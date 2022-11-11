@@ -7,6 +7,8 @@ name = "pypi"
 django = "*"
 djangorestframework = "*"
 django-cors-headers = "*"
+mypy = "*"
+django-stubs = "*"
 django-bootstrap-v5 = "*"
 
 [dev-packages]

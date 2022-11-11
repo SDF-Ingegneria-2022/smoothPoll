@@ -1,3 +1,4 @@
+from typing import List, Any
 """
 Django settings for SmoothPoll project.
 
@@ -25,7 +26,7 @@ SECRET_KEY = 'django-insecure-v3daz3lmbf8ksvfubkdz7nchc*0&#5sf+sa$*7+$+e((qyn6#5
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS: List[Any] = [] 
 
 
 # Application definition
