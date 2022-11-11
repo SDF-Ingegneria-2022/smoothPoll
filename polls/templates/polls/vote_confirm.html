@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smooth Polls | Conferma voto</title>
+
+    {# Load the tag library #}
+    {% load bootstrap5 %}
+
+    {# Load CSS and JavaScript #}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+
+</head>
+<body>
+
+    <div class="container text-center">
+        <h1>Nome del sondaggio</h1>
+        <h2>Grazie di aver votato!</h2>
+    </div>
+
+    <div class="container">
+
+        <h3 class="success">Grazie di aver votato! Abbiamo registrato il tuo voto.</h3>
+        <p class="secondary">Quando il sondaggio sarà chiuso, potrai vedere i risultati</p>
+
+        <h4>Questito del sondaggio: </h4>
+        <p>Domanda del sondaggio</p>
+
+        <h4>Opzione scelta: </h4>
+        <p>{{ choice }}</p>
+
+    </div>
+
+</body>
+</html>
