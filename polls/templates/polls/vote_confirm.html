@@ -1,24 +1,69 @@
-{% extends 'global/base.html' %}
+{% extends 'global/skeleton.html' %}
 
 {% block pagename %}Voto confermato{% endblock pagename %}
 
+{% block customjs %}
+<script>
+/**
+ * Copy an url on user's clipboard.
+ * 
+ * Inspired to: https://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_copy_clipboard 
+ */
+function copyLink(url) {
+
+    // Copy the text inside user 
+    navigator.clipboard.writeText(url);
+  
+    // Alert the copied text
+    alert("Link copiato!");
+}
+</script>
+{% endblock customjs %}
+
+
+
 {% block content %}
 
-<div class="container text-center">
+<div class="container text-center m-5">
     <h1>Nome del sondaggio</h1>
-    <h2>Grazie di aver votato!</h2>
+    <h2 class="text-info">Voto registrato!</h2>
 </div>
 
 <div class="container">
 
-    <h3 class="success">Grazie di aver votato! Abbiamo registrato il tuo voto.</h3>
-    <p class="secondary">Quando il sondaggio sarà chiuso, potrai vedere i risultati</p>
+    <h3 class="text-success">Grazie di aver votato! Abbiamo registrato il tuo voto.</h3>
 
-    <h4>Questito del sondaggio: </h4>
-    <p>Domanda del sondaggio</p>
+    <div class="container m-3">
+        <div class="row">
+            <div class="col-2">
+                <p class="text-secondary">Quesito:</p>
+            </div>
+            <div class="col-10">
+                <p class="fw-bold">Domanda del sondaggio</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-2">
+                <p class="text-secondary">Opzione scelta: </p>
+            </div>
+            <div class="col-10">
+                <p class="fw-bold fs-5 text-primary">{{ choice }}</p>
+            </div>
+        </div>
+    </div>
 
-    <h4>Opzione scelta: </h4>
-    <p>{{ choice }}</p>
+    <div class="container mt-5" >
+        <p class="secondary">
+            Quando il sondaggio sarà chiuso, potrai vedere il risultato 
+            <a href="{% url 'polls:dummy' %}" title="Esiti sondaggio">su questa pagina</a>. 
+            
+            <button type="button" class="btn btn-secondary" 
+                onclick="copyLink('{{request.get_host}}{% url 'polls:dummy' %}')">
+                Copia link
+            </button>
+        </p>
+    </div>
+
 
 </div>
 
