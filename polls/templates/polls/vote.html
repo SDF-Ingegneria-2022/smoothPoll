@@ -1,57 +1,43 @@
-<!DOCTYPE html>
-<html lang="it">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smooth Polls | Esprimi il tuo voto</title>
+{% extends 'polls/base.html' %}
 
-    {# Load the tag library #}
-    {% load bootstrap5 %}
+{% block pagename %}Esprimi il tuo voto{% endblock pagename %}
 
-    {# Load CSS and JavaScript #}
-    {% bootstrap_css %}
-    {% bootstrap_javascript %}
+{% block body %}
+<div class="container text-center">
+    <h1>Nome del sondaggio</h1>
+    <h2>Esprimi il tuo voto</h2>
+</div>
 
-</head>
-<body>
-
-    <div class="container text-center">
-        <h1>Nome del sondaggio</h1>
-        <h2>Esprimi il tuo voto</h2>
-    </div>
-
+<div class="container">
+    <p>Domanda: </p>
+    <h3>Testo della domanda del sondaggio</h3>
+    
     <div class="container">
-        <p>Domanda: </p>
-        <h3>Testo della domanda del sondaggio</h3>
-        
-        <div class="container">
-            <form action="{% url 'polls:submit_vote' %}" method="POST">
+        <form action="{% url 'polls:submit_vote' %}" method="POST">
 
-                {% csrf_token %}
+            {% csrf_token %}
 
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="vote" id="option-1" value="1"> 
-                    <label class="form-check-label" for="">
-                        Opzione 1
-                    </label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="vote" id="option-2" value="2">
-                    <label class="form-check-label" for="">
-                        Opzione 2
-                    </label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="vote" id="option-3" value="3">
-                    <label class="form-check-label" for="">
-                        Opzione 3
-                    </label>
-                </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="vote" id="option-1" value="1"> 
+                <label class="form-check-label" for="">
+                    Opzione 1
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="vote" id="option-2" value="2">
+                <label class="form-check-label" for="">
+                    Opzione 2
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="vote" id="option-3" value="3">
+                <label class="form-check-label" for="">
+                    Opzione 3
+                </label>
+            </div>
 
-                <button type="submit" class="btn btn-primary">Conferma</button>
-            </form>
-        </div>
+            <button type="submit" class="btn btn-primary">Conferma</button>
+        </form>
     </div>
-</body>
-</html>
+</div>
+{% endblock body %}
