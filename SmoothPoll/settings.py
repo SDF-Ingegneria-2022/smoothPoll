@@ -1,3 +1,4 @@
+import os
 from typing import List, Any
 """
 Django settings for SmoothPoll project.
@@ -58,7 +59,10 @@ ROOT_URLCONF = 'SmoothPoll.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+
+        # all templates in a global folder
+        'DIRS': [os.path.join(BASE_DIR, 'templates')], 
+        
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

@@ -1,0 +1,72 @@
+{% extends 'global/base.html' %}
+
+{% block body %}
+
+    {# Page header #}
+    {% block header %}
+    <header class="pageheader">
+        <div class="container-fluid bg-primary text-light">
+            <div class="d-flex justify-content-center">
+                <span class="text-center">
+                    <a href="{% url 'home' %}" >
+                        <span class="logo">
+                            <img src="" alt="SmoothPoll" title="SmoothPoll Logo" />
+                        </span>
+                    </a>
+                    <span class="motto">
+                        <p>Crea e vota sondaggi</p>
+                    </span>
+                </span>
+                
+                
+            </div> 
+        </div>
+    </header>
+
+    {% endblock header %}
+
+    {# Page container #}
+    {% block container %}
+
+        <div class="container">
+            {# Page content (proper page content, specific for each page) #}
+            {# Use hineritance (extends) to define it #}
+            {% block content %}{% endblock content %}
+        </div>
+
+    {% endblock container %}
+
+    {# Page footer #}
+    {% block footer %}
+        <footer class="pagefooter">
+            {# App name #}
+            <div class="bg-secondary text-light pagefooter-identity"> 
+                <div class="container">
+                    <p class="text-center">
+                        SmoothPoll @ {% now "Y" %} - Progetto didattico di Ing. del Software <br />
+                        Università degli Studi di Udine, A.A. 2022/23
+                    </p>
+                </div>
+            </div>
+
+            {# Repo reference #}
+            <div class="bg-dark text-light pagefooter-reporef">
+                <div class="container">
+                    <p class="text-center ">
+                        Repository progetto: 
+                        <a target="_blank" title="Github Repository SmoothPoll"
+                            href="https://github.com/SDF-Ingegneria-2022/smoothPoll" >
+                            https://github.com/SDF-Ingegneria-2022/smoothPoll
+                        </a> 
+                    </p>
+                </div>
+            </div>
+
+        </footer>
+    {% endblock footer %}
+
+{% endblock body %}
+
+
+
+
