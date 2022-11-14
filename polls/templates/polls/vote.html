@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="container text-center m-5">
-    <h1>Nome del sondaggio</h1>
+    <h1>{{ poll.name }}</h1>
     <h2 class="text-info">Esprimi il tuo voto</h2>
 </div>
 
@@ -12,7 +12,7 @@
 
     <div class="container mt-5 mb-5">
         <p class="mb-0">Testo della domanda: </p>
-        <h3>Testo della domanda del sondaggio</h3>
+        <h3>{{ poll.question }}</h3>
     </div>
     
     <div class="container mt-5 mb-5">
@@ -22,24 +22,15 @@
 
             {# Form Options #}
             <div class="container m-3">
-                <div class="form-check m-2">
-                    <input class="form-check-input" type="radio" name="vote" id="option-1" value="1"> 
-                    <label class="form-check-label" for="">
-                        Opzione 1
-                    </label>
-                </div>
-                <div class="form-check m-2">
-                    <input class="form-check-input" type="radio" name="vote" id="option-2" value="2">
-                    <label class="form-check-label" for="">
-                        Opzione 2
-                    </label>
-                </div>
-                <div class="form-check m-2">
-                    <input class="form-check-input" type="radio" name="vote" id="option-3" value="3">
-                    <label class="form-check-label" for="">
-                        Opzione 3
-                    </label>
-                </div>
+
+                {% for option in poll.options %}
+                    <div class="form-check m-2">
+                        <input class="form-check-input" type="radio" id="option-{{option.key}}"" name="vote" value="{{option.key}}"> 
+                        <label class="form-check-label" for="option-{{option.key}}"" >
+                            {{option.value}}
+                        </label>
+                    </div>
+                {% endfor %}
             </div>
 
             {# Confirm button #}

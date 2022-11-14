@@ -19,4 +19,13 @@ class Poll:
         self.question = question
         self.options = options.copy()
 
-         
+# dummy poll with all options
+dummy_poll = Poll(
+    "Sondaggio di prova", 
+    "Quale tra queste User Story ti sembra più importante da implementare?", 
+    [
+        PollOption("User Story Nro #01"), 
+        PollOption("User Story Nro #02"), 
+        PollOption("User Story Nro #03")
+    ]
+)
