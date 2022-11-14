@@ -1,6 +1,14 @@
 
 from polls.logic.classes.poll_option import PollOption
 
+class PollOptionUnvalidException(Exception):
+    """
+    A PollOption is unvalid for a certain Poll
+    """
+
+    def __init__(self, *args: object) -> None:
+        super().__init__(*args)
+    pass
 
 class Poll: 
     """
@@ -18,6 +26,14 @@ class Poll:
         self.name = name
         self.question = question
         self.options = options.copy()
+
+    def get_option_by_key(self, key: str) -> PollOption:
+        
+        for option in self.options:
+            if option.key == key:
+                return option
+        
+        raise PollOptionUnvalidException()
 
 # dummy poll with all options
 dummy_poll = Poll(
