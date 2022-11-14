@@ -4,7 +4,10 @@ class PollOption:
     choose from.
     """
 
+    text: str 
     value: str
 
-    def __init__(self, value: str) -> None:
-        self.value = value
+    def __init__(self, text: str, value: str=None) -> None:
+
+        self.text = text
+        self.value = value if value is not None else text
