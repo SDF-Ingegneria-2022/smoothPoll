@@ -25,13 +25,14 @@ function copyLink(url) {
 {% block content %}
 
 <div class="container text-center m-5">
-    <h1>Nome del sondaggio</h1>
+    <h1>{{poll.name}}</h1>
     <h2 class="text-info">Voto registrato!</h2>
 </div>
 
 <div class="container">
 
-    <h3 class="text-success">Grazie di aver votato! Abbiamo registrato il tuo voto.</h3>
+    <h3 class="text-success">Grazie di aver votato! Il tuo voto è stato ricevuto.</h3>
+    <p class="text-secondary">(Essendo questo solo un prototipo, il voto non è stato registrato)</p>
 
     <div class="container m-3">
         <div class="row">
@@ -39,7 +40,7 @@ function copyLink(url) {
                 <p class="text-secondary">Quesito:</p>
             </div>
             <div class="col-10">
-                <p class="fw-bold">Domanda del sondaggio</p>
+                <p class="fw-bold">{{poll.question}}</p>
             </div>
         </div>
         <div class="row">
@@ -47,7 +48,7 @@ function copyLink(url) {
                 <p class="text-secondary">Opzione scelta: </p>
             </div>
             <div class="col-10">
-                <p class="fw-bold fs-5 text-primary">{{ choice }}</p>
+                <p class="fw-bold fs-5 text-primary">{{ choice.value }}</p>
             </div>
         </div>
     </div>
