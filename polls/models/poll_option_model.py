@@ -1,7 +1,7 @@
 from django.db import models
 from django.db.models import CharField
 
-from polls.business.contants.models_constants import POLL_MODEL_NAME # type: ignore
+from ..constants.models_constants import POLL_MODEL_NAME
 
 class PollOptionModel(models.Model): 
     key: CharField = models.CharField(max_length=200)

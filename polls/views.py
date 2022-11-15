@@ -1,9 +1,8 @@
 from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render
-
-from polls.business.dtos.poll_option_dto import PollOptionDto #type: ignore
-from polls.business.dtos.poll_dto import dummy_poll #type: ignore
-from polls.business.exceptions.poll_option_unvalid_exception import PollOptionUnvalidException #type: ignore
+from .dtos.poll_option_dto import PollOptionDto 
+from .dtos.poll_dto import dummy_poll
+from .exceptions.poll_option_unvalid_exception import PollOptionUnvalidException
 
 
 
@@ -12,7 +11,6 @@ def index(request):
     """
     Hello world in our first app
     """
-
     return HttpResponse("Hello, world. You're at the polls index.")
 
 def dummy(request: HttpRequest): 

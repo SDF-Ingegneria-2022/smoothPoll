@@ -11,7 +11,7 @@ class PollDto:
 
     Options are ranke in decreasing number of votes. 
     """
-
+    
     name: str
     question: str
     options: List[PollOptionDto]
