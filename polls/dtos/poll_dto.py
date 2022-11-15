@@ -1,33 +1,27 @@
 
-from polls.logic.classes.poll_option import PollOption
+from typing import List
 
-class PollOptionUnvalidException(Exception):
-    """
-    A PollOption is unvalid for a certain Poll
-    """
+from polls.dtos.poll_option_dto import PollOptionDto
+from polls.exceptions.poll_option_unvalid_exception import PollOptionUnvalidException
 
-    def __init__(self, *args: object) -> None:
-        super().__init__(*args)
-    pass
-
-class Poll: 
+class PollDto: 
     """
     A classic poll, where user may choose one between 
     a set of options. 
 
     Options are ranke in decreasing number of votes. 
     """
-
+    
     name: str
     question: str
-    options: list[PollOption]
+    options: List[PollOptionDto]
 
-    def __init__(self, name: str, question: str, options: list[PollOption]) -> None: 
+    def __init__(self, name: str, question: str, options: List[PollOptionDto]) -> None: 
         self.name = name
         self.question = question
         self.options = options.copy()
 
-    def get_option_by_key(self, key: str) -> PollOption:
+    def get_option_by_key(self, key: str) -> PollOptionDto:
         
         for option in self.options:
             if option.key == key:
@@ -36,12 +30,12 @@ class Poll:
         raise PollOptionUnvalidException()
 
 # dummy poll with all options
-dummy_poll = Poll(
+dummy_poll = PollDto(
     "Sondaggio di prova", 
     "Quale tra queste User Story ti sembra più importante da implementare?", 
     [
-        PollOption("User Story Nro #01"), 
-        PollOption("User Story Nro #02"), 
-        PollOption("User Story Nro #03")
+        PollOptionDto("User Story Nro #01"), 
+        PollOptionDto("User Story Nro #02"), 
+        PollOptionDto("User Story Nro #03")
     ]
 )

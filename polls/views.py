@@ -1,8 +1,9 @@
 from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render
+from .dtos.poll_option_dto import PollOptionDto 
+from .dtos.poll_dto import dummy_poll
+from .exceptions.poll_option_unvalid_exception import PollOptionUnvalidException
 
-from polls.logic.classes.poll_option import PollOption
-from polls.logic.classes.poll import Poll, dummy_poll, PollOptionUnvalidException
 
 
 
@@ -10,7 +11,6 @@ def index(request):
     """
     Hello world in our first app
     """
-
     return HttpResponse("Hello, world. You're at the polls index.")
 
 def dummy(request: HttpRequest): 
@@ -33,7 +33,7 @@ def submit_vote(request: HttpRequest):
         return HttpResponseBadRequest("Errore: manca il voto")
 
     try:
-        choice: PollOption = dummy_poll.get_option_by_key(request.POST["vote"])
+        choice: PollOptionDto = dummy_poll.get_option_by_key(request.POST["vote"])
     except PollOptionUnvalidException:
         return HttpResponseBadRequest("Errore: l'opzione non è valida")
 
