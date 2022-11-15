@@ -1,4 +1,4 @@
-class PollOption:
+class PollOptionDto:
     """
     Poll Option. One of the choices user may 
     choose from.

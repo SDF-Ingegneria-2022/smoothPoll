@@ -1,8 +1,10 @@
 from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render
 
-from polls.logic.classes.poll_option import PollOption
-from polls.logic.classes.poll import Poll, dummy_poll, PollOptionUnvalidException
+from polls.business.dtos.poll_option_dto import PollOptionDto #type: ignore
+from polls.business.dtos.poll_dto import dummy_poll #type: ignore
+from polls.business.exceptions.poll_option_unvalid_exception import PollOptionUnvalidException #type: ignore
+
 
 
 
@@ -33,7 +35,7 @@ def submit_vote(request: HttpRequest):
         return HttpResponseBadRequest("Errore: manca il voto")
 
     try:
-        choice: PollOption = dummy_poll.get_option_by_key(request.POST["vote"])
+        choice: PollOptionDto = dummy_poll.get_option_by_key(request.POST["vote"])
     except PollOptionUnvalidException:
         return HttpResponseBadRequest("Errore: l'opzione non è valida")
 
