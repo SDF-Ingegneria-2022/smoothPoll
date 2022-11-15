@@ -1,7 +1,8 @@
 
 from typing import List
-from polls.business.exceptions.poll_option_unvalid_exception import PollOptionUnvalidException # type: ignore
-from polls.business.dtos.poll_option_dto import PollOptionDto # type: ignore
+
+from polls.dtos.poll_option_dto import PollOptionDto
+from polls.exceptions.poll_option_unvalid_exception import PollOptionUnvalidException
 
 class PollDto: 
     """
