@@ -47,3 +47,25 @@ This project is based on Django, so all usual Django rules and commands are vali
     ```
 
     (more info: https://docs.djangoproject.com/en/4.1/intro/tutorial02/#database-setup)
+
+-   if you quickly need to run some code on a running application:
+
+    ```bash
+    python manage.py shell
+    ```
+
+    then you can call services, models code, etc.
+    (https://docs.djangoproject.com/en/4.1/intro/tutorial02/#playing-with-the-api)
+
+    For example, this sequence of commands will make you create a dummy survey:
+    -   import service:
+        ```
+        from polls.services.poll_service import PollService
+        ```
+    -   use service to create dummy survey
+        ```
+        PollService.create("sondaggio di prova", "che sondaggio facciamo?", [{"key": "risposta-1", "value": "Risposta 1"}, {"key": "risposta-2", "value": "Risposta 2"}])
+        ```
+
+
+
