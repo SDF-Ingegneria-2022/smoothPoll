@@ -26,6 +26,7 @@ class PollService:
         
         return PollDto(name=new_poll.name, question=new_poll.question, options=created_poll_options)
     
+    @staticmethod
     def get_by_id(id:str) -> PollDto:
         """Get a poll by id.
         Args:

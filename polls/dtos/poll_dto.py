@@ -1,9 +1,10 @@
 
 from typing import List
+from dataclasses import dataclass
 
 from polls.dtos.poll_option_dto import PollOptionDto
 from polls.exceptions.poll_option_unvalid_exception import PollOptionUnvalidException
-
+@dataclass
 class PollDto: 
     """
     A classic poll, where user may choose one between 
@@ -15,11 +16,6 @@ class PollDto:
     name: str
     question: str
     options: List[PollOptionDto]
-
-    def __init__(self, name: str, question: str, options: List[PollOptionDto]) -> None: 
-        self.name = name
-        self.question = question
-        self.options = options.copy()
 
     def get_option_by_key(self, key: str) -> PollOptionDto:
         
