@@ -1,10 +1,16 @@
 from django.db import models
-from django.db.models import DateTimeField, ForeignKey
-
-from ..constants.models_constants import VOTE_MODEL_NAME
+from polls.constants.models_constants import POLL_OPTION_MODEL_NAME
 
 
 class VoteModel(models.Model):
 
-    datetime: DateTimeField = models.DateTimeField(_(""), auto_now=True, auto_now_add=True)
-    poll_option_fk: ForeignKey = models.ForeignKey(VOTE_MODEL_NAME, on_delete=models.CASCADE)
+    datetime: models.DateTimeField = models.DateTimeField(auto_now=True)
+    poll_option: models.ForeignKey = models.ForeignKey(POLL_OPTION_MODEL_NAME, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str({
+            'id': self.id,
+            'datetime': self.datetime, 
+            'poll_option': str(self.poll_option)
+        })
+
