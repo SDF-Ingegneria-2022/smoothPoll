@@ -28,7 +28,17 @@ To run the server:
 ```bash
 python manage.py runserver  
 ```
-
+## Command Line Interface(CLI)
+To see all available CLIs run:
+```bash
+python manage.py --help 
+```
+### General CLI usage
+```bash
+python manage.py [cli_command]
+```
+#### Custom CLI commands
+- poll_seeder
 ## Quick notes on how to code
 
 This project is based on Django, so all usual Django rules and commands are valid here. Here it follows a quick brief.
