@@ -10,8 +10,10 @@ class PollOptionDto:
     """
     value: str
     key: str 
+    id: str
     
 
-    def __init__(self, value: str, key: str=None) -> None:
+    def __init__(self, id: str, value: str, key: str=None) -> None:
+        self.id = id
         self.value = value
         self.key = key if key is not None else value
