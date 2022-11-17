@@ -38,10 +38,10 @@ def submit_vote(request: HttpRequest):
     """
 
     if request.method != "POST":
-        return HttpResponseBadRequest("Errore: il metodo deve essere post")
+        return HttpResponseBadRequest("Error: method should be post")
     
     if 'vote' not in request.POST:
-        return HttpResponseBadRequest("Errore: manca il voto")
+        return HttpResponseBadRequest("Error: vote has not been passed")
 
     try:
         vote: VoteModel = VoteService.perform_vote(1, request.POST["vote"])
@@ -51,6 +51,8 @@ def submit_vote(request: HttpRequest):
         pass
 
     return render(request, 'polls/vote_confirm.html', 
-        {'poll': vote.poll(), 'choice': vote.poll_option})
+        # {'poll': vote.poll(), 'choice': vote.poll_option}
+        {'vote': vote}
+        )
     
     

@@ -18,5 +18,5 @@ class PollModel(models.Model):
         })
 
     def options(self) -> List[PollOptionModel]:
-        return [PollOptionModel.objects.filter(poll_fk=self.id)]         
+        return list(PollOptionModel.objects.filter(poll_fk=self.id))         
         
