@@ -10,14 +10,26 @@
                 <h3 class="card-title text-primary">Benvenuto su SmoothPoll!</h3>
                 <h5 class="card-title text-info">L'applicazione al momento è in costruzione</h5> 
                 <p class="card-text">
-                    Questa e la pagina dei risultati
+                    Questa è la pagina dei risultati
                 </p>
-
+                <div class="row">
+                    <div class="col-3">
+                        <p class="text-secondary">Quesito:</p>
+                    </div>
+                    <div class="col-6">
+                        <p class="fw-bold">{{poll.question}}</p>
+                    </div>
+                </div>
+                <div class="container">
+                    {%for option in poll.options %}
+                        <p>{{option.value}}</p>
+                        {% endfor %}
+                </div>
                 <div class="container">
                     <a name="" id="" role="button"
                         class="btn btn-primary" 
                         href="{% url 'polls:dummy' %}" >
-                        Risultati
+                        Vota di nuovo
                     </a>
                     <a name="" id="" role="button"
                         class="btn btn-secondary" 

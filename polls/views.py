@@ -60,4 +60,11 @@ def results(request: HttpRequest):
     """
     Render page with results
     """
-    return render(request, 'polls/results.html')
+    try:
+        # retrieve dummy poll
+        dummy_poll: PollDto = PollService.get_by_id("1")
+    except Exception:
+        # internal error: you should inizialize DB first (error 500)
+        return HttpResponseServerError("Dummy survey is not initialized. Please see README.md and create it.")
+    return render(request, 'polls/results.html', 
+        {'poll': dummy_poll})
