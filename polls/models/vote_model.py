@@ -1,11 +1,26 @@
 from django.db import models
-from polls.constants.models_constants import POLL_OPTION_MODEL_NAME
+from polls.models.poll_option_model import PollOptionModel
 
 
 class VoteModel(models.Model):
+    """
+    A Vote to a certain Poll. 
+    It's the classic choice of an option.
+    """
 
     datetime: models.DateTimeField = models.DateTimeField(auto_now=True)
-    poll_option: models.ForeignKey = models.ForeignKey(POLL_OPTION_MODEL_NAME, on_delete=models.CASCADE)
+    """Timestamp of vote registration instant"""
+
+    poll_option: models.ForeignKey = models.ForeignKey(PollOptionModel, on_delete=models.CASCADE)
+    """choosed poll option"""
+
+    def poll(self) -> "PollModel": 
+        """
+        Retrieve corresponding Poll of this Vote.
+        """
+
+        option: PollOptionModel = self.poll_option
+        return option.poll_fk
 
     def __str__(self):
         return str({
@@ -13,4 +28,3 @@ class VoteModel(models.Model):
             'datetime': self.datetime, 
             'poll_option': str(self.poll_option)
         })
-
