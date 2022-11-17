@@ -43,7 +43,7 @@ This project is based on Django, so all usual Django rules and commands are vali
 -   to iterate with database you will use models and migrations. After creating a model, you wanna run this command to create a migration file:
 
     ```bash
-    python manage.py makemigration APP_NAME
+    python manage.py makemigrations APP_NAME
     ```
 
     (more info: https://docs.djangoproject.com/en/4.1/intro/tutorial02/#database-setup)
