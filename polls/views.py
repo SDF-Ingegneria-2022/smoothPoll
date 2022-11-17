@@ -1,5 +1,7 @@
+from typing import List
 from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest, HttpResponseServerError
 from django.shortcuts import render
+from polls.classes.poll_result import PollResult, PollResultVoice
 from polls.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
 
 from polls.models.vote_model import VoteModel
@@ -58,13 +60,16 @@ def submit_vote(request: HttpRequest):
 
 def results(request: HttpRequest):
     """
-    Render page with results
+    #TODO: improve readability
+    Render page with results. 
     """
     try:
         # retrieve dummy poll
         dummy_poll: PollDto = PollService.get_by_id("1")
+        poll_results: PollResult = VoteService.calculate_result("1")
+        sorted_options: List[PollResultVoice] = poll_results.get_sorted_options()
     except Exception:
         # internal error: you should inizialize DB first (error 500)
         return HttpResponseServerError("Dummy survey is not initialized. Please see README.md and create it.")
     return render(request, 'polls/results.html', 
-        {'poll': dummy_poll})
+        {'poll': dummy_poll, 'sorted_options':sorted_options})

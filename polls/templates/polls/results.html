@@ -21,8 +21,8 @@
                     </div>
                 </div>
                 <div class="container">
-                    {%for option in poll.options %}
-                        <p>{{option.value}}</p>
+                    {%for option in sorted_options %}
+                        <p>{{option.n_votes}}</p>
                         {% endfor %}
                 </div>
                 <div class="container">
