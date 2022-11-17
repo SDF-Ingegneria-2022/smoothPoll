@@ -7,3 +7,11 @@ class PollOptionModel(models.Model):
     key: CharField = models.CharField(max_length=200)
     value: CharField = models.CharField(max_length=200)
     poll_fk: models.ForeignKey = models.ForeignKey(POLL_MODEL_NAME, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str({
+            'id': self.id, 
+            'key': self.key,
+            'value': self.value, 
+            'poll': str(self.poll_fk)
+        })
