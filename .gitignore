@@ -264,5 +264,7 @@ cython_debug/
 [Ss]cripts
 pyvenv.cfg
 pip-selfcheck.json
+# Visual studio code
+.vscode/*
 
 # End of https://www.toptal.com/developers/gitignore/api/python,django,venv
