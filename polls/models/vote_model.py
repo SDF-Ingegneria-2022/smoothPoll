@@ -1,6 +1,6 @@
 from django.db import models
 from polls.models.poll_option_model import PollOptionModel
-
+from polls.models.poll_model import PollModel
 
 class VoteModel(models.Model):
     """
@@ -14,11 +14,10 @@ class VoteModel(models.Model):
     poll_option: models.ForeignKey = models.ForeignKey(PollOptionModel, on_delete=models.CASCADE)
     """choosed poll option"""
 
-    def poll(self) -> "PollModel": 
+    def poll(self) -> PollModel: 
         """
         Retrieve corresponding Poll of this Vote.
         """
-
         option: PollOptionModel = self.poll_option
         return option.poll_fk
 

@@ -30,8 +30,8 @@ dummy_poll = PollDto(
     "Sondaggio di prova", 
     "Quale tra queste User Story ti sembra più importante da implementare?", 
     [
-        PollOptionDto("User Story Nro #01"), 
-        PollOptionDto("User Story Nro #02"), 
-        PollOptionDto("User Story Nro #03")
+        PollOptionDto(1, "User Story Nro #01"), 
+        PollOptionDto(2, "User Story Nro #02"), 
+        PollOptionDto(3, "User Story Nro #03")
     ]
 )

@@ -1,10 +1,13 @@
 from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest, HttpResponseServerError
 from django.shortcuts import render
+from polls.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
+
+from polls.models.vote_model import VoteModel
 from .dtos.poll_option_dto import PollOptionDto 
 from .dtos.poll_dto import PollDto
 from .services.poll_service import PollService
 from .exceptions.poll_option_unvalid_exception import PollOptionUnvalidException
-
+from polls.services.vote_service import VoteService
 
 
 
@@ -41,18 +44,13 @@ def submit_vote(request: HttpRequest):
         return HttpResponseBadRequest("Errore: manca il voto")
 
     try:
-        # retrieve dummy poll
-        dummy_poll: PollDto = PollService.get_by_id("1")
-    except Exception:
-        # internal error: you should inizialize DB first (error 500)
-        return HttpResponseServerError("Dummy survey is not initialized. Please see README.md and create it.")
-
-    try:
-        choice: PollOptionDto = dummy_poll.get_option_by_key(request.POST["vote"])
+        vote: VoteModel = VoteService.perform_vote(1, request.POST["vote"])
     except PollOptionUnvalidException:
-        return HttpResponseBadRequest("Errore: l'opzione selezionata non è valida")
+        pass
+    except PollDoesNotExistException:
+        pass
 
     return render(request, 'polls/vote_confirm.html', 
-        {'poll': dummy_poll, 'choice': choice})
+        {'poll': vote.poll(), 'choice': vote.poll_option})
     
     
