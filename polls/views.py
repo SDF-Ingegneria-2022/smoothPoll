@@ -55,4 +55,9 @@ def submit_vote(request: HttpRequest):
     return render(request, 'polls/vote_confirm.html', 
         {'poll': dummy_poll, 'choice': choice})
     
-    
+
+def results(request: HttpRequest):
+    """
+    Render page with results
+    """
+    return render(request, 'polls/results.html')

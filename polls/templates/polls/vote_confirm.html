@@ -56,7 +56,7 @@ function copyLink(url) {
     <div class="container mt-5" >
         <p class="secondary">
             Quando il sondaggio sarà chiuso, potrai vedere il risultato 
-            <a href="{% url 'polls:dummy' %}" title="Esiti sondaggio">su questa pagina</a>. 
+            <a href="{% url 'polls:results' %}" title="Esiti sondaggio">su questa pagina</a>. 
             
             <button type="button" class="btn btn-secondary" 
                 onclick="copyLink('{{request.get_host}}{% url 'polls:dummy' %}')">

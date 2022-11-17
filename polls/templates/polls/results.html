@@ -1,0 +1,37 @@
+{% extends 'global/skeleton.html' %}
+
+{% block pagename %}Visualizza i risultati{% endblock pagename %}
+
+{% block content %}
+
+    <div class="d-flex justify-content-center">
+        <div class="card text-center" >
+            <div class="card-body">
+                <h3 class="card-title text-primary">Benvenuto su SmoothPoll!</h3>
+                <h5 class="card-title text-info">L'applicazione al momento è in costruzione</h5> 
+                <p class="card-text">
+                    Questa e la pagina dei risultati
+                </p>
+
+                <div class="container">
+                    <a name="" id="" role="button"
+                        class="btn btn-primary" 
+                        href="{% url 'polls:dummy' %}" >
+                        Risultati
+                    </a>
+                    <a name="" id="" role="button"
+                        class="btn btn-secondary" 
+                        href="https://github.com/SDF-Ingegneria-2022/smoothPoll/issues" 
+                        target="_blank">
+                        Lasciaci un Feedback
+                    </a> 
+                </div>
+
+                
+                
+            </div>
+        </div>
+    </div>
+    
+{% endblock content %}
+
