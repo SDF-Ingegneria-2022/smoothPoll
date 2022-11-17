@@ -22,7 +22,7 @@
                 </div>
                 <div class="container">
                     {%for option in sorted_options %}
-                        <p>{{option.n_votes}}</p>
+                        <p>{{option.option.value}}:{{option.n_votes}}</p>
                         {% endfor %}
                 </div>
                 <div class="container">
