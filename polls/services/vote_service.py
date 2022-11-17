@@ -22,6 +22,7 @@ class VoteService:
         
         return vote
 
+    @staticmethod
     def calculate_result(poll_id: str) -> PollResult:
         """
         Calculate result of a poll.
