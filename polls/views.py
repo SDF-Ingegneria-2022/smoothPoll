@@ -1,6 +1,7 @@
-from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest, HttpResponseServerError
+from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest, HttpResponseServerError, HttpResponseRedirect
 from django.shortcuts import render
 from polls.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
+from django.urls import reverse
 
 from polls.models.vote_model import VoteModel
 from .dtos.poll_option_dto import PollOptionDto 
@@ -31,7 +32,7 @@ def dummy(request: HttpRequest):
      
     # render page for vote
     return render(request, 'polls/vote.html', {'poll': dummy_poll})
-
+    
 def submit_vote(request: HttpRequest): 
     """
     Submit the vote and get the result
@@ -41,7 +42,7 @@ def submit_vote(request: HttpRequest):
         return HttpResponseBadRequest("Error: method should be post")
     
     if 'vote' not in request.POST:
-        return HttpResponseBadRequest("Error: vote has not been passed")
+        return HttpResponseRedirect(reverse('polls:vote_error'))
 
     try:
         vote: VoteModel = VoteService.perform_vote(1, request.POST["vote"])
@@ -55,4 +56,10 @@ def submit_vote(request: HttpRequest):
         {'vote': vote}
         )
     
-    
+def vote_error(request: HttpRequest):
+    """
+    Error page for vote
+    """
+    #TODO: temporary hardcoded poll retrieval. It should be retrieved from DB according to the poll id
+    dummy_poll: PollDto = PollService.get_by_id("1")
+    return render(request, 'polls/vote_error.html', {'poll': dummy_poll})

@@ -7,4 +7,5 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('dummy/', views.dummy, name='dummy'),
     path('submit-vote/', views.submit_vote, name='submit_vote'),
+    path('vote-error/', views.vote_error, name='vote_error'),
 ]
