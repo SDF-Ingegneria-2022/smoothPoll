@@ -86,7 +86,7 @@ According to Semantic Versioning 2.0.0 the type of version increment can be:
 
 ### Example
 ```bash
-    bump2version minor
+bump2version minor
 ```
 
 
