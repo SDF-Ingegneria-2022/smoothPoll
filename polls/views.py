@@ -71,5 +71,6 @@ def results(request: HttpRequest):
     except Exception:
         # internal error: you should inizialize DB first (error 500)
         return HttpResponseServerError("Dummy survey is not initialized. Please see README.md and create it.")
+    print(poll_results, sorted_options)
     return render(request, 'polls/results.html', 
-        {'poll': dummy_poll, 'sorted_options':sorted_options})
+        {'poll':sorted_options, 'question': poll_results.poll.question})

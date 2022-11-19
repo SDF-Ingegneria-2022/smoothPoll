@@ -3,47 +3,35 @@
 {% block pagename %}Visualizza i risultati{% endblock pagename %}
 
 {% block content %}
-
-    <div class="d-flex justify-content-center">
-        <div class="card text-center" >
-            <div class="card-body">
-                <h3 class="card-title text-primary">Benvenuto su SmoothPoll!</h3>
-                <h5 class="card-title text-info">L'applicazione al momento è in costruzione</h5> 
-                <p class="card-text">
-                    Questa è la pagina dei risultati
-                </p>
-                <div class="row">
-                    <div class="col-3">
-                        <p class="text-secondary">Quesito:</p>
-                    </div>
-                    <div class="col-6">
-                        <p class="fw-bold">{{poll.question}}</p>
-                    </div>
-                </div>
-                <div class="container">
-                    {%for option in sorted_options %}
-                        <p>{{option.option.value}}:{{option.n_votes}}</p>
-                        {% endfor %}
-                </div>
-                <div class="container">
-                    <a name="" id="" role="button"
-                        class="btn btn-primary" 
-                        href="{% url 'polls:dummy' %}" >
-                        Vota di nuovo
-                    </a>
-                    <a name="" id="" role="button"
-                        class="btn btn-secondary" 
-                        href="https://github.com/SDF-Ingegneria-2022/smoothPoll/issues" 
-                        target="_blank">
-                        Lasciaci un Feedback
-                    </a> 
-                </div>
-
-                
-                
+<div class="container text-center m-5">
+    <h1>{{question}}</h1>
+</div>
+<div class="container">
+    <div class="container text-center m-5">
+            <div class="row">
+                {%for option in poll %}
+                <div class="col">
+                    <p class="fw-bold text-secondary">{{option.option.value}} </p>
+                    <p class="fw-bold fs-5 text-primary"> ha ricevuto {{option.n_votes}} voti</p>
+                </div> 
+                {% endfor %}
             </div>
-        </div>
+            
     </div>
-    
+    <div class="container text-center m-5">
+    <a name="" id="" role="button"
+        class="btn btn-primary" 
+        href="{% url 'polls:dummy' %}" >
+        Vota di nuovo
+    </a>
+    <a name="" id="" role="button"
+        class="btn btn-secondary" 
+        href="https://github.com/SDF-Ingegneria-2022/smoothPoll/issues" 
+        target="_blank">
+        Lasciaci un Feedback
+    </a> 
+    </div>
+</div>
+</div>
 {% endblock content %}
 
