@@ -10,17 +10,19 @@
                 <span class="text-center">
                     <a href="{% url 'home' %}" >
                         <span class="logo">
-                            <img src="" alt="SmoothPoll" title="SmoothPoll Logo" />
+                            {% load static %}
+                            <img src="{% static 'logo-smooth-poll.svg' %}" 
+                                alt="SmoothPoll" title="SmoothPoll Logo" 
+                                class="navbar-brand" />
                         </span>
                     </a>
-                    <span class="motto">
+                    {% comment %} <span class="motto">
                         <p>Crea e vota sondaggi</p>
-                    </span>
+                    </span> {% endcomment %}
                 </span>
-                
-                
             </div> 
         </div>
+        
     </header>
 
     {% endblock header %}
