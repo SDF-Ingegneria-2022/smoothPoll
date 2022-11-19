@@ -72,7 +72,11 @@ def results(request: HttpRequest):
         return HttpResponseServerError("Dummy survey is not initialized. Please see README.md and create it.")
 
     return render(request, 'polls/results.html', 
-        {'poll':sorted_options, 'question': poll_results.poll.question})
+        # {'poll':sorted_options, 'question': poll_results.poll.question}
+        {'poll_results': poll_results}
+        )
+
+
 def vote_error(request: HttpRequest):
     """
     Error page for vote
