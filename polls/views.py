@@ -1,8 +1,9 @@
 from typing import List
-from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest, HttpResponseServerError
+from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest, HttpResponseServerError, HttpResponseRedirect
 from django.shortcuts import render
 from polls.classes.poll_result import PollResult, PollResultVoice
 from polls.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
+from django.urls import reverse
 
 from polls.models.vote_model import VoteModel
 from .dtos.poll_option_dto import PollOptionDto 
@@ -33,7 +34,7 @@ def dummy(request: HttpRequest):
      
     # render page for vote
     return render(request, 'polls/vote.html', {'poll': dummy_poll})
-
+    
 def submit_vote(request: HttpRequest): 
     """
     Submit the vote and get the result
@@ -43,7 +44,7 @@ def submit_vote(request: HttpRequest):
         return HttpResponseBadRequest("Error: method should be post")
     
     if 'vote' not in request.POST:
-        return HttpResponseBadRequest("Error: vote has not been passed")
+        return HttpResponseRedirect(reverse('polls:vote_error'))
 
     try:
         vote: VoteModel = VoteService.perform_vote(1, request.POST["vote"])
@@ -64,13 +65,18 @@ def results(request: HttpRequest):
     Render page with results. 
     """
     try:
-        # retrieve dummy poll
-        dummy_poll: PollDto = PollService.get_by_id("1")
         poll_results: PollResult = VoteService.calculate_result("1")
         sorted_options: List[PollResultVoice] = poll_results.get_sorted_options()
     except Exception:
         # internal error: you should inizialize DB first (error 500)
         return HttpResponseServerError("Dummy survey is not initialized. Please see README.md and create it.")
-    print(poll_results, sorted_options)
+
     return render(request, 'polls/results.html', 
         {'poll':sorted_options, 'question': poll_results.poll.question})
+def vote_error(request: HttpRequest):
+    """
+    Error page for vote
+    """
+    #TODO: temporary hardcoded poll retrieval. It should be retrieved from DB according to the poll id
+    dummy_poll: PollDto = PollService.get_by_id("1")
+    return render(request, 'polls/vote_error.html', {'poll': dummy_poll})

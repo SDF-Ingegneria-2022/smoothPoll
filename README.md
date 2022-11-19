@@ -2,7 +2,7 @@
 
 ## Prepare your enviroment to start coding
 
-### Inizialize virtual enviroment w. Pipenv
+### Inizialize virtual enviroment w/ Pipenv
 
 Before running any command remember to install eventual new dependencies:
 ```bash
@@ -76,6 +76,19 @@ This project is based on Django, so all usual Django rules and commands are vali
         ```
         PollService.create("sondaggio di prova", "che sondaggio facciamo?", [{"key": "risposta-1", "value": "Risposta 1"}, {"key": "risposta-2", "value": "Risposta 2"}])
         ```
+## Semantic versioning
+To create a new version use the `bump2version` command. The version system follow the [Semantic Versioning 2.0.0](https://semver.org/#semantic-versioning-200) guidelines.
+
+According to Semantic Versioning 2.0.0 the type of version increment can be:
+1. `major` : version when you make incompatible API changes
+1. `minor` : version when you add functionality in a backwards compatible manner
+1. `patch` : version when you make backwards compatible bug fixes
+
+### Example
+```bash
+bump2version minor
+```
+
 
 
 
