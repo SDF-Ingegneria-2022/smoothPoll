@@ -55,15 +55,18 @@ function copyLink(url) {
 
     <div class="container mt-5" >
         <p class="secondary">
-            Quando il sondaggio sarà chiuso, potrai vedere il risultato 
-            <a href="{% url 'polls:results' %}" title="Esiti sondaggio">su questa pagina</a>. 
+            {% comment %} Quando il sondaggio sarà chiuso, potrai vedere il risultato 
+            <a href="{% url 'polls:results' %}" title="Esiti sondaggio">su questa pagina</a>.  {% endcomment %}
             
+            <a class="btn btn-primary" href="{% url 'polls:results' %}" role="button">Vedi risultati</a>
+
+
             <button type="button" class="btn btn-secondary" 
                 onclick="copyLink('{{request.get_host}}{% url 'polls:results' %}')">
                 Copia link
             </button>
 
-            <a class="btn btn-primary" href="{% url 'polls:dummy' %}" role="button">Vota di nuovo</a>
+            <a class="btn btn-secondary" href="{% url 'polls:dummy' %}" role="button">Vota di nuovo</a>
         </p>
     </div>
 </div>

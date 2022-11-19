@@ -5,17 +5,19 @@
 {% block content %}
 
     <div class="d-flex justify-content-center">
-        <div class="card text-center" >
+        <div class="card text-center pt-3 pb-3" >
             <div class="card-body">
                 <h3 class="card-title text-primary">Benvenuto su SmoothPoll!</h3>
                 <h5 class="card-title text-info">L'applicazione al momento è in costruzione</h5> 
-                <p class="card-text">
+                
+                
+                <p class="card-text mt-5 mb-5">
                     Perché nel frattempo non provi il 
                     <a href="{% url 'polls:dummy' %}">sondaggio di esempio</a> 
                     che abbiamo preparato per te?
                 </p>
 
-                <div class="container">
+                <div class="container mt-5">
                     <a name="" id="" role="button"
                         class="btn btn-primary" 
                         href="{% url 'polls:dummy' %}" >
