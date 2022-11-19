@@ -59,7 +59,7 @@ function copyLink(url) {
             <a href="{% url 'polls:results' %}" title="Esiti sondaggio">su questa pagina</a>. 
             
             <button type="button" class="btn btn-secondary" 
-                onclick="copyLink('{{request.get_host}}{% url 'polls:dummy' %}')">
+                onclick="copyLink('{{request.get_host}}{% url 'polls:results' %}')">
                 Copia link
             </button>
 
