@@ -1,0 +1,74 @@
+{% extends 'global/base.html' %}
+
+{% block body %}
+
+    {# Page header #}
+    {% block header %}
+    <header>
+        <div class="container-fluid bg-primary text-light p-2 pt-3">
+            <div class="d-flex justify-content-center">
+                <span class="text-center">
+                    <a href="{% url 'home' %}" >
+                        <span class="logo">
+                            {% load static %}
+                            <img src="{% static 'logo-smooth-poll.svg' %}" 
+                                alt="SmoothPoll" title="SmoothPoll Logo" 
+                                class="navbar-brand" />
+                        </span>
+                    </a>
+                    {% comment %} <span class="motto">
+                        <p>Crea e vota sondaggi</p>
+                    </span> {% endcomment %}
+                </span>
+            </div> 
+        </div>
+        
+    </header>
+
+    {% endblock header %}
+
+    {# Page container #}
+    {% block container %}
+
+        <div class="container pt-5 pb-5">
+            {# Page content (proper page content, specific for each page) #}
+            {# Use hineritance (extends) to define it #}
+            {% block content %}{% endblock content %}
+        </div>
+
+    {% endblock container %}
+
+    {# Page footer #}
+    {% block footer %}
+        <footer>
+            {# App name #}
+            <div class="bg-secondary text-light"> 
+                <div class="container p-3">
+                    <p class="text-center m-0">
+                        SmoothPoll @ {% now "Y" %} - Progetto didattico di Ing. del Software <br />
+                        Università degli Studi di Udine, A.A. 2022/23
+                    </p>
+                </div>
+            </div>
+
+            {# Repo reference #}
+            <div class="bg-dark text-light">
+                <div class="container p-2">
+                    <p class="text-center m-0">
+                        Repository progetto: 
+                        <a target="_blank" title="Github Repository SmoothPoll"
+                            href="https://github.com/SDF-Ingegneria-2022/smoothPoll" >
+                            https://github.com/SDF-Ingegneria-2022/smoothPoll
+                        </a> 
+                    </p>
+                </div>
+            </div>
+
+        </footer>
+    {% endblock footer %}
+
+{% endblock body %}
+
+
+
+

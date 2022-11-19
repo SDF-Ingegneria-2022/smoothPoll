@@ -1,3 +1,5 @@
+import os
+from typing import List, Any
 """
 Django settings for SmoothPoll project.
 
@@ -25,7 +27,7 @@ SECRET_KEY = 'django-insecure-v3daz3lmbf8ksvfubkdz7nchc*0&#5sf+sa$*7+$+e((qyn6#5
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS: List[Any] = [] 
 
 
 # Application definition
@@ -37,6 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'polls', 
+    'bootstrap5', 
 ]
 
 MIDDLEWARE = [
@@ -54,7 +59,10 @@ ROOT_URLCONF = 'SmoothPoll.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+
+        # all templates in a global folder
+        'DIRS': [os.path.join(BASE_DIR, 'templates')], 
+        
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -116,6 +124,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
+
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field

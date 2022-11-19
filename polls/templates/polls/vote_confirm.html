@@ -1,0 +1,74 @@
+{% extends 'global/skeleton.html' %}
+
+{% block pagename %}Voto confermato{% endblock pagename %}
+
+{% block customjs %}
+<script>
+/**
+ * Copy an url on user's clipboard.
+ * 
+ * Inspired to: https://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_copy_clipboard 
+ */
+function copyLink(url) {
+
+    // Copy the text inside user 
+    navigator.clipboard.writeText(url);
+  
+    // Alert the copied text
+    alert("Link copiato!");
+}
+</script>
+{% endblock customjs %}
+
+
+
+{% block content %}
+
+<div class="container text-center m-5">
+    <h1>{{vote.poll.name}}</h1>
+    <h2 class="text-info">Voto registrato!</h2>
+</div>
+
+<div class="container">
+
+    <h3 class="text-success">Grazie di aver votato! Il tuo voto è stato registrato.</h3>
+    {% comment %} <p class="text-secondary">(Essendo questo solo un prototipo, il voto non è stato registrato)</p> {% endcomment %}
+
+    <div class="container m-3">
+        <div class="row">
+            <div class="col-2">
+                <p class="text-secondary">Quesito:</p>
+            </div>
+            <div class="col-10">
+                <p class="fw-bold">{{vote.poll.question}}</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-2">
+                <p class="text-secondary">Opzione scelta: </p>
+            </div>
+            <div class="col-10">
+                <p class="fw-bold fs-5 text-primary">{{ vote.poll_option.value }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-5" >
+        <p class="secondary">
+            {% comment %} Quando il sondaggio sarà chiuso, potrai vedere il risultato 
+            <a href="{% url 'polls:results' %}" title="Esiti sondaggio">su questa pagina</a>.  {% endcomment %}
+            
+            <a class="btn btn-primary" href="{% url 'polls:results' %}" role="button">Vedi risultati</a>
+
+
+            <button type="button" class="btn btn-secondary" 
+                onclick="copyLink('{{request.get_host}}{% url 'polls:results' %}')">
+                Copia link
+            </button>
+
+            <a class="btn btn-secondary" href="{% url 'polls:dummy' %}" role="button">Vota di nuovo</a>
+        </p>
+    </div>
+</div>
+
+{% endblock content %}
