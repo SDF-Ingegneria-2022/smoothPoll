@@ -1,0 +1,37 @@
+{% extends 'global/skeleton.html' %}
+
+{% block pagename %}Visualizza i risultati{% endblock pagename %}
+
+{% block content %}
+<div class="container text-center m-5">
+    <h1>{{question}}</h1>
+</div>
+<div class="container">
+    <div class="container text-center m-5">
+            <div class="row">
+                {%for option in poll %}
+                <div class="col">
+                    <p class="fw-bold text-secondary">{{option.option.value}} </p>
+                    <p class="fw-bold fs-5 text-primary"> ha ricevuto {{option.n_votes}} voti</p>
+                </div> 
+                {% endfor %}
+            </div>
+            
+    </div>
+    <div class="container text-center m-5">
+    <a name="" id="" role="button"
+        class="btn btn-primary" 
+        href="{% url 'polls:dummy' %}" >
+        Vota di nuovo
+    </a>
+    <a name="" id="" role="button"
+        class="btn btn-secondary" 
+        href="https://github.com/SDF-Ingegneria-2022/smoothPoll/issues" 
+        target="_blank">
+        Lasciaci un Feedback
+    </a> 
+    </div>
+</div>
+</div>
+{% endblock content %}
+
