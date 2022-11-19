@@ -16,7 +16,15 @@
     {% bootstrap_javascript %}
 
     {# Custom JS #}
-    {% block customjs %}{% endblock customjs %}
+    {% block customjs %}{% endblock customjs %} 
+
+    {# basic style #}
+    <style>
+        span.logo img {
+            max-width: 380px;
+            width: 100%;
+        }
+    </style>
 
 </head>
 <body class="body">
