@@ -23,12 +23,12 @@
         <div class="container m-3">
             {%for voted_option in poll_results.get_sorted_options %}
                 <div class="row">
-                    <div class="col-2">
+                    <div class="col-6">
                         <p class="text-secondary">{{forloop.counter}}.
                             <span class="{% if forloop.counter == 1 %}text-success fw-bold
                             {% else %}text-dark{% endif %}">{{voted_option.option.value}}</span></p>
                     </div>
-                    <div class="col-10">
+                    <div class="col-6">
                         <p class="fw-bold text-primary"> ha ricevuto {{voted_option.n_votes}} voti</p>
                     </div>
                 </div>
