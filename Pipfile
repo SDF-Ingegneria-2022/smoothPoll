@@ -11,6 +11,7 @@ mypy = "*"
 django-stubs = "*"
 django-bootstrap-v5 = "*"
 bumpversion = "*"
+pytest-django = "*"
 
 [dev-packages]
 
