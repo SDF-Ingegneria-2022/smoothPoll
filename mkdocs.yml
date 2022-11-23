@@ -1,7 +1,10 @@
 site_name: SmoothPoll docs
+repo_url: https://github.com/SDF-Ingegneria-2022/smoothPoll
 
 theme:
   name: "material"
+
+dev_addr: '127.0.0.1:8001'
 
 plugins:
   - mkdocstrings
