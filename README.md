@@ -89,6 +89,11 @@ According to Semantic Versioning 2.0.0 the type of version increment can be:
 bump2version minor
 ```
 
+## Code documentation
+If you have updated or if you only want to see the documentation in locale, run:
+```bash
+mkdocs serve
+```
 
 
 
