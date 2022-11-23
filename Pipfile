@@ -12,6 +12,9 @@ django-stubs = "*"
 django-bootstrap-v5 = "*"
 bumpversion = "*"
 pytest-django = "*"
+mkdocs = "*"
+mkdocstrings = {extras = ["python"], version = "*"}
+mkdocs-material = "*"
 
 [dev-packages]
 
