@@ -1,0 +1,9 @@
+site_name: SmoothPoll docs
+
+theme:
+  name: "material"
+
+plugins:
+  - mkdocstrings
+
+
