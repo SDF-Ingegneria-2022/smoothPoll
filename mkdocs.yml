@@ -5,5 +5,5 @@ theme:
 
 plugins:
   - mkdocstrings
-
-
+  - search
+  
