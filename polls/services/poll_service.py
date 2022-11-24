@@ -1,7 +1,9 @@
 from typing import List
 from polls.dtos.poll_dto import PollDto
 from polls.dtos.poll_option_dto import PollOptionDto
+from polls.exceptions.poll_not_valid_creation_exception import PollNotValidCreationException
 from polls.models import PollModel
+from polls.models.poll_option_model import PollOptionModel
 from polls.services.poll_option_service import PollOptionService
 
 
@@ -9,22 +11,28 @@ class PollService:
     """Class to handle all poll related operations"""
     
     @staticmethod
-    def create(name: str, question: str, options: List[dict]) -> PollDto: 
+    def create(name: str, question: str, options: List[dict]) -> PollModel: 
         """Creates a new poll.
         Args:
-            name: Name of the poll.
-            question: Question of the poll.
-            options: List of options for the poll.
+            name: Name of the poll. It has to be at least 1 characters long.
+            question: Question of the poll. It has to be at least 1 characters long.
+            options: List of options for the poll. It has to have at least 1 option.
+        Raises:
+            PollNotValidCreationException: Is raised when the poll is not valid. When the input params not meet the requirements.
         Returns:
-            PollDto: The created poll
+            PollModel: The created poll.
         """
+        if len(name)<1 or len(question)<1 or len(options)<1:
+            raise PollNotValidCreationException("Poll not valid for creation")
+        
         new_poll: PollModel = PollModel(name=name, question=question)
         new_poll.save()
         
-        #TODO: Understand what is the "key" param porpouse.
-        created_poll_options: List[PollOptionDto] = [PollOptionService.create(option["key"], option["value"], new_poll.id) for option in options]
+        for option in options:
+            new_option: PollOptionModel = PollOptionModel(key=option["key"],value=option["value"], poll_fk_id=new_poll.id)
+            new_option.save()
         
-        return PollDto(name=new_poll.name, question=new_poll.question, options=created_poll_options)
+        return new_poll
     
     @staticmethod
     def get_by_id(id:str) -> PollDto:
