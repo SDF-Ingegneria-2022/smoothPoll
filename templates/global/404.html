@@ -1,0 +1,23 @@
+{% extends 'global/skeleton.html' %}
+
+{% block pagename %}Visualizza i risultati{% endblock pagename %}
+
+{% block content %}
+{% load static %}
+<div class="container">
+    <div class="row">
+        <div class="col-4 justify-content-center">
+            <div class="container404">
+                <img src="{% static '404.svg' %}" alt=""/>
+            </div>
+            <a href="https://storyset.com/web">Web illustrations by Storyset</a>
+        </div>
+        <div class="col-8">
+        OPS! Non abbiamo trovato nulla
+        </div>
+        
+    </div>
+</div>
+
+
+{% endblock content %}
