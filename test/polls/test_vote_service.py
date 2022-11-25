@@ -128,7 +128,6 @@ class TestPollService:
 
         voted_poll: PollModel = test_polls['voted_poll']
         id = voted_poll.id
-        option_id = voted_poll.options()[0].id
         voted_poll.delete()
 
         assert_that(VoteService.calculate_result) \
