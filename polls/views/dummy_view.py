@@ -6,8 +6,8 @@ from polls.exceptions.poll_does_not_exist_exception import PollDoesNotExistExcep
 from django.urls import reverse
 
 from polls.models.vote_model import VoteModel
-from .services.poll_service import PollService
-from .exceptions.poll_option_unvalid_exception import PollOptionUnvalidException
+from polls.services.poll_service import PollService
+from polls.exceptions.poll_option_unvalid_exception import PollOptionUnvalidException
 from polls.services.vote_service import VoteService
 
 def index(request):
@@ -79,7 +79,11 @@ def vote_error(request: HttpRequest):
     """
     #TODO: temporary hardcoded poll retrieval. It should be retrieved from DB according to the poll id
     dummy_poll = PollService.get_poll_by_id("1")
-    return render(request, 'polls/vote.html', {'poll': dummy_poll})
+    return render(request, 'polls/vote.html', 
+        {
+            'poll': dummy_poll, 
+            'error': "Attenzione! Non è stata espressa nessuna preferenza!"
+        })
 
 
 def all_polls(request: HttpRequest):

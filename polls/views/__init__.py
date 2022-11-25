@@ -1,1 +1,1 @@
-from polls.views.dummy import *
+from polls.views.dummy_view import *
