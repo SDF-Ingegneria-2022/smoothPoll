@@ -82,3 +82,7 @@ def vote_error(request: HttpRequest):
     #TODO: temporary hardcoded poll retrieval. It should be retrieved from DB according to the poll id
     dummy_poll = PollService.get_poll_by_id("1")
     return render(request, 'polls/vote_error.html', {'poll': dummy_poll})
+
+
+def all_polls(request: HttpRequest):
+    return render(request, 'polls/all_polls.html', {'some_list': [x for x in range(5)]})
