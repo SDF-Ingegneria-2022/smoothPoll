@@ -99,3 +99,12 @@ def dummy_majority(request: HttpRequest):
 
     # render page for vote
     return render(request, 'polls/majority-vote.html', {'poll_results': poll_results})
+
+def majority_results(request: HttpRequest):
+    """
+    #TODO: improve readability
+    Render page with results. 
+    """
+    return render(request, 'polls/dummy-majority/results.html', 
+        # {'poll':sorted_options, 'question': poll_results.poll.question}
+        )
