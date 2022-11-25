@@ -1,3 +1,4 @@
+from polls.classes.vote_builder import VoteBuilder
 from polls.models.poll_model import PollModel
 from polls.models.poll_option_model import PollOptionModel
 from polls.models.vote_model import VoteModel
@@ -15,30 +16,18 @@ class VoteService:
     def perform_vote(poll_id: str, poll_choice_id: str) -> VoteModel:
         """
         Perform a vote on a survey.
+        Raises: 
+            PollDoesNotExistException: you tried to vote a not existent poll
+            PollOptionUnvalidException: you tried to vote an unvalid option 
+                (id doesn't exists or it doesn't belong to this poll)
         """
 
-        # vote = VoteFactory.create_vote(poll_id, poll_choice_id)
+        vote_builder = VoteBuilder()
 
-        # check if poll exists
-        try:
-            poll: PollModel = PollModel.objects.get(id=poll_id)
-            # todo: add here "is open" filter
-        except ObjectDoesNotExist:
-            raise PollDoesNotExistException(f"Error: Poll with id={poll_id} does not exist")
-
-        # check if option exists
-        try:
-            poll_choice: PollOptionModel = PollOptionModel.objects.filter(poll_fk=poll.id).get(id=poll_choice_id)
-        except ObjectDoesNotExist:
-            raise PollOptionUnvalidException(f"Error: PollOption with id={poll_choice_id} does " +
-            f"not exist or it is not related to Poll with id={poll_id}")
-
-        # todo: add a check if user alredy voted this
-
-        # create vote object
-        vote: VoteModel = VoteModel()
-        vote.poll_option = poll_choice
+        vote_builder.set_poll(poll_id)
+        vote_builder.set_voted_option(poll_choice_id)
         
+        vote: VoteModel = vote_builder.perform_creation()
         vote.save()
         
         return vote
