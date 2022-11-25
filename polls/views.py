@@ -84,3 +84,18 @@ def vote_error(request: HttpRequest):
     #TODO: temporary hardcoded poll retrieval. It should be retrieved from DB according to the poll id
     dummy_poll: PollDto = PollService.get_by_id("1")
     return render(request, 'polls/vote_error.html', {'poll': dummy_poll})
+
+def majority_vote(request: HttpRequest): 
+    """
+    Dummy poll page, here user can try to vote.
+    """
+
+    try:
+        poll_results: PollResult = VoteService.calculate_result("1")
+        sorted_options: List[PollResultVoice] = poll_results.get_sorted_options()
+    except Exception:
+        # internal error: you should inizialize DB first (error 500)
+        return HttpResponseServerError("Dummy survey is not initialized. Please see README.md and create it.")
+
+    # render page for vote
+    return render(request, 'polls/majority-vote.html', {'poll_results': poll_results})
