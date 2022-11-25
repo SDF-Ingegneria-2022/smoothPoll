@@ -27,7 +27,7 @@ def dummy(request: HttpRequest):
 
     try:
         # retrieve dummy poll
-        dummy_poll: PollDto = PollService.get_by_id("1")
+        dummy_poll = PollService.get_poll_by_id("1")
     except Exception:
         # internal error: you should inizialize DB first (error 500)
         return HttpResponseServerError("Dummy survey is not initialized. Please see README.md and create it.")
@@ -49,12 +49,11 @@ def submit_vote(request: HttpRequest):
     try:
         vote: VoteModel = VoteService.perform_vote(1, request.POST["vote"])
     except PollOptionUnvalidException:
-        pass
+        pass # TODO: add error error page
     except PollDoesNotExistException:
-        pass
+        pass # TODO: add error 404 error page
 
     return render(request, 'polls/vote_confirm.html', 
-        # {'poll': vote.poll(), 'choice': vote.poll_option}
         {'vote': vote}
         )
     
@@ -66,7 +65,8 @@ def results(request: HttpRequest):
     """
     try:
         poll_results: PollResult = VoteService.calculate_result("1")
-        sorted_options: List[PollResultVoice] = poll_results.get_sorted_options()
+    except PollDoesNotExistException:
+        pass # TODO: add error 404 error page
     except Exception:
         # internal error: you should inizialize DB first (error 500)
         return HttpResponseServerError("Dummy survey is not initialized. Please see README.md and create it.")
@@ -82,5 +82,5 @@ def vote_error(request: HttpRequest):
     Error page for vote
     """
     #TODO: temporary hardcoded poll retrieval. It should be retrieved from DB according to the poll id
-    dummy_poll: PollDto = PollService.get_by_id("1")
+    dummy_poll: PollDto = PollService.get_poll_by_id("1")
     return render(request, 'polls/vote_error.html', {'poll': dummy_poll})
