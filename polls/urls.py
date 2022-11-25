@@ -10,5 +10,5 @@ urlpatterns = [
     path('dummy/results/', views.results, name='results'),
     path('dummy/vote-error/', views.vote_error, name='vote_error'),
     path('dummy-majority/', views.dummy_majority, name='dummy-majority'),
-    path('dummy-majority/results', views.majority_results, name='majority-results'),
+    path('dummy-majority/majority-results', views.majority_results, name='majority-results'),
 ]
