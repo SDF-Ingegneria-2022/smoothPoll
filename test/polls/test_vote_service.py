@@ -5,6 +5,8 @@ from assertpy import assert_that
 from polls.models.poll_model import PollModel
 from polls.models.poll_option_model import PollOptionModel
 from polls.services.vote_service import VoteService
+from polls.exceptions.poll_option_unvalid_exception import PollOptionUnvalidException
+from polls.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
 
 @pytest.fixture()
 def test_polls(request):
@@ -16,11 +18,13 @@ def test_polls(request):
     PollOptionModel(key="2", value="Valore 2", poll_fk=dummy_poll).save()
     PollOptionModel(key="3", value="Valore 3", poll_fk=dummy_poll).save()
 
-    def teardown():
-        dummy_poll.delete()
-    request.addfinalizer(teardown)
+    control_poll = PollModel(name="Dummy#02", question="Other dummy question?")
+    control_poll.save()
 
-    return {'voted_poll': dummy_poll}
+    PollOptionModel(key="1", value="Valore 1", poll_fk=control_poll).save()
+    PollOptionModel(key="2", value="Valore 2", poll_fk=control_poll).save()
+
+    return {'voted_poll': dummy_poll, 'control_poll': control_poll}
     
 class TestPollService:
 
@@ -87,7 +91,50 @@ class TestPollService:
         for voted_option in VoteService.calculate_result(poll.id).get_sorted_options(): 
             assert_that(voted_option.n_votes).is_equal_to(2)
 
+    @pytest.mark.django_db
+    def test_vote_wrong_option(self, test_polls):
+        """
+        Test that you cannot vote an option wich doesn't exist
+        """
     
+        voted_poll: PollModel = test_polls['voted_poll']
+        control_poll: PollModel = test_polls['control_poll']
+
+        assert_that(VoteService.perform_vote) \
+            .raises(PollOptionUnvalidException) \
+            .when_called_with(poll_id=voted_poll.id,  
+            poll_choice_id=control_poll.options()[0].id)
+
+    @pytest.mark.django_db
+    def test_vote_notexist_poll(self, test_polls):
+        """
+        Test that you cannot vote a pool wich doesn't exist
+        """
+
+        voted_poll: PollModel = test_polls['voted_poll']
+        id = voted_poll.id
+        option_id = voted_poll.options()[0].id
+        voted_poll.delete()
+
+        assert_that(VoteService.perform_vote) \
+            .raises(PollDoesNotExistException) \
+            .when_called_with(poll_id=id, poll_choice_id=option_id)
+
+    @pytest.mark.django_db
+    def test_get_results_notexistent(self, test_polls):
+        """
+        Test calculate results of not existent poll
+        """
+
+        voted_poll: PollModel = test_polls['voted_poll']
+        id = voted_poll.id
+        option_id = voted_poll.options()[0].id
+        voted_poll.delete()
+
+        assert_that(VoteService.calculate_result) \
+            .raises(PollDoesNotExistException) \
+            .when_called_with(poll_id=id)
+
 
 
 
