@@ -1,10 +1,9 @@
 from typing import List
-from polls.dtos.poll_dto import PollDto
-from polls.dtos.poll_option_dto import PollOptionDto
+from django.core.exceptions import ObjectDoesNotExist
 from polls.exceptions.poll_not_valid_creation_exception import PollNotValidCreationException
+from polls.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
 from polls.models import PollModel
 from polls.models.poll_option_model import PollOptionModel
-from polls.services.poll_option_service import PollOptionService
 
 
 class PollService:
@@ -22,6 +21,7 @@ class PollService:
         Returns:
             PollModel: The created poll.
         """
+
         if len(name)<1 or len(question)<1 or len(options)<1:
             raise PollNotValidCreationException("Poll not valid for creation")
         
@@ -35,11 +35,17 @@ class PollService:
         return new_poll
     
     @staticmethod
-    def get_by_id(id:str) -> PollDto:
+    def get_poll_by_id(id:str) -> PollModel:
         """Get a poll by id.
         Args:
             id: Id of the poll.
+        Raises:
+            PollDoesNotExistException: raised when you retrieve a non-existent poll
         """
-        poll: PollModel = PollModel.objects.get(id=id)
-        poll_options: List[PollOptionDto] = PollOptionService.get_by_poll_id(poll.id)
-        return PollDto(name=poll.name, question=poll.question, options=poll_options)
+
+        try:
+            poll: PollModel = PollModel.objects.get(id=id)
+        except ObjectDoesNotExist:
+            raise PollDoesNotExistException(f"Error: poll with id={id} does not exit")    
+        
+        return poll
