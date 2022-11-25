@@ -18,7 +18,9 @@ class VoteBuilder:
     - use perform_creation to confirm your choice and generate the model
       (call it just once)
 
-    At end of process object is not saved.
+    If something goes wrong, proper exception will be thrown.
+
+    At end of process object is NOT saved (call save() to do so)
     """
 
     def __init__(self) -> None:
@@ -28,6 +30,13 @@ class VoteBuilder:
         
 
     def set_poll(self, poll_id: str) -> "PollVoteBuilder":
+        """
+        Set the poll you want to vote. It resets choosed option
+        Args:
+            poll_id: poll you want to vote
+        Raises:
+            PollDoesNotExistException: you passed a not existent poll
+        """
         
         self.__voted_option = None
         
@@ -40,6 +49,14 @@ class VoteBuilder:
         return self
 
     def set_voted_option(self, poll_option_id: str) -> "PollVoteBuilder":
+        """
+        Set the option you want to vote
+        Args:
+            poll_option_id: your choice you want to vote
+        Raises:
+            PollOptionUnvalidException: you passed an option that does not belong to poll
+                or you passed a not existent option
+        """
         
         try:
             self.__voted_option: PollOptionModel = PollOptionModel.objects \
@@ -53,6 +70,18 @@ class VoteBuilder:
         return self
     
     def perform_creation(self) -> VoteModel:
+        """
+        Create VoteModel instance using passed (and validated) poll and option. 
+        instance is not yet saved. Call save() to store it in DB.
+        Raises:
+            PollDoesNotExistException: poll is unvalid
+            PollOptionUnvalidException: poll option is unvalid
+        """
+
+        if self.__poll is None:
+            raise PollDoesNotExistException()
+        if self.__voted_option is None:
+            raise PollOptionUnvalidException()
         
         if self.__vote_model is not None:
             return self.__vote_model
