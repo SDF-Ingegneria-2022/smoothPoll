@@ -85,7 +85,7 @@ def vote_error(request: HttpRequest):
     dummy_poll: PollDto = PollService.get_by_id("1")
     return render(request, 'polls/vote_error.html', {'poll': dummy_poll})
 
-def majority_vote(request: HttpRequest): 
+def dummy_majority(request: HttpRequest): 
     """
     Dummy poll page, here user can try to vote.
     """
