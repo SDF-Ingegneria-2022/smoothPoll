@@ -1,13 +1,11 @@
 from typing import List
 from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest, HttpResponseServerError, HttpResponseRedirect
 from django.shortcuts import render
-from polls.classes.poll_result import PollResult, PollResultVoice
+from polls.classes.poll_result import PollResult
 from polls.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
 from django.urls import reverse
 
 from polls.models.vote_model import VoteModel
-from .dtos.poll_option_dto import PollOptionDto 
-from .dtos.poll_dto import PollDto
 from .services.poll_service import PollService
 from .exceptions.poll_option_unvalid_exception import PollOptionUnvalidException
 from polls.services.vote_service import VoteService
@@ -82,5 +80,5 @@ def vote_error(request: HttpRequest):
     Error page for vote
     """
     #TODO: temporary hardcoded poll retrieval. It should be retrieved from DB according to the poll id
-    dummy_poll: PollDto = PollService.get_poll_by_id("1")
+    dummy_poll = PollService.get_poll_by_id("1")
     return render(request, 'polls/vote_error.html', {'poll': dummy_poll})
