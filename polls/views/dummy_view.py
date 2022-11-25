@@ -10,8 +10,6 @@ from .services.poll_service import PollService
 from .exceptions.poll_option_unvalid_exception import PollOptionUnvalidException
 from polls.services.vote_service import VoteService
 
-
-
 def index(request):
     """
     Hello world in our first app
@@ -81,7 +79,7 @@ def vote_error(request: HttpRequest):
     """
     #TODO: temporary hardcoded poll retrieval. It should be retrieved from DB according to the poll id
     dummy_poll = PollService.get_poll_by_id("1")
-    return render(request, 'polls/vote_error.html', {'poll': dummy_poll})
+    return render(request, 'polls/vote.html', {'poll': dummy_poll})
 
 
 def all_polls(request: HttpRequest):
