@@ -16,6 +16,7 @@ mkdocs = "*"
 mkdocstrings = {extras = ["python"], version = "*"}
 mkdocs-material = "*"
 assertpy = "*"
+python-dotenv = "*"
 
 [dev-packages]
 
