@@ -1,5 +1,6 @@
+from typing import List
 from django.core.exceptions import ObjectDoesNotExist
-from polls.classes.majority_poll_result import MajorityPollResult
+#from polls.classes.majority_poll_result import MajorityPollResult
 from polls.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
 from polls.exceptions.poll_option_rating_unvalid_exception import PollOptionRatingUnvalidException
 from polls.exceptions.poll_option_unvalid_exception import PollOptionUnvalidException
@@ -12,9 +13,9 @@ class MajorityVoteService:
     """Class that handles vote procedures for the majority vote case"""
 
     @staticmethod
-    def perform_vote(poll_id: str, poll_choice_id: str, majority_rating_choice_id: str) -> MajorityVoteModel:
+    def perform_vote(poll_id: str, options: List[dict]) -> MajorityVoteModel:
         """
-        Perform a vote on a majority vote survey
+        Perform a vote on a majority vote poll
         """
 
         # check if poll exists
@@ -48,8 +49,8 @@ class MajorityVoteService:
         
         return vote
 
-    @staticmethod
-    def calculate_result(poll_id: str) -> MajorityPollResult:
+    #@staticmethod
+    #def calculate_result(poll_id: str) -> MajorityPollResult:
         """
         Calculate result of a majority poll.
         """

@@ -1,6 +1,6 @@
 from typing import List
 from polls.exceptions.majority_number_of_ratings_not_valid import MajorityNumberOfRatingsNotValid
-from polls.models.majority_option import MajorityOption
+from polls.models.majority_option_model import MajorityOption
 from polls.models.poll_option_model import PollOptionModel
 
 class MajorityPollOptionService:
