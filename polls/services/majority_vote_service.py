@@ -1,4 +1,5 @@
 from django.core.exceptions import ObjectDoesNotExist
+from polls.classes.majority_poll_result import MajorityPollResult
 from polls.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
 from polls.exceptions.poll_option_rating_unvalid_exception import PollOptionRatingUnvalidException
 from polls.exceptions.poll_option_unvalid_exception import PollOptionUnvalidException
@@ -11,7 +12,7 @@ class MajorityVoteService:
     """Class that handles vote procedures for the majority vote case"""
 
     @staticmethod
-    def perform_vote(poll_id: str, poll_choice_id: str, majority_rating_choice_id: int) -> MajorityVoteModel:
+    def perform_vote(poll_id: str, poll_choice_id: str, majority_rating_choice_id: str) -> MajorityVoteModel:
         """
         Perform a vote on a majority vote survey
         """
@@ -31,9 +32,8 @@ class MajorityVoteService:
             f"not exist or it is not related to Poll with id={poll_id}")
 
         # check if rating choice exists
-
         try:
-            majority_rating_choice: MajorityVoteModel = MajorityVoteModel.objects.filter(poll_fk=poll_id).filter(poll_option=poll_choice_id).get(id= majority_rating_choice_id)
+            majority_rating_choice: MajorityVoteModel = MajorityVoteModel.objects.filter(poll_fk=poll_id).filter(poll_option=poll_choice_id).get(id=majority_rating_choice_id)
         except ObjectDoesNotExist:
             raise PollOptionRatingUnvalidException(f"Error: PollOptionRating with id={majority_rating_choice_id} does " +
             f"not exist or it is not related to PollOption with id={poll_choice_id} or the Poll with id={poll_id}")
@@ -42,9 +42,21 @@ class MajorityVoteService:
 
         # create vote object
         vote: MajorityVoteModel = MajorityVoteModel()
-        vote.poll_option = poll_choice
-        vote.rating = majority_rating_
+        vote.rating_option = majority_rating_choice
         
         vote.save()
         
         return vote
+
+    @staticmethod
+    def calculate_result(poll_id: str) -> MajorityPollResult:
+        """
+        Calculate result of a majority poll.
+        """
+
+        try:
+            poll: PollModel = PollModel.objects.get(id=poll_id)
+        except ObjectDoesNotExist:
+            raise PollDoesNotExistException(f"Poll with id={poll_id} does not exist")
+
+        return MajorityPollResult(poll)

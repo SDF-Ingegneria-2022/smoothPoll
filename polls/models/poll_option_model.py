@@ -1,5 +1,8 @@
+from typing import List
 from django.db import models
 from django.db.models import CharField
+
+from polls.models.majority_option import MajorityOption
 
 from ..constants.models_constants import POLL_MODEL_NAME
 
@@ -15,3 +18,6 @@ class PollOptionModel(models.Model):
             'value': self.value, 
             'poll': str(self.poll_fk)
         })
+
+    def ratings(self) -> List[MajorityOption]:
+        return list(MajorityOption.objects.filter(poll_option=self.poll_fk))
