@@ -5,16 +5,26 @@
 {% block content %}
 {% load static %}
 <div class="container">
-    <div class="row">
-        <div class="col-4 justify-content-center">
+    <div class="row align-items-center">
+        <div class="col-md-6 order-md-1">
+            <p class="fs-1 fw-bold">
+                {% if error_message is not None %}
+                    {{ error_message }}
+                {% else %}
+                    Oops! La pagina che stavi cercando non esiste.
+                {% endif %}
+            </p>
+        </div>
+        <div class="col-md-6 order-md-0 justify-content-center">
             <div class="container404">
                 <img src="{% static '404.svg' %}" alt=""/>
             </div>
-            <a href="https://storyset.com/web">Web illustrations by Storyset</a>
+            <div class="text-center"> 
+                <a href="https://storyset.com/web" class="link-info">Web illustrations by Storyset</a>
+            </div>
+            
         </div>
-        <div class="col-8">
-        OPS! Non abbiamo trovato nulla
-        </div>
+        
         
     </div>
 </div>
