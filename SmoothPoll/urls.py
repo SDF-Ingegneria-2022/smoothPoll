@@ -26,3 +26,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('polls/', include('polls.urls'), name="polls"),
 ]
+
+handler404 = 'SmoothPoll.views.error_404_view'
