@@ -1,7 +1,7 @@
 from django.db import models
-from polls.constants.models_constants import POLL_OPTION_MODEL_NAME
+from polls.constants.models_constants import MAJORITY_VOTE_MODEL_NAME, POLL_OPTION_MODEL_NAME
 
-class MajorityOption(models.Model):
+class MajorityOptionModel(models.Model):
     """Class which represents the majority vote choice and the
     rating for it"""
     
@@ -10,6 +10,9 @@ class MajorityOption(models.Model):
 
     poll_option: models.ForeignKey = models.ForeignKey(POLL_OPTION_MODEL_NAME, on_delete=models.CASCADE)
     """Choosed pool option"""
+
+    poll_rating: models.ForeignKey = models.ForeignKey(MAJORITY_VOTE_MODEL_NAME, on_delete=models.CASCADE)
+    """Rating of a poll option"""
 
     def __str__(self):
         return str({
