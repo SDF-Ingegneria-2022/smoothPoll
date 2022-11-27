@@ -3,7 +3,7 @@
 {% block pagename %}Esprimi il tuo voto{% endblock pagename %}
 
 {% block content %}
-<div class="container text-center m-5">
+<div class="container text-center mt-5 mb-5">
     <h1>{{ poll.name }}</h1>
     <h2 class="text-info">Esprimi il tuo voto</h2>
 </div>
@@ -20,6 +20,12 @@
 
             {% csrf_token %}
 
+            {% if error is not None %}
+            <div class="alert alert-danger" role="alert">
+                {{ error }}
+            </div>
+            {% endif %}
+
             {# Form Options #}
             <div class="container m-3">
 
@@ -31,10 +37,6 @@
                         </label>
                     </div>
                 {% endfor %}
-
-                {% if error is not None %}<div class="alert alert-danger" role="alert">
-                    {{error}}
-                </div>{% endif %}
             </div>
 
             {# Confirm button #}
