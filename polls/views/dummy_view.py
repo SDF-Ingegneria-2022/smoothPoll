@@ -48,13 +48,14 @@ def submit_vote(request: HttpRequest):
         # GET REQUEST --> I wanna render a page wich shows performed vote
         # (reloadable as many times user wants)
 
-        # 
+        # retrieve session saved vote ID
         vote_id = request.session.get("vote-submit-id")
         if vote_id is None:
             request.session['vote-submit-error'] = "Errore! Non hai ancora caricato " \
                 + "nessun voto. Usa questo form per esprimere la tua preferenza."
             return HttpResponseRedirect(reverse('polls:dummy'))
 
+        # retrieve vote 
         try:
             vote = VoteService.get_vote_by_id(vote_id)
         except VoteDoesNotExistException:
@@ -62,6 +63,7 @@ def submit_vote(request: HttpRequest):
                 + "nessun voto. Usa questo form per esprimere la tua preferenza."
             return HttpResponseRedirect(reverse('polls:dummy'))
         
+        # show confirm page
         return render(request, 'polls/vote_confirm.html', {'vote': vote})
 
     # POST REQUEST --> I wanna save the vote, save it in session and reload
@@ -110,7 +112,7 @@ def results(request: HttpRequest):
     try:
         poll_results: PollResult = VoteService.calculate_result("1")
     except PollDoesNotExistException:
-        pass # TODO: add error 404 error page
+        raise Http404
     except Exception:
         # internal error: you should inizialize DB first (error 500)
         return HttpResponseServerError("Dummy survey is not initialized. Please see README.md and create it.")
