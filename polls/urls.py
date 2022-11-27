@@ -8,5 +8,4 @@ urlpatterns = [
     path('dummy/', views.dummy, name='dummy'),
     path('dummy/submit-vote/', views.submit_vote, name='submit_vote'),
     path('dummy/results/', views.results, name='results'),
-    path('dummy/vote-error/', views.vote_error, name='vote_error'),
 ]

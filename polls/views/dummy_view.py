@@ -1,4 +1,5 @@
 from typing import List
+from django.http import Http404  
 from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest, HttpResponseServerError, HttpResponseRedirect
 from django.shortcuts import render
 from polls.classes.poll_result import PollResult
@@ -27,9 +28,16 @@ def dummy(request: HttpRequest):
     except Exception:
         # internal error: you should inizialize DB first (error 500)
         return HttpResponseServerError("Dummy survey is not initialized. Please see README.md and create it.")
-     
-    # render page for vote
-    return render(request, 'polls/vote.html', {'poll': dummy_poll})
+
+    eventual_error = request.session.get('vote-submit-error')
+    if eventual_error is not None:
+        del request.session['vote-submit-error']
+
+    # render vote form (with eventual error message)
+    return render(request, 'polls/vote.html', {
+        'poll': dummy_poll, 
+        'error': eventual_error
+        })
     
 def submit_vote(request: HttpRequest): 
     """
@@ -37,21 +45,32 @@ def submit_vote(request: HttpRequest):
     """
 
     if request.method != "POST":
-        return HttpResponseBadRequest("Error: method should be post")
+        request.session['vote-submit-error'] = "Errore! Il voto deve essere " \
+            + "inviato tramite l'apposito form. Se continui a vedere questo " \
+            + "messaggio contatta gli sviluppatori."
+        return HttpResponseRedirect(reverse('polls:dummy'))
     
     if 'vote' not in request.POST:
-        return HttpResponseRedirect(reverse('polls:vote_error'))
+        request.session['vote-submit-error'] = "Errore! Per confermare il voto " \
+            + "devi esprimere una preferenza."
+        return HttpResponseRedirect(reverse('polls:dummy'))
 
     try:
         vote: VoteModel = VoteService.perform_vote(1, request.POST["vote"])
     except PollOptionUnvalidException:
-        pass # TODO: add error error page
+        request.session['vote-submit-error'] = "Errore! Il voto deve essere " \
+            + "inviato tramite l'apposito form. Se continui a vedere questo " \
+            + "messaggio contatta gli sviluppatori."
+        return HttpResponseRedirect(reverse('polls:dummy'))
+        
     except PollDoesNotExistException:
-        pass # TODO: add error 404 error page
+        raise Http404
 
-    return render(request, 'polls/vote_confirm.html', 
-        {'vote': vote}
-        )
+    # clean session error
+    if request.session.get('vote-submit-error') is not None:
+        del request.session['vote-submit-error']
+
+    return render(request, 'polls/vote_confirm.html', {'vote': vote})
     
 
 def results(request: HttpRequest):
@@ -71,19 +90,6 @@ def results(request: HttpRequest):
         # {'poll':sorted_options, 'question': poll_results.poll.question}
         {'poll_results': poll_results}
         )
-
-
-def vote_error(request: HttpRequest):
-    """
-    Error page for vote
-    """
-    #TODO: temporary hardcoded poll retrieval. It should be retrieved from DB according to the poll id
-    dummy_poll = PollService.get_poll_by_id("1")
-    return render(request, 'polls/vote.html', 
-        {
-            'poll': dummy_poll, 
-            'error': "Attenzione! Non è stata espressa nessuna preferenza!"
-        })
 
 
 def all_polls(request: HttpRequest):
