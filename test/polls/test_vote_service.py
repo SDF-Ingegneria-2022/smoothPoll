@@ -7,6 +7,7 @@ from polls.models.poll_option_model import PollOptionModel
 from polls.services.vote_service import VoteService
 from polls.exceptions.poll_option_unvalid_exception import PollOptionUnvalidException
 from polls.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
+from polls.exceptions.vote_does_not_exixt_exception import VoteDoesNotExistException
 
 @pytest.fixture()
 def test_polls(request):
@@ -133,6 +134,40 @@ class TestPollService:
         assert_that(VoteService.calculate_result) \
             .raises(PollDoesNotExistException) \
             .when_called_with(poll_id=id)
+
+    @pytest.mark.django_db
+    def test_get_vote_by_id(self, test_polls): 
+        """
+        Test if I can retrieve a vote from its ID
+        """
+
+        poll: PollModel = test_polls['voted_poll']
+
+        performed_vote = VoteService.perform_vote(poll_id=poll.id, poll_choice_id=poll.options()[0].id)
+        retrieved_vote = VoteService.get_vote_by_id(vote_id=performed_vote.id)
+
+        assert_that(retrieved_vote).is_instance_of(VoteModel)
+        assert_that(retrieved_vote.id).is_equal_to(performed_vote.id)
+        assert_that(retrieved_vote.poll_option).is_equal_to(performed_vote.poll_option)
+
+    @pytest.mark.django_db
+    def test_get_vote_not_exist(self, test_polls): 
+        """
+        Test retrieving not existing vote
+        """
+
+        poll: PollModel = test_polls['voted_poll']
+
+        performed_vote = VoteService.perform_vote(poll_id=poll.id, poll_choice_id=poll.options()[0].id)
+        id = performed_vote.id
+        performed_vote.delete()
+
+        assert_that(VoteService.get_vote_by_id) \
+            .raises(VoteDoesNotExistException) \
+            .when_called_with(vote_id=id)
+        
+
+
 
 
 
