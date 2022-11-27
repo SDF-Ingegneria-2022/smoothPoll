@@ -20,6 +20,12 @@
 
             {% csrf_token %}
 
+            {% if error is not None %}
+            <div class="alert alert-danger" role="alert">
+                {{ error }}
+            </div>
+            {% endif %}
+
             {# Form Options #}
             <div class="container m-3">
 
@@ -31,10 +37,6 @@
                         </label>
                     </div>
                 {% endfor %}
-
-                {% if error is not None %}<div class="alert alert-danger" role="alert">
-                    {{error}}
-                </div>{% endif %}
             </div>
 
             {# Confirm button #}

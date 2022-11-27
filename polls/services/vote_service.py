@@ -1,5 +1,5 @@
+from polls.classes.vote_builder import VoteBuilder
 from polls.models.poll_model import PollModel
-from polls.models.poll_option_model import PollOptionModel
 from polls.models.vote_model import VoteModel
 from polls.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
 from polls.exceptions.poll_option_unvalid_exception import PollOptionUnvalidException
@@ -8,37 +8,31 @@ from polls.classes.poll_result import PollResult
 
 class VoteService: 
     """
-    Handle vote procedures 
+    Handle vote procedures like:
+
+    - perform a vote on a simple poll (one choice)
+    - calculate results on a simple poll
     """
 
     @staticmethod
     def perform_vote(poll_id: str, poll_choice_id: str) -> VoteModel:
         """
         Perform a vote on a survey.
+        Args:
+            poll_id: id of poll you want to vote
+            poll_choice_id: the voted option
+        Raises: 
+            PollDoesNotExistException: you tried to vote a not existent poll
+            PollOptionUnvalidException: you tried to vote an unvalid option 
+                (id doesn't exists or it doesn't belong to this poll)
         """
 
-        # vote = VoteFactory.create_vote(poll_id, poll_choice_id)
+        vote_builder = VoteBuilder()
 
-        # check if poll exists
-        try:
-            poll: PollModel = PollModel.objects.get(id=poll_id)
-            # todo: add here "is open" filter
-        except ObjectDoesNotExist:
-            raise PollDoesNotExistException(f"Error: Poll with id={poll_id} does not exist")
-
-        # check if option exists
-        try:
-            poll_choice: PollOptionModel = PollOptionModel.objects.filter(poll_fk=poll.id).get(id=poll_choice_id)
-        except ObjectDoesNotExist:
-            raise PollOptionUnvalidException(f"Error: PollOption with id={poll_choice_id} does " +
-            f"not exist or it is not related to Poll with id={poll_id}")
-
-        # todo: add a check if user alredy voted this
-
-        # create vote object
-        vote: VoteModel = VoteModel()
-        vote.poll_option = poll_choice
+        vote_builder.set_poll(poll_id)
+        vote_builder.set_voted_option(poll_choice_id)
         
+        vote: VoteModel = vote_builder.perform_creation()
         vote.save()
         
         return vote
@@ -47,6 +41,10 @@ class VoteService:
     def calculate_result(poll_id: str) -> PollResult:
         """
         Calculate result of a poll.
+        Args:
+            poll_id: id of poll you want to calculate results
+        Raises:
+            PollDoesNotExistException: you tried to calculate results on a non-existent poll
         """
 
         try:
