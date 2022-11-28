@@ -11,12 +11,6 @@ from polls.services.poll_service import PollService
 from polls.exceptions.poll_option_unvalid_exception import PollOptionUnvalidException
 from polls.services.vote_service import VoteService
 
-def index(request):
-    """
-    Hello world in our first app
-    """
-    return HttpResponse("Hello, world. You're at the polls index.")
-
 def dummy(request: HttpRequest): 
     """
     Dummy poll page, here user can try to vote.
