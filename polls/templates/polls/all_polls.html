@@ -8,33 +8,43 @@
     <div class="row">
         {# Title #}
         <div class="col-8">
-            <h1> Tutti i risultati</h1>
+            <h1> Tutti i sondaggi</h1>
         </div>
-    </div>
-    {# New poll botton #}
-    <div class="row justify-content-end">
+        {# New poll botton #}
         <div class="col-4">
-            <button type="button" class="btn btn-primary float-end w-45">Nuovo sondaggio</button>
+            <button type="button" class="btn btn-success float-end w-45 mt-3 ">Nuovo sondaggio</button>
         </div>
     </div>
-    
-    {# Page navigation bar #}
+    <hr class="mb-0"/>
     <div class="row justify-content-end ">
-        <div class="col-4">
+
+        {# Page navigation bar #}
+        <div class="col-3">
             <nav aria-label="Page navigation example">
                 <ul class="pagination float-end mt-3">
-                    <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
-                    </li>
-                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
-                    </li>
+                    {% if page.has_previous %}
+    
+                        <li class="page-item ">
+                            <a class="page-link" href="{{page.previous_page_number}}" tabindex="-1" aria-disabled="true">Precedente</a>
+                        </li>
+                        <li class="page-item"><a class="page-link " href="{{page.previous_page_number}}">{{page.previous_page_number}}</a></li>
+                    {% else %}
+                        <li class="page-item  disabled">
+                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Precedente</a>
+                        </li>
+                    {% endif %} 
+                        <li class="page-item active"><a class="page-link " href="{{page.number}}">{{page.number}}</a></li>
+
+                    {% if page.has_next %}
+                        <li class="page-item"><a class="page-link " href="{{page.next_page_number}}">{{page.next_page_number}}</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="{{page.next_page_number}}">Successiva</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#">Successiva</a>
+                        </li>
+                    {% endif %}
                 </ul>
             </nav>
         </div>
@@ -42,14 +52,18 @@
     
     {# Poll list#}
     <div class="list-group">
-        {% for o in some_list %}
+        {% for poll in page.object_list %}
             <div class="d-grid">
             <div class="row p-2 rounded border mb-2">
-                <div class="col-8">Nome sondaggio</div>
-                <div class="col-4">
+                <div class="col-6">
+                <p  class="fw-bold m-0"> {{poll.name}} </p>
+                <p class="text-muted m-0" > {{poll.question}} </p>
+                
+                </div>
+                <div class="col-6">
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                <button class="btn btn-primary me-md-2" type="button">Vai al voto</button>
-                <button class="btn btn-secondary" type="button">Vai al risultato</button>
+                    <button class="btn btn-primary me-md-2 mt-2" type="button">Vai al voto</button>
+                    <button class="btn btn-secondary mt-2" type="button">Vai al risultato</button>
                 </div>
                 </div>
             </div>
@@ -60,20 +74,31 @@
     {# Page navigation bar #}
     <div class="row justify-content-end ">
         <div class="col-4">
-            <nav aria-label="Page navigation example">
+           <nav aria-label="Page navigation example">
                 <ul class="pagination float-end mt-3">
-                    <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
-                    </li>
-                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
-                    </li>
+                    {% if page.has_previous %}
+    
+                        <li class="page-item ">
+                            <a class="page-link" href="{{page.previous_page_number}}" tabindex="-1" aria-disabled="true">Precedente</a>
+                        </li>
+                        <li class="page-item"><a class="page-link " href="{{page.previous_page_number}}">{{page.previous_page_number}}</a></li>
+                    {% else %}
+                        <li class="page-item  disabled">
+                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Precedente</a>
+                        </li>
+                    {% endif %} 
+                        <li class="page-item active"><a class="page-link " href="{{page.number}}">{{page.number}}</a></li>
+
+                    {% if page.has_next %}
+                        <li class="page-item"><a class="page-link " href="{{page.next_page_number}}">{{page.next_page_number}}</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="{{page.next_page_number}}">Successiva</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#">Successiva</a>
+                        </li>
+                    {% endif %}
                 </ul>
             </nav>
         </div>
