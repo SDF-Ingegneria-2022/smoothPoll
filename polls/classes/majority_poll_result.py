@@ -20,9 +20,10 @@ class MajorityPollResult:
     """
 
     #remake in a better way
-    def __init__(self, poll: PollModel) -> None:
+    def __init__(self, poll: PollModel, poll_op: PollOptionModel) -> None:
         self.majority_poll: PollModel = poll
-        self.poll_options: PollOptionModel = self.majority_poll.objects.filter(poll_fk=self.majority_poll.id)
+        self.poll_options: PollOptionModel = poll_op
+        #self.poll_options: PollOptionModel = self.majority_poll.objects.filter(poll_fk=self.majority_poll.id)
 
     """Method used to return the median of the rating options"""
     def majority_median(self) -> int:

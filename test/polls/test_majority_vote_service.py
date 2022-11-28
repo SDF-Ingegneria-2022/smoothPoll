@@ -73,7 +73,7 @@ class TestMajorityVoteService:
         poll: PollModel = test_polls['voted_poll']
 
         votes: List[dict] = [{'poll_choice_id': poll.options()[0].id, 'rating': 1 },
-                            {'poll_choice_id': poll.options()[1].id, 'rating': 4 },
-                            {'poll_choice_id': poll.options()[2].id, 'rating': 5 }]
+                            {'poll_choice_id': poll.options()[1].id, 'rating': 2 },
+                            {'poll_choice_id': poll.options()[2].id, 'rating': 3 }]
 
         MajorityVoteService.perform_vote(votes, poll_id=poll.id)

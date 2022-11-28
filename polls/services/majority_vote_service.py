@@ -7,6 +7,7 @@ from polls.exceptions.poll_option_rating_unvalid_exception import PollOptionRati
 from polls.models.majority_option_model import MajorityOptionModel
 from polls.models.majority_vote_model import MajorityVoteModel
 from polls.models.poll_model import PollModel
+from polls.models.poll_option_model import PollOptionModel
 
 
 class MajorityVoteService:
@@ -74,7 +75,8 @@ class MajorityVoteService:
         except ObjectDoesNotExist:
             raise PollDoesNotExistException(f"Poll with id={poll_id} does not exist")
 
-        result: MajorityPollResult = MajorityPollResult(poll)
+        poll_op: PollOptionModel = PollOptionModel.objects.filter(poll_fk=poll.id)
+        result: MajorityPollResult = MajorityPollResult(poll, poll_op)
 
         median: int = result.majority_median()
 
