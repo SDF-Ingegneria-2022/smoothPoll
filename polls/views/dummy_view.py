@@ -141,15 +141,18 @@ def majority_results(request: HttpRequest):
         # {'poll':sorted_options, 'question': poll_results.poll.question}
         )
 
-def all_polls(request: HttpRequest, page: int):
+def all_polls(request: HttpRequest):
     """
     Render page with all polls.
     """
-    paginator: Paginator = PollService.get_paginated_polls()
+    page: int = int(request.GET.get('page'))
+    per_page: int = int(request.GET.get('per_page'))
+    paginator: Paginator = PollService.get_paginated_polls(per_page)
     
     return render(  request, 
                     'polls/all_polls.html', 
                     {
+                    'per_page': per_page,
                     'page': paginator.page(page)
                     }
                 )
