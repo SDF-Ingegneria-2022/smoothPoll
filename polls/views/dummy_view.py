@@ -3,8 +3,8 @@ from django.http import Http404
 from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest, HttpResponseServerError, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-
 from polls.classes.poll_result import PollResult, PollResultVoice
+from polls.classes.poll_result import PollResult
 from polls.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
 from polls.exceptions.vote_does_not_exixt_exception import VoteDoesNotExistException
 from polls.services.poll_service import PollService
@@ -145,7 +145,6 @@ def majority_results(request: HttpRequest):
     return render(request, 'polls/majority-results.html', 
         # {'poll':sorted_options, 'question': poll_results.poll.question}
         )
-
 
 def all_polls(request: HttpRequest):
     return render(request, 'polls/all_polls.html', {'some_list': [x for x in range(5)]})
