@@ -118,11 +118,13 @@ def results(request: HttpRequest):
         )
 
 
-def all_polls(request: HttpRequest):
-    paginator: Paginator = PollService.get_paginated_polls
+def all_polls(request: HttpRequest, page: int):
+    paginator: Paginator = PollService.get_paginated_polls()
+    
     return render(  request, 
                     'polls/all_polls.html', 
                     {'some_list': [x for x in range(5)],
                     'paginator': paginator,
+                    'page': paginator.page(page)
                     }
                 )

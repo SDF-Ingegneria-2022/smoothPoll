@@ -69,5 +69,5 @@ class PollService:
 
         polls: List[PollModel] = PollModel.objects.get_queryset().order_by('id')
         paginator: Paginator = Paginator(polls, page_size)
-
+        
         return paginator

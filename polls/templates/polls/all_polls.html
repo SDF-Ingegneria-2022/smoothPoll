@@ -24,18 +24,24 @@
         <div class="col-2">
             <nav aria-label="Page navigation example">
                 <ul class="pagination float-end mt-3">
+                    {% if page.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{page.number|add:-1}}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+
+                    {% endif %} 
+                        <li class="page-item"><a class="page-link " href="{{page.number}}">{{page.number}}</a></li>
+
+                    {% if page.has_next %}
                     <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
+                    
+                        <a class="page-link" href="{{page.number|add:1}}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
                     </li>
-                    <li class="page-item"><a class="page-link " href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
-                    </li>
+                    {% endif %}
                 </ul>
             </nav>
         </div>
@@ -43,7 +49,7 @@
     
     {# Poll list#}
     <div class="list-group">
-        {% for poll in paginator.object_list %}
+        {% for poll in page.object_list %}
             <div class="d-grid">
             <div class="row p-2 rounded border mb-2">
                 <div class="col-6">
@@ -65,20 +71,26 @@
     {# Page navigation bar #}
     <div class="row justify-content-end ">
         <div class="col-4">
-            <nav aria-label="Page navigation example">
+           <nav aria-label="Page navigation example">
                 <ul class="pagination float-end mt-3">
+                    {% if page.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{page.number|add:-1}}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+
+                    {% endif %} 
+                        <li class="page-item"><a class="page-link " href="{{page.number}}">{{page.number}}</a></li>
+
+                    {% if page.has_next %}
                     <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
+                    
+                        <a class="page-link" href="{{page.number|add:1}}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
                     </li>
-                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
-                    </li>
+                    {% endif %}
                 </ul>
             </nav>
         </div>
