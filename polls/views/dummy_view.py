@@ -4,7 +4,7 @@ from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest, HttpR
 from django.shortcuts import render
 from django.urls import reverse
 from django.core.paginator import Paginator
-
+from polls.classes.poll_result import PollResult, PollResultVoice
 from polls.classes.poll_result import PollResult
 from polls.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
 from polls.exceptions.vote_does_not_exixt_exception import VoteDoesNotExistException
@@ -117,6 +117,29 @@ def results(request: HttpRequest):
         {'poll_results': poll_results}
         )
 
+def dummy_majority(request: HttpRequest): 
+    """
+    Dummy poll page, here user can try to vote.
+    """
+
+    try:
+        poll_results: PollResult = VoteService.calculate_result("1")
+        sorted_options: List[PollResultVoice] = poll_results.get_sorted_options()
+    except Exception:
+        # internal error: you should inizialize DB first (error 500)
+        return HttpResponseServerError("Dummy survey is not initialized. Please see README.md and create it.")
+
+    # render page for vote
+    return render(request, 'polls/majority-vote.html', {'poll_results': poll_results})
+
+def majority_results(request: HttpRequest):
+    """
+    #TODO: improve readability
+    Render page with results. 
+    """
+    return render(request, 'polls/majority-results.html', 
+        # {'poll':sorted_options, 'question': poll_results.poll.question}
+        )
 
 def all_polls(request: HttpRequest, page: int):
     """
