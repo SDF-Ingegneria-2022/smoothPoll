@@ -3,6 +3,7 @@ from django.http import Http404
 from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest, HttpResponseServerError, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from django.core.paginator import Paginator
 from polls.classes.poll_result import PollResult, PollResultVoice
 from polls.classes.poll_result import PollResult
 from polls.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
@@ -10,12 +11,6 @@ from polls.exceptions.vote_does_not_exixt_exception import VoteDoesNotExistExcep
 from polls.services.poll_service import PollService
 from polls.exceptions.poll_option_unvalid_exception import PollOptionUnvalidException
 from polls.services.vote_service import VoteService
-
-def index(request):
-    """
-    Hello world in our first app
-    """
-    return HttpResponse("Hello, world. You're at the polls index.")
 
 def dummy(request: HttpRequest): 
     """
@@ -146,5 +141,15 @@ def majority_results(request: HttpRequest):
         # {'poll':sorted_options, 'question': poll_results.poll.question}
         )
 
-def all_polls(request: HttpRequest):
-    return render(request, 'polls/all_polls.html', {'some_list': [x for x in range(5)]})
+def all_polls(request: HttpRequest, page: int):
+    """
+    Render page with all polls.
+    """
+    paginator: Paginator = PollService.get_paginated_polls()
+    
+    return render(  request, 
+                    'polls/all_polls.html', 
+                    {
+                    'page': paginator.page(page)
+                    }
+                )
