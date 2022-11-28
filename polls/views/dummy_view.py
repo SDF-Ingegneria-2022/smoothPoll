@@ -3,6 +3,7 @@ from django.http import Http404
 from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest, HttpResponseServerError, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from django.core.paginator import Paginator
 
 from polls.classes.poll_result import PollResult
 from polls.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
@@ -118,4 +119,10 @@ def results(request: HttpRequest):
 
 
 def all_polls(request: HttpRequest):
-    return render(request, 'polls/all_polls.html', {'some_list': [x for x in range(5)]})
+    paginator: Paginator = PollService.get_paginated_polls
+    return render(  request, 
+                    'polls/all_polls.html', 
+                    {'some_list': [x for x in range(5)],
+                    'paginator': paginator,
+                    }
+                )

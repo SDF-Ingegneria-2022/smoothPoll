@@ -43,12 +43,12 @@
     
     {# Poll list#}
     <div class="list-group">
-        {% for o in some_list %}
+        {% for poll in paginator.object_list %}
             <div class="d-grid">
             <div class="row p-2 rounded border mb-2">
                 <div class="col-6">
-                <p  class="fw-bold m-0"> Nome sondaggio </p>
-                <p class="text-muted m-0" > Testo della domanda del sondaggio</p>
+                <p  class="fw-bold m-0"> {{poll.name}} </p>
+                <p class="text-muted m-0" > {{poll.question}} </p>
                 
                 </div>
                 <div class="col-6">
