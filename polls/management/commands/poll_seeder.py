@@ -6,7 +6,11 @@ class Command(BaseCommand):
     help = 'Seed the DB with a dummy poll'
 
     def add_arguments(self, parser: CommandParser) -> None:
-        parser.add_argument('new_polls_number', nargs='+', type=int)
+        parser.add_argument(
+            'new_polls_number', 
+            nargs='+', 
+            type=int,
+            help='Number of polls to create.')
 
         parser.add_argument(
             '--delete',
