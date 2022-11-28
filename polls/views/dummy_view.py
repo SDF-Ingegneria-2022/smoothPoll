@@ -123,8 +123,7 @@ def all_polls(request: HttpRequest, page: int):
     
     return render(  request, 
                     'polls/all_polls.html', 
-                    {'some_list': [x for x in range(5)],
-                    'paginator': paginator,
+                    {
                     'page': paginator.page(page)
                     }
                 )
