@@ -15,15 +15,15 @@ def test_polls(request):
     dummy_poll = PollModel(name="Dummy", question="Dummy question?")
     dummy_poll.save()
 
-    PollOptionModel(key="1", value="Valore 1", poll_fk=dummy_poll).save()
-    PollOptionModel(key="2", value="Valore 2", poll_fk=dummy_poll).save()
-    PollOptionModel(key="3", value="Valore 3", poll_fk=dummy_poll).save()
+    PollOptionModel(value="Valore 1", poll_fk=dummy_poll).save()
+    PollOptionModel(value="Valore 2", poll_fk=dummy_poll).save()
+    PollOptionModel(value="Valore 3", poll_fk=dummy_poll).save()
 
     control_poll = PollModel(name="Dummy#02", question="Other dummy question?")
     control_poll.save()
 
-    PollOptionModel(key="1", value="Valore 1", poll_fk=control_poll).save()
-    PollOptionModel(key="2", value="Valore 2", poll_fk=control_poll).save()
+    PollOptionModel(value="Valore 1", poll_fk=control_poll).save()
+    PollOptionModel(value="Valore 2", poll_fk=control_poll).save()
 
     return {'voted_poll': dummy_poll, 'control_poll': control_poll}
     

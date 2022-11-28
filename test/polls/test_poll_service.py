@@ -16,10 +16,8 @@ class TestPollService:
 
     name: str = "TestPollName"
     question: str = "What is your favorite poll option?"
-    options: List[dict] = [
-                                {"key": "key_1", "value": "Question 1"}, 
-                                {"key": "key_2", "value": "Question 2"}
-                            ]
+    options: List[dict] = ["Question 1", "Question 2"]
+
     ## Fixtures
     @pytest.fixture
     def create_20_polls(self):
@@ -28,8 +26,7 @@ class TestPollService:
             new_poll: PollModel = PollModel(name=f"Poll {poll_index}", question=f"Question {poll_index} ?")
             new_poll.save()
             for option_index in range(2):
-                PollOptionModel(key=f"key_{option_index}", value=f"Option {option_index}", poll_fk_id=new_poll.id).save()
-
+                PollOptionModel(value=f"Option {option_index}", poll_fk_id=new_poll.id).save()
         
     ## Tests
     
