@@ -10,7 +10,7 @@ class PollService:
     """Class to handle all poll related operations"""
     
     @staticmethod
-    def create(name: str, question: str, options: List[dict]) -> PollModel: 
+    def create(name: str, question: str, options: List[str]) -> PollModel: 
         """Creates a new poll.
         Args:
             name: Name of the poll. It has to be at least 1 characters long.
@@ -29,7 +29,8 @@ class PollService:
         new_poll.save()
         
         for option in options:
-            new_option: PollOptionModel = PollOptionModel(key=option["key"],value=option["value"], poll_fk_id=new_poll.id)
+            # new_option: PollOptionModel = PollOptionModel(key=option["key"],value=option["value"], poll_fk_id=new_poll.id)
+            new_option: PollOptionModel = PollOptionModel(value=option, poll_fk_id=new_poll.id)
             new_option.save()
         
         return new_poll

@@ -14,10 +14,11 @@ class TestPollService:
 
     name: str = "TestPollName"
     question: str = "What is your favorite poll option?"
-    options: List[dict] = [
-                                {"key": "key_1", "value": "Question 1"}, 
-                                {"key": "key_2", "value": "Question 2"}
-                            ]
+    # options: List[dict] = [
+    #                             {"key": "key_1", "value": "Question 1"}, 
+    #                             {"key": "key_2", "value": "Question 2"}
+    #                         ]
+    options: List[dict] = ["Question 1", "Question 2"]
     
     @pytest.mark.django_db
     def test_create(self):
