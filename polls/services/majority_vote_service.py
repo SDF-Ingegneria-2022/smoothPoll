@@ -87,4 +87,4 @@ class MajorityVoteService:
 
         return majority_vote_result
 
-# to remake better all the calculate result method
+# to remake in a better way the calculate_result method

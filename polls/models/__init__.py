@@ -2,5 +2,5 @@
 from .poll_model import PollModel
 from .poll_option_model import PollOptionModel
 from .vote_model import VoteModel
-from .majority_option_model import MajorityOption
+from .majority_option_model import MajorityOptionModel
 from .majority_vote_model import MajorityVoteModel
