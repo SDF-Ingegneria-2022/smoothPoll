@@ -17,7 +17,19 @@
     </div>
     <hr class="mb-0"/>
     <div class="row justify-content-end ">
+        <div class="col-3">
+            <div class="dropdown mt-3 ms-5">
+                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                    Elementi per pagina : {{per_page}}
+                </a>
 
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink"> 
+                    <li><a class="dropdown-item {% if per_page == 10 %} active {%endif%}" href="?page={{page.number}}&per_page={{10}}">10</a></li>
+                    <li><a class="dropdown-item {% if per_page == 15 %} active {%endif%}" href="?page={{page.number}}&per_page={{15}}">15</a></li>
+                    <li><a class="dropdown-item {% if per_page == 20 %} active {%endif%}" href="?page={{page.number}}&per_page={{20}}">20</a></li>
+                </ul>
+            </div>
+        </div>
         {# Page navigation bar #}
         <div class="col-3">
             <nav aria-label="Page navigation example">
