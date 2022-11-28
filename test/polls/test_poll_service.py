@@ -2,6 +2,8 @@ from typing import List
 import pytest
 from assertpy import assert_that
 from django.db import models
+from django.core.paginator import Paginator
+from polls.exceptions.paginator_page_size_exception import PaginatorPageSizeException
 from polls.models.poll_model import PollModel
 from polls.models.poll_option_model import PollOptionModel
 from polls.services.poll_service import PollService
@@ -18,6 +20,18 @@ class TestPollService:
                                 {"key": "key_1", "value": "Question 1"}, 
                                 {"key": "key_2", "value": "Question 2"}
                             ]
+    ## Fixtures
+    @pytest.fixture
+    def create_20_polls(self):
+        """Creates 20 polls"""
+        for poll_index in range(20):
+            new_poll: PollModel = PollModel(name=f"Poll {poll_index}", question=f"Question {poll_index} ?")
+            new_poll.save()
+            for option_index in range(2):
+                PollOptionModel(key=f"key_{option_index}", value=f"Option {option_index}", poll_fk_id=new_poll.id).save()
+
+        
+    ## Tests
     
     @pytest.mark.django_db
     def test_create(self):
@@ -82,4 +96,16 @@ class TestPollService:
             .raises(PollDoesNotExistException) \
             .when_called_with(id=id)
 
+    @pytest.mark.django_db
+    def test_get_paginated_polls_check_instance(self, create_20_polls):
+        """Test get paginated polls with 20 polls and 5 polls per page and check the instance of the returned object"""
+        polls_paginated: Paginator = PollService.get_paginated_polls(5)
 
+        assert_that(polls_paginated).is_instance_of(Paginator)
+    
+    @pytest.mark.django_db
+    def test_get_paginated_not_valid_items_per_page(self, create_20_polls):
+        """Test get paginated polls with 20 polls and 5 polls per page and check the instance of the returned object"""
+        items_per_page: int = 0
+
+        assert_that(PollService.get_paginated_polls).raises(PaginatorPageSizeException).when_called_with(items_per_page)
