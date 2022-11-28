@@ -1,3 +1,5 @@
 POLL_MODEL_NAME: str = 'PollModel'
 POLL_OPTION_MODEL_NAME: str = 'PollOptionModel' 
 VOTE_MODEL_NAME: str = 'VoteModel'
+MAJORITY_OPTION_NAME: str = 'MajorityOptionModel'
+MAJORITY_VOTE_MODEL_NAME: str = 'MajorityVoteModel'

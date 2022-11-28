@@ -1,5 +1,7 @@
 import os
 from typing import List, Any
+
+from config.settings import ALLOWED_HOSTS_CONFIGURATION, DEBUG_CONFIGURATION
 """
 Django settings for SmoothPoll project.
 
@@ -25,10 +27,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-v3daz3lmbf8ksvfubkdz7nchc*0&#5sf+sa$*7+$+e((qyn6#5'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = DEBUG_CONFIGURATION
 
-ALLOWED_HOSTS: List[Any] = [] 
-
+ALLOWED_HOSTS: List[Any] = ALLOWED_HOSTS_CONFIGURATION
 
 # Application definition
 

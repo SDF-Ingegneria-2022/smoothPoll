@@ -15,6 +15,10 @@ and activate the virtual environment:
 pipenv shell  
 ```
 
+### Initialize .env file
+
+Copy ```.env.example``` file and rename it into ```.env```. Here you will add eventual enviroment configurations.
+
 ### Database migration
 
 Run the following command before start the server, in order to create all the tables in your database:
