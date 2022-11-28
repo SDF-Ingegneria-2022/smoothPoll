@@ -119,6 +119,9 @@ def results(request: HttpRequest):
 
 
 def all_polls(request: HttpRequest, page: int):
+    """
+    Render page with all polls.
+    """
     paginator: Paginator = PollService.get_paginated_polls()
     
     return render(  request, 
