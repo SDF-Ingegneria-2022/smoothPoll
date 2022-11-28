@@ -25,20 +25,20 @@
                     {% if page.has_previous %}
     
                         <li class="page-item ">
-                            <a class="page-link" href="{{page.previous_page_number}}" tabindex="-1" aria-disabled="true">Precedente</a>
+                            <a class="page-link" href="?page={{page.previous_page_number}}&per_page={{per_page}}" tabindex="-1" aria-disabled="true">Precedente</a>
                         </li>
-                        <li class="page-item"><a class="page-link " href="{{page.previous_page_number}}">{{page.previous_page_number}}</a></li>
+                        <li class="page-item"><a class="page-link " href="?page={{page.previous_page_number}}&per_page={{per_page}}">{{page.previous_page_number}}</a></li>
                     {% else %}
                         <li class="page-item  disabled">
                             <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Precedente</a>
                         </li>
                     {% endif %} 
-                        <li class="page-item active"><a class="page-link " href="{{page.number}}">{{page.number}}</a></li>
+                        <li class="page-item active"><a class="page-link " href="?page={{page.number}}&per_page={{per_page}}">{{page.number}}</a></li>
 
                     {% if page.has_next %}
-                        <li class="page-item"><a class="page-link " href="{{page.next_page_number}}">{{page.next_page_number}}</a></li>
+                        <li class="page-item"><a class="page-link " href="?page={{page.next_page_number}}&per_page={{per_page}}">{{page.next_page_number}}</a></li>
                         <li class="page-item">
-                            <a class="page-link" href="{{page.next_page_number}}">Successiva</a>
+                            <a class="page-link" href="?page={{page.next_page_number}}&per_page={{per_page}}">Successiva</a>
                         </li>
                     {% else %}
                         <li class="page-item disabled">
@@ -79,20 +79,20 @@
                     {% if page.has_previous %}
     
                         <li class="page-item ">
-                            <a class="page-link" href="{{page.previous_page_number}}" tabindex="-1" aria-disabled="true">Precedente</a>
+                            <a class="page-link" href="?page={{page.previous_page_number}}&per_page={{per_page}}" tabindex="-1" aria-disabled="true">Precedente</a>
                         </li>
-                        <li class="page-item"><a class="page-link " href="{{page.previous_page_number}}">{{page.previous_page_number}}</a></li>
+                        <li class="page-item"><a class="page-link " href="?page={{page.previous_page_number}}&per_page={{per_page}}">{{page.previous_page_number}}</a></li>
                     {% else %}
                         <li class="page-item  disabled">
                             <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Precedente</a>
                         </li>
                     {% endif %} 
-                        <li class="page-item active"><a class="page-link " href="{{page.number}}">{{page.number}}</a></li>
+                        <li class="page-item active"><a class="page-link " href="?page={{page.number}}&per_page={{per_page}}">{{page.number}}</a></li>
 
                     {% if page.has_next %}
-                        <li class="page-item"><a class="page-link " href="{{page.next_page_number}}">{{page.next_page_number}}</a></li>
+                        <li class="page-item"><a class="page-link " href="?page={{page.next_page_number}}&per_page={{per_page}}">{{page.next_page_number}}</a></li>
                         <li class="page-item">
-                            <a class="page-link" href="{{page.next_page_number}}">Successiva</a>
+                            <a class="page-link" href="?page={{page.next_page_number}}&per_page={{per_page}}">Successiva</a>
                         </li>
                     {% else %}
                         <li class="page-item disabled">
