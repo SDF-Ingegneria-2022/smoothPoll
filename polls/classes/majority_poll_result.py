@@ -14,6 +14,10 @@ class MajorityPollResult:
     """
     The majority poll the result is about
     """
+    poll_options: PollOptionModel
+    """
+    The poll options the majority poll is about
+    """
 
     #remake in a better way
     def __init__(self, poll: PollModel) -> None:

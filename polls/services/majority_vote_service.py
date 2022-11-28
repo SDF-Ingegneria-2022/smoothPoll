@@ -48,7 +48,7 @@ class MajorityVoteService:
 
         # todo: add a check if user alredy voted this
 
-        # create vote object
+        # create majority vote object
         vote: MajorityVoteModel = MajorityVoteModel()
         vote.poll = poll_id
         vote.save()
@@ -64,7 +64,7 @@ class MajorityVoteService:
         return vote
 
     @staticmethod
-    def calculate_result(poll_id: str) -> MajorityPollResult:
+    def calculate_result(poll_id: str) -> List[tuple(int)]:
         """
         Calculate result of a majority poll.
         """
@@ -76,7 +76,7 @@ class MajorityVoteService:
 
         result: MajorityPollResult = MajorityPollResult(poll)
 
-        median: int = result.majority_count()
+        median: int = result.majority_median()
 
         majority_vote_result_unsorted: list[tuple(int)] = []
 
