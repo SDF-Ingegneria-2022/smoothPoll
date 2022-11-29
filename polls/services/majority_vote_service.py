@@ -65,7 +65,7 @@ class MajorityVoteService:
         return vote
 
     @staticmethod
-    def calculate_result(poll_id: str) -> List[tuple(int)]:
+    def calculate_result(poll_id: str) -> List[List[int]]:
         """
         Calculate result of a majority poll.
         """
@@ -80,10 +80,10 @@ class MajorityVoteService:
 
         median: int = result.majority_median()
 
-        majority_vote_result_unsorted: list[tuple(int)] = []
+        majority_vote_result_unsorted: list[List[int]] = []
 
-        for majority_option in result.poll_options:
-            majority_vote_result_unsorted.append(result.majority_count(majority_option, median))
+        for majority_option in poll_op:
+            majority_vote_result_unsorted.append(result.majority_count(median, majority_option))
 
         majority_vote_result = result.print_result(majority_vote_result_unsorted)
 

@@ -36,7 +36,7 @@ class MajorityPollResult:
             return int(max_rating / 2)
 
     """Method used to count the good and bad ratings of the majority votes of one poll option"""
-    def majority_count(majority_poll_option: PollOptionModel, median: int) -> tuple(int):
+    def majority_count(median: int, majority_poll_option: PollOptionModel) -> List[int]:
 
         all_options: MajorityOptionModel = majority_poll_option.objects.filter(poll_option=majority_poll_option.id)
         voted_options: MajorityOptionModel = all_options.objects.exclude(poll_vote__isnull=True)
@@ -49,10 +49,10 @@ class MajorityPollResult:
             elif rating.rating < median:
                 bad_votes += 1
         
-        return (good_votes, median, bad_votes)
+        return [good_votes, median, bad_votes]
 
-    """Method used to return a list of tuple of good, median and bad votes"""
-    def print_result(results: List[tuple(int)]) -> List[tuple(int)]:
+    """Method used to return a list of Tuple of good, median and bad votes"""
+    def print_result(results: List[List[int]]) -> List[List[int]]:
 
         # remake this in a simpler and better way
         for first in results:

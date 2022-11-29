@@ -17,7 +17,8 @@ def test_polls(request):
     dummy_poll = PollModel(name="Dummy", question="Dummy question?")
     dummy_poll.save()
 
-    option1 = PollOptionModel(value="Valore 1", poll_fk=dummy_poll).save()
+    option1 = PollOptionModel(value="Valore 1", poll_fk=dummy_poll)
+    option1.save()
 
     MajorityOptionModel(rating=1, poll_option=option1).save()
     MajorityOptionModel(rating=2, poll_option=option1).save()
@@ -25,7 +26,8 @@ def test_polls(request):
     MajorityOptionModel(rating=4, poll_option=option1).save()
     MajorityOptionModel(rating=5, poll_option=option1).save()
 
-    option2 = PollOptionModel(value="Valore 2", poll_fk=dummy_poll).save()
+    option2 = PollOptionModel(value="Valore 2", poll_fk=dummy_poll)
+    option2.save()
 
     MajorityOptionModel(rating=1, poll_option=option2).save()
     MajorityOptionModel(rating=2, poll_option=option2).save()
@@ -33,7 +35,8 @@ def test_polls(request):
     MajorityOptionModel(rating=4, poll_option=option2).save()
     MajorityOptionModel(rating=5, poll_option=option2).save()
 
-    option3 = PollOptionModel(value="Valore 3", poll_fk=dummy_poll).save()
+    option3 = PollOptionModel(value="Valore 3", poll_fk=dummy_poll)
+    option3.save()
 
     MajorityOptionModel(rating=1, poll_option=option3).save()
     MajorityOptionModel(rating=2, poll_option=option3).save()
@@ -44,21 +47,32 @@ def test_polls(request):
     control_poll = PollModel(name="Dummy#02", question="Other dummy question?")
     control_poll.save()
 
-    control_option1 = PollOptionModel(value="Valore 1", poll_fk=control_poll).save()
+    control_option1 = PollOptionModel(value="Valore 1", poll_fk=control_poll)
+    control_option1.save()
 
-    MajorityOptionModel(rating=1, poll_option=control_option1).save()
+    MajorityOptionModel(rating=0, poll_option=control_option1).save()
     MajorityOptionModel(rating=2, poll_option=control_option1).save()
     MajorityOptionModel(rating=3, poll_option=control_option1).save()
-    MajorityOptionModel(rating=4, poll_option=control_option1).save()
+    MajorityOptionModel(rating=7, poll_option=control_option1).save()
     MajorityOptionModel(rating=5, poll_option=control_option1).save()
 
-    control_option2 = PollOptionModel(value="Valore 2", poll_fk=control_poll).save()
+    control_option2 = PollOptionModel(value="Valore 2", poll_fk=control_poll)
+    control_option2.save()
 
-    MajorityOptionModel(rating=1, poll_option=control_option2).save()
+    MajorityOptionModel(rating=0, poll_option=control_option2).save()
     MajorityOptionModel(rating=2, poll_option=control_option2).save()
     MajorityOptionModel(rating=3, poll_option=control_option2).save()
-    MajorityOptionModel(rating=4, poll_option=control_option2).save()
+    MajorityOptionModel(rating=7, poll_option=control_option2).save()
     MajorityOptionModel(rating=5, poll_option=control_option2).save()
+
+    control_option3 = PollOptionModel(value="Valore 3", poll_fk=control_poll)
+    control_option3.save()
+
+    MajorityOptionModel(rating=0, poll_option=control_option3).save()
+    MajorityOptionModel(rating=2, poll_option=control_option3).save()
+    MajorityOptionModel(rating=3, poll_option=control_option3).save()
+    MajorityOptionModel(rating=7, poll_option=control_option3).save()
+    MajorityOptionModel(rating=5, poll_option=control_option3).save()
 
     return {'voted_poll': dummy_poll, 'control_poll': control_poll}
 
