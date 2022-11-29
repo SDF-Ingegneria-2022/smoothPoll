@@ -49,20 +49,23 @@ class MajorityVoteService:
 
         # todo: add a check if user alredy voted this
 
-        # create majority vote object
-        vote: MajorityVoteModel = MajorityVoteModel()
-        vote.poll = poll_id
-        vote.save()
-
         for num_ratings in rating_options:
             for rating_key, rating_value in num_ratings.items():
                 temp_majority_option: MajorityOptionModel = MajorityOptionModel()
                 temp_majority_option.poll_option = rating_key
                 temp_majority_option.rating = rating_value
-                temp_majority_option.poll_vote = vote.id  #Not sure about this
                 temp_majority_option.save()
+                new_vote = MajorityVoteModel = MajorityVoteModel()
+                new_vote.poll = poll_id
+                new_vote.majority_poll_vote = temp_majority_option.id
+                new_vote.save()
         
-        return vote
+        options: PollOptionModel = poll.objects.filter(poll_id=poll_id)
+        majority_options: MajorityOptionModel = options.objects.filter(poll_option=options.id)
+        votes: MajorityVoteModel = majority_options.objects.filter(poll_id=poll_id, majority_poll_vote=majority_options.id)
+
+        # What is returned here is not a single vote, but a queryset of votes
+        return votes
 
     @staticmethod
     def calculate_result(poll_id: str) -> List[List[int]]:
