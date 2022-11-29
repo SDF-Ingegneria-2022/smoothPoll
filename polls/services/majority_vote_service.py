@@ -37,15 +37,15 @@ class MajorityVoteService:
 
         # check if every option has a value assigned
         for num_ratings in rating_options:
-            for rating in num_ratings.values():
-                if rating is None:
-                    raise PollOptionRatingUnvalidException(f"Error: the poll option doesn't have a rating assigned")
+            rating_value = num_ratings.get('rating')
+            if rating_value is None:
+                raise PollOptionRatingUnvalidException(f"Error: the poll option doesn't have a rating assigned")
 
         # check if rating assigned is a number from 1 to 5
         for num_ratings in rating_options:
-            for rating in num_ratings.values():
-                if rating < 1 or rating > 5:
-                    raise MajorityNumberOfRatingsNotValid(f"Error: the poll option has an invalid rating assigned")
+            rating_value = num_ratings.get('rating')
+            if rating_value < 1 or rating_value > 5:
+                raise MajorityNumberOfRatingsNotValid(f"Error: the poll option has an invalid rating assigned")
 
         # todo: add a check if user alredy voted this
 

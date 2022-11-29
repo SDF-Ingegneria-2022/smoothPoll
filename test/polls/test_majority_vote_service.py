@@ -58,7 +58,7 @@ class TestMajorityVoteService:
         """
         Test majority vote perform procedure works
         """
-        pass
+        #pass
         poll: PollModel = test_polls['voted_poll']
 
         votes: List[dict] = [{'poll_choice_id': poll.options()[0].id, 'rating': 1 },
