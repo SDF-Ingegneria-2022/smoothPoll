@@ -22,10 +22,34 @@ def test_polls(request):
     option1 = PollOptionModel(value="Valore 1", poll_fk=dummy_poll)
     option1.save()
 
-    option_majority = MajorityOptionModel(rating=1, poll_option=option1)
-    option_majority.save()
+    #option_majority = MajorityOptionModel(rating=1, poll_option=option1)
+    #option_majority.save()
 
-    #return {'voted_poll': dummy_poll, 'control_poll': control_poll}
+    MajorityOptionModel(rating=1, poll_option=option1).save()
+    MajorityOptionModel(rating=2, poll_option=option1).save()
+    MajorityOptionModel(rating=3, poll_option=option1).save()
+    MajorityOptionModel(rating=4, poll_option=option1).save()
+    MajorityOptionModel(rating=5, poll_option=option1).save()
+
+    option2 = PollOptionModel(value="Valore 2", poll_fk=dummy_poll)
+    option2.save()
+
+    MajorityOptionModel(rating=1, poll_option=option2).save()
+    MajorityOptionModel(rating=2, poll_option=option2).save()
+    MajorityOptionModel(rating=3, poll_option=option2).save()
+    MajorityOptionModel(rating=4, poll_option=option2).save()
+    MajorityOptionModel(rating=5, poll_option=option2).save()
+
+    option3 = PollOptionModel(value="Valore 3", poll_fk=dummy_poll)
+    option3.save()
+
+    MajorityOptionModel(rating=1, poll_option=option3).save()
+    MajorityOptionModel(rating=2, poll_option=option3).save()
+    MajorityOptionModel(rating=3, poll_option=option3).save()
+    MajorityOptionModel(rating=4, poll_option=option3).save()
+    MajorityOptionModel(rating=5, poll_option=option3).save()
+
+    return {'voted_poll': dummy_poll} #'control_poll': control_poll}
 
 class TestMajorityVoteService:
 
@@ -35,10 +59,10 @@ class TestMajorityVoteService:
         Test majority vote perform procedure works
         """
         pass
-        #poll: PollModel = test_polls['voted_poll']
+        poll: PollModel = test_polls['voted_poll']
 
-        #votes: List[dict] = [{'poll_choice_id': poll.options()[0].id, 'rating': 1 },
-        #                    {'poll_choice_id': poll.options()[1].id, 'rating': 2 },
-        #                    {'poll_choice_id': poll.options()[2].id, 'rating': 3 }]
+        votes: List[dict] = [{'poll_choice_id': poll.options()[0].id, 'rating': 1 },
+                            {'poll_choice_id': poll.options()[1].id, 'rating': 2 },
+                            {'poll_choice_id': poll.options()[2].id, 'rating': 3 }]
 
-        #MajorityVoteService.perform_vote(votes, poll_id=poll.id)
+        MajorityVoteService.perform_vote(votes, poll_id=poll.id)

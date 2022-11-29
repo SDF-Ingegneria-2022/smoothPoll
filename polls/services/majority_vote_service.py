@@ -14,7 +14,7 @@ class MajorityVoteService:
     """Class that handles vote procedures for the majority vote case"""
 
     @staticmethod
-    def perform_vote(poll_id: str, rating_options: List[dict]) -> MajorityVoteModel:
+    def perform_vote(rating_options: List[dict], poll_id: str) -> MajorityVoteModel:
         """
         Perform a vote on a majority vote poll
         Args:
@@ -49,23 +49,22 @@ class MajorityVoteService:
 
         # todo: add a check if user alredy voted this
 
-        for num_ratings in rating_options:
-            for rating_key, rating_value in num_ratings.items():
-                temp_majority_option: MajorityOptionModel = MajorityOptionModel()
-                temp_majority_option.poll_option = rating_key
-                temp_majority_option.rating = rating_value
-                temp_majority_option.save()
-                new_vote = MajorityVoteModel = MajorityVoteModel()
-                new_vote.poll = poll_id
-                new_vote.majority_poll_vote = temp_majority_option.id
-                new_vote.save()
-        
-        options: PollOptionModel = poll.objects.filter(poll_id=poll_id)
-        majority_options: MajorityOptionModel = options.objects.filter(poll_option=options.id)
-        votes: MajorityVoteModel = majority_options.objects.filter(poll_id=poll_id, majority_poll_vote=majority_options.id)
+        # create majority vote object
+        vote: MajorityVoteModel = MajorityVoteModel()
+        vote.poll = poll
+        vote.save()
 
-        # What is returned here is not a single vote, but a queryset of votes
-        return votes
+        for num_ratings in rating_options:
+            rating_key = num_ratings.get('poll_choice_id')
+            rating_value = num_ratings.get('rating')
+
+            temp_majority_option: MajorityOptionModel = MajorityOptionModel()
+            temp_majority_option.poll_option = PollOptionModel.objects.filter(poll_fk=poll_id).get(id=rating_key)
+            temp_majority_option.rating = rating_value
+            temp_majority_option.majority_poll_vote = vote  #Not sure about this
+            temp_majority_option.save()
+        
+        return vote
 
     @staticmethod
     def calculate_result(poll_id: str) -> List[List[int]]:
