@@ -1,0 +1,28 @@
+{% extends 'global/skeleton.html' %}
+{# https://ngangasn.com/how-to-use-bootstrap-5-with-django-the-right-way/ #}
+{% load bootstrap5 %}
+
+{% block pagename %}Visualizza i risultati{% endblock pagename %}
+
+{% block content %}
+<div class="container text-center mt-5 mb-5">
+    <h1>Crea nuovo sondaggio</h1>
+    <h2 class="text-info">Crea nuovo sondaggio</h2>
+</div>
+<div class="container">
+
+
+    <div class="container">
+        <form action="{% url 'polls:create-poll' %}" method="POST" class="form">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            
+            {% buttons %}
+            <button type="submit" class="btn btn-primary">Salva</button>
+            {% endbuttons %}
+        </form>
+    </div>
+    
+</div>
+
+{% endblock %}

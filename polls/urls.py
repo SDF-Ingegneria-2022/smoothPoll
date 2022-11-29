@@ -10,4 +10,5 @@ urlpatterns = [
     path('dummy/risultati/', views.results, name='results'),
     path('dummy/maggioritario/', views.dummy_majority, name='dummy-majority'),
     path('dummt/risultati-maggioritario', views.majority_results, name='majority-results'),
+    path('crea-nuovo/', views.create_poll_view, name="create-poll")
 ]
