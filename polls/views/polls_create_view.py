@@ -12,9 +12,13 @@ def create_poll_view(request: HttpRequest):
     if request.method == "GET":
         return render(request, "polls/poll_create.html", {"form": form})
     
-    # todo: use session to render an OK in all polls page
+    if not form.is_valid():
+        return HttpResponseRedirect(reverse('polls:create-poll'))
 
-    # todo: change redirect to handle better the list
+    form.save()
+
+    # todo: change redirect to handle better the list 
+    # a "last" page option would be useful
     return HttpResponseRedirect(reverse('polls:all_polls', kwargs={'page':1}))
 
 
