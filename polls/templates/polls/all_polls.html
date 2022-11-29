@@ -64,7 +64,9 @@
     
     {# Poll list#}
     <div class="list-group">
-        {% for poll in page.object_list %}
+        
+    {% for poll in page.object_list %}
+         
             <div class="d-grid">
             <div class="row p-2 rounded border mb-2">
                 <div class="col-6">
@@ -80,6 +82,9 @@
                 </div>
             </div>
         </div>
+        {% empty %}
+        <p class="fs-3 fw-bold mt-5"> Attualmente non ci sono sondaggi! </p>
+        
     {% endfor %}
     </div>
 
