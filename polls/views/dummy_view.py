@@ -159,7 +159,7 @@ def submit_majority_vote(request: HttpRequest):
     """Submit the majority vote and get the result"""
 
     try:
-        majority_vote = MajorityVoteService.perform_vote(List[{'poll_choice_id': 4, 'rating': 2 },
+        majority_vote = MajorityVoteService.perform_vote([{'poll_choice_id': 4, 'rating': 2 },
                                                             {'poll_choice_id': 5, 'rating': 2 },
                                                             {'poll_choice_id': 6, 'rating': 3 }], 1)
     except Exception:

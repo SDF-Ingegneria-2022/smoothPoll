@@ -9,6 +9,6 @@ urlpatterns = [
     path('dummy/conferma-voto/', views.submit_vote, name='submit_vote'),
     path('dummy/risultati/', views.results, name='results'),
     path('dummy/maggioritario/', views.dummy_majority, name='dummy-majority'),
-    path('dummy/conferma-voto-maggioritario/', views.submit_majority_vote, name='vote-majority-confirm'),
     path('dummt/risultati-maggioritario', views.majority_results, name='majority-results'),
+    path('dummy/conferma-voto-maggioritario/', views.submit_majority_vote, name='submit_majority_vote'),
 ]
