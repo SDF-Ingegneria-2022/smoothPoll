@@ -36,10 +36,10 @@ class MajorityVoteService:
             raise PollDoesNotExistException(f"Error: Poll with id={poll_id} does not exist")
 
         # check if every option has a value assigned
-        for num_ratings in rating_options:
-            rating_value = num_ratings.get('rating')
-            if rating_value is None:
-                raise PollOptionRatingUnvalidException(f"Error: the poll option doesn't have a rating assigned")
+
+        num_poll_options: int = PollOptionModel.objects.filter(poll_fk=poll_id).count()
+        if num_poll_options != len(rating_options):
+            raise PollOptionRatingUnvalidException(f"Error: the poll option doesn't have a rating assigned")
 
         # check if rating assigned is a number from 1 to 5
         for num_ratings in rating_options:

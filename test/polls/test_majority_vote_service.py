@@ -1,6 +1,8 @@
 from typing import List
 import pytest
 from assertpy import assert_that
+from polls.exceptions.majority_number_of_ratings_not_valid import MajorityNumberOfRatingsNotValid
+from polls.exceptions.poll_option_rating_unvalid_exception import PollOptionRatingUnvalidException
 from polls.models.majority_judgment_model import MajorityJudgmentModel
 from polls.models.majority_vote_model import MajorityVoteModel
 from polls.models.poll_model import PollModel
@@ -45,7 +47,8 @@ class TestMajorityVoteService:
         MajorityVoteService.perform_vote(votes, poll_id=poll.id)
 
     @pytest.mark.django_db
-    def test_majority_vote_result_works(self, test_polls):
+    def test_majority_vote_perform_works_correctly(self, test_polls):
+        """Various test to assert that the majority vote creates the vote correctly"""
 
         poll: PollModel = test_polls['voted_poll']
         
@@ -67,4 +70,51 @@ class TestMajorityVoteService:
         assert_that(majority_judgement.get(poll_option=poll.options()[1].id).rating).is_equal_to(2)
         assert_that(majority_judgement.get(poll_option=poll.options()[2].id).rating).is_equal_to(3)
 
-        
+    @pytest.mark.django_db
+    def test_majority_vote_notexist_poll(self, test_polls):
+        """
+        Test that you cannot vote a majority pool which doesn't exist
+        """
+
+        votes: List[dict] = []
+
+        voted_poll: PollModel = test_polls['voted_poll']
+        id = voted_poll.id
+        voted_poll.delete()
+
+        assert_that(MajorityVoteService.perform_vote) \
+            .raises(PollDoesNotExistException) \
+            .when_called_with(votes, poll_id=id)
+
+    @pytest.mark.django_db
+    def test_majority_vote_option_not_all_voted(self, test_polls):
+        """
+        Test that you cannot vote a majority poll when you have not selected
+        a preference for every option
+        """
+
+        poll: PollModel = test_polls['voted_poll']
+
+        votes: List[dict] = [{'poll_choice_id': poll.options()[0].id, 'rating': 2 },
+                            {'poll_choice_id': poll.options()[1].id, 'rating': 2 }]
+
+        assert_that(MajorityVoteService.perform_vote) \
+            .raises(PollOptionRatingUnvalidException) \
+            .when_called_with(votes, poll_id=poll.id)
+
+    @pytest.mark.django_db
+    def test_majority_vote_option_ratin_number_wrong(self, test_polls):
+        """
+        Test that you cannot give a preference not expected by the majority poll
+        (es.: 7 when the max number/value is 5)
+        """
+
+        poll: PollModel = test_polls['voted_poll']
+
+        votes: List[dict] = [{'poll_choice_id': poll.options()[0].id, 'rating': 2 },
+                            {'poll_choice_id': poll.options()[1].id, 'rating': 7 },
+                            {'poll_choice_id': poll.options()[2].id, 'rating': 3 }]
+
+        assert_that(MajorityVoteService.perform_vote) \
+            .raises(MajorityNumberOfRatingsNotValid) \
+            .when_called_with(votes, poll_id=poll.id)
