@@ -16,8 +16,6 @@ def test_polls(request):
 
     dummy_poll = PollModel(name="Dummy", question="Dummy question?")
     dummy_poll.save()
-    #print(dummy_poll)
-
 
     option1 = PollOptionModel(value="Valore 1", poll_fk=dummy_poll)
     option1.save()
@@ -62,5 +60,11 @@ class TestMajorityVoteService:
         majority_judgement = MajorityJudgmentModel.objects.filter(majority_poll_vote=performed_vote.id)
 
         # check if we have added three votes
-        # check if rating of votes is as expected
+        assert_that(majority_judgement.count()).is_equal_to(3)
+
         # check if the rating are assigned to the correct options
+        assert_that(majority_judgement.get(poll_option=poll.options()[0].id).rating).is_equal_to(2)
+        assert_that(majority_judgement.get(poll_option=poll.options()[1].id).rating).is_equal_to(2)
+        assert_that(majority_judgement.get(poll_option=poll.options()[2].id).rating).is_equal_to(3)
+
+        
