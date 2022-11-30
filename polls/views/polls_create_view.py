@@ -22,7 +22,10 @@ class CreatePollStep1View(View):
         """
 
         form = PollForm(request.session.get('create-poll-s1-form-data') or None)
-        return render(request, "polls/create_poll_step_1.html", {"form": form})
+        return render(request, "polls/create_poll_step_1.html", {
+            "form": form, 
+            'enable_save': request.session.get('create-poll-enable-save'), 
+        })
 
     def post(self, request: HttpRequest, *args, **kwargs):
         """
@@ -60,12 +63,13 @@ class CreatePollStep2View(View):
         """
 
         # redirect if prec. steps are not done
-        if request.session.get("form-poll-id") is None:
+        if request.session.get("create-poll-s1-form-data") is None:
             return HttpResponseRedirect(reverse('polls:create-poll'))
 
         return render(request, "polls/create_poll_step_2.html", {
             'options': request.session.get('create-poll-s2-options'), 
-            'error': request.session.get('create-poll-s2-error')
+            'error': request.session.get('create-poll-s2-error'), 
+            'enable_save': request.session.get('create-poll-enable-save'), 
         })
 
     def post(self, request: HttpRequest, *args, **kwargs):
@@ -86,8 +90,6 @@ class CreatePollStep2View(View):
             request.session['create-poll-s2-error'] = "Inserisci almeno 2 opzioni"
             return HttpResponseRedirect(reverse('polls:create-poll-2'))
 
-        request.session['create-poll-s2-options'] = options
-
         # remove white spaces before and at the end
         def trim_str(s: str) -> str:
             return s.strip()
@@ -95,6 +97,8 @@ class CreatePollStep2View(View):
 
         # remove nulls
         options = list(filter(None, options))
+
+        request.session['create-poll-s2-options'] = options
         
         if len(options)<2:
             request.session['create-poll-s2-error'] = "Inserisci almeno 2 opzioni"
@@ -106,26 +110,40 @@ class CreatePollStep2View(View):
 
         # todo: check for duplicates
 
-        # perform creation
-        self.perform_creation(PollForm(request.session.get('create-poll-s1-form-data')), options)
-
-        # clear session
-        del request.session['create-poll-s1-form-data']
-        del request.session['create-poll-s2-options']
-        if request.session.get('create-poll-s2-error') is None:
+        # remove eventual errors
+        if request.session.get('create-poll-s2-error') is not None:
             del request.session['create-poll-s2-error']
-    
-        return HttpResponseRedirect("%s?page=1&per_page=10" % reverse('polls:all_polls'))
+
+        # enable save
+        request.session['create-poll-enable-save'] = True
+
+        return HttpResponseRedirect(reverse('polls:create-poll-2'))
 
 
-    def perform_creation(self, form: PollForm, options: list[str]):
-        """
-        Perform the creation (on validated objects)
-        """
+def create_poll_confirm(request: HttpRequest):
+    """
+    Confirm creation and apply changes (creating objects and saving them in DB)
+    """
 
-        # save poll 
-        poll = form.save()
+    form = PollForm(request.session.get('create-poll-s1-form-data'))
+    options = request.session.get('create-poll-s2-options')
+
+    # todo: repeat validation
+
+    # save poll 
+    poll = form.save()
         
-        # save options
-        for option in options:
-            PollOptionModel(value=option, poll_fk=poll).save()
+    # save options
+    for option in options:
+        PollOptionModel(value=option, poll_fk=poll).save()
+
+    # clear session
+    del request.session['create-poll-s1-form-data']
+    del request.session['create-poll-s2-options']
+    if request.session.get('create-poll-s2-error') is not None:
+        del request.session['create-poll-s2-error']
+    if request.session.get('create-poll-enable-save') is not None:
+        del request.session['create-poll-enable-save']
+
+    return HttpResponseRedirect("%s?page=1&per_page=10" % reverse('polls:all_polls'))        
+

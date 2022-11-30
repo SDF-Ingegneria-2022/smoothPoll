@@ -19,6 +19,18 @@
             <button type="submit" class="btn btn-primary">Conferma</button>
             {% endbuttons %}
         </form>
+
+        {% if enable_save %}
+        <div class="container row">
+            <div class="col-9"></div>
+            <div class="col-3">
+                <form action="{% url 'polls:create-poll-confirm' %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-success">Crea il Sondaggio</button>
+                </form>
+            </div>
+        </div>
+        {% endif %}
     </div>
 </div>
 
