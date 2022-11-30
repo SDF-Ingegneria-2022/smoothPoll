@@ -21,7 +21,7 @@ class CreatePollStep1View(View):
         with poll's basic data
         """
 
-        form = PollForm(None)
+        form = PollForm(request.session.get('create-poll-s1-form-data') or None)
         return render(request, "polls/create_poll_step_1.html", {"form": form})
 
     def post(self, request: HttpRequest, *args, **kwargs):
@@ -35,8 +35,10 @@ class CreatePollStep1View(View):
         if not form.is_valid():
             return HttpResponseRedirect(reverse('polls:create-poll-1'))
 
-        poll = form.save()
-        request.session['form-poll-id'] = poll.id
+        # poll = form.save()
+        # request.session['form-poll-id'] = poll.id
+
+        request.session['create-poll-s1-form-data'] = request.POST
 
         return HttpResponseRedirect(reverse('polls:create-poll-2'))
 
@@ -75,44 +77,51 @@ class CreatePollStep2View(View):
         """
 
         # redirect if prec. steps are not done
-        if request.session.get("form-poll-id") is None:
+        if request.session.get("create-poll-s1-form-data") is None:
             return HttpResponseRedirect(reverse('polls:create-poll'))
 
         options = request.POST.getlist("options[]")
     
         if options is None:
-            # todo: render error: add at least n-options
-            # return HttpResponse(f"poche opzioni 1, {options}")
+            request.session['create-poll-s2-error'] = "Inserisci almeno 2 opzioni"
             return HttpResponseRedirect(reverse('polls:create-poll-2'))
+
+        request.session['create-poll-s2-options'] = options
 
         # remove white spaces before and at the end
         def trim_str(s: str) -> str:
             return s.strip()
-
         options = map(trim_str, options)
+
         # remove nulls
         options = list(filter(None, options))
         
         if len(options)<2:
-            # todo: render error: add at least n-options
-            # return HttpResponse(f"poche opzioni 2, {options}")
+            request.session['create-poll-s2-error'] = "Inserisci almeno 2 opzioni"
             return HttpResponseRedirect(reverse('polls:create-poll-2'))
 
         if len(options)>10:
-            # todo: render error: not more than n-options
-            # return HttpResponse("troppe opzioni")
+            request.session['create-poll-s2-error'] = "Errore, non puoi inserire più di 10 opzioni"
             return HttpResponseRedirect(reverse('polls:create-poll-2'))
 
         # todo: check for duplicates
 
-        # save options
-        for option in options:
-            PollOptionModel(value=option, poll_fk_id=request.session.get("form-poll-id")).save()
+        # perform creation
+        self.perform_creation(PollForm(request.session.get('create-poll-s1-form-data')), options)
+
+        # clear session
+        del request.session['create-poll-s1-form-data']
+        del request.session['create-poll-s2-options']
+        if request.session.get('create-poll-s2-error') is None:
+            del request.session['create-poll-s2-error']
     
         return HttpResponseRedirect("%s?page=1&per_page=10" % reverse('polls:all_polls'))
 
 
     def perform_creation(self, form: PollForm, options: list[str]):
+        """
+        Perform the creation (on validated objects)
+        """
 
         # save poll 
         poll = form.save()

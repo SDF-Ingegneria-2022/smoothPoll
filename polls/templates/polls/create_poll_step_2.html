@@ -13,6 +13,12 @@
     <div class="container">
         <form action="{% url 'polls:create-poll-2' %}" method="POST" class="form">
             {% csrf_token %}
+
+            {% if error is not None %}
+            <div class="alert alert-danger" role="alert">
+                {{ error }}
+            </div>
+            {% endif %}
             
             <div class="container mb-5" id="poll-options-inputs">
                 <div class="row mb-3" id="option-1-container">
@@ -44,6 +50,7 @@
 
                         
             {% buttons %}
+            <a class="btn btn-warning" href="{% url 'polls:create-poll-1' %}" role="button">Indietro</a>
             <button type="submit" class="btn btn-success">Salva</button>
             {% endbuttons %}
         </form>
