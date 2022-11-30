@@ -31,12 +31,14 @@ class MajorityPollResult:
     def majority_count(self, median_number) -> List[List[int]]:
 
         all_options: PollOptionModel = PollOptionModel.objects.filter(poll_fk=self.majority_poll.id)
+        #votes: MajorityVoteModel = MajorityVoteModel.objects.filter(poll=self.majority_poll.id)
 
         majority_count_votes: List[List[int]] = []
 
         for option in all_options:
 
             # to write it better (we need a list of MajorityJudgmentModel VOTED for a single option of the poll)
+            # check here to see if the votes are really filtered by single option
             option_votes: MajorityJudgmentModel = MajorityJudgmentModel.objects.filter(poll_option=option.id)
 
             good_votes: int = int(0)

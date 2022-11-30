@@ -149,7 +149,15 @@ class TestMajorityVoteService:
 
         performed_vote: MajorityVoteModel = MajorityVoteService.perform_vote(votes, poll_id=poll.id)
 
-        performed_vote: MajorityVoteModel = MajorityVoteService.perform_vote(votes, poll_id=poll.id)
+        votes1: List[dict] = [{'poll_choice_id': poll.options()[0].id, 'rating': 3 },
+                            {'poll_choice_id': poll.options()[1].id, 'rating': 1 },
+                            {'poll_choice_id': poll.options()[2].id, 'rating': 5 }]
+
+        performed_vote: MajorityVoteModel = MajorityVoteService.perform_vote(votes1, poll_id=poll.id)
+
+        votes2: List[dict] = [{'poll_choice_id': poll.options()[0].id, 'rating': 1 },
+                            {'poll_choice_id': poll.options()[1].id, 'rating': 2 },
+                            {'poll_choice_id': poll.options()[2].id, 'rating': 1 }]
 
         performed_vote: MajorityVoteModel = MajorityVoteService.perform_vote(votes, poll_id=poll.id)
 
