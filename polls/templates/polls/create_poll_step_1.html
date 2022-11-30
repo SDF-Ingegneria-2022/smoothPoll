@@ -7,22 +7,19 @@
 {% block content %}
 <div class="container text-center mt-5 mb-5">
     <h1>Crea nuovo sondaggio</h1>
-    <h2 class="text-info">Crea nuovo sondaggio</h2>
+    <h2 class="text-info">Step 1 di 2: Imposta nome e quesito</h2>
 </div>
 <div class="container">
-
-
     <div class="container">
-        <form action="{% url 'polls:create-poll' %}" method="POST" class="form">
+        <form action="{% url 'polls:create-poll-1' %}" method="POST" class="form">
             {% csrf_token %}
             {% bootstrap_form form %}
             
             {% buttons %}
-            <button type="submit" class="btn btn-primary">Salva</button>
+            <button type="submit" class="btn btn-primary">Conferma</button>
             {% endbuttons %}
         </form>
     </div>
-    
 </div>
 
 {% endblock %}

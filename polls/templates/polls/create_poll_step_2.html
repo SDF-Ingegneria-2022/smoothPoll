@@ -1,0 +1,53 @@
+{% extends 'global/skeleton.html' %}
+{# https://ngangasn.com/how-to-use-bootstrap-5-with-django-the-right-way/ #}
+{% load bootstrap5 %}
+
+{% block pagename %}Visualizza i risultati{% endblock pagename %}
+
+{% block content %}
+<div class="container text-center mt-5 mb-5">
+    <h1>Crea nuovo sondaggio</h1>
+    <h2 class="text-info">Step 2 di 2: Definisci opzioni</h2>
+</div>
+<div class="container">
+    <div class="container">
+        <form action="{% url 'polls:create-poll-2' %}" method="POST" class="form">
+            {% csrf_token %}
+            
+            <div class="container mb-5" id="poll-options-inputs">
+                <div class="row mb-3" id="option-1-container">
+                    <div class="col-9">
+                        <input type="text" class="form-control" name="options[]" id="option-1" placeholder="Testo opzione" />
+                    </div>
+                    <div class="col-3">
+                        <a id="option-1-remove" class="btn btn-danger" role="button">Rimuovi Opzione</a>
+                    </div>
+                </div>
+                <div class="row mb-3" id="option-2-container">
+                    <div class="col-9">
+                        <input type="text" class="form-control" name="options[]" id="option-2" placeholder="Testo opzione" />
+                    </div>
+                    <div class="col-3">
+                        <a id="option-2-remove" class="btn btn-danger" role="button">Rimuovi Opzione</a>
+                    </div>
+                </div>
+                <div class="row mb-3" id="option-3-container">
+                    <div class="col-9">
+                        <input type="text" class="form-control" name="options[]" id="option-3" placeholder="Testo opzione" />
+                    </div>
+                    <div class="col-3">
+                        <a id="option-3-remove" class="btn btn-danger" role="button">Rimuovi Opzione</a>
+                    </div>
+                </div>
+                <a name="" id="add-option-button" class="btn btn-primary" href="#" role="button">Aggiungi Opzione</a>
+            </div>
+
+                        
+            {% buttons %}
+            <button type="submit" class="btn btn-success">Salva</button>
+            {% endbuttons %}
+        </form>
+    </div>
+</div>
+
+{% endblock %}
