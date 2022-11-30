@@ -2,7 +2,8 @@ from django.db import models
 from polls.constants.models_constants import MAJORITY_VOTE_MODEL_NAME, POLL_OPTION_MODEL_NAME
 
 class MajorityJudgmentModel(models.Model):
-    """"""
+    """Class which represents a single rating voted on a
+    majority poll"""
     
     rating: models.PositiveSmallIntegerField = models.PositiveSmallIntegerField(default=None)
     """Majority vote rating value"""
@@ -11,7 +12,7 @@ class MajorityJudgmentModel(models.Model):
     """Choosed pool option"""
 
     majority_poll_vote: models.ForeignKey = models.ForeignKey(MAJORITY_VOTE_MODEL_NAME, null=True, on_delete=models.CASCADE)
-    """Rating of a majority poll option"""
+    """Overall vote of a majority vote poll"""
 
     def __str__(self):
         return str({
