@@ -5,9 +5,10 @@ from . import views
 app_name = 'polls'
 urlpatterns = [
     path('', views.all_polls, name='all_polls'),
-    path('dummy/', views.dummy, name='dummy'),
-    path('dummy/conferma-voto/', views.submit_vote, name='submit_vote'),
-    path('dummy/risultati/', views.results, name='results'),
+    path('<int:poll_id>', views.get_poll, name='get_poll'),
+    path('<int:poll_id>/conferma-voto/', views.submit_vote, name='submit_vote'),
+    
+    path('<int:poll_id>/risultati/', views.results, name='results'),
     path('dummy/maggioritario/', views.dummy_majority, name='dummy-majority'),
     path('dummt/risultati-maggioritario', views.majority_results, name='majority-results'),
 

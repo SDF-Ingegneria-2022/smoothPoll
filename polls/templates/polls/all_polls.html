@@ -11,8 +11,8 @@
             <h1> Tutti i sondaggi</h1>
         </div>
         {# New poll botton #}
-        <div class="col-4">
-            <button type="button" class="btn btn-success float-end w-45 mt-3 ">Nuovo sondaggio</button>
+        <div class="col-4"> 
+            <a href="{% url 'polls:create-poll' %}"class="btn btn-success float-end w-45 mt-3 " role="button">Nuovo sondaggio</a>
         </div>
     </div>
     <hr class="mb-0"/>
@@ -76,8 +76,8 @@
                 </div>
                 <div class="col-6">
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                    <button class="btn btn-primary me-md-2 mt-2" type="button">Vai al voto</button>
-                    <button class="btn btn-secondary mt-2" type="button">Vai al risultato</button>
+                    <a href="{% url 'polls:get_poll' poll_id=poll.id %}" class="btn btn-primary me-md-2 mt-2" role="button">Vai al voto</a>
+                    <a href="{% url 'polls:results' poll_id=poll.id %}"class="btn btn-secondary mt-2"  role="button">Vai al risultato</a>
                 </div>
                 </div>
             </div>
