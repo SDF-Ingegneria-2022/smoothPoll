@@ -13,6 +13,6 @@ urlpatterns = [
 
     # create poll proces urls
     path('crea-nuovo/', views.create_poll_start, name="create-poll"), 
-    path('crea-nuovo/step1', views.create_poll_step_1_view, name="create-poll-1"), 
+    path('crea-nuovo/step1', views.CreatePollStep1View.as_view(), name="create-poll-1"), 
     path('crea-nuovo/step2', views.create_poll_step_2_view, name="create-poll-2"), 
 ]

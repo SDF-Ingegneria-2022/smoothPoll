@@ -3,28 +3,43 @@ from polls.models.poll_option_model import PollOptionModel
 from django.http import HttpRequest, HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from django.urls import reverse
+from django.views import View
 
 def create_poll_start(request: HttpRequest):
     return HttpResponseRedirect(reverse('polls:create-poll-1'))
 
-def create_poll_step_1_view(request: HttpRequest):
-    """View to handle step 1 of poll creation"""
-
-    form = PollForm(request.POST or None, request.FILES or None)
-
-    if request.method == "GET":
-        return render(request, "polls/create_poll_step_1.html", {"form": form})
+class CreatePollStep1View(View):
+    """
+    View which handles step 1 of creation of a new poll. It has
+    responsability to let user type basic form data (like name 
+    and question that should be asked)
+    """
     
-    if not form.is_valid():
-        return HttpResponseRedirect(reverse('polls:create-poll-1'))
+    def get(self, request, *args, **kwargs):
+        """
+        Get request should render a form which allows user to fill it
+        with poll's basic data
+        """
 
-    poll = form.save()
-    request.session['form-poll-id'] = poll.id
+        form = PollForm(None)
+        return render(request, "polls/create_poll_step_1.html", {"form": form})
 
-    # PollOptionModel(value="Opzione 1", poll_fk=poll.id).save()
-    # PollOptionModel(value="Opzione 2", poll_fk=poll.id).save()
+    def post(self, request, *args, **kwargs):
+        """
+        Post request should take passed input as a form, 
+        validate it, and eventually redirect to next step
+        """
+        
+        form = PollForm(request.POST or None)
 
-    return HttpResponseRedirect(reverse('polls:create-poll-2'))
+        if not form.is_valid():
+            return HttpResponseRedirect(reverse('polls:create-poll-1'))
+
+        poll = form.save()
+        request.session['form-poll-id'] = poll.id
+
+        return HttpResponseRedirect(reverse('polls:create-poll-2'))
+
 
 def create_poll_step_2_view(request: HttpRequest):
     """View to handle step 2 of poll creation"""
