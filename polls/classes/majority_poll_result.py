@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from typing import List
-from polls.models.majority_option_model import MajorityOptionModel
+from polls.models.majority_judgment_model import MajorityJudgmentModel
 from polls.models.poll_model import PollModel
 from django.db.models import Max
 
@@ -27,7 +27,7 @@ class MajorityPollResult:
 
     """Method used to return the median of the rating options"""
     def majority_median(self) -> int:
-        rating_options: MajorityOptionModel = self.poll_options.objects.filter(poll_option=self.poll_options.id)
+        rating_options: MajorityJudgmentModel = self.poll_options.objects.filter(poll_option=self.poll_options.id)
         max_rating: int = rating_options.objects.aggregate(Max('rating'))
 
         if max_rating % 2 == 0:
@@ -38,8 +38,8 @@ class MajorityPollResult:
     """Method used to count the good and bad ratings of the majority votes of one poll option"""
     def majority_count(median: int, majority_poll_option: PollOptionModel) -> List[int]:
 
-        all_options: MajorityOptionModel = majority_poll_option.objects.filter(poll_option=majority_poll_option.id)
-        voted_options: MajorityOptionModel = all_options.objects.exclude(poll_vote__isnull=True)
+        all_options: MajorityJudgmentModel = majority_poll_option.objects.filter(poll_option=majority_poll_option.id)
+        voted_options: MajorityJudgmentModel = all_options.objects.exclude(poll_vote__isnull=True)
         good_votes: int = int(0)
         bad_votes: int = int(0)
 

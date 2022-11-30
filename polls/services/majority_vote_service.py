@@ -4,7 +4,7 @@ from polls.exceptions.majority_number_of_ratings_not_valid import MajorityNumber
 from polls.classes.majority_poll_result import MajorityPollResult
 from polls.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
 from polls.exceptions.poll_option_rating_unvalid_exception import PollOptionRatingUnvalidException
-from polls.models.majority_option_model import MajorityOptionModel
+from polls.models.majority_judgment_model import MajorityJudgmentModel
 from polls.models.majority_vote_model import MajorityVoteModel
 from polls.models.poll_model import PollModel
 from polls.models.poll_option_model import PollOptionModel
@@ -58,7 +58,7 @@ class MajorityVoteService:
             rating_key = num_ratings.get('poll_choice_id')
             rating_value = num_ratings.get('rating')
 
-            temp_majority_option: MajorityOptionModel = MajorityOptionModel()
+            temp_majority_option: MajorityJudgmentModel = MajorityJudgmentModel()
             temp_majority_option.poll_option = PollOptionModel.objects.filter(poll_fk=poll_id).get(id=rating_key)
             temp_majority_option.rating = rating_value
             temp_majority_option.majority_poll_vote = vote  #Not sure about this

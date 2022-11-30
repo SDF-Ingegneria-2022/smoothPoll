@@ -1,9 +1,8 @@
 from django.db import models
 from polls.constants.models_constants import MAJORITY_VOTE_MODEL_NAME, POLL_OPTION_MODEL_NAME
 
-class MajorityOptionModel(models.Model):
-    """Class which represents the majority vote choice and the
-    rating for it"""
+class MajorityJudgmentModel(models.Model):
+    """"""
     
     rating: models.PositiveSmallIntegerField = models.PositiveSmallIntegerField(default=None)
     """Majority vote rating value"""
