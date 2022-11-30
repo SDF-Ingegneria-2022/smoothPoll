@@ -76,9 +76,8 @@
                 </div>
                 <div class="col-6">
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                {#TODO: Add correct link to each button#}
-                    <a href="{% url 'polls:create-poll' %}" class="btn btn-primary me-md-2 mt-2" role="button">Vai al voto</a>
-                    <a href="{% url 'polls:create-poll' %}"class="btn btn-secondary mt-2"  role="button">Vai al risultato</a>
+                    <a href="{% url 'polls:get_poll' poll_id=poll.id %}" class="btn btn-primary me-md-2 mt-2" role="button">Vai al voto</a>
+                    <a href="{% url 'polls:results' poll_id=poll.id %}"class="btn btn-secondary mt-2"  role="button">Vai al risultato</a>
                 </div>
                 </div>
             </div>
