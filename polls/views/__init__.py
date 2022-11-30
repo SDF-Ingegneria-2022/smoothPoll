@@ -1,1 +1,2 @@
-from polls.views.dummy_view import *
+from .dummy_view import *
+from .polls_create_view import *
