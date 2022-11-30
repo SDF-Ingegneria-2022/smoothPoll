@@ -12,7 +12,8 @@
         </div>
         {# New poll botton #}
         <div class="col-4">
-            <button type="button" class="btn btn-success float-end w-45 mt-3 ">Nuovo sondaggio</button>
+            
+            <a href="{% url 'polls:create-poll' %}"class="btn btn-success float-end w-45 mt-3 " role="button">Nuovo sondaggio</a>
         </div>
     </div>
     <hr class="mb-0"/>
