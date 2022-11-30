@@ -61,7 +61,7 @@ class MajorityVoteService:
             temp_majority_option: MajorityJudgmentModel = MajorityJudgmentModel()
             temp_majority_option.poll_option = PollOptionModel.objects.filter(poll_fk=poll_id).get(id=rating_key)
             temp_majority_option.rating = rating_value
-            temp_majority_option.majority_poll_vote = vote  #Not sure about this
+            temp_majority_option.majority_poll_vote = vote
             temp_majority_option.save()
         
         return vote
@@ -83,7 +83,7 @@ class MajorityVoteService:
 
         median: int = int(3)
 
-        majority_vote_result_unsorted: list[List[int]] = []
+        majority_vote_result_unsorted: List[List[int]] = []
 
         majority_vote_result_unsorted = result.majority_count_votes(5)
 

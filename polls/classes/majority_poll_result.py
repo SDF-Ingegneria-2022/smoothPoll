@@ -39,7 +39,7 @@ class MajorityPollResult:
         for option in all_options:
 
             # to write it better (we need a list of MajorityJudgmentModel VOTED for a single option of the poll)
-            option_votes: List[MajorityJudgmentModel] = all_voted_options.filter(poll_option=option.id)
+            option_votes: List[MajorityJudgmentModel] = []#filter (lambda single_option: single_option.id=option.id, all_voted_options)
 
             good_votes: int = int(0)
             bad_votes: int = int(0)
