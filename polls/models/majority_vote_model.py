@@ -22,4 +22,4 @@ class MajorityVoteModel(models.Model):
 
     # add method to retrieve all majority judgment related
     def judgments(self) -> List[MajorityJudgmentModel]:
-        return list(MajorityJudgmentModel.objects.filter(poll_fk=self.id))
+        return list(MajorityJudgmentModel.objects.filter(majority_poll_vote=self.id))

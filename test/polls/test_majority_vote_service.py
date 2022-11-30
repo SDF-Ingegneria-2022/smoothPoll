@@ -118,3 +118,6 @@ class TestMajorityVoteService:
         assert_that(MajorityVoteService.perform_vote) \
             .raises(MajorityNumberOfRatingsNotValid) \
             .when_called_with(votes, poll_id=poll.id)
+
+# Section related to tests of method calculate result
+

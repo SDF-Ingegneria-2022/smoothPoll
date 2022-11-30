@@ -77,15 +77,15 @@ class MajorityVoteService:
         except ObjectDoesNotExist:
             raise PollDoesNotExistException(f"Poll with id={poll_id} does not exist")
 
-        poll_op: PollOptionModel = PollOptionModel.objects.filter(poll_fk=poll.id)
-        result: MajorityPollResult = MajorityPollResult(poll, poll_op)
+        result: MajorityPollResult = MajorityPollResult(poll)
 
-        median: int = result.majority_median()
+        #median: int = result.majority_median(num)
+
+        median: int = int(3)
 
         majority_vote_result_unsorted: list[List[int]] = []
 
-        for majority_option in poll_op:
-            majority_vote_result_unsorted.append(result.majority_count(median, majority_option))
+        majority_vote_result_unsorted = result.majority_count_votes(5)
 
         majority_vote_result = result.print_result(majority_vote_result_unsorted)
 
