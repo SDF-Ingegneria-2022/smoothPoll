@@ -3,7 +3,6 @@ from typing import List
 from polls.models.majority_judgment_model import MajorityJudgmentModel
 from polls.models.majority_vote_model import MajorityVoteModel
 from polls.models.poll_model import PollModel
-from django.db.models import Max
 
 from polls.models.poll_option_model import PollOptionModel
 
@@ -21,7 +20,7 @@ class MajorityPollResult:
         self.majority_poll: PollModel = poll
 
     """Method used to return the median of the rating options"""
-    def majority_median(num:int) -> int:
+    def majority_median(self, num:int) -> int:
 
         if num % 2 == 0:
             return num / 2
@@ -31,15 +30,14 @@ class MajorityPollResult:
     """Method used to count the good and bad ratings of the majority votes of one poll option"""
     def majority_count(self, median_number) -> List[List[int]]:
 
-        all_options: PollOptionModel = self.majority_poll.objects.filter(poll_fk=self.majority_poll.id)
-        all_voted_options: List[MajorityJudgmentModel] = MajorityVoteModel.objects.get(poll=self.majority_poll.id).judgments()
+        all_options: PollOptionModel = PollOptionModel.objects.filter(poll_fk=self.majority_poll.id)
 
         majority_count_votes: List[List[int]] = []
 
         for option in all_options:
 
             # to write it better (we need a list of MajorityJudgmentModel VOTED for a single option of the poll)
-            option_votes: List[MajorityJudgmentModel] = []#filter (lambda single_option: single_option.id=option.id, all_voted_options)
+            option_votes: MajorityJudgmentModel = MajorityJudgmentModel.objects.filter(poll_option=option.id)
 
             good_votes: int = int(0)
             bad_votes: int = int(0)
@@ -55,7 +53,7 @@ class MajorityPollResult:
         return majority_count_votes
 
     """Method used to return a list of Tuple of good, median and bad votes"""
-    def print_result(results: List[List[int]]) -> List[List[int]]:
+    def vote_result(self, results: List[List[int]]) -> List[List[int]]:
 
         # remake this in a simpler and better way
         for first in results:

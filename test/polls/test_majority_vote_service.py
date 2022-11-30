@@ -103,7 +103,7 @@ class TestMajorityVoteService:
             .when_called_with(votes, poll_id=poll.id)
 
     @pytest.mark.django_db
-    def test_majority_vote_option_ratin_number_wrong(self, test_polls):
+    def test_majority_vote_option_rating_number_wrong(self, test_polls):
         """
         Test that you cannot give a preference not expected by the majority poll
         (es.: 7 when the max number/value is 5)
@@ -120,4 +120,40 @@ class TestMajorityVoteService:
             .when_called_with(votes, poll_id=poll.id)
 
 # Section related to tests of method calculate result
+
+    @pytest.mark.django_db
+    def test_majority_vote_calculate_result_call(self, test_polls):
+        """
+        Test where the calculate_result function is only called
+        """
+        poll: PollModel = test_polls['voted_poll']
+
+        votes: List[dict] = [{'poll_choice_id': poll.options()[0].id, 'rating': 2 },
+                            {'poll_choice_id': poll.options()[1].id, 'rating': 2 },
+                            {'poll_choice_id': poll.options()[2].id, 'rating': 3 }]
+
+        performed_vote: MajorityVoteModel = MajorityVoteService.perform_vote(votes, poll_id=poll.id)
+
+        MajorityVoteService.calculate_result(poll_id=poll.id)
+
+    @pytest.mark.django_db
+    def test_majority_vote_calculate_result_check_correct(self, test_polls):
+        """
+        Test where the calculate_result function is only called
+        """
+        poll: PollModel = test_polls['voted_poll']
+
+        votes: List[dict] = [{'poll_choice_id': poll.options()[0].id, 'rating': 5 },
+                            {'poll_choice_id': poll.options()[1].id, 'rating': 2 },
+                            {'poll_choice_id': poll.options()[2].id, 'rating': 1 }]
+
+        performed_vote: MajorityVoteModel = MajorityVoteService.perform_vote(votes, poll_id=poll.id)
+
+        performed_vote: MajorityVoteModel = MajorityVoteService.perform_vote(votes, poll_id=poll.id)
+
+        performed_vote: MajorityVoteModel = MajorityVoteService.perform_vote(votes, poll_id=poll.id)
+
+        x: List[List[int]] = MajorityVoteService.calculate_result(poll_id=poll.id)
+
+        print(x)
 

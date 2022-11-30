@@ -85,9 +85,9 @@ class MajorityVoteService:
 
         majority_vote_result_unsorted: List[List[int]] = []
 
-        majority_vote_result_unsorted = result.majority_count_votes(5)
+        majority_vote_result_unsorted = result.majority_count(median)
 
-        majority_vote_result = result.print_result(majority_vote_result_unsorted)
+        majority_vote_result = result.vote_result(majority_vote_result_unsorted)
 
         return majority_vote_result
 
