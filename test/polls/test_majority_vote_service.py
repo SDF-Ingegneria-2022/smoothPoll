@@ -1,6 +1,7 @@
 from typing import List
 import pytest
 from assertpy import assert_that
+from polls.classes.majority_poll_result_data import MajorityPollResultData
 from polls.exceptions.majority_number_of_ratings_not_valid import MajorityNumberOfRatingsNotValid
 from polls.exceptions.poll_option_rating_unvalid_exception import PollOptionRatingUnvalidException
 from polls.models.majority_judgment_model import MajorityJudgmentModel
@@ -159,9 +160,9 @@ class TestMajorityVoteService:
                             {'poll_choice_id': poll.options()[1].id, 'rating': 2 },
                             {'poll_choice_id': poll.options()[2].id, 'rating': 1 }]
 
-        performed_vote: MajorityVoteModel = MajorityVoteService.perform_vote(votes, poll_id=poll.id)
+        performed_vote: MajorityVoteModel = MajorityVoteService.perform_vote(votes2, poll_id=poll.id)
 
-        x: List[List[int]] = MajorityVoteService.calculate_result(poll_id=poll.id)
+        x: List[MajorityPollResultData] = MajorityVoteService.calculate_result(poll_id=poll.id)
 
         print(x)
 

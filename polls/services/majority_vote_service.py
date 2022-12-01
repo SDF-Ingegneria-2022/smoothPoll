@@ -1,5 +1,6 @@
 from typing import List
 from django.core.exceptions import ObjectDoesNotExist
+from polls.classes.majority_poll_result_data import MajorityPollResultData
 from polls.exceptions.majority_number_of_ratings_not_valid import MajorityNumberOfRatingsNotValid
 from polls.classes.majority_poll_result import MajorityPollResult
 from polls.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
@@ -83,7 +84,7 @@ class MajorityVoteService:
 
         median: int = int(3)
 
-        majority_vote_result_unsorted: List[List[int]] = []
+        majority_vote_result_unsorted: List[MajorityPollResultData] = []
 
         majority_vote_result_unsorted = result.majority_count(median)
 

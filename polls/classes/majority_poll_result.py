@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from typing import List
+from polls.classes.majority_poll_result_data import MajorityPollResultData
 from polls.models.majority_judgment_model import MajorityJudgmentModel
 from polls.models.majority_vote_model import MajorityVoteModel
 from polls.models.poll_model import PollModel
@@ -28,12 +29,12 @@ class MajorityPollResult:
             return int(num / 2)
 
     """Method used to count the good and bad ratings of the majority votes of one poll option"""
-    def majority_count(self, median_number) -> List[List[int]]:
+    def majority_count(self, median_number) -> List[MajorityPollResultData]:
 
         all_options: PollOptionModel = PollOptionModel.objects.filter(poll_fk=self.majority_poll.id)
         #votes: MajorityVoteModel = MajorityVoteModel.objects.filter(poll=self.majority_poll.id)
 
-        majority_count_votes: List[List[int]] = []
+        majority_count_votes: List[MajorityPollResultData] = []
 
         for option in all_options:
 
@@ -50,23 +51,25 @@ class MajorityPollResult:
                 elif rating.rating < median_number:
                     bad_votes += 1
         
-            majority_count_votes.append([good_votes, median_number, bad_votes])
+            result_data: MajorityPollResultData = MajorityPollResultData(option, good_votes, median_number, bad_votes)
+
+            majority_count_votes.append(result_data)
 
         return majority_count_votes
 
     """Method used to return a list of Tuple of good, median and bad votes"""
-    def vote_result(self, results: List[List[int]]) -> List[List[int]]:
+    def vote_result(self, results: List[MajorityPollResultData]) -> List[MajorityPollResultData]:
 
         # remake this in a simpler and better way
         for first in results:
             for second in results:
-                if first != second and first[0] > first[2] and second[0] < second[2]:
+                if first != second and first.good_votes > first.bad_votes and second.good_votes < second.bad_votes:
                     first, second = second, first   # to check if the swap can be done like this or the index is necessary
-                elif first != second and first[0] > first[2] and second[0] > second[2]:
-                    if first[0] > second[0]:
+                elif first != second and first.good_votes > first.bad_votes and second.good_votes > second.bad_votes:
+                    if first.good_votes > second.good_votes:
                         first, second = second, first
-                elif first != second and first[0] < first[2] and second[0] < second[2]:
-                    if first[2] > second[2]:
+                elif first != second and first.good_votes < first.bad_votes and second.good_votes < second.bad_votes:
+                    if first.bad_votes > second.bad_votes:
                         first, second = second, first
 
         return results
