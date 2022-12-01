@@ -157,7 +157,6 @@ def dummy_majority(request: HttpRequest):
     new_option.save()
     new_option: PollOptionModel = PollOptionModel(value="Poll 3", poll_fk_id=new_poll.id)
     new_option.save()
-    
     return render(request, 'polls/majority-vote.html', {'poll': new_poll})
 
 def majority_results(request: HttpRequest):
