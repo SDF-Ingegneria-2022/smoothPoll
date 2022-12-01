@@ -145,5 +145,5 @@ def create_poll_confirm(request: HttpRequest):
     if request.session.get('create-poll-enable-save') is not None:
         del request.session['create-poll-enable-save']
 
-    return HttpResponseRedirect("%s?page=1&per_page=10" % reverse('polls:all_polls'))        
+    return HttpResponseRedirect("%s?page=last&per_page=10" % reverse('polls:all_polls'))        
 
