@@ -8,6 +8,7 @@ from polls.classes.poll_result import PollResult, PollResultVoice
 from polls.classes.poll_result import PollResult
 from polls.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
 from polls.exceptions.vote_does_not_exixt_exception import VoteDoesNotExistException
+from polls.models.majority_vote_model import MajorityVoteModel
 from polls.models.poll_model import PollModel
 from polls.models.poll_option_model import PollOptionModel
 from polls.services.majority_vote_service import MajorityVoteService
@@ -141,10 +142,6 @@ def dummy_majority(request: HttpRequest):
     """
     Dummy poll page, here user can try to vote.
     """
-    poll = PollModel(id = "1",name="Dummy", question="Dummy question?")
-    option1 = PollOptionModel(poll)
-    # render page for vote
-    #dummy_poll: PollModel = PollService.get_by_id("1")
     try:
         new_poll: PollModel = PollModel(name=f"Poll sample name", question=f"What is your favorite option")
         new_poll.save()
@@ -190,13 +187,20 @@ def all_polls(request: HttpRequest):
                 )
 
 def submit_majority_vote(request: HttpRequest):
+    if 'vote' not in request.POST:
+        request.session['vote-submit-error'] = "Errore! Per confermare il voto " \
+            + "devi esprimere una preferenza."
+        print("errore")
     """Submit the majority vote and get the result"""
-    poll : PollModel = PollService.get_poll_by_id("183")
+    poll : PollModel = PollService.get_poll_by_id("196")
     votes: List[dict] = [{'poll_choice_id': poll.options()[0].id, 'rating': 2 },
                             {'poll_choice_id': poll.options()[1].id, 'rating': 2 },
                             {'poll_choice_id': poll.options()[2].id, 'rating': 3 }]
-    MajorityVoteService.perform_vote(votes, poll_id=183)
-
-    return render(request, 'polls/vote-majority-confirm.html', 
+    MajorityVoteService.perform_vote(votes, poll_id=196)
+    vote: MajorityVoteModel = MajorityVoteModel()
+    vote.poll = poll
+    vote.save()
+    print(vote)
+    return render(request, 'polls/vote-majority-confirm.html', {'poll' : poll, 'vote': vote}
         # {'poll':sorted_options, 'question': poll_results.poll.question}
         )
