@@ -19,10 +19,9 @@
         <form action="{% url 'polls:submit_majority_vote' %}" method="POST">
 
             {% csrf_token %}
-
             {# Form Options #}
             <p>{{poll}}</p>
-            <p>{{poll.option}}</p>
+            <p>{{poll.options}}</p>
             <div class="container m-3">
                 {% for option in poll.options %}
                     <div class="form-check m-2">

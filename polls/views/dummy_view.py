@@ -146,16 +146,16 @@ def dummy_majority(request: HttpRequest):
     # render page for vote
     #dummy_poll: PollModel = PollService.get_by_id("1")
     try:
-        new_poll: PollModel = PollModel(name=f"Poll sample name jose", question=f"What is your favorite poll number jose?")
+        new_poll: PollModel = PollModel(name=f"Poll sample name", question=f"What is your favorite option")
         new_poll.save()
     except Exception as exception:
         raise CommandError('Error while creating poll: %s' % exception)
             
-    new_option: PollOptionModel = PollOptionModel(value="Poll 1", poll_fk_id=new_poll.id)   
+    new_option: PollOptionModel = PollOptionModel(value="Option 1", poll_fk_id=new_poll.id)   
     new_option.save()
-    new_option: PollOptionModel = PollOptionModel(value="Poll 2", poll_fk_id=new_poll.id)
+    new_option: PollOptionModel = PollOptionModel(value="Option 2", poll_fk_id=new_poll.id)
     new_option.save()
-    new_option: PollOptionModel = PollOptionModel(value="Poll 3", poll_fk_id=new_poll.id)
+    new_option: PollOptionModel = PollOptionModel(value="Option 3", poll_fk_id=new_poll.id)
     new_option.save()
     return render(request, 'polls/majority-vote.html', {'poll': new_poll})
 
@@ -191,12 +191,12 @@ def all_polls(request: HttpRequest):
 
 def submit_majority_vote(request: HttpRequest):
     """Submit the majority vote and get the result"""
+    poll : PollModel = PollService.get_poll_by_id("183")
+    votes: List[dict] = [{'poll_choice_id': poll.options()[0].id, 'rating': 2 },
+                            {'poll_choice_id': poll.options()[1].id, 'rating': 2 },
+                            {'poll_choice_id': poll.options()[2].id, 'rating': 3 }]
+    MajorityVoteService.perform_vote(votes, poll_id=183)
 
-    try:
-        majority_vote = MajorityVoteService.perform_vote([{'poll_choice_id': 4, 'rating': 2 },
-                                                            {'poll_choice_id': 5, 'rating': 2 },
-                                                            {'poll_choice_id': 6, 'rating': 3 }], 1)
-    except Exception:
-        return HttpResponseServerError("Couldn't submit vote")
-
-    return HttpResponseRedirect(reverse('polls:submit_majority_vote'))
+    return render(request, 'polls/vote-majority-confirm.html', 
+        # {'poll':sorted_options, 'question': poll_results.poll.question}
+        )
