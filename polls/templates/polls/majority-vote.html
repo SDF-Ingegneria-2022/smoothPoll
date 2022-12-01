@@ -23,6 +23,15 @@
             {# Form Options #}
             <p>{{poll}}</p>
             <p>{{poll.option}}</p>
+            {% for option in poll.options %}
+                    <div class="form-check m-2">
+                        <input class="form-check-input" type="radio" id="option-{{option.id}}"" name="vote" value="{{option.id}}"> 
+                        <label class="form-check-label" for="option-{{option.id}}"" >
+                            {{option.value}}
+                        </label>
+                    </div>
+                {% endfor %}
+
             <div class="container m-3">
                 <div class="row">
                     <p class="fw-bold">

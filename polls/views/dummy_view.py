@@ -144,8 +144,21 @@ def dummy_majority(request: HttpRequest):
     poll = PollModel(id = "1",name="Dummy", question="Dummy question?")
     option1 = PollOptionModel(poll)
     # render page for vote
-
-    return render(request, 'polls/majority-vote.html', {'poll': poll})
+    #dummy_poll: PollModel = PollService.get_by_id("1")
+    try:
+        new_poll: PollModel = PollModel(name=f"Poll sample name jose", question=f"What is your favorite poll number jose?")
+        new_poll.save()
+    except Exception as exception:
+        raise CommandError('Error while creating poll: %s' % exception)
+            
+    new_option: PollOptionModel = PollOptionModel(value="Poll 1", poll_fk_id=new_poll.id)   
+    new_option.save()
+    new_option: PollOptionModel = PollOptionModel(value="Poll 2", poll_fk_id=new_poll.id)
+    new_option.save()
+    new_option: PollOptionModel = PollOptionModel(value="Poll 3", poll_fk_id=new_poll.id)
+    new_option.save()
+    
+    return render(request, 'polls/majority-vote.html', {'poll': new_poll})
 
 def majority_results(request: HttpRequest):
     """
