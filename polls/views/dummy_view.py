@@ -164,13 +164,18 @@ def all_polls(request: HttpRequest):
     Render page with all polls.
     """
     try:
-        page: int = int(request.GET.get('page'))
+        page_information: str = request.GET.get('page')
         per_page: int = int(request.GET.get('per_page'))
     except TypeError:
-        page = 1
+        page_information = '1'
         per_page = 10
-
+    
     paginator: Paginator = PollService.get_paginated_polls(per_page)
+
+    if page_information == 'last':
+        page = paginator.num_pages
+    else:
+        page: int = int(page_information)
     
     return render(  request, 
                     'polls/all_polls.html', 
