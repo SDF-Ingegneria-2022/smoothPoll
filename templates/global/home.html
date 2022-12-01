@@ -3,35 +3,48 @@
 {% block pagename %}Crea e Vota Sondaggi{% endblock pagename %}
 
 {% block content %}
-
-    <div class="d-flex justify-content-center">
-        <div class="card text-center pt-3 pb-3" >
-            <div class="card-body">
-                <h3 class="card-title text-primary">Benvenuto su SmoothPoll!</h3>
-                <h5 class="card-title text-info">L'applicazione al momento è in costruzione</h5> 
-
-                    <a name="" id="" role="button"
-                        class="btn btn-primary" 
-                        href="{% url 'polls:dummy-majority' %}" >
-                        Vai al Sondaggio con metodo maggioritario
-                    </a>
-                    <a name="" id="" role="button"
-                        class="btn btn-primary" 
-                        href="{% url 'polls:all_polls' %}?page=1&per_page=10" >
-                        Vai alla lista di tutti i sondaggi
-                    </a>
-                    <a name="" id="" role="button"
-                        class="btn btn-secondary" 
-                        href="https://github.com/SDF-Ingegneria-2022/smoothPoll/issues" 
-                        target="_blank">
-                        Lasciaci un Feedback
-                    </a> 
-                </div>
-
-                
-                
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h1>Benvenuto su SmoothPoll!</h1>
             </div>
         </div>
+        <div class="row">
+            <div class="col-6">
+                <p class="fs-5">L'obbiettivo di SmoothPoll è di facilitare la gestione dei tuoi sondaggi. Potrai gestirli a partire 
+                dalla creazione, fino al calcolo dei risultati!</p>
+                <div class="alert alert-info mt-5" role="alert">
+                     Nota: l'applicazione è ancora in fase di costruzione. Per qualsiasi problema o suggerimento contattare gli svilupparatori.
+                </div>
+            </div>
+        </div>
+        <div class="row mt-2 justify-content-between">
+            <div class="col-6">
+                <a name="" id="" role="button"
+                            class="btn btn-primary" 
+                            href="{% url 'polls:all_polls' %}?page=1&per_page=10" >
+                            Vai alla lista di tutti i sondaggi
+                        </a>
+                        <a name="" id="" role="button"
+                            class="btn btn-secondary" 
+                            href="https://github.com/SDF-Ingegneria-2022/smoothPoll/issues" 
+                            target="_blank">
+                            Lasciaci un Feedback
+                        </a> 
+            </div>
+
+            {# Demo card #}
+            <div class="col-4">
+                <div class="card shadow-lg  mb-5 bg-body rounded">
+                    <h5 class="card-header">Demo</h5>
+                    <div class="card-body">
+                        <h5 class="card-title">Sondaggio maggioritario</h5>
+                        <p class="card-text">Perchè non provi il nuovo tipo di sondaggio che i nostri programmatori stanno sviluppando?</p>
+                        <a  href="{% url 'polls:dummy-majority' %}" class="btn btn-primary">Vai al sondaggio maggioritario</a>
+                    </div>
+                </div>
+            </div>
+        </div>        
     </div>
     
 {% endblock content %}
