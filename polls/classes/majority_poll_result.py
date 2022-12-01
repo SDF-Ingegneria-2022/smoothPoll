@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from functools import cmp_to_key
 from typing import List
 from polls.classes.majority_poll_result_data import MajorityPollResultData
 from polls.models.majority_judgment_model import MajorityJudgmentModel
@@ -57,22 +58,41 @@ class MajorityPollResult:
 
         return majority_count_votes
 
-    """Method used to return a list of Tuple of good, median and bad votes"""
+    """Method used to return a list of  of good, median and bad votes"""
     def vote_result(self, results: List[MajorityPollResultData]) -> List[MajorityPollResultData]:
 
-        # remake this in a simpler and better way
-        for first in results:
-            for second in results:
-                if second.positive_grade and first.negative_grade:
-                    first, second = second, first   # to check if the swap can be done like this or the index is necessary
-                elif second.positive_grade and first.positive_grade:
-                    if second.good_votes >= first.good_votes:
-                        first, second = second, first
-                elif second.negative_grade and first.negative_grade:
-                    if second.bad_votes >= first.bad_votes:
-                        first, second = second, first
+        results_temp = results.copy()
 
-        #return results.sort(key = lambda x: x.good_votes, reverse = True)
+        def compare(x, y):
+            if x.positive_grade and y.negative_grade:
+                return 1
+            elif x.positive_grade and y.positive_grade:
+                if x.good_votes > y.good_votes:
+                    return 1
+                else:
+                    return -1
+            elif x.negative_grade and y.negative_grade:
+                if x.bad_votes > y.bad_votes:
+                    return 1
+                else:
+                    return -1
+            else:
+                return -1
 
-        return results
+        results_temp = sorted(results, key=cmp_to_key(compare), reverse=True)
 
+        return results_temp
+
+        # #remake this in a simpler and better way
+        # for first in results:
+        #     for second in results:
+        #         if second.positive_grade and first.negative_grade:
+        #             first, second = second, first   # to check if the swap can be done like this or the index is necessary
+        #         elif second.positive_grade and first.positive_grade:
+        #             if second.good_votes >= first.good_votes:
+        #                 first, second = second, first
+        #         elif second.negative_grade and first.negative_grade:
+        #             if second.bad_votes >= first.bad_votes:
+        #                 first, second = second, first
+
+        # return results

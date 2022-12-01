@@ -20,7 +20,7 @@ class MajorityVoteService:
         Perform a vote on a majority vote poll
         Args:
             poll_id: the id of the poll.
-            rating_options: List of dictionaries of ratings assigned to an option [{'poll_choice_id': ..., 'rating_choosen': ...}, ...].
+            rating_options: List of dictionaries of ratings assigned to an option [{'poll_choice_id': ..., 'rating': ...}, ...].
         Raises:
             PollDoesNotExistException: execption raised when the poll selected is not present in the database
             PollOptionRatingUnvalidException: exception raised when there are no rating choices in the options (None)
