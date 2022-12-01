@@ -167,7 +167,7 @@ def all_polls(request: HttpRequest):
         page_information: str = request.GET.get('page')
         per_page: int = int(request.GET.get('per_page'))
     except TypeError:
-        page = 1
+        page_information = '1'
         per_page = 10
     
     paginator: Paginator = PollService.get_paginated_polls(per_page)
