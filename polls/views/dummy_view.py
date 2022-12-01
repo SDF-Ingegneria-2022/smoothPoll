@@ -9,34 +9,48 @@ from polls.classes.poll_result import PollResult
 from polls.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
 from polls.exceptions.vote_does_not_exixt_exception import VoteDoesNotExistException
 from polls.services.majority_vote_service import MajorityVoteService
+from polls.models.poll_model import PollModel
 from polls.services.poll_service import PollService
 from polls.exceptions.poll_option_unvalid_exception import PollOptionUnvalidException
 from polls.services.vote_service import VoteService
 
-def dummy(request: HttpRequest): 
+def get_poll(request: HttpRequest, poll_id: int): 
     """
-    Dummy poll page, here user can try to vote.
+    Get poll by id and render it.
+    Args:
+        request (HttpRequest): Request object.
+        poll_id (int): The poll id.
+    Returns:
+        HttpResponse: Render the poll page.
     """
 
     try:
-        # retrieve dummy poll
-        dummy_poll = PollService.get_poll_by_id("1")
+        # Retrieve poll
+        poll: PollModel = PollService.get_poll_by_id(poll_id)
     except Exception:
-        # internal error: you should inizialize DB first (error 500)
-        return HttpResponseServerError("Dummy survey is not initialized. Please see README.md and create it.")
+        raise Http404(f"Poll with id {poll_id} not found.")
 
-    # get eventual error message and clean it
+    # Get eventual error message and clean it
     eventual_error = request.session.get('vote-submit-error')
     if eventual_error is not None:
         del request.session['vote-submit-error']
-
-    # render vote form (with eventual error message)
-    return render(request, 'polls/vote.html', 
-        { 'poll': dummy_poll, 'error': eventual_error })
     
-def submit_vote(request: HttpRequest): 
-    """
-    Submit the vote and get the result
+    # Render vote form (with eventual error message)
+    return render(request, 
+                'polls/vote.html', 
+                { 
+                    'poll': poll, 
+                    'error': eventual_error 
+                })
+    
+def submit_vote(request: HttpRequest, poll_id: int): 
+    """Submit the vote.
+    Args:
+        request (HttpRequest): Request object.
+        poll_id (int): The poll id.
+    Returns:
+        HttpResponseRedirect: Redirect to the poll page.
+        HttpResponse: Rendered confirm page.
     """
 
     if request.method == "GET":
@@ -44,12 +58,12 @@ def submit_vote(request: HttpRequest):
         # GET REQUEST --> I wanna render a page wich shows performed vote
         # (reloadable as many times user wants)
 
-        # retrieve session saved vote ID
+        # Retrieve session saved vote ID
         vote_id = request.session.get("vote-submit-id")
         if vote_id is None:
             request.session['vote-submit-error'] = "Errore! Non hai ancora caricato " \
                 + "nessun voto. Usa questo form per esprimere la tua preferenza."
-            return HttpResponseRedirect(reverse('polls:dummy'))
+            return HttpResponseRedirect(reverse('polls:get_poll', args=(poll_id,)))
 
         # retrieve vote 
         try:
@@ -57,7 +71,7 @@ def submit_vote(request: HttpRequest):
         except VoteDoesNotExistException:
             request.session['vote-submit-error'] = "Errore! Non hai ancora caricato " \
                 + "nessun voto. Usa questo form per esprimere la tua preferenza."
-            return HttpResponseRedirect(reverse('polls:dummy'))
+            return HttpResponseRedirect(reverse('polls:get_poll', args=(poll_id,)))
         
         # show confirm page
         return render(request, 'polls/vote_confirm.html', {'vote': vote})
@@ -66,55 +80,59 @@ def submit_vote(request: HttpRequest):
     # this request as a GET one (so user will be able to refresh without
     # submitting again)
 
-    # check method is post
+    # Check method is post.
     if request.method != "POST":
         request.session['vote-submit-error'] = "Errore! Il voto deve essere " \
             + "inviato tramite l'apposito form. Se continui a vedere questo " \
             + "messaggio contatta gli sviluppatori."
-        return HttpResponseRedirect(reverse('polls:dummy'))
+        return HttpResponseRedirect(reverse('polls:get_poll', args=(poll_id,)))
     
-    # check is passed any data
+    # Check is passed any data.
     if 'vote' not in request.POST:
         request.session['vote-submit-error'] = "Errore! Per confermare il voto " \
             + "devi esprimere una preferenza."
-        return HttpResponseRedirect(reverse('polls:dummy'))
+        return HttpResponseRedirect(reverse('polls:get_poll', args=(poll_id,)))
 
-    # perform vote and handle missing vote or poll exception
+    # Perform vote and handle missing vote or poll exception.
     try:
-        vote = VoteService.perform_vote(1, request.POST["vote"])
+        vote = VoteService.perform_vote(poll_id, request.POST["vote"])
     except PollOptionUnvalidException:
         request.session['vote-submit-error'] = "Errore! Il voto deve essere " \
             + "inviato tramite l'apposito form. Se continui a vedere questo " \
             + "messaggio contatta gli sviluppatori."
-        return HttpResponseRedirect(reverse('polls:dummy'))
+        return HttpResponseRedirect(reverse('polls:get_poll', args=(poll_id,)))
     except PollDoesNotExistException:
         raise Http404
 
-    # clean eventual error session 
+    # Clean eventual error session.
     if request.session.get('vote-submit-error') is not None:
         del request.session['vote-submit-error']
 
-    # save user vote in session (so when I re-render with GET I have the vote)
+    # Save user vote in session (so when I re-render with GET I have the vote).
     request.session['vote-submit-id'] = vote.id
 
-    # RE-direct to get request
-    return HttpResponseRedirect(reverse('polls:submit_vote'))    
+    # RE-direct to get request.
+    return HttpResponseRedirect(reverse('polls:submit_vote', args=(poll_id, )))    
 
-def results(request: HttpRequest):
-    """
-    #TODO: improve readability
-    Render page with results. 
+def results(request: HttpRequest, poll_id: int):
+    """Render page with results.
+    Args:
+        request (HttpRequest): Request object.
+        poll_id (int): The poll id.
+    Returns:
+        HttpResponse: Rendered results page.
+        HttpResponseServerError: If DB is not initialized.
     """
     try:
-        poll_results: PollResult = VoteService.calculate_result("1")
+        poll_results: PollResult = VoteService.calculate_result(poll_id)
     except PollDoesNotExistException:
         raise Http404
     except Exception:
-        # internal error: you should inizialize DB first (error 500)
+        # Internal error: you should inizialize DB first (error 500)
         return HttpResponseServerError("Dummy survey is not initialized. Please see README.md and create it.")
 
     return render(request, 'polls/results.html', 
-        # {'poll':sorted_options, 'question': poll_results.poll.question}
+        
         {'poll_results': poll_results}
         )
 
@@ -142,15 +160,28 @@ def majority_results(request: HttpRequest):
         # {'poll':sorted_options, 'question': poll_results.poll.question}
         )
 
-def all_polls(request: HttpRequest, page: int):
+def all_polls(request: HttpRequest):
     """
     Render page with all polls.
     """
-    paginator: Paginator = PollService.get_paginated_polls()
+    try:
+        page_information: str = request.GET.get('page')
+        per_page: int = int(request.GET.get('per_page'))
+    except TypeError:
+        page_information = '1'
+        per_page = 10
+    
+    paginator: Paginator = PollService.get_paginated_polls(per_page)
+
+    if page_information == 'last':
+        page = paginator.num_pages
+    else:
+        page: int = int(page_information)
     
     return render(  request, 
                     'polls/all_polls.html', 
                     {
+                    'per_page': per_page,
                     'page': paginator.page(page)
                     }
                 )

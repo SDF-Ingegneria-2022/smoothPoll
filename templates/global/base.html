@@ -15,9 +15,6 @@
     {% bootstrap_css %}
     {% bootstrap_javascript %}
 
-    {# Custom JS #}
-    {% block customjs %}{% endblock customjs %} 
-
     {# basic style #}
     <style>
         span.logo img {
@@ -34,5 +31,8 @@
 </head>
 <body class="body">
     {% block body %}{% endblock body %}
+
+    {# Custom JS #}
+    {% block customjs %}{% endblock customjs %} 
 </body>
 </html>

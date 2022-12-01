@@ -1,0 +1,106 @@
+{% extends 'global/skeleton.html' %}
+{# https://ngangasn.com/how-to-use-bootstrap-5-with-django-the-right-way/ #}
+{% load bootstrap5 %}
+
+{% block pagename %}Visualizza i risultati{% endblock pagename %}
+
+{% block content %}
+<div class="container text-center mt-5 mb-5">
+    <h1>Crea nuovo sondaggio</h1>
+    <h2 class="text-info">Step 2 di 2: Definisci opzioni</h2>
+</div>
+<div class="container">
+    <div class="container">
+
+        <h4 class="text-secondary">Inserisci le opzioni del sondaggio e clicca "Conferma"</h4>
+
+        <form action="{% url 'polls:create-poll-2' %}" method="POST" class="form">
+            {% csrf_token %}
+
+            {% if error is not None %}
+            <div class="alert alert-danger" role="alert">
+                {{ error }}
+            </div>
+            {% endif %}
+
+            <div class="container mb-5">
+                <div class="mb-2" id="poll-options-inputs">
+                    {% for option in options %}
+                    <div class="row mb-3" id="option-{{forloop.counter}}-container">
+                        <div class="col-9">
+                            <input type="text" class="form-control" name="options[]" id="option-{{forloop.counter}}" placeholder="Testo opzione" value="{{option}}" />
+                        </div>
+                        <div class="col-3">
+                            <a id="option-{{forloop.counter}}-remove" class="btn btn-danger" role="button" onclick="removeOption({{forloop.counter}})">Rimuovi Opzione</a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% comment %} <div class="row mb-3" id="option-3-container">
+                        <div class="col-9">
+                            <input type="text" class="form-control" name="options[]" id="option-3" placeholder="Testo opzione" value="" />
+                        </div>
+                        <div class="col-3">
+                            <a id="option-3-remove" class="btn btn-danger" onclick="removeOption(3)" role="button">Rimuovi Opzione</a>
+                        </div>
+                    </div> {% endcomment %}
+                </div>
+                <a id="add-option-button" class="btn btn-primary" onclick="addOption()" role="button">Aggiungi Opzione</a>
+            </div>
+
+                        
+            {% buttons %}
+            <a class="btn btn-warning" href="{% url 'polls:create-poll-1' %}" role="button">Indietro</a>
+            <button type="submit" class="btn btn-primary">Conferma</button>
+            {% endbuttons %}
+        </form>
+
+        {% if enable_save %}
+        <div class="container row">
+            <div class="col-9"></div>
+            <div class="col-3">
+                <form action="{% url 'polls:create-poll-confirm' %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-success">Crea il Sondaggio</button>
+                </form>
+            </div>
+        </div>
+        {% endif %}
+
+        
+    </div>
+</div>
+
+
+{% block customjs %}
+
+<script type="text/javascript">
+
+    var optionCounter = "{% if options %}{{ options|length }}{% else %}0{% endif %}";
+
+    function addOption() {
+
+        optionCounter++;
+        
+        const allOptionsBox = document.getElementById("poll-options-inputs");
+        allOptionsBox.insertAdjacentHTML('beforeend', '<div class="row mb-3" id="option-' + optionCounter  + '-container"> \
+            <div class="col-9"> \
+                <input type="text" class="form-control" name="options[]" \
+                id="option-' + optionCounter  + '" placeholder="Testo opzione" value="" /> \
+            </div> \
+            <div class="col-3"> \
+                <a id="option-3-remove" class="btn btn-danger" \
+                    role="button" onclick="removeOption(' + optionCounter  + ')">Rimuovi Opzione</a> \
+            </div> \
+        </div>')
+    }
+
+    function removeOption(optionHTMLid) {
+
+        document.getElementById("option-" + optionHTMLid + "-container").remove()
+    }
+
+</script>
+
+{% endblock customjs %}
+
+{% endblock %}
