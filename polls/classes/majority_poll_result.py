@@ -1,8 +1,10 @@
 from dataclasses import dataclass
+from functools import cmp_to_key
 from typing import List
-from polls.models.majority_option_model import MajorityOptionModel
+from polls.classes.majority_poll_result_data import MajorityPollResultData
+from polls.models.majority_judgment_model import MajorityJudgmentModel
+from polls.models.majority_vote_model import MajorityVoteModel
 from polls.models.poll_model import PollModel
-from django.db.models import Max
 
 from polls.models.poll_option_model import PollOptionModel
 
@@ -18,48 +20,79 @@ class MajorityPollResult:
     #remake in a better way
     def __init__(self, poll: PollModel) -> None:
         self.majority_poll: PollModel = poll
-        self.poll_options: PollOptionModel = self.majority_poll.objects.filter(poll_fk=self.majority_poll.id)
 
     """Method used to return the median of the rating options"""
-    def majority_median(self) -> int:
-        rating_options: MajorityOptionModel = self.poll_options.objects.filter(poll_option=self.poll_options.id)
-        max_rating: int = rating_options.objects.aggregate(Max('rating'))
+    def majority_median(self, num:int) -> int:
 
-        if max_rating % 2 == 0:
-            return max_rating / 2
+        if num % 2 == 0:
+            return num / 2
         else:
-            return int(max_rating / 2)
+            return int(num / 2)
 
     """Method used to count the good and bad ratings of the majority votes of one poll option"""
-    def majority_count(majority_poll_option: PollOptionModel, median: int) -> tuple(int):
+    def majority_count(self, median_number) -> List[MajorityPollResultData]:
 
-        all_options: MajorityOptionModel = majority_poll_option.objects.filter(poll_option=majority_poll_option.id)
-        voted_options: MajorityOptionModel = all_options.objects.exclude(poll_vote__isnull=True)
-        good_votes: int = int(0)
-        bad_votes: int = int(0)
+        all_options: PollOptionModel = PollOptionModel.objects.filter(poll_fk=self.majority_poll.id)
+        #votes: MajorityVoteModel = MajorityVoteModel.objects.filter(poll=self.majority_poll.id)
 
-        for rating in voted_options:
-            if rating.rating > median:
-                good_votes += 1
-            elif rating.rating < median:
-                bad_votes += 1
+        majority_count_votes: List[MajorityPollResultData] = []
+
+        for option in all_options:
+
+            # to write it better (we need a list of MajorityJudgmentModel VOTED for a single option of the poll)
+            # check here to see if the votes are really filtered by single option
+            option_votes: MajorityJudgmentModel = MajorityJudgmentModel.objects.filter(poll_option=option.id)
+
+            good_votes: int = int(0)
+            bad_votes: int = int(0)
+
+            for rating in option_votes:
+                if rating.rating > median_number:
+                    good_votes += 1
+                elif rating.rating < median_number:
+                    bad_votes += 1
         
-        return (good_votes, median, bad_votes)
+            result_data: MajorityPollResultData = MajorityPollResultData(option, good_votes, median_number, bad_votes)
 
-    """Method used to return a list of tuple of good, median and bad votes"""
-    def print_result(results: List[tuple(int)]) -> List[tuple(int)]:
+            majority_count_votes.append(result_data)
 
-        # remake this in a simpler and better way
-        for first in results:
-            for second in results:
-                if first != second and first[0] > first[2] and second[0] < second[2]:
-                    first, second = second, first   # to check if the swap can be done like this or the index is necessary
-                elif first != second and first[0] > first[2] and second[0] > second[2]:
-                    if first[0] > second[0]:
-                        first, second = second, first
-                elif first != second and first[0] < first[2] and second[0] < second[2]:
-                    if first[2] > second[2]:
-                        first, second = second, first
+        return majority_count_votes
 
-        return results
+    """Method used to return a list of  of good, median and bad votes"""
+    def vote_result(self, results: List[MajorityPollResultData]) -> List[MajorityPollResultData]:
 
+        results_temp = results.copy()
+
+        def compare(x, y):
+            if x.positive_grade and y.negative_grade:
+                return 1
+            elif x.positive_grade and y.positive_grade:
+                if x.good_votes > y.good_votes:
+                    return 1
+                else:
+                    return -1
+            elif x.negative_grade and y.negative_grade:
+                if x.bad_votes > y.bad_votes:
+                    return 1
+                else:
+                    return -1
+            else:
+                return -1
+
+        results_temp = sorted(results, key=cmp_to_key(compare), reverse=True)
+
+        return results_temp
+
+        # #remake this in a simpler and better way
+        # for first in results:
+        #     for second in results:
+        #         if second.positive_grade and first.negative_grade:
+        #             first, second = second, first   # to check if the swap can be done like this or the index is necessary
+        #         elif second.positive_grade and first.positive_grade:
+        #             if second.good_votes >= first.good_votes:
+        #                 first, second = second, first
+        #         elif second.negative_grade and first.negative_grade:
+        #             if second.bad_votes >= first.bad_votes:
+        #                 first, second = second, first
+
+        # return results

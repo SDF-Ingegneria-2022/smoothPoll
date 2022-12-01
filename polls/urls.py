@@ -17,4 +17,5 @@ urlpatterns = [
     path('crea-nuovo/step1', views.CreatePollStep1View.as_view(), name="create-poll-1"), 
     path('crea-nuovo/step2', views.CreatePollStep2View.as_view(), name="create-poll-2"), 
     path('crea-nuovo/conferma', views.create_poll_confirm, name="create-poll-confirm")
+    path('dummy/conferma-voto-maggioritario/', views.submit_majority_vote, name='submit_majority_vote'),
 ]
