@@ -1,3 +1,6 @@
+from typing import List
+
+from polls.models.majority_judgment_model import MajorityJudgmentModel
 from ..constants.models_constants import POLL_MODEL_NAME
 from django.db import models
 
@@ -16,3 +19,7 @@ class MajorityVoteModel(models.Model):
             'datetime': self.datetime, 
             'poll': str(self.poll)
         })
+
+    # add method to retrieve all majority judgment related
+    def judgments(self) -> List[MajorityJudgmentModel]:
+        return list(MajorityJudgmentModel.objects.filter(majority_poll_vote=self.id))

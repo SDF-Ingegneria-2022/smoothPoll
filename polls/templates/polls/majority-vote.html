@@ -16,7 +16,7 @@
     </div>
     
     <div class="container mt-5 mb-5">
-        <form action="{% url 'polls:submit_vote' %}" method="POST">
+        <form action="{% url 'polls:submit_majority_vote' %}" method="POST">
 
             {% csrf_token %}
 

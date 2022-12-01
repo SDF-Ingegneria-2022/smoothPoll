@@ -8,6 +8,7 @@ from polls.classes.poll_result import PollResult, PollResultVoice
 from polls.classes.poll_result import PollResult
 from polls.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
 from polls.exceptions.vote_does_not_exixt_exception import VoteDoesNotExistException
+from polls.services.majority_vote_service import MajorityVoteService
 from polls.models.poll_model import PollModel
 from polls.services.poll_service import PollService
 from polls.exceptions.poll_option_unvalid_exception import PollOptionUnvalidException
@@ -184,3 +185,15 @@ def all_polls(request: HttpRequest):
                     'page': paginator.page(page)
                     }
                 )
+
+def submit_majority_vote(request: HttpRequest):
+    """Submit the majority vote and get the result"""
+
+    try:
+        majority_vote = MajorityVoteService.perform_vote([{'poll_choice_id': 4, 'rating': 2 },
+                                                            {'poll_choice_id': 5, 'rating': 2 },
+                                                            {'poll_choice_id': 6, 'rating': 3 }], 1)
+    except Exception:
+        return HttpResponseServerError("Couldn't submit vote")
+
+    return HttpResponseRedirect(reverse('polls:submit_majority_vote'))
