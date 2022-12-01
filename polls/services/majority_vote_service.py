@@ -68,7 +68,7 @@ class MajorityVoteService:
         return vote
 
     @staticmethod
-    def calculate_result(poll_id: str) -> List[List[int]]:
+    def calculate_result(poll_id: str) -> List[MajorityPollResultData]:
         """
         Calculate result of a majority poll.
         """

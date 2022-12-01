@@ -63,14 +63,16 @@ class MajorityPollResult:
         # remake this in a simpler and better way
         for first in results:
             for second in results:
-                if first != second and first.good_votes > first.bad_votes and second.good_votes < second.bad_votes:
+                if second.positive_grade and first.negative_grade:
                     first, second = second, first   # to check if the swap can be done like this or the index is necessary
-                elif first != second and first.good_votes > first.bad_votes and second.good_votes > second.bad_votes:
-                    if first.good_votes > second.good_votes:
+                elif second.positive_grade and first.positive_grade:
+                    if second.good_votes >= first.good_votes:
                         first, second = second, first
-                elif first != second and first.good_votes < first.bad_votes and second.good_votes < second.bad_votes:
-                    if first.bad_votes > second.bad_votes:
+                elif second.negative_grade and first.negative_grade:
+                    if second.bad_votes >= first.bad_votes:
                         first, second = second, first
+
+        #return results.sort(key = lambda x: x.good_votes, reverse = True)
 
         return results
 
