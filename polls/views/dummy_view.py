@@ -9,6 +9,7 @@ from polls.classes.poll_result import PollResult
 from polls.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
 from polls.exceptions.vote_does_not_exixt_exception import VoteDoesNotExistException
 from polls.models.poll_model import PollModel
+from polls.models.poll_option_model import PollOptionModel
 from polls.services.majority_vote_service import MajorityVoteService
 from polls.services.poll_service import PollService
 from polls.exceptions.poll_option_unvalid_exception import PollOptionUnvalidException
@@ -140,16 +141,11 @@ def dummy_majority(request: HttpRequest):
     """
     Dummy poll page, here user can try to vote.
     """
-
-    try:
-        poll_results: PollResult = VoteService.calculate_result("1")
-        sorted_options: List[PollResultVoice] = poll_results.get_sorted_options()
-    except Exception:
-        # internal error: you should inizialize DB first (error 500)
-        return HttpResponseServerError("Dummy survey is not initialized. Please see README.md and create it.")
-
+    poll = PollModel(id = "1",name="Dummy", question="Dummy question?")
+    option1 = PollOptionModel(poll)
     # render page for vote
-    return render(request, 'polls/majority-vote.html', {'poll_results': poll_results})
+
+    return render(request, 'polls/majority-vote.html', {'poll': poll})
 
 def majority_results(request: HttpRequest):
     """
