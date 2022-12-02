@@ -30,9 +30,7 @@ function copyLink(url) {
 </div>
 
 <div class="container">
-
-    <h3 class="text-success">Grazie di aver votato! Il tuo voto è stato registrato.</h3>
-    {% comment %} <p class="text-secondary">(Essendo questo solo un prototipo, il voto non è stato registrato)</p> {% endcomment %}
+    {% comment %} <h3 class="text-success">Grazie di aver votato! Il tuo voto è stato registrato.</h3>
     <div class="container m-3">
         <div class="row">
             <div class="col-2">
@@ -53,8 +51,8 @@ function copyLink(url) {
     </div>
     <div class="container mt-5" >
         <p class="secondary">
-            {% comment %} Quando il sondaggio sarà chiuso, potrai vedere il risultato 
-            <a href="{% url 'polls:majority-results' %}" title="Esiti sondaggio">su questa pagina</a>.  {% endcomment %}
+            Quando il sondaggio sarà chiuso, potrai vedere il risultato 
+            <a href="{% url 'polls:majority-results' %}" title="Esiti sondaggio">su questa pagina</a>. 
             
             <a class="btn btn-primary" href="{% url 'polls:majority_vote_results' poll_id=vote.poll.id %}" role="button">Vedi risultati</a>
 
@@ -64,7 +62,46 @@ function copyLink(url) {
             </button>
             <a class="btn btn-secondary" href="{% url 'polls:dummy-majority' %}" role="button">Vota di nuovo</a>
         </p>
+    </div> {% endcomment %}
+    <h2 class="text-success">Grazie di aver votato! Il tuo voto è stato registrato.</h2>
+    <div class="row">
+        <div class="col-1">
+            <p class="fw-bold fs-5">Quesito:</p>
+        </div>
+        <div class="col">
+            <p class="mt-1">{{vote.poll.question}}</p>
+        </div>
     </div>
+    <div class="row">
+        <div class="col-2">
+            <p class="fw-bold fs-5">Riassunto del voto:</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-5">
+            <table class="table">
+                <thead>
+                    <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Opzione</th>
+                    <th scope="col">Voto</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for option in vote.poll.options%}
+                        <tr>
+                            <th scope="row">  {{ forloop.counter }}</th>
+                            <td>{{option.value}}</td>
+                            <td>Option to add</td>
+                        </tr>  
+                    {%endfor%}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    
+
 </div> 
 
 {% endblock content %}
