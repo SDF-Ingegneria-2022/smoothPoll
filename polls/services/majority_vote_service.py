@@ -98,6 +98,8 @@ class MajorityVoteService:
                 .order_by('rating')
 
             option_result = MajorityPollResultData()
+            
+            option_result.poll_option_data=option
 
             # calculate median (or worse of two)
             option_result.median = option_votes[math.floor(option_votes.count()/2)].rating
@@ -111,8 +113,11 @@ class MajorityVoteService:
             # else if good <= bad   --> -
             option_result.positive_grade = (option_result.good_votes > option_result.bad_votes)
 
+            majority_vote_result_unsorted.append(option_result)
+
+
         majority_vote_result = result.vote_result(majority_vote_result_unsorted)
 
-        return majority_vote_result
+        return list(majority_vote_result)
 
 # to remake in a better way the calculate_result method

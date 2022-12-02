@@ -79,9 +79,9 @@ class MajorityPollResult:
             # if both are positive, it wins who has greater number of 
             # strictly better votes
             if x.positive_grade and y.positive_grade:
-                return x if x.good_votes > y.good_votes else y
+                return 1 if x.good_votes > y.good_votes else -1
             elif (not x.positive_grade) and (not y.positive_grade):
-                return x if x.negative_votes < y.negative_votes else y
+                return 1 if x.bad_votes < y.bad_votes else -1
 
             return 0
 
