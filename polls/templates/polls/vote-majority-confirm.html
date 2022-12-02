@@ -33,21 +33,37 @@ function copyLink(url) {
 
     <h3 class="text-success">Grazie di aver votato! Il tuo voto è stato registrato.</h3>
     {% comment %} <p class="text-secondary">(Essendo questo solo un prototipo, il voto non è stato registrato)</p> {% endcomment %}
-
+    <div class="container m-3">
+        <div class="row">
+            <div class="col-2">
+                <p class="text-secondary">Quesito:</p>
+            </div>
+            <div class="col-10">
+                <p class="fw-bold">{{vote.poll.question}}</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-2">
+                <p class="text-secondary">Opzione scelta: </p>
+            </div>
+            <div class="col-10">
+                <p class="fw-bold fs-5 text-primary">{{ vote.poll_option.value }}</p>
+            </div>
+        </div>
+    </div>
     <div class="container mt-5" >
         <p class="secondary">
             {% comment %} Quando il sondaggio sarà chiuso, potrai vedere il risultato 
-            <a href="{% url 'polls:results' %}" title="Esiti sondaggio">su questa pagina</a>.  {% endcomment %}
+            <a href="{% url 'polls:majority-results' %}" title="Esiti sondaggio">su questa pagina</a>.  {% endcomment %}
             
-            <a class="btn btn-primary" href="{% url 'polls:results' %}" role="button">Vedi risultati</a>
+            <a class="btn btn-primary" href="{% url 'polls:majority-results' %}" role="button">Vedi risultati</a>
 
 
             <button type="button" class="btn btn-secondary" 
-                onclick="copyLink('{{request.get_host}}{% url 'polls:results' %}')">
-                Copia link
+            onclick="copyLink('{{request.get_host}}{% url 'polls:majority-results' %}')">
+            Copia link
             </button>
-
-            <a class="btn btn-secondary" href="{% url 'polls:dummy' %}" role="button">Vota di nuovo</a>
+            <a class="btn btn-secondary" href="{% url 'polls:dummy-majority' %}" role="button">Vota di nuovo</a>
         </p>
     </div>
 </div>

@@ -8,8 +8,10 @@ from polls.classes.poll_result import PollResult, PollResultVoice
 from polls.classes.poll_result import PollResult
 from polls.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
 from polls.exceptions.vote_does_not_exixt_exception import VoteDoesNotExistException
-from polls.services.majority_vote_service import MajorityVoteService
+from polls.models.majority_vote_model import MajorityVoteModel
 from polls.models.poll_model import PollModel
+from polls.models.poll_option_model import PollOptionModel
+from polls.services.majority_vote_service import MajorityVoteService
 from polls.services.poll_service import PollService
 from polls.exceptions.poll_option_unvalid_exception import PollOptionUnvalidException
 from polls.services.vote_service import VoteService
@@ -140,16 +142,19 @@ def dummy_majority(request: HttpRequest):
     """
     Dummy poll page, here user can try to vote.
     """
-
     try:
-        poll_results: PollResult = VoteService.calculate_result("1")
-        sorted_options: List[PollResultVoice] = poll_results.get_sorted_options()
-    except Exception:
-        # internal error: you should inizialize DB first (error 500)
-        return HttpResponseServerError("Dummy survey is not initialized. Please see README.md and create it.")
-
-    # render page for vote
-    return render(request, 'polls/majority-vote.html', {'poll_results': poll_results})
+        new_poll: PollModel = PollModel(name=f"Poll sample name", question=f"What is your favorite option")
+        new_poll.save()
+    except Exception as exception:
+        raise CommandError('Error while creating poll: %s' % exception)
+            
+    new_option: PollOptionModel = PollOptionModel(value="Option 1", poll_fk_id=new_poll.id)   
+    new_option.save()
+    new_option: PollOptionModel = PollOptionModel(value="Option 2", poll_fk_id=new_poll.id)
+    new_option.save()
+    new_option: PollOptionModel = PollOptionModel(value="Option 3", poll_fk_id=new_poll.id)
+    new_option.save()
+    return render(request, 'polls/majority-vote.html', {'poll': new_poll})
 
 def majority_results(request: HttpRequest):
     """
@@ -187,13 +192,20 @@ def all_polls(request: HttpRequest):
                 )
 
 def submit_majority_vote(request: HttpRequest):
+    if 'vote' not in request.POST:
+        request.session['vote-submit-error'] = "Errore! Per confermare il voto " \
+            + "devi esprimere una preferenza."
+        print("errore")
     """Submit the majority vote and get the result"""
-
-    try:
-        majority_vote = MajorityVoteService.perform_vote([{'poll_choice_id': 4, 'rating': 2 },
-                                                            {'poll_choice_id': 5, 'rating': 2 },
-                                                            {'poll_choice_id': 6, 'rating': 3 }], 1)
-    except Exception:
-        return HttpResponseServerError("Couldn't submit vote")
-
-    return HttpResponseRedirect(reverse('polls:submit_majority_vote'))
+    poll : PollModel = PollService.get_poll_by_id("196")
+    votes: List[dict] = [{'poll_choice_id': poll.options()[0].id, 'rating': 2 },
+                            {'poll_choice_id': poll.options()[1].id, 'rating': 2 },
+                            {'poll_choice_id': poll.options()[2].id, 'rating': 3 }]
+    MajorityVoteService.perform_vote(votes, poll_id=196)
+    vote: MajorityVoteModel = MajorityVoteModel()
+    vote.poll = poll
+    vote.save()
+    print(vote)
+    return render(request, 'polls/vote-majority-confirm.html', {'poll' : poll, 'vote': vote}
+        # {'poll':sorted_options, 'question': poll_results.poll.question}
+        )
