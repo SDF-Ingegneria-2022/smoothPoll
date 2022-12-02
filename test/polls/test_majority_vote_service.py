@@ -171,76 +171,100 @@ class TestMajorityVoteService:
         """
         poll: PollModel = test_polls['voted_poll']
 
-        votes: List[dict] = [{'poll_choice_id': poll.options()[0].id, 'rating': 5 },
-                            {'poll_choice_id': poll.options()[1].id, 'rating': 2 },
-                            {'poll_choice_id': poll.options()[2].id, 'rating': 1 }]
+        MajorityVoteService.perform_vote(
+            [{'poll_choice_id': poll.options()[0].id, 'rating': 5 },
+            {'poll_choice_id': poll.options()[1].id, 'rating': 2 },
+            {'poll_choice_id': poll.options()[2].id, 'rating': 2 }], poll_id=poll.id)
 
-        performed_vote: MajorityVoteModel = MajorityVoteService.perform_vote(votes, poll_id=poll.id)
+        MajorityVoteService.perform_vote(
+            [{'poll_choice_id': poll.options()[0].id, 'rating': 3 },
+            {'poll_choice_id': poll.options()[1].id, 'rating': 1 },
+            {'poll_choice_id': poll.options()[2].id, 'rating': 5 }], poll_id=poll.id)
 
-        votes1: List[dict] = [{'poll_choice_id': poll.options()[0].id, 'rating': 3 },
-                            {'poll_choice_id': poll.options()[1].id, 'rating': 1 },
-                            {'poll_choice_id': poll.options()[2].id, 'rating': 5 }]
-
-        performed_vote: MajorityVoteModel = MajorityVoteService.perform_vote(votes1, poll_id=poll.id)
-
-        votes2: List[dict] = [{'poll_choice_id': poll.options()[0].id, 'rating': 1 },
-                            {'poll_choice_id': poll.options()[1].id, 'rating': 2 },
-                            {'poll_choice_id': poll.options()[2].id, 'rating': 1 }]
-
-        performed_vote: MajorityVoteModel = MajorityVoteService.perform_vote(votes2, poll_id=poll.id)
+        MajorityVoteService.perform_vote(
+            [{'poll_choice_id': poll.options()[0].id, 'rating': 1 },
+            {'poll_choice_id': poll.options()[1].id, 'rating': 2 },
+            {'poll_choice_id': poll.options()[2].id, 'rating': 2 }], poll_id=poll.id)
 
         x: List[MajorityPollResultData] = MajorityVoteService.calculate_result(poll_id=poll.id)
+        
+        # verify options order
+        assert_that(x[0].poll_option_data).is_equal_to(poll.options()[0])
+        assert_that(x[1].poll_option_data).is_equal_to(poll.options()[2])
+        assert_that(x[2].poll_option_data).is_equal_to(poll.options()[1])
 
-        assert_that(x[0].good_votes).is_equal_to(1)
-        assert_that(x[0].median).is_equal_to(3)
-        assert_that(x[0].bad_votes).is_equal_to(1)
+        # verify option values
+        for option in x:
 
-        assert_that(x[1].good_votes).is_equal_to(0)
-        assert_that(x[1].median).is_equal_to(3)
-        assert_that(x[1].bad_votes).is_equal_to(3)
+            if option.poll_option_data == poll.options()[0]:
+                # votes on option 0: [1, 3, 5 ]
+                assert_that(option.median).is_equal_to()
+                assert_that(option.good_votes).is_equal_to()
+                assert_that(option.bad_votes).is_equal_to()
+                assert_that(option.positive_grade)
 
-        assert_that(x[2].good_votes).is_equal_to(1)
-        assert_that(x[2].median).is_equal_to(3)
-        assert_that(x[2].bad_votes).is_equal_to(2)
+            elif option.poll_option_data == poll.options()[1]:
+                # votes on option 1: [1, 2, 2] 
+                assert_that(option.median).is_equal_to()
+                assert_that(option.good_votes).is_equal_to()
+                assert_that(option.bad_votes).is_equal_to()
+                assert_that(option.positive_grade)
+            else:
+                # votes on option 2: [2, 2, 5]
+                assert_that(option.median).is_equal_to()
+                assert_that(option.good_votes).is_equal_to()
+                assert_that(option.bad_votes).is_equal_to()
+                assert_that(option.positive_grade)
 
-    @pytest.mark.django_db
-    def test_majority_vote_calculate_result_check_correct2(self, test_polls):
-        """
-        Test where the calculate_result function is called and chech if the result is correct
-        """
-        poll: PollModel = test_polls['voted_poll']
+    # @pytest.mark.django_db
+    # def test_majority_vote_calculate_result_check_correct2(self, test_polls):
+    #     """
+    #     Test where the calculate_result function is called and chech if the result is correct
+    #     """
+    #     poll: PollModel = test_polls['voted_poll']
 
-        votes: List[dict] = [{'poll_choice_id': poll.options()[0].id, 'rating': 2 },
-                            {'poll_choice_id': poll.options()[1].id, 'rating': 2 },
-                            {'poll_choice_id': poll.options()[2].id, 'rating': 2 }]
+    #     MajorityVoteService.perform_vote(
+    #         [{'poll_choice_id': poll.options()[0].id, 'rating': 2 },
+    #         {'poll_choice_id': poll.options()[1].id, 'rating': 2 },
+    #         {'poll_choice_id': poll.options()[2].id, 'rating': 2 }], poll_id=poll.id)
 
-        performed_vote: MajorityVoteModel = MajorityVoteService.perform_vote(votes, poll_id=poll.id)
+    #     MajorityVoteService.perform_vote(
+    #         [{'poll_choice_id': poll.options()[0].id, 'rating': 5 },
+    #         {'poll_choice_id': poll.options()[1].id, 'rating': 3 },
+    #         {'poll_choice_id': poll.options()[2].id, 'rating': 4 }], poll_id=poll.id)
 
-        votes1: List[dict] = [{'poll_choice_id': poll.options()[0].id, 'rating': 5 },
-                            {'poll_choice_id': poll.options()[1].id, 'rating': 5 },
-                            {'poll_choice_id': poll.options()[2].id, 'rating': 5 }]
+    #     MajorityVoteService.perform_vote(
+    #         [{'poll_choice_id': poll.options()[0].id, 'rating': 3 },
+    #         {'poll_choice_id': poll.options()[1].id, 'rating': 3 },
+    #         {'poll_choice_id': poll.options()[2].id, 'rating': 4 }], poll_id=poll.id)
 
-        performed_vote: MajorityVoteModel = MajorityVoteService.perform_vote(votes1, poll_id=poll.id)
+    #     x: List[MajorityPollResultData] = MajorityVoteService.calculate_result(poll_id=poll.id)
 
-        votes2: List[dict] = [{'poll_choice_id': poll.options()[0].id, 'rating': 3 },
-                            {'poll_choice_id': poll.options()[1].id, 'rating': 3 },
-                            {'poll_choice_id': poll.options()[2].id, 'rating': 3 }]
+    #     # verify option values
+    #     for option in x:
 
-        performed_vote: MajorityVoteModel = MajorityVoteService.perform_vote(votes2, poll_id=poll.id)
+    #         if option.poll_option_data == poll.options()[0]:
+    #             # votes on option 0: [2, 3, 5 ]
+    #             assert_that(option.median).is_equal_to()
+    #             assert_that(option.good_votes).is_equal_to()
+    #             assert_that(option.bad_votes).is_equal_to()
+    #             assert_that(option.positive_grade)
+    #             assert_that(option.negative_grade)
 
-        x: List[MajorityPollResultData] = MajorityVoteService.calculate_result(poll_id=poll.id)
-
-        assert_that(x[0].good_votes).is_equal_to(1)
-        assert_that(x[0].median).is_equal_to(3)
-        assert_that(x[0].bad_votes).is_equal_to(1)
-
-        assert_that(x[1].good_votes).is_equal_to(1)
-        assert_that(x[1].median).is_equal_to(3)
-        assert_that(x[1].bad_votes).is_equal_to(1)
-
-        assert_that(x[2].good_votes).is_equal_to(1)
-        assert_that(x[2].median).is_equal_to(3)
-        assert_that(x[2].bad_votes).is_equal_to(1)
+    #         elif option.poll_option_data == poll.options()[1]:
+    #             # votes on option 1:  [2, 3, 3 ]
+    #             assert_that(option.median).is_equal_to()
+    #             assert_that(option.good_votes).is_equal_to()
+    #             assert_that(option.bad_votes).is_equal_to()
+    #             assert_that(option.positive_grade)
+    #             assert_that(option.negative_grade)
+    #         else:
+    #             # votes on option 2: [2, 4, 4]
+    #             assert_that(option.median).is_equal_to()
+    #             assert_that(option.good_votes).is_equal_to()
+    #             assert_that(option.bad_votes).is_equal_to()
+    #             assert_that(option.positive_grade)
+    #             assert_that(option.negative_grade)
 
     @pytest.mark.django_db
     def test_majority_vote_calculate_result_check_correct3(self, test_polls):
@@ -249,83 +273,101 @@ class TestMajorityVoteService:
         """
         poll: PollModel = test_polls['voted_poll']
 
-        votes: List[dict] = [{'poll_choice_id': poll.options()[0].id, 'rating': 1 },
-                            {'poll_choice_id': poll.options()[1].id, 'rating': 5 },
-                            {'poll_choice_id': poll.options()[2].id, 'rating': 5 }]
+        MajorityVoteService.perform_vote(
+            [{'poll_choice_id': poll.options()[0].id, 'rating': 1 },
+             {'poll_choice_id': poll.options()[1].id, 'rating': 5 },
+             {'poll_choice_id': poll.options()[2].id, 'rating': 5 }], poll_id=poll.id)
 
-        performed_vote: MajorityVoteModel = MajorityVoteService.perform_vote(votes, poll_id=poll.id)
+        MajorityVoteService.perform_vote(
+            [{'poll_choice_id': poll.options()[0].id, 'rating': 2 },
+             {'poll_choice_id': poll.options()[1].id, 'rating': 5 },
+             {'poll_choice_id': poll.options()[2].id, 'rating': 5 }], poll_id=poll.id)
 
-        votes1: List[dict] = [{'poll_choice_id': poll.options()[0].id, 'rating': 2 },
-                            {'poll_choice_id': poll.options()[1].id, 'rating': 5 },
-                            {'poll_choice_id': poll.options()[2].id, 'rating': 5 }]
+        MajorityVoteService.perform_vote(
+            [{'poll_choice_id': poll.options()[0].id, 'rating': 1 },
+             {'poll_choice_id': poll.options()[1].id, 'rating': 4 },
+             {'poll_choice_id': poll.options()[2].id, 'rating': 5 }], poll_id=poll.id)
 
-        performed_vote: MajorityVoteModel = MajorityVoteService.perform_vote(votes1, poll_id=poll.id)
-
-        votes2: List[dict] = [{'poll_choice_id': poll.options()[0].id, 'rating': 1 },
-                            {'poll_choice_id': poll.options()[1].id, 'rating': 4 },
-                            {'poll_choice_id': poll.options()[2].id, 'rating': 5 }]
-
-        performed_vote: MajorityVoteModel = MajorityVoteService.perform_vote(votes2, poll_id=poll.id)
-
-        x: List[MajorityPollResultData] = MajorityVoteService.calculate_result(poll_id=poll.id)
-
-        assert_that(x[0].good_votes).is_equal_to(3)
-        assert_that(x[0].median).is_equal_to(3)
-        assert_that(x[0].bad_votes).is_equal_to(0)
-
-        assert_that(x[1].good_votes).is_equal_to(3)
-        assert_that(x[1].median).is_equal_to(3)
-        assert_that(x[1].bad_votes).is_equal_to(0)
-
-        assert_that(x[2].good_votes).is_equal_to(0)
-        assert_that(x[2].median).is_equal_to(3)
-        assert_that(x[2].bad_votes).is_equal_to(3)
-
-
-    @pytest.mark.django_db
-    def test_majority_vote_calculate_result_check_correct4(self, test_polls):
-        """
-        Test where the calculate_result function is called and chech if the result is correct
-        """
-        poll: PollModel = test_polls['voted_poll']
-
-        votes: List[dict] = [{'poll_choice_id': poll.options()[0].id, 'rating': 1 },
-                            {'poll_choice_id': poll.options()[1].id, 'rating': 5 },
-                            {'poll_choice_id': poll.options()[2].id, 'rating': 5 }]
-
-        performed_vote: MajorityVoteModel = MajorityVoteService.perform_vote(votes, poll_id=poll.id)
-
-        votes1: List[dict] = [{'poll_choice_id': poll.options()[0].id, 'rating': 2 },
-                            {'poll_choice_id': poll.options()[1].id, 'rating': 5 },
-                            {'poll_choice_id': poll.options()[2].id, 'rating': 5 }]
-
-        performed_vote: MajorityVoteModel = MajorityVoteService.perform_vote(votes1, poll_id=poll.id)
-
-        votes2: List[dict] = [{'poll_choice_id': poll.options()[0].id, 'rating': 1 },
-                            {'poll_choice_id': poll.options()[1].id, 'rating': 4 },
-                            {'poll_choice_id': poll.options()[2].id, 'rating': 5 }]
-
-        performed_vote: MajorityVoteModel = MajorityVoteService.perform_vote(votes2, poll_id=poll.id)
-
-        votes3: List[dict] = [{'poll_choice_id': poll.options()[0].id, 'rating': 3 },
-                            {'poll_choice_id': poll.options()[1].id, 'rating': 2 },
-                            {'poll_choice_id': poll.options()[2].id, 'rating': 5 }]
-
-        performed_vote: MajorityVoteModel = MajorityVoteService.perform_vote(votes3, poll_id=poll.id)
+        MajorityVoteService.perform_vote(
+            [{'poll_choice_id': poll.options()[0].id, 'rating': 1 },
+             {'poll_choice_id': poll.options()[1].id, 'rating': 4 },
+             {'poll_choice_id': poll.options()[2].id, 'rating': 5 }], poll_id=poll.id)
 
         x: List[MajorityPollResultData] = MajorityVoteService.calculate_result(poll_id=poll.id)
 
-        assert_that(x[0].good_votes).is_equal_to(4)
-        assert_that(x[0].median).is_equal_to(3)
-        assert_that(x[0].bad_votes).is_equal_to(0)
+        # verify options order
+        assert_that(x[0].poll_option_data).is_equal_to(poll.options()[2])
+        assert_that(x[1].poll_option_data).is_equal_to(poll.options()[1])
+        assert_that(x[2].poll_option_data).is_equal_to(poll.options()[0])
 
-        assert_that(x[1].good_votes).is_equal_to(3)
-        assert_that(x[1].median).is_equal_to(3)
-        assert_that(x[1].bad_votes).is_equal_to(1)
+        # verify option values
+        for option in x:
+            
+            if option.poll_option_data == poll.options()[0]:
+                # votes on option 0: [1, 1, 1, 2]
+                assert_that(option.median).is_equal_to()
+                assert_that(option.good_votes).is_equal_to()
+                assert_that(option.bad_votes).is_equal_to()
+                assert_that(option.positive_grade)
 
-        assert_that(x[2].good_votes).is_equal_to(0)
-        assert_that(x[2].median).is_equal_to(3)
-        assert_that(x[2].bad_votes).is_equal_to(3)
+            elif option.poll_option_data == poll.options()[1]:
+                # votes on option 1:  [4, 4, 5, 5]
+                assert_that(option.median).is_equal_to()
+                assert_that(option.good_votes).is_equal_to()
+                assert_that(option.bad_votes).is_equal_to()
+                assert_that(option.positive_grade)
+            else:
+                # votes on option 2: [5, 5, 5, 5]
+                assert_that(option.median).is_equal_to()
+                assert_that(option.good_votes).is_equal_to()
+                assert_that(option.bad_votes).is_equal_to()
+                assert_that(option.positive_grade)
+
+
+    # @pytest.mark.django_db
+    # def test_majority_vote_calculate_result_check_correct4(self, test_polls):
+    #     """
+    #     Test where the calculate_result function is called and chech if the result is correct
+    #     """
+    #     poll: PollModel = test_polls['voted_poll']
+
+    #     votes: List[dict] = [{'poll_choice_id': poll.options()[0].id, 'rating': 1 },
+    #                         {'poll_choice_id': poll.options()[1].id, 'rating': 5 },
+    #                         {'poll_choice_id': poll.options()[2].id, 'rating': 5 }]
+
+    #     performed_vote: MajorityVoteModel = MajorityVoteService.perform_vote(votes, poll_id=poll.id)
+
+    #     votes1: List[dict] = [{'poll_choice_id': poll.options()[0].id, 'rating': 2 },
+    #                         {'poll_choice_id': poll.options()[1].id, 'rating': 5 },
+    #                         {'poll_choice_id': poll.options()[2].id, 'rating': 5 }]
+
+    #     performed_vote: MajorityVoteModel = MajorityVoteService.perform_vote(votes1, poll_id=poll.id)
+
+    #     votes2: List[dict] = [{'poll_choice_id': poll.options()[0].id, 'rating': 1 },
+    #                         {'poll_choice_id': poll.options()[1].id, 'rating': 4 },
+    #                         {'poll_choice_id': poll.options()[2].id, 'rating': 5 }]
+
+    #     performed_vote: MajorityVoteModel = MajorityVoteService.perform_vote(votes2, poll_id=poll.id)
+
+    #     votes3: List[dict] = [{'poll_choice_id': poll.options()[0].id, 'rating': 3 },
+    #                         {'poll_choice_id': poll.options()[1].id, 'rating': 2 },
+    #                         {'poll_choice_id': poll.options()[2].id, 'rating': 5 }]
+
+    #     performed_vote: MajorityVoteModel = MajorityVoteService.perform_vote(votes3, poll_id=poll.id)
+
+    #     x: List[MajorityPollResultData] = MajorityVoteService.calculate_result(poll_id=poll.id)
+
+    #     assert_that(x[0].good_votes).is_equal_to(4)
+    #     assert_that(x[0].median).is_equal_to(3)
+    #     assert_that(x[0].bad_votes).is_equal_to(0)
+
+    #     assert_that(x[1].good_votes).is_equal_to(3)
+    #     assert_that(x[1].median).is_equal_to(3)
+    #     assert_that(x[1].bad_votes).is_equal_to(1)
+
+    #     assert_that(x[2].good_votes).is_equal_to(0)
+    #     assert_that(x[2].median).is_equal_to(3)
+    #     assert_that(x[2].bad_votes).is_equal_to(3)
 
     @pytest.mark.django_db
     def test_majority_vote_calculate_result_check_correct5(self, test_polls):
@@ -334,48 +376,52 @@ class TestMajorityVoteService:
         """
         poll: PollModel = test_polls['control_poll']
 
-        votes: List[dict] = [{'poll_choice_id': poll.options()[0].id, 'rating': 1 },
-                            {'poll_choice_id': poll.options()[1].id, 'rating': 2 },
-                            {'poll_choice_id': poll.options()[2].id, 'rating': 4 },
-                            {'poll_choice_id': poll.options()[3].id, 'rating': 4 }]
+        MajorityVoteService.perform_vote(
+            [{'poll_choice_id': poll.options()[0].id, 'rating': 1 },
+            {'poll_choice_id': poll.options()[1].id, 'rating': 2 },
+            {'poll_choice_id': poll.options()[2].id, 'rating': 4 },
+            {'poll_choice_id': poll.options()[3].id, 'rating': 4 }], poll_id=poll.id)
 
-        performed_vote: MajorityVoteModel = MajorityVoteService.perform_vote(votes, poll_id=poll.id)
+        MajorityVoteService.perform_vote(
+            [{'poll_choice_id': poll.options()[0].id, 'rating': 2 },
+            {'poll_choice_id': poll.options()[1].id, 'rating': 2 },
+            {'poll_choice_id': poll.options()[2].id, 'rating': 5 },
+            {'poll_choice_id': poll.options()[3].id, 'rating': 5 }], poll_id=poll.id)
 
-        votes1: List[dict] = [{'poll_choice_id': poll.options()[0].id, 'rating': 2 },
-                            {'poll_choice_id': poll.options()[1].id, 'rating': 2 },
-                            {'poll_choice_id': poll.options()[2].id, 'rating': 5 },
-                            {'poll_choice_id': poll.options()[3].id, 'rating': 5 }]
+        MajorityVoteService.perform_vote(
+            [{'poll_choice_id': poll.options()[0].id, 'rating': 1 },
+            {'poll_choice_id': poll.options()[1].id, 'rating': 1 },
+            {'poll_choice_id': poll.options()[2].id, 'rating': 3 },
+            {'poll_choice_id': poll.options()[3].id, 'rating': 5 }], poll_id=poll.id)
 
-        performed_vote: MajorityVoteModel = MajorityVoteService.perform_vote(votes1, poll_id=poll.id)
-
-        votes2: List[dict] = [{'poll_choice_id': poll.options()[0].id, 'rating': 1 },
-                            {'poll_choice_id': poll.options()[1].id, 'rating': 1 },
-                            {'poll_choice_id': poll.options()[2].id, 'rating': 3 },
-                            {'poll_choice_id': poll.options()[3].id, 'rating': 5 }]
-
-        performed_vote: MajorityVoteModel = MajorityVoteService.perform_vote(votes2, poll_id=poll.id)
-
-        votes3: List[dict] = [{'poll_choice_id': poll.options()[0].id, 'rating': 3 },
-                            {'poll_choice_id': poll.options()[1].id, 'rating': 2 },
-                            {'poll_choice_id': poll.options()[2].id, 'rating': 4 },
-                            {'poll_choice_id': poll.options()[3].id, 'rating': 5 }]
-
-        performed_vote: MajorityVoteModel = MajorityVoteService.perform_vote(votes3, poll_id=poll.id)
+        MajorityVoteService.perform_vote(
+            [{'poll_choice_id': poll.options()[0].id, 'rating': 3 },
+            {'poll_choice_id': poll.options()[1].id, 'rating': 2 },
+            {'poll_choice_id': poll.options()[2].id, 'rating': 4 },
+            {'poll_choice_id': poll.options()[3].id, 'rating': 5 }], poll_id=poll.id)
 
         x: List[MajorityPollResultData] = MajorityVoteService.calculate_result(poll_id=poll.id)
 
-        assert_that(x[0].good_votes).is_equal_to(4)
-        assert_that(x[0].median).is_equal_to(3)
-        assert_that(x[0].bad_votes).is_equal_to(0)
+        # assert_that(x[0].good_votes).is_equal_to()
+        # assert_that(x[0].median).is_equal_to()
+        # assert_that(x[0].positive_grade)
+        # assert_that(x[0].negative_grade)
+        # assert_that(x[0].bad_votes).is_equal_to()
 
-        assert_that(x[1].good_votes).is_equal_to(3)
-        assert_that(x[1].median).is_equal_to(3)
-        assert_that(x[1].bad_votes).is_equal_to(0)
+        # assert_that(x[1].good_votes).is_equal_to()
+        # assert_that(x[1].median).is_equal_to()
+        # assert_that(x[1].positive_grade)
+        # assert_that(x[1].negative_grade)
+        # assert_that(x[1].bad_votes).is_equal_to()
 
-        assert_that(x[2].good_votes).is_equal_to(0)
-        assert_that(x[2].median).is_equal_to(3)
-        assert_that(x[2].bad_votes).is_equal_to(4)
+        # assert_that(x[2].good_votes).is_equal_to()
+        # assert_that(x[2].median).is_equal_to()
+        # assert_that(x[2].positive_grade)
+        # assert_that(x[2].negative_grade)
+        # assert_that(x[2].bad_votes).is_equal_to()
 
-        assert_that(x[3].good_votes).is_equal_to(0)
-        assert_that(x[3].median).is_equal_to(3)
-        assert_that(x[3].bad_votes).is_equal_to(3)
+        # assert_that(x[3].good_votes).is_equal_to()
+        # assert_that(x[3].median).is_equal_to()
+        # assert_that(x[3].positive_grade)
+        # assert_that(x[3].negative_grade)
+        # assert_that(x[3].bad_votes).is_equal_to()
