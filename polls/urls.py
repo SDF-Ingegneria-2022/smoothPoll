@@ -10,12 +10,13 @@ urlpatterns = [
     
     path('<int:poll_id>/risultati/', views.results, name='results'),
     path('dummy/maggioritario/', views.dummy_majority, name='dummy-majority'),
-    path('dummt/risultati-maggioritario', views.majority_results, name='majority-results'),
-    path('dummy/conferma-voto-maggioritario/', views.submit_majority_vote, name='submit_majority_vote'),
+    path('<int:poll_id>/conferma-voto-maggioritario/', views.majority_vote_submit, name='majority_vote_submit'),
+    path('<int:poll_id>/risultati-maggioritario', views.majority_vote_results, name='majority_vote_results'),
+
+
     # create poll proces urls
     path('crea-nuovo/', views.create_poll_start, name="create-poll"), 
     path('crea-nuovo/step1', views.CreatePollStep1View.as_view(), name="create-poll-1"), 
     path('crea-nuovo/step2', views.CreatePollStep2View.as_view(), name="create-poll-2"), 
-    path('crea-nuovo/conferma', views.create_poll_confirm, name="create-poll-confirm")
-
+    path('crea-nuovo/conferma', views.create_poll_confirm, name="create-poll-confirm"),
 ]

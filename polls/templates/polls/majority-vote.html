@@ -11,140 +11,66 @@
 <div class="container border">
 
     <div class="container mt-5 mb-5">
+        <h4 class="text-dark">Per votare un sondaggio con il metodo del giudizio maggioritario 
+            {% comment %} (<a href="https://youtu.be/J_UJ19t5vuY" target="_blank">metodo del voto maggioritario</a>) {% endcomment %}
+            dai la tua opinione su ciascuno delle opzioni tramite l'apposita scala di giudizi </h4>
+        <p class="text-secondary">Per valutare una opzione seleziona un valore della scala di giudizi 
+            attraverso l'apposita check-box </p>
+    </div>
+
+    <div class="container mt-5 mb-5">
         <p class="mb-0">Testo della domanda: </p>
         <h3>{{ poll.question }}</h3>
     </div>
     
     <div class="container mt-5 mb-5">
-        <form action="{% url 'polls:submit_majority_vote' %}" method="POST">
+        <form action="{% url 'polls:majority_vote_submit' poll_id=poll.id %}" method="POST">
 
             {% csrf_token %}
-
             {# Form Options #}
+            <p class="text-secondary">Opzioni da valutare: </p>
             <div class="container m-3">
-                <div class="row">
-                    <p class="fw-bold">
-                        Opzione 1
-                    </p>
-                    <div class="col">
-                        <p>pessimo</p>
+                {% for option in poll.options %}
+                    <div class="form-check m-2 pb-5">
+                        <div class="row">
+                            <p class="fw-bold">
+                                {{option.value}}
+                            </p>
+                            <div class="col">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="{{option.id}}" id="inlineRadio1" value="1">
+                                    <label class="form-check-label" for="inlineRadio1">Pessimo</label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="{{option.id}}" id="inlineRadio2" value="2">
+                                    <label class="form-check-label" for="inlineRadio2">Insufficiente</label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="{{option.id}}" id="inlineRadio3" value="3">
+                                    <label class="form-check-label" for="inlineRadio3">Sufficiente</label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="{{option.id}}" id="inlineRadio3" value="4">
+                                    <label class="form-check-label" for="inlineRadio3">Buono</label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="{{option.id}}" id="inlineRadio3" value="5">
+                                    <label class="form-check-label" for="inlineRadio3">Ottimo</label>
+                                </div>
+                            </div>
+                        </div>
+                        <hr />
                     </div>
-                    <div class="col">
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="Option1" id="inlineRadio1" value="option1">
-                            <label class="form-check-label" for="inlineRadio1">1</label>
-                          </div>
-                    </div>
-                    <div class="col">
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="Option1" id="inlineRadio2" value="option2">
-                            <label class="form-check-label" for="inlineRadio2">2</label>
-                          </div>
-                    </div>
-                    <div class="col">
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="Option1" id="inlineRadio3" value="option3">
-                            <label class="form-check-label" for="inlineRadio3">3</label>
-                          </div>
-                    </div>
-                    <div class="col">
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="Option1" id="inlineRadio3" value="option4">
-                            <label class="form-check-label" for="inlineRadio3">4</label>
-                          </div>
-                    </div>
-                    <div class="col">
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="Option1" id="inlineRadio3" value="option5">
-                            <label class="form-check-label" for="inlineRadio3">5</label>
-                          </div>
-                    </div>
-                    <div class="col">
-                        <p>ottimo</p>
-                    </div>
-                </div>
-                <div class="row">
-                    <p class="fw-bold">
-                        Opzione 2
-                    </p>
-                    <div class="col">
-                        <p>pessimo</p>
-                    </div>
-                    <div class="col">
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="Option2" id="inlineRadio1" value="option1">
-                            <label class="form-check-label" for="inlineRadio1">1</label>
-                          </div>
-                    </div>
-                    <div class="col">
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="Option2" id="inlineRadio2" value="option2">
-                            <label class="form-check-label" for="inlineRadio2">2</label>
-                          </div>
-                    </div>
-                    <div class="col">
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="Option2" id="inlineRadio3" value="option3">
-                            <label class="form-check-label" for="inlineRadio3">3</label>
-                          </div>
-                    </div>
-                    <div class="col">
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="Option2" id="inlineRadio3" value="option4">
-                            <label class="form-check-label" for="inlineRadio3">4</label>
-                          </div>
-                    </div>
-                    <div class="col">
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="Option2" id="inlineRadio3" value="option5">
-                            <label class="form-check-label" for="inlineRadio3">5</label>
-                          </div>
-                    </div>
-                    <div class="col">
-                        <p>ottimo</p>
-                    </div>
-                </div>
-                <div class="row">
-                    <p class="fw-bold">
-                        Opzione 3
-                    </p>
-                    <div class="col">
-                        <p>pessimo</p>
-                    </div>
-                    <div class="col">
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="Option3" id="inlineRadio1" value="option1">
-                            <label class="form-check-label" for="inlineRadio1">1</label>
-                          </div>
-                    </div>
-                    <div class="col">
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="Option3" id="inlineRadio2" value="option2">
-                            <label class="form-check-label" for="inlineRadio2">2</label>
-                          </div>
-                    </div>
-                    <div class="col">
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="Option3" id="inlineRadio3" value="option3">
-                            <label class="form-check-label" for="inlineRadio3">3</label>
-                          </div>
-                    </div>
-                    <div class="col">
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="Option3" id="inlineRadio3" value="option4">
-                            <label class="form-check-label" for="inlineRadio3">4</label>
-                          </div>
-                    </div>
-                    <div class="col">
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="Option3" id="inlineRadio3" value="option5">
-                            <label class="form-check-label" for="inlineRadio3">5</label>
-                          </div>
-                    </div>
-                    <div class="col">
-                        <p>ottimo</p>
-                    </div>
-                </div>
+                {% endfor %}
+
                 {% if error is not None %}<div class="alert alert-danger" role="alert">
                     {{error}}
                 </div>{% endif %}
@@ -153,7 +79,7 @@
             {# Confirm button #}
             <div class="container mt-5">
                 <button type="submit" class="btn btn-primary">Conferma</button>
-                <a class="btn btn-primary" href="{% url 'polls:majority-results' %}" role="button">Vedi risultati</a>
+                <a class="btn btn-primary" href="{% url 'polls:majority_vote_results' poll_id=poll.id %}" role="button">Vedi risultati</a>
             </div>
 
 

@@ -4,12 +4,15 @@ from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest, HttpR
 from django.shortcuts import render
 from django.urls import reverse
 from django.core.paginator import Paginator
+from polls.classes.majority_poll_result_data import MajorityPollResultData
 from polls.classes.poll_result import PollResult, PollResultVoice
 from polls.classes.poll_result import PollResult
 from polls.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
 from polls.exceptions.vote_does_not_exixt_exception import VoteDoesNotExistException
-from polls.services.majority_vote_service import MajorityVoteService
+from polls.models.majority_vote_model import MajorityVoteModel
 from polls.models.poll_model import PollModel
+from polls.models.poll_option_model import PollOptionModel
+from polls.services.majority_vote_service import MajorityVoteService
 from polls.services.poll_service import PollService
 from polls.exceptions.poll_option_unvalid_exception import PollOptionUnvalidException
 from polls.services.vote_service import VoteService
@@ -140,24 +143,47 @@ def dummy_majority(request: HttpRequest):
     """
     Dummy poll page, here user can try to vote.
     """
+    try:
+        poll = PollModel.objects.filter(poll_type='majority_vote').first()
+    except Exception:
+        raise Http404
+
+    return render(request, 'polls/majority-vote.html', {'poll': poll})
+
+def majority_vote_submit(request: HttpRequest, poll_id: int):
+    """Render page with confirmation of majority vote validation."""
+
+    ratings: List[dict] = []
+    #poll: PollModel = PollModel.objects.filter(poll_id=poll_id)
+
+    for key, value in request.POST.items():
+        if not key == 'csrfmiddlewaretoken':
+            rating: dict = {}
+            rating["poll_choice_id"] = int(key)
+            rating["rating"] = int(value)
+            ratings.append(rating)
 
     try:
-        poll_results: PollResult = VoteService.calculate_result("1")
-        sorted_options: List[PollResultVoice] = poll_results.get_sorted_options()
+        vote: MajorityVoteModel = MajorityVoteService.perform_vote(ratings, poll_id=str(poll_id))
+    except Exception as e:
+        raise Http404
+
+    return render(request, 'polls/vote-majority-confirm.html', {'vote': vote})
+
+def majority_vote_results(request: HttpRequest, poll_id: int):
+    """Render page with majority poll results"""
+
+    try:
+        poll_results: List[MajorityPollResultData] = MajorityVoteService.calculate_result(poll_id=str(poll_id))
+    except PollDoesNotExistException:
+        raise Http404
     except Exception:
-        # internal error: you should inizialize DB first (error 500)
+        # Internal error: you should inizialize DB first (error 500)
         return HttpResponseServerError("Dummy survey is not initialized. Please see README.md and create it.")
 
-    # render page for vote
-    return render(request, 'polls/majority-vote.html', {'poll_results': poll_results})
-
-def majority_results(request: HttpRequest):
-    """
-    #TODO: improve readability
-    Render page with results. 
-    """
     return render(request, 'polls/majority-results.html', 
-        # {'poll':sorted_options, 'question': poll_results.poll.question}
+        
+        {'poll_results': poll_results}
         )
 
 def all_polls(request: HttpRequest):
@@ -186,14 +212,3 @@ def all_polls(request: HttpRequest):
                     }
                 )
 
-def submit_majority_vote(request: HttpRequest):
-    """Submit the majority vote and get the result"""
-
-    try:
-        majority_vote = MajorityVoteService.perform_vote([{'poll_choice_id': 4, 'rating': 2 },
-                                                            {'poll_choice_id': 5, 'rating': 2 },
-                                                            {'poll_choice_id': 6, 'rating': 3 }], 1)
-    except Exception:
-        return HttpResponseServerError("Couldn't submit vote")
-
-    return HttpResponseRedirect(reverse('polls:submit_majority_vote'))

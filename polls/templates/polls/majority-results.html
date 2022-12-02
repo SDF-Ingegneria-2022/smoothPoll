@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="container text-center m-5">
-    <h1>{{poll_results.poll.name}}</h1>
+    <h1>{{poll_results.poll_option_data.poll_fk.name}}</h1>
     <h2 class="text-info">Risultati sondaggio</h2>
 </div>
 
@@ -31,7 +31,7 @@
             <span style="background-color:#FDB777;" class="label">5</span>            
         </div>
         <div class="container m-3">
-            <span class="fw-bold">Opzione 1</span>
+            <span class="fw-bold">{{poll_results.poll_option_data.value}}</span>
             <div class="progress">
                 <div style="background-color:#FF6200; width: 50%" class="progress-bar" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">50%</div>
                 <div style="background-color:#FD7F2C; width: 30%" class="progress-bar" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100">30%</div>
