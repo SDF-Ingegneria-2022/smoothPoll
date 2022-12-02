@@ -3,7 +3,6 @@ from typing import List
 from django.core.exceptions import ObjectDoesNotExist
 from polls.classes.majority_poll_result_data import MajorityPollResultData
 from polls.exceptions.majority_number_of_ratings_not_valid import MajorityNumberOfRatingsNotValid
-from polls.classes.majority_poll_result import MajorityPollResult
 from polls.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
 from polls.exceptions.poll_option_rating_unvalid_exception import PollOptionRatingUnvalidException
 from polls.models.majority_judgment_model import MajorityJudgmentModel
@@ -79,12 +78,6 @@ class MajorityVoteService:
         except ObjectDoesNotExist:
             raise PollDoesNotExistException(f"Poll with id={poll_id} does not exist")
 
-        result: MajorityPollResult = MajorityPollResult(poll)
-
-        #median: int = result.majority_median(num)
-
-        median: int = int(3)
-
         majority_vote_result_unsorted: List[MajorityPollResultData] = []
 
         all_options: PollOptionModel = PollOptionModel.objects.filter(poll_fk=poll)
@@ -92,32 +85,10 @@ class MajorityVoteService:
         # calculate triplet <#worst votes, median(sign), #best votes> foreach option
         for option in all_options:
 
-            # retrieve votes (ordered by rating)
-            option_votes = MajorityJudgmentModel.objects \
-                .filter(poll_option=option.id) \
-                .order_by('rating')
-
-            option_result = MajorityPollResultData()
-
-            option_result.poll_option_data=option
-
-            # calculate median (or worse of two)
-            option_result.median = option_votes[math.floor((option_votes.count()-1)/2)].rating
-
-            # retrieve number of (strictly) greater and smaller votes
-            option_result.good_votes: int = option_votes.filter(rating__gt=option_result.median).count()
-            option_result.bad_votes: int = option_votes.filter(rating__lt=option_result.median).count()
-            
-            # set sign: 
-            # if good > bad         --> +
-            # else if good <= bad   --> -
-            option_result.positive_grade = (option_result.good_votes > option_result.bad_votes)
-
+            option_result = MajorityPollResultData(option)
             majority_vote_result_unsorted.append(option_result)
 
+        # sort result (descendant)
+        majority_vote_result_unsorted.sort(reverse=True)
 
-        majority_vote_result = result.vote_result(majority_vote_result_unsorted)
-
-        return list(majority_vote_result)
-
-# to remake in a better way the calculate_result method
+        return majority_vote_result_unsorted
