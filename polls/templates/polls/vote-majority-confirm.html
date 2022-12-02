@@ -56,11 +56,10 @@ function copyLink(url) {
             {% comment %} Quando il sondaggio sarà chiuso, potrai vedere il risultato 
             <a href="{% url 'polls:majority-results' %}" title="Esiti sondaggio">su questa pagina</a>.  {% endcomment %}
             
-            <a class="btn btn-primary" href="{% url 'polls:majority-results' %}" role="button">Vedi risultati</a>
-
+            <a class="btn btn-primary" href="{% url 'polls:majority_vote_results' poll_id=poll.id %}" role="button">Vedi risultati</a>
 
             <button type="button" class="btn btn-secondary" 
-            onclick="copyLink('{{request.get_host}}{% url 'polls:majority-results' %}')">
+            onclick="copyLink('{{request.get_host}}{% url 'polls:majority_vote_results' poll_id=poll.id %}')">
             Copia link
             </button>
             <a class="btn btn-secondary" href="{% url 'polls:dummy-majority' %}" role="button">Vota di nuovo</a>

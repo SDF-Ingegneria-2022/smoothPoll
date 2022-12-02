@@ -4,6 +4,7 @@ from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest, HttpR
 from django.shortcuts import render
 from django.urls import reverse
 from django.core.paginator import Paginator
+from polls.classes.majority_poll_result_data import MajorityPollResultData
 from polls.classes.poll_result import PollResult, PollResultVoice
 from polls.classes.poll_result import PollResult
 from polls.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
@@ -169,15 +170,20 @@ def majority_vote_submit(request: HttpRequest, poll_id: int):
 
     return render(request, 'polls/vote-majority-confirm.html', {'vote': vote})
 
+def majority_vote_results(request: HttpRequest, poll_id: int):
+    """Render page with majority poll results"""
 
+    try:
+        poll_results: List[MajorityPollResultData] = MajorityVoteService.calculate_result(poll_id=str(poll_id))
+    except PollDoesNotExistException:
+        raise Http404
+    except Exception:
+        # Internal error: you should inizialize DB first (error 500)
+        return HttpResponseServerError("Dummy survey is not initialized. Please see README.md and create it.")
 
-def majority_results(request: HttpRequest):
-    """
-    #TODO: improve readability
-    Render page with results. 
-    """
     return render(request, 'polls/majority-results.html', 
-        # {'poll':sorted_options, 'question': poll_results.poll.question}
+        
+        {'poll_results': poll_results}
         )
 
 def all_polls(request: HttpRequest):
@@ -206,21 +212,3 @@ def all_polls(request: HttpRequest):
                     }
                 )
 
-def submit_majority_vote(request: HttpRequest):
-    if 'vote' not in request.POST:
-        request.session['vote-submit-error'] = "Errore! Per confermare il voto " \
-            + "devi esprimere una preferenza."
-        print("errore")
-    """Submit the majority vote and get the result"""
-    poll : PollModel = PollService.get_poll_by_id("196")
-    votes: List[dict] = [{'poll_choice_id': poll.options()[0].id, 'rating': 2 },
-                            {'poll_choice_id': poll.options()[1].id, 'rating': 2 },
-                            {'poll_choice_id': poll.options()[2].id, 'rating': 3 }]
-    MajorityVoteService.perform_vote(votes, poll_id=196)
-    vote: MajorityVoteModel = MajorityVoteModel()
-    vote.poll = poll
-    vote.save()
-    print(vote)
-    return render(request, 'polls/vote-majority-confirm.html', {'poll' : poll, 'vote': vote}
-        # {'poll':sorted_options, 'question': poll_results.poll.question}
-        )

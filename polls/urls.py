@@ -11,7 +11,7 @@ urlpatterns = [
     path('<int:poll_id>/risultati/', views.results, name='results'),
     path('dummy/maggioritario/', views.dummy_majority, name='dummy-majority'),
     path('<int:poll_id>/conferma-voto-maggioritario/', views.majority_vote_submit, name='majority_vote_submit'),
-    path('dummy/risultati-maggioritario', views.majority_results, name='majority-results'),
+    path('<int:poll_id>/risultati-maggioritario', views.majority_vote_results, name='majority_vote_results'),
 
 
     # create poll proces urls
