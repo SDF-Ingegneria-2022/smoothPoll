@@ -88,11 +88,11 @@ function copyLink(url) {
                     </tr>
                 </thead>
                 <tbody>
-                    {% for option in vote.poll.options%}
+                    {% for option in vote.judgments%}
                         <tr>
                             <th scope="row">  {{ forloop.counter }}</th>
-                            <td>{{option.value}}</td>
-                            <td>Option to add</td>
+                            <td>{{option.poll_option.value}}</td>
+                            <td>{{option.rating}}</td>
                         </tr>  
                     {%endfor%}
                 </tbody>
