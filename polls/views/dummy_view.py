@@ -155,7 +155,6 @@ def majority_vote_submit(request: HttpRequest, poll_id: int):
 
     ratings: List[dict] = []
     #poll: PollModel = PollModel.objects.filter(poll_id=poll_id)
-    print(request.POST.items())
     for key, value in request.POST.items():
         if not key == 'csrfmiddlewaretoken':
             rating: dict = {}
@@ -167,7 +166,6 @@ def majority_vote_submit(request: HttpRequest, poll_id: int):
         vote: MajorityVoteModel = MajorityVoteService.perform_vote(ratings, poll_id=str(poll_id))
     except Exception as e:
         raise Http404
-    print(vote.judgments())
     return render(request, 'polls/vote-majority-confirm.html', {'vote': vote})
 
 def majority_vote_results(request: HttpRequest, poll_id: int):
