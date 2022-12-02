@@ -1,3 +1,4 @@
+import math
 from typing import List
 from django.core.exceptions import ObjectDoesNotExist
 from polls.classes.majority_poll_result_data import MajorityPollResultData
@@ -86,7 +87,29 @@ class MajorityVoteService:
 
         majority_vote_result_unsorted: List[MajorityPollResultData] = []
 
-        majority_vote_result_unsorted = result.majority_count(median)
+        all_options: PollOptionModel = PollOptionModel.objects.filter(poll_fk=poll)
+        
+        # calculate triplet <#worst votes, median(sign), #best votes> foreach option
+        for option in all_options:
+
+            # retrieve votes (ordered by rating)
+            option_votes = MajorityJudgmentModel.objects \
+                .filter(poll_option=option.id) \
+                .order_by('rating')
+
+            option_result = MajorityPollResultData()
+
+            # calculate median (or worse of two)
+            option_result.median = option_votes[math.floor(option_votes.count()/2)].rating
+
+            # retrieve number of (strictly) greater and smaller votes
+            option_result.good_votes: int = option_votes.filter(rating__gt=option_result.median).count()
+            option_result.bad_votes: int = option_votes.filter(rating__lt=option_result.median).count()
+            
+            # set sign: 
+            # if good > bad         --> +
+            # else if good <= bad   --> -
+            option_result.positive_grade = (option_result.good_votes > option_result.bad_votes)
 
         majority_vote_result = result.vote_result(majority_vote_result_unsorted)
 

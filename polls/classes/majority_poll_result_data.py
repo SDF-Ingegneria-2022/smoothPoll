@@ -22,14 +22,14 @@ class MajorityPollResultData:
     """The majority grade sign is '+' if good votes are more than
     bad votes"""
 
-    negative_grade: bool
-    """The majority grade sign is '-' if bad votes are more than
-    good votes"""
+    # negative_grade: bool
+    # """The majority grade sign is '-' if bad votes are more than
+    # good votes"""
     
-    def __init__(self, option: PollOptionModel, good: int, med: int, bad: int) -> None:
-        self.poll_option_data = option
-        self.good_votes = good
-        self.median = med
-        self.bad_votes = bad
-        self.positive_grade = self.good_votes >= self.bad_votes
-        self.negative_grade = self.good_votes < self.bad_votes
+    # def __init__(self, option: PollOptionModel, good: int, med: int, bad: int) -> None:
+    #     self.poll_option_data = option
+    #     self.good_votes = good
+    #     self.median = med
+    #     self.bad_votes = bad
+    #     self.positive_grade = self.good_votes >= self.bad_votes
+    #     self.negative_grade = self.good_votes < self.bad_votes

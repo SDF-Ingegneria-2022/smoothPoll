@@ -64,20 +64,26 @@ class MajorityPollResult:
         results_temp = results.copy()
 
         def compare(x, y):
-            if x.positive_grade and y.negative_grade:
+            
+            # if median is greater --> x win
+            if x.median > y.median:
                 return 1
-            elif x.positive_grade and y.positive_grade:
-                if x.good_votes > y.good_votes:
-                    return 1
-                else:
-                    return -1
-            elif x.negative_grade and y.negative_grade:
-                if x.bad_votes > y.bad_votes:
-                    return 1
-                else:
-                    return -1
-            else:
-                return -1
+
+            # positive grade should win against  
+            # negative grade
+            if x.positive_grade and not y.positive_grade:
+                return 1
+            elif not x.positive_grade and y.positive_grade:
+                return -1 
+            
+            # if both are positive, it wins who has greater number of 
+            # strictly better votes
+            if x.positive_grade and y.positive_grade:
+                return x if x.good_votes > y.good_votes else y
+            elif (not x.positive_grade) and (not y.positive_grade):
+                return x if x.negative_votes < y.negative_votes else y
+
+            return 0
 
         results_temp = sorted(results, key=cmp_to_key(compare), reverse=True)
 
