@@ -98,11 +98,11 @@ class MajorityVoteService:
                 .order_by('rating')
 
             option_result = MajorityPollResultData()
-            
+
             option_result.poll_option_data=option
 
             # calculate median (or worse of two)
-            option_result.median = option_votes[math.floor(option_votes.count()/2)].rating
+            option_result.median = option_votes[math.floor((option_votes.count()-1)/2)].rating
 
             # retrieve number of (strictly) greater and smaller votes
             option_result.good_votes: int = option_votes.filter(rating__gt=option_result.median).count()

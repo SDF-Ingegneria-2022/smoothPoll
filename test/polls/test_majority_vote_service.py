@@ -198,23 +198,23 @@ class TestMajorityVoteService:
 
             if option.poll_option_data == poll.options()[0]:
                 # votes on option 0: [1, 3, 5 ]
-                assert_that(option.median).is_equal_to()
-                assert_that(option.good_votes).is_equal_to()
-                assert_that(option.bad_votes).is_equal_to()
-                assert_that(option.positive_grade)
+                assert_that(option.median).is_equal_to(3)
+                assert_that(option.good_votes).is_equal_to(1)
+                assert_that(option.bad_votes).is_equal_to(1)
+                assert_that(option.positive_grade).is_false()
 
             elif option.poll_option_data == poll.options()[1]:
                 # votes on option 1: [1, 2, 2] 
-                assert_that(option.median).is_equal_to()
-                assert_that(option.good_votes).is_equal_to()
-                assert_that(option.bad_votes).is_equal_to()
-                assert_that(option.positive_grade)
+                assert_that(option.median).is_equal_to(2)
+                assert_that(option.good_votes).is_equal_to(0)
+                assert_that(option.bad_votes).is_equal_to(1)
+                assert_that(option.positive_grade).is_false()
             else:
                 # votes on option 2: [2, 2, 5]
-                assert_that(option.median).is_equal_to()
-                assert_that(option.good_votes).is_equal_to()
-                assert_that(option.bad_votes).is_equal_to()
-                assert_that(option.positive_grade)
+                assert_that(option.median).is_equal_to(2)
+                assert_that(option.good_votes).is_equal_to(1)
+                assert_that(option.bad_votes).is_equal_to(0)
+                assert_that(option.positive_grade).is_true
 
     # @pytest.mark.django_db
     # def test_majority_vote_calculate_result_check_correct2(self, test_polls):
@@ -305,23 +305,23 @@ class TestMajorityVoteService:
             
             if option.poll_option_data == poll.options()[0]:
                 # votes on option 0: [1, 1, 1, 2]
-                assert_that(option.median).is_equal_to()
-                assert_that(option.good_votes).is_equal_to()
-                assert_that(option.bad_votes).is_equal_to()
-                assert_that(option.positive_grade)
+                assert_that(option.median).is_equal_to(1)
+                assert_that(option.good_votes).is_equal_to(1)
+                assert_that(option.bad_votes).is_equal_to(0)
+                assert_that(option.positive_grade).is_true()
 
             elif option.poll_option_data == poll.options()[1]:
                 # votes on option 1:  [4, 4, 5, 5]
-                assert_that(option.median).is_equal_to()
-                assert_that(option.good_votes).is_equal_to()
-                assert_that(option.bad_votes).is_equal_to()
-                assert_that(option.positive_grade)
+                assert_that(option.median).is_equal_to(4)
+                assert_that(option.good_votes).is_equal_to(2)
+                assert_that(option.bad_votes).is_equal_to(0)
+                assert_that(option.positive_grade).is_true()
             else:
                 # votes on option 2: [5, 5, 5, 5]
-                assert_that(option.median).is_equal_to()
-                assert_that(option.good_votes).is_equal_to()
-                assert_that(option.bad_votes).is_equal_to()
-                assert_that(option.positive_grade)
+                assert_that(option.median).is_equal_to(5)
+                assert_that(option.good_votes).is_equal_to(0)
+                assert_that(option.bad_votes).is_equal_to(0)
+                assert_that(option.positive_grade).is_false()
 
 
     # @pytest.mark.django_db

@@ -68,6 +68,8 @@ class MajorityPollResult:
             # if median is greater --> x win
             if x.median > y.median:
                 return 1
+            elif x.median < y.median:
+                return -1
 
             # positive grade should win against  
             # negative grade
