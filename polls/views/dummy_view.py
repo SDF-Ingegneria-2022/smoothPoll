@@ -149,6 +149,28 @@ def dummy_majority(request: HttpRequest):
 
     return render(request, 'polls/majority-vote.html', {'poll': poll})
 
+def majority_vote_submit(request: HttpRequest, poll_id: int):
+    """Render page with confirmation of majority vote validation."""
+
+    ratings: List[dict] = []
+    #poll: PollModel = PollModel.objects.filter(poll_id=poll_id)
+
+    for key, value in request.POST.items():
+        if not key == 'csrfmiddlewaretoken':
+            rating: dict = {}
+            rating["poll_choice_id"] = int(key)
+            rating["rating"] = int(value)
+            ratings.append(rating)
+
+    try:
+        vote: MajorityVoteModel = MajorityVoteService.perform_vote(ratings, poll_id=str(poll_id))
+    except Exception as e:
+        raise Http404
+
+    return render(request, 'polls/vote-majority-confirm.html', {'vote': vote})
+
+
+
 def majority_results(request: HttpRequest):
     """
     #TODO: improve readability

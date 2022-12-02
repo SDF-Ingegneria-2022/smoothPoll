@@ -24,7 +24,7 @@
     </div>
     
     <div class="container mt-5 mb-5">
-        <form action="{% url 'polls:submit_majority_vote' %}" method="POST">
+        <form action="{% url 'polls:majority_vote_submit' poll_id=poll.id %}" method="POST">
 
             {% csrf_token %}
             {# Form Options #}
@@ -38,31 +38,31 @@
                             </p>
                             <div class="col">
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="{{option.value}}" id="inlineRadio1" value="1">
+                                    <input class="form-check-input" type="radio" name="{{option.id}}" id="inlineRadio1" value="1">
                                     <label class="form-check-label" for="inlineRadio1">Pessimo</label>
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="{{option.value}}" id="inlineRadio2" value="2">
+                                    <input class="form-check-input" type="radio" name="{{option.id}}" id="inlineRadio2" value="2">
                                     <label class="form-check-label" for="inlineRadio2">Insufficiente</label>
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="{{option.value}}" id="inlineRadio3" value="3">
+                                    <input class="form-check-input" type="radio" name="{{option.id}}" id="inlineRadio3" value="3">
                                     <label class="form-check-label" for="inlineRadio3">Sufficiente</label>
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="{{option.value}}" id="inlineRadio3" value="4">
+                                    <input class="form-check-input" type="radio" name="{{option.id}}" id="inlineRadio3" value="4">
                                     <label class="form-check-label" for="inlineRadio3">Buono</label>
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="{{option.value}}" id="inlineRadio3" value="5">
+                                    <input class="form-check-input" type="radio" name="{{option.id}}" id="inlineRadio3" value="5">
                                     <label class="form-check-label" for="inlineRadio3">Ottimo</label>
                                 </div>
                             </div>
