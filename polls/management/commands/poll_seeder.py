@@ -19,7 +19,7 @@ class Command(BaseCommand):
         )
 
         parser.add_argument(
-            '--majority-poll',
+            '--majority',
             action='store_true',
             help='Create majority poll.',
         )
@@ -34,7 +34,7 @@ class Command(BaseCommand):
         
         for index in range(1, new_polls_number + 1):
             try:
-                if options['majority-poll']:
+                if options['majority']:
                     new_poll: PollModel = PollModel(name=f"Poll sample name {index}", question=f"What is your favorite poll number {index}?", poll_type='majority_vote')
                     new_poll.save()
                 else:
@@ -49,6 +49,8 @@ class Command(BaseCommand):
                 new_option: PollOptionModel = PollOptionModel(value="Poll 2", poll_fk_id=new_poll.id)
                 new_option.save()
                 new_option: PollOptionModel = PollOptionModel(value="Poll 3", poll_fk_id=new_poll.id)
+                new_option.save()
+                new_option: PollOptionModel = PollOptionModel(value="Poll 4", poll_fk_id=new_poll.id)
                 new_option.save()
             except Exception as exception:
                 raise CommandError('Error while creating options: %s' % exception)

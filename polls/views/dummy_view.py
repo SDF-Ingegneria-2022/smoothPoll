@@ -143,18 +143,11 @@ def dummy_majority(request: HttpRequest):
     Dummy poll page, here user can try to vote.
     """
     try:
-        new_poll: PollModel = PollModel(name=f"Poll sample name", question=f"What is your favorite option")
-        new_poll.save()
-    except Exception as exception:
-        raise CommandError('Error while creating poll: %s' % exception)
-            
-    new_option: PollOptionModel = PollOptionModel(value="Option 1", poll_fk_id=new_poll.id)   
-    new_option.save()
-    new_option: PollOptionModel = PollOptionModel(value="Option 2", poll_fk_id=new_poll.id)
-    new_option.save()
-    new_option: PollOptionModel = PollOptionModel(value="Option 3", poll_fk_id=new_poll.id)
-    new_option.save()
-    return render(request, 'polls/majority-vote.html', {'poll': new_poll})
+        poll = PollModel.objects.filter(poll_type='majority_vote').first()
+    except Exception:
+        raise Http404
+
+    return render(request, 'polls/majority-vote.html', {'poll': poll})
 
 def majority_results(request: HttpRequest):
     """
