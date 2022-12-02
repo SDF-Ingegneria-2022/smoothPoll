@@ -386,42 +386,55 @@ class TestMajorityVoteService:
             [{'poll_choice_id': poll.options()[0].id, 'rating': 2 },
             {'poll_choice_id': poll.options()[1].id, 'rating': 2 },
             {'poll_choice_id': poll.options()[2].id, 'rating': 5 },
-            {'poll_choice_id': poll.options()[3].id, 'rating': 5 }], poll_id=poll.id)
+            {'poll_choice_id': poll.options()[3].id, 'rating': 2 }], poll_id=poll.id)
 
         MajorityVoteService.perform_vote(
             [{'poll_choice_id': poll.options()[0].id, 'rating': 1 },
             {'poll_choice_id': poll.options()[1].id, 'rating': 1 },
-            {'poll_choice_id': poll.options()[2].id, 'rating': 3 },
-            {'poll_choice_id': poll.options()[3].id, 'rating': 5 }], poll_id=poll.id)
+            {'poll_choice_id': poll.options()[2].id, 'rating': 1 },
+            {'poll_choice_id': poll.options()[3].id, 'rating': 2 }], poll_id=poll.id)
 
         MajorityVoteService.perform_vote(
             [{'poll_choice_id': poll.options()[0].id, 'rating': 3 },
             {'poll_choice_id': poll.options()[1].id, 'rating': 2 },
-            {'poll_choice_id': poll.options()[2].id, 'rating': 4 },
-            {'poll_choice_id': poll.options()[3].id, 'rating': 5 }], poll_id=poll.id)
+            {'poll_choice_id': poll.options()[2].id, 'rating': 2 },
+            {'poll_choice_id': poll.options()[3].id, 'rating': 2 }], poll_id=poll.id)
 
         x: List[MajorityPollResultData] = MajorityVoteService.calculate_result(poll_id=poll.id)
 
-        # assert_that(x[0].good_votes).is_equal_to()
-        # assert_that(x[0].median).is_equal_to()
-        # assert_that(x[0].positive_grade)
-        # assert_that(x[0].negative_grade)
-        # assert_that(x[0].bad_votes).is_equal_to()
+                # verify options order
+        assert_that(x[0].poll_option_data).is_equal_to(poll.options()[2])
+        assert_that(x[1].poll_option_data).is_equal_to(poll.options()[3])
+        assert_that(x[2].poll_option_data).is_equal_to(poll.options()[1])
+        assert_that(x[3].poll_option_data).is_equal_to(poll.options()[0])
 
-        # assert_that(x[1].good_votes).is_equal_to()
-        # assert_that(x[1].median).is_equal_to()
-        # assert_that(x[1].positive_grade)
-        # assert_that(x[1].negative_grade)
-        # assert_that(x[1].bad_votes).is_equal_to()
+        # verify option values
+        for option in x:
+            
+            if option.poll_option_data == poll.options()[0]:
+                # votes on option 0: [1, 1, 2, 3]
+                assert_that(option.median).is_equal_to(1)
+                assert_that(option.good_votes).is_equal_to(2)
+                assert_that(option.bad_votes).is_equal_to(0)
+                assert_that(option.positive_grade).is_true()
 
-        # assert_that(x[2].good_votes).is_equal_to()
-        # assert_that(x[2].median).is_equal_to()
-        # assert_that(x[2].positive_grade)
-        # assert_that(x[2].negative_grade)
-        # assert_that(x[2].bad_votes).is_equal_to()
+            elif option.poll_option_data == poll.options()[1]:
+                # votes on option 1:  [1, 2, 2, 2]
+                assert_that(option.median).is_equal_to(2)
+                assert_that(option.good_votes).is_equal_to(0)
+                assert_that(option.bad_votes).is_equal_to(1)
+                assert_that(option.positive_grade).is_false()
 
-        # assert_that(x[3].good_votes).is_equal_to()
-        # assert_that(x[3].median).is_equal_to()
-        # assert_that(x[3].positive_grade)
-        # assert_that(x[3].negative_grade)
-        # assert_that(x[3].bad_votes).is_equal_to()
+            elif option.poll_option_data == poll.options()[2]:
+                # votes on option 1:  [1, 2, 4, 5]
+                assert_that(option.median).is_equal_to(2)
+                assert_that(option.good_votes).is_equal_to(2)
+                assert_that(option.bad_votes).is_equal_to(1)
+                assert_that(option.positive_grade).is_true()
+
+            else:
+                # votes on option 2: [2, 2, 2, 4]
+                assert_that(option.median).is_equal_to(2)
+                assert_that(option.good_votes).is_equal_to(1)
+                assert_that(option.bad_votes).is_equal_to(0)
+                assert_that(option.positive_grade).is_true()
