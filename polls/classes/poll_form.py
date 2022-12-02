@@ -4,7 +4,7 @@ from django.forms import ModelForm
 class PollForm(ModelForm):
     class Meta:
         model = PollModel
-        fields="__all__"
+        fields=['name','question']
         labels={
             "name": "Nome", 
             "question": "Quesito"
