@@ -77,7 +77,7 @@ class MajorityPollResultData(object):
 
             res.append({
                 'value': value, 
-                'percentage': math.floor(value*100), 
+                'percentage': int(value*100), 
                 'style': f"background-color:{colors[i-1]}; color: {textcolors[i-1]}; ", 
                 'label': self.get_qualitative(i), 
             })
