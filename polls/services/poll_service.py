@@ -68,7 +68,7 @@ class PollService:
         if page_size < 1:
             raise PaginatorPageSizeException(f"Page size: {page_size} is not valid: It must be at least 1")
 
-        polls: List[PollModel] = PollModel.objects.get_queryset().order_by('id')
+        polls: List[PollModel] = PollModel.objects.get_queryset().filter(poll_type='single_option').order_by('id')
         paginator: Paginator = Paginator(polls, page_size)
         
         return paginator

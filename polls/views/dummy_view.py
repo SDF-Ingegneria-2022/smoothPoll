@@ -4,11 +4,16 @@ from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest, HttpR
 from django.shortcuts import render
 from django.urls import reverse
 from django.core.paginator import Paginator
+from polls.classes.majority_poll_result_data import MajorityPollResultData
 from polls.classes.poll_result import PollResult, PollResultVoice
 from polls.classes.poll_result import PollResult
 from polls.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
+from polls.exceptions.poll_option_rating_unvalid_exception import PollOptionRatingUnvalidException
 from polls.exceptions.vote_does_not_exixt_exception import VoteDoesNotExistException
+from polls.models.majority_vote_model import MajorityVoteModel
 from polls.models.poll_model import PollModel
+from polls.models.poll_option_model import PollOptionModel
+from polls.services.majority_vote_service import MajorityVoteService
 from polls.services.poll_service import PollService
 from polls.exceptions.poll_option_unvalid_exception import PollOptionUnvalidException
 from polls.services.vote_service import VoteService
@@ -135,30 +140,6 @@ def results(request: HttpRequest, poll_id: int):
         {'poll_results': poll_results}
         )
 
-def dummy_majority(request: HttpRequest): 
-    """
-    Dummy poll page, here user can try to vote.
-    """
-
-    try:
-        poll_results: PollResult = VoteService.calculate_result("1")
-        sorted_options: List[PollResultVoice] = poll_results.get_sorted_options()
-    except Exception:
-        # internal error: you should inizialize DB first (error 500)
-        return HttpResponseServerError("Dummy survey is not initialized. Please see README.md and create it.")
-
-    # render page for vote
-    return render(request, 'polls/majority-vote.html', {'poll_results': poll_results})
-
-def majority_results(request: HttpRequest):
-    """
-    #TODO: improve readability
-    Render page with results. 
-    """
-    return render(request, 'polls/majority-results.html', 
-        # {'poll':sorted_options, 'question': poll_results.poll.question}
-        )
-
 def all_polls(request: HttpRequest):
     """
     Render page with all polls.
@@ -184,3 +165,4 @@ def all_polls(request: HttpRequest):
                     'page': paginator.page(page)
                     }
                 )
+
