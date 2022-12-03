@@ -1,0 +1,155 @@
+{% extends 'global/skeleton.html' %}
+
+{% block pagename %}Visualizza i risultati{% endblock pagename %}
+
+{% block content %}
+<div class="container text-center mt-5 mb-5">
+    <h1>{{ poll.name }}</h1>
+    <h2 class="text-info">Risultati sondaggio</h2>
+</div>
+
+
+<div class="container">
+
+    
+    <div class="container mt-5 mb-5">
+        <p class="mb-0">Testo della domanda: </p>
+        <h3>{{ poll.question }}</h3>
+    </div>
+    
+
+    <div class="container mb-3 mt-3">
+
+        <h4>Risultati</h4>
+        
+        <div class="container m-3">
+            <div class="row fw-bold text-dark">
+                <div class="col-4">
+                    <p>Testo opzione:</p>
+                </div>
+                <div class="col-2">
+                    <p>Giudizio mediano:</p>
+                </div>
+                <div class="col-2">
+                    <p>Segno:</p>
+                </div>
+                <div class="col-2">
+                    <p>Nro giudizi strettamente peggiori:</p>
+                </div>
+                <div class="col-2">
+                    <p>Nro giudizi strettamente migliori:</p>
+                </div>
+            </div>
+            {%for voted_option in poll_results %}
+                <div class="row">
+                    <div class="col-4">
+                        <p class="text-secondary">{{forloop.counter}}.
+                            <span class="{% if forloop.counter == 1 %}text-success fw-bold
+                            {% else %}text-dark{% endif %}">{{voted_option.option.value}}</span>
+                            {% comment %} <a name="" id="" class="btn btn-primary" 
+                                href="#votes-distribution-{{forloop.counter}}" 
+                                data-toggle="collapse"
+                                aria-expanded="false" 
+                                aria-controls="votes-distribution-{{forloop.counter}}"
+                                role="button">Vedi voti</a> {% endcomment %}
+                        </p>
+                    </div>
+                    <div class="col-2">
+                        <p class="text-secondary pb-0 mb-0">
+                            {% comment %} Giudizio mediano:  {% endcomment %}
+                            <span class="fw-bold text-primary">
+                                {{voted_option.get_qualitative_median}}
+                            </span>
+                        </p>
+                        
+                    </div>
+                    <div class="col-2">
+                        <p class="text-secondary pb-0 mb-0">
+                            {% comment %} Segno:  {% endcomment %}
+                            <span class="fw-bold text-primary">
+                                {{voted_option.get_sign}}
+                            </span>
+                        </p>
+                        
+                    </div>
+                    <div class="col-2">
+                        <p class="text-secondary pb-0 mb-0">
+                            {% comment %} Nro giudizi strett. peggiori:  {% endcomment %}
+                            <span class="fw-bold text-danger">
+                                {{voted_option.bad_votes}}
+                            </span>
+                        </p>
+                        
+                    </div>
+                    <div class="col-2">
+                        <p class="text-secondary pb-0 mb-0">
+                            {% comment %} Nro giudizi strett. migliori:  {% endcomment %}
+                            <span class="fw-bold text-success">
+                                {{voted_option.good_votes}}
+                            </span>
+                        </p>
+                    </div>
+                </div>
+                <div class="collapse multi-collapse" id="votes-distribution-{{forloop.counter}}">
+                    <div class="card card-body mb-3">
+                        <div class="progress">
+                            {% for j in voted_option.get_judjment_percentages %}
+                                <div style="{{j.style}} width:{{j.percentage}}%" 
+                                    class="progress-bar fw-bold" role="progressbar" 
+                                    aria-valuenow="{{j.percentage}}" 
+                                    aria-valuemin="0" 
+                                    aria-valuemax="100">
+                                    {% comment %}{{j.label}}: {{j.percentage}}{{"%"}} {% endcomment %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                        {% for j in voted_option.get_judjment_percentages %}
+                        <div class="container">
+                            <ul class="text-dark fw-bold">
+                                <li>{{j.label}}: {{j.percentage}}{{"%"}}</li>
+                            </ul>
+                        </div>
+                        {% endfor %}
+                    </div>
+                  </div>
+                <hr />
+            {% endfor %}
+        </div>
+
+        <button class="btn btn-primary" type="button" 
+                    data-bs-toggle="collapse" data-bs-target=".multi-collapse" 
+                    aria-expanded="false" 
+                    aria-controls="">Visualizza Distribuzione Giudizi</button>
+
+        <div class="collapse multi-collapse">
+            <div class="card card-body m-2">
+                <div class="row justify-content-center align-items-center g-2 fw-bold">
+                    <div>Scala colori: </div>
+                    <div style="background-color:#E41A1C; color:white;">Pessimo</div>
+                    <div style="background-color:#FE8E3C; color:white;">Insufficiente</div>
+                    <div style="background-color:#FFFFCD">Sufficiente</div>
+                    <div style="background-color:#7FCEBC">Buono</div>
+                    <div style="background-color:#253495; color:white;">Ottimo</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container text-center m-5">
+        <a name="" id="" role="button"
+            class="btn btn-primary" 
+            href="{% url 'home' %}" >
+            Torna alla home
+        </a>
+        <a name="" id="" role="button"
+            class="btn btn-secondary" 
+            href="https://github.com/SDF-Ingegneria-2022/smoothPoll/issues" 
+            target="_blank">
+            Lasciaci un Feedback
+        </a> 
+    </div>
+</div>
+</div>
+{% endblock content %}
+

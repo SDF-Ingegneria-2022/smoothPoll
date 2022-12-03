@@ -15,19 +15,32 @@
     {% bootstrap_css %}
     {% bootstrap_javascript %}
 
-    {# Custom JS #}
-    {% block customjs %}{% endblock customjs %} 
-
     {# basic style #}
     <style>
         span.logo img {
             max-width: 380px;
             width: 100%;
         }
+
+        .container404 img {
+            max-width: 570px;
+            width: 100%;
+        }
+
+        @media only screen and (max-width: 1023px) {
+            .hide-mobile {
+                display: none;
+            }
+        }
+
+        
     </style>
 
 </head>
 <body class="body">
     {% block body %}{% endblock body %}
+
+    {# Custom JS #}
+    {% block customjs %}{% endblock customjs %} 
 </body>
 </html>

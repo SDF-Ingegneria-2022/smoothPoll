@@ -15,6 +15,10 @@ and activate the virtual environment:
 pipenv shell  
 ```
 
+### Initialize .env file
+
+Copy ```.env.example``` file and rename it into ```.env```. Here you will add eventual enviroment configurations.
+
 ### Database migration
 
 Run the following command before start the server, in order to create all the tables in your database:
@@ -89,6 +93,11 @@ According to Semantic Versioning 2.0.0 the type of version increment can be:
 bump2version minor
 ```
 
+## Code documentation
+If you have updated or if you only want to see the documentation in locale, run:
+```bash
+mkdocs serve
+```
 
 
 
