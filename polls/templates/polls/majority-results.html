@@ -20,29 +20,7 @@
 
     <div class="container mb-3 mt-3">
 
-        <div class="row mb-3 align-middle">
-            <div class="col-9"><h4>Risultati</h4></div>
-            <div class="col-3 hide-mobile">
-                <button class="btn btn-primary" type="button" 
-                    data-bs-toggle="collapse" data-bs-target=".multi-collapse" 
-                    aria-expanded="false" 
-                    aria-controls="">Visualizza Distribuzione Giudizi</button>
-            </div>
-        </div>
-        
-        <div class="collapse multi-collapse hide-mobile">
-            <div class="card card-body">
-                <div class="row justify-content-center align-items-center g-2 fw-bold">
-                    <div class="col-2">Scala: </div>
-                    <div class="col-2" style="background-color:#E41A1C; color:white;">Pessimo</div>
-                    <div class="col-2" style="background-color:#FE8E3C; color:white;">Insufficiente</div>
-                    <div class="col-2" style="background-color:#FFFFCD">Sufficiente</div>
-                    <div class="col-2" style="background-color:#7FCEBC">Buono</div>
-                    <div class="col-2" style="background-color:#253495; color:white;">Ottimo</div>
-                </div>
-            </div>
-          </div>
-
+        <h4>Risultati</h4>
         
         <div class="container m-3">
             <div class="row fw-bold text-dark">
@@ -56,10 +34,10 @@
                     <p>Segno:</p>
                 </div>
                 <div class="col-2">
-                    <p>Nro giudizi strettamente migliori:</p>
+                    <p>Nro giudizi strettamente peggiori:</p>
                 </div>
                 <div class="col-2">
-                    <p>Nro giudizi strettamente peggiori:</p>
+                    <p>Nro giudizi strettamente migliori:</p>
                 </div>
             </div>
             {%for voted_option in poll_results %}
@@ -112,23 +90,48 @@
                         </p>
                     </div>
                 </div>
-                <div class="collapse multi-collapse hide-mobile" id="votes-distribution-{{forloop.counter}}">
-                    {% comment %} <div class="card card-body"> {% endcomment %}
+                <div class="collapse multi-collapse" id="votes-distribution-{{forloop.counter}}">
+                    <div class="card card-body mb-3">
                         <div class="progress">
                             {% for j in voted_option.get_judjment_percentages %}
-                                <div style="{{j.style}} width: {{j.percentage}}%" 
+                                <div style="{{j.style}} width:{{j.percentage}}%" 
                                     class="progress-bar fw-bold" role="progressbar" 
                                     aria-valuenow="{{j.percentage}}" 
                                     aria-valuemin="0" 
                                     aria-valuemax="100">
-                                    {{j.label}}: {{j.percentage}}{{"%"}}
+                                    {% comment %}{{j.label}}: {{j.percentage}}{{"%"}} {% endcomment %}
                                 </div>
                             {% endfor %}
                         </div>
-                    {% comment %} </div> {% endcomment %}
+                        {% for j in voted_option.get_judjment_percentages %}
+                        <div class="container">
+                            <ul class="text-dark fw-bold">
+                                <li>{{j.label}}: {{j.percentage}}{{"%"}}</li>
+                            </ul>
+                        </div>
+                        {% endfor %}
+                    </div>
                   </div>
                 <hr />
             {% endfor %}
+        </div>
+
+        <button class="btn btn-primary" type="button" 
+                    data-bs-toggle="collapse" data-bs-target=".multi-collapse" 
+                    aria-expanded="false" 
+                    aria-controls="">Visualizza Distribuzione Giudizi</button>
+
+        <div class="collapse multi-collapse">
+            <div class="card card-body m-2">
+                <div class="row justify-content-center align-items-center g-2 fw-bold">
+                    <div>Scala colori: </div>
+                    <div style="background-color:#E41A1C; color:white;">Pessimo</div>
+                    <div style="background-color:#FE8E3C; color:white;">Insufficiente</div>
+                    <div style="background-color:#FFFFCD">Sufficiente</div>
+                    <div style="background-color:#7FCEBC">Buono</div>
+                    <div style="background-color:#253495; color:white;">Ottimo</div>
+                </div>
+            </div>
         </div>
     </div>
 
