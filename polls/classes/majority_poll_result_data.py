@@ -10,7 +10,7 @@ class MajorityPollResultData(object):
     """Small class used to store the data related to
     the results of a majority poll"""
 
-    poll_option_data: PollOptionModel
+    option: PollOptionModel
     """The poll_option the data is related to"""
 
     good_votes: int
@@ -29,7 +29,7 @@ class MajorityPollResultData(object):
 
     def __init__(self, option: PollOptionModel):
 
-        self.poll_option_data = option
+        self.option = option
 
         # retrieve votes (ordered by rating)
         option_votes = MajorityJudgmentModel.objects \
@@ -48,6 +48,33 @@ class MajorityPollResultData(object):
         # else if good <= bad   --> -
         self.positive_grade = (self.good_votes > self.bad_votes)
 
+    def get_qualitative_median(self) -> str:
+        """Get median value as a qualitative judjment"""
+        range = ['Pessimo', 'Insufficiente', 'Sufficiente', 'Buono', 'Ottimo']
+        return range[self.median-1]
+
+    def get_sign(self) -> str:
+        """Get sign (as symbol)"""
+        return "+" if self.positive_grade else "-"
+
+    def get_judjment_percentages(self) -> list[dict]: 
+        """Get percentage of judjments of each value"""
+
+
+        all_votes = MajorityJudgmentModel.objects \
+            .filter(poll_option=self.option)
+        all_votes_n = float(all_votes.count())
+
+        res: list[dict] = []
+        for i in range(1,6):
+            value = float(all_votes.filter(rating=i).count())/all_votes_n
+            res.append({
+                'value': value, 
+                'percentage': int(value*100)
+            })
+
+        return res
+        
 
     def __eq__(self, other): 
 
@@ -87,4 +114,4 @@ class MajorityPollResultData(object):
 
         # if both have exactly same votes, I make win 
         # the one with "value" that came before
-        return self.poll_option_data.value > other.poll_option_data.value
+        return self.option.value > other.option.value

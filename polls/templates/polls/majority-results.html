@@ -21,17 +21,67 @@
     <div class="container mb-3 mt-3">
         <h4>Risultati</h4>
         <div class="container m-3">
-            {%for voted_option in poll_results.get_sorted_options %}
+            <div class="row fw-bold text-dark">
+                <div class="col-4">
+                    <p>Testo opzione:</p>
+                </div>
+                <div class="col-2">
+                    <p>Giudizio mediano:</p>
+                </div>
+                <div class="col-2">
+                    <p>Segno:</p>
+                </div>
+                <div class="col-2">
+                    <p>Nro giudizi strettamente migliori:</p>
+                </div>
+                <div class="col-2">
+                    <p>Nro giudizi strettamente peggiori:</p>
+                </div>
+            </div>
+            {%for voted_option in poll_results %}
                 <div class="row">
-                    <div class="col-6">
+                    <div class="col-4">
                         <p class="text-secondary">{{forloop.counter}}.
                             <span class="{% if forloop.counter == 1 %}text-success fw-bold
                             {% else %}text-dark{% endif %}">{{voted_option.option.value}}</span></p>
                     </div>
-                    <div class="col-6">
-                        <p class="fw-bold text-primary"> ha ricevuto {{voted_option.n_votes}} voti</p>
+                    <div class="col-2">
+                        <p class="text-secondary pb-0 mb-0">
+                            {% comment %} Giudizio mediano:  {% endcomment %}
+                            <span class="fw-bold text-primary">
+                                {{voted_option.get_qualitative_median}}
+                            </span>
+                        </p>
+                        
+                    </div>
+                    <div class="col-2">
+                        <p class="text-secondary pb-0 mb-0">
+                            {% comment %} Segno:  {% endcomment %}
+                            <span class="fw-bold text-primary">
+                                {{voted_option.get_sign}}
+                            </span>
+                        </p>
+                        
+                    </div>
+                    <div class="col-2">
+                        <p class="text-secondary pb-0 mb-0">
+                            {% comment %} Nro giudizi strett. peggiori:  {% endcomment %}
+                            <span class="fw-bold text-danger">
+                                {{voted_option.bad_votes}}
+                            </span>
+                        </p>
+                        
+                    </div>
+                    <div class="col-2">
+                        <p class="text-secondary pb-0 mb-0">
+                            {% comment %} Nro giudizi strett. migliori:  {% endcomment %}
+                            <span class="fw-bold text-success">
+                                {{voted_option.good_votes}}
+                            </span>
+                        </p>
                     </div>
                 </div>
+
                 <hr />
             {% endfor %}
         </div>

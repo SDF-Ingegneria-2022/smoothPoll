@@ -83,7 +83,7 @@ def majority_vote_results(request: HttpRequest, poll_id: int):
         # Internal error: you should inizialize DB first (error 500)
         return HttpResponseServerError("Dummy survey is not initialized. Please see README.md and create it.")
 
-    return render(request, 'polls/majority-results.html', 
-        
-        {'poll_results': poll_results}
-        )
+    return render(request, 'polls/majority-results.html', {
+        'poll_results': poll_results, 
+        'poll': PollModel.objects.get(id=poll_id)
+        })
