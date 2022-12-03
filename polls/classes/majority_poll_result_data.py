@@ -50,8 +50,11 @@ class MajorityPollResultData(object):
 
     def get_qualitative_median(self) -> str:
         """Get median value as a qualitative judjment"""
+        return self.get_qualitative(self.median)
+    
+    def get_qualitative(self, rating) -> str:
         range = ['Pessimo', 'Insufficiente', 'Sufficiente', 'Buono', 'Ottimo']
-        return range[self.median-1]
+        return range[rating-1]
 
     def get_sign(self) -> str:
         """Get sign (as symbol)"""
@@ -60,17 +63,23 @@ class MajorityPollResultData(object):
     def get_judjment_percentages(self) -> list[dict]: 
         """Get percentage of judjments of each value"""
 
-
         all_votes = MajorityJudgmentModel.objects \
             .filter(poll_option=self.option)
+
         all_votes_n = float(all_votes.count())
+
+        colors = ['#E41A1C', '#FE8E3C', '#FFFFCD', '#7FCEBC', '#253495']
+        textcolors = ['white', 'white', 'black', 'black', 'white']
 
         res: list[dict] = []
         for i in range(1,6):
             value = float(all_votes.filter(rating=i).count())/all_votes_n
+
             res.append({
                 'value': value, 
-                'percentage': int(value*100)
+                'percentage': int(value*100), 
+                'style': f"background-color:{colors[i-1]}; color: {textcolors[i-1]}; ", 
+                'label': self.get_qualitative(i), 
             })
 
         return res

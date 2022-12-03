@@ -19,7 +19,31 @@
     
 
     <div class="container mb-3 mt-3">
-        <h4>Risultati</h4>
+
+        <div class="row mb-3 align-middle">
+            <div class="col-9"><h4>Risultati</h4></div>
+            <div class="col-3">
+                <button class="btn btn-primary" type="button" 
+                    data-bs-toggle="collapse" data-bs-target=".multi-collapse" 
+                    aria-expanded="false" 
+                    aria-controls="">Visualizza Distribuzione Giudizi</button>
+            </div>
+        </div>
+        
+        <div class="collapse multi-collapse">
+            <div class="card card-body">
+                <div class="row justify-content-center align-items-center g-2 fw-bold">
+                    <div class="col-2">Scala: </div>
+                    <div class="col-2" style="background-color:#E41A1C; color:white;">Pessimo</div>
+                    <div class="col-2" style="background-color:#FE8E3C; color:white;">Insufficiente</div>
+                    <div class="col-2" style="background-color:#FFFFCD">Sufficiente</div>
+                    <div class="col-2" style="background-color:#7FCEBC">Buono</div>
+                    <div class="col-2" style="background-color:#253495; color:white;">Ottimo</div>
+                </div>
+            </div>
+          </div>
+
+        
         <div class="container m-3">
             <div class="row fw-bold text-dark">
                 <div class="col-4">
@@ -43,7 +67,14 @@
                     <div class="col-4">
                         <p class="text-secondary">{{forloop.counter}}.
                             <span class="{% if forloop.counter == 1 %}text-success fw-bold
-                            {% else %}text-dark{% endif %}">{{voted_option.option.value}}</span></p>
+                            {% else %}text-dark{% endif %}">{{voted_option.option.value}}</span>
+                            {% comment %} <a name="" id="" class="btn btn-primary" 
+                                href="#votes-distribution-{{forloop.counter}}" 
+                                data-toggle="collapse"
+                                aria-expanded="false" 
+                                aria-controls="votes-distribution-{{forloop.counter}}"
+                                role="button">Vedi voti</a> {% endcomment %}
+                        </p>
                     </div>
                     <div class="col-2">
                         <p class="text-secondary pb-0 mb-0">
@@ -81,7 +112,21 @@
                         </p>
                     </div>
                 </div>
-
+                <div class="collapse multi-collapse" id="votes-distribution-{{forloop.counter}}">
+                    <div class="card card-body">
+                        <div class="progress">
+                            {% for j in voted_option.get_judjment_percentages %}
+                                <div style="{{j.style}} width: {{j.percentage}}%" 
+                                    class="progress-bar fw-bold" role="progressbar" 
+                                    aria-valuenow="{{j.percentage}}" 
+                                    aria-valuemin="0" 
+                                    aria-valuemax="100">
+                                    {{j.label}}: {{j.percentage}}{{"%"}}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                  </div>
                 <hr />
             {% endfor %}
         </div>
