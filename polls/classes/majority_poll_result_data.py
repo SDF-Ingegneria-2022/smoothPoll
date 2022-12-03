@@ -74,13 +74,13 @@ class MajorityPollResultData(object):
         res: list[dict] = []
         for i in range(1,6):
             value = float(all_votes.filter(rating=i).count())/all_votes_n
-
-            res.append({
-                'value': value, 
-                'percentage': int(value*100), 
-                'style': f"background-color:{colors[i-1]}; color: {textcolors[i-1]}; ", 
-                'label': self.get_qualitative(i), 
-            })
+            if value > 0:
+                res.append({
+                    'value': value, 
+                    'percentage': int(value*100), 
+                    'style': f"background-color:{colors[i-1]}; color: {textcolors[i-1]}; ", 
+                    'label': self.get_qualitative(i), 
+                })
 
         return res
         
