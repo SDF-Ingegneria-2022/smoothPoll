@@ -24,47 +24,81 @@ function copyLink(url) {
 
 {% block content %}
 
-<div class="container text-center mt-5 mb-5">
-    <h1>{{vote.poll.name}}</h1>
-    <h2 class="text-info">Voto registrato!</h2>
-</div>
-
 <div class="container">
-
-    <h3 class="text-success">Grazie di aver votato! Il tuo voto è stato registrato.</h3>
-    {% comment %} <p class="text-secondary">(Essendo questo solo un prototipo, il voto non è stato registrato)</p> {% endcomment %}
-    <div class="container m-3">
-        <div class="row">
-            <div class="col-2">
-                <p class="text-secondary">Quesito:</p>
-            </div>
-            <div class="col-10">
-                <p class="fw-bold">{{vote.poll.question}}</p>
-            </div>
+    {# Poll summary #}
+    <h2 class="text-success">Grazie di aver votato! Il tuo voto è stato registrato.</h2>
+    <div class="row">
+        <div class="col-md-auto">
+            <p class="fw-bold fs-5 ">Nome del sondaggio:</p>    
         </div>
-        <div class="row">
-            <div class="col-2">
-                <p class="text-secondary">Opzione scelta: </p>
-            </div>
-            <div class="col-10">
-                <p class="fw-bold fs-5 text-primary">{{ vote.poll_option.value }}</p>
-            </div>
+        <div class="col ps-0">
+            <p class="mt-1">{{vote.poll.name}}</p>
         </div>
     </div>
-    <div class="container mt-5" >
-        <p class="secondary">
-            {% comment %} Quando il sondaggio sarà chiuso, potrai vedere il risultato 
-            <a href="{% url 'polls:majority-results' %}" title="Esiti sondaggio">su questa pagina</a>.  {% endcomment %}
-            
-            <a class="btn btn-primary" href="{% url 'polls:majority_vote_results' poll_id=vote.poll.id %}" role="button">Vedi risultati</a>
+    <div class="row">
+        <div class="col-md-auto">
+            <p class="fw-bold fs-5">Quesito:</p>
+        </div>
+        <div class="col  ps-0">
+            <p class="mt-1">{{vote.poll.question}}</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-2">
+            <p class="fw-bold fs-5">Riassunto del voto:</p>
+        </div>
+    </div>
+    {# Table #}
+    <div class="row">
+        <div class="col-5">
+            <table class="table table-secondary shadow p-3 mb-5 bg-body rounded">
+                <thead>
+                    <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Opzione</th>
+                    <th scope="col">Voto</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for option in vote.judgments%}
+                        <tr>
+                            <th scope="row">  {{ forloop.counter }}</th>
+                            <td>
+                            {{option.poll_option.value}}</td>
+                            <td> 
+                                {% if option.rating == 1 %}
+                                    Pessimo
+                                {%elif  option.rating == 2%}
+                                    Insufficiente
+                                {%elif  option.rating == 3%}
+                                    Sufficiente  
+                                {%elif  option.rating == 4%}
+                                    Buono 
+                                {%else%}
+                                    Ottimo  
+                                {% endif %}
+                            
+                            
+                            </td>
+                        </tr>  
+                    {%endfor%}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    {# Buttons #}
+    <div class="container mt-5 ps-0" >
+        <a class="btn btn-primary" href="{% url 'polls:majority_vote_results' poll_id=vote.poll.id %}" role="button">Vedi risultati</a>
 
-            <button type="button" class="btn btn-secondary" 
+        <button type="button" class="btn btn-secondary" 
             onclick="copyLink('{{request.get_host}}{% url 'polls:majority_vote_results' poll_id=vote.poll.id %}')">
             Copia link
-            </button>
-            <a class="btn btn-secondary" href="{% url 'polls:dummy-majority' %}" role="button">Vota di nuovo</a>
-        </p>
+        </button>
+        <a class="btn btn-secondary" href="{% url 'polls:dummy_majority' %}" role="button">Vota di nuovo</a>
+        
     </div>
+
 </div> 
 
 {% endblock content %}
