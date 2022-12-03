@@ -70,55 +70,90 @@
                                 </div>
                                 
                         </div>
+                        {# Options form #}
                         <div class="form-check m-2">
                             <div class="row">
                                     
                                     
-                                    {% load get_item %} {# TODO: integrate get_item filter#}
+                                    {% load get_item %}
                                     {% if option.id not in error.options_selected.id %}
                                         <div class="alert alert-danger" role="alert">
                                             {{ error.message }}
                                         </div>
                                     {% endif %}
-
-
+                                    
                                 <div class="col">
                                 
-                                    <div class="form-check">
-
-                                    <input type="radio" class="form-check-input btn-check btn-block" id="btn-check-2-outlined-{{option.id}}-a"   autocomplete="off" name="{{option.id}}"  value="1">
-                                    <label class="btn btn-outline-secondary" for="btn-check-2-outlined-{{option.id}}-a">Pessimo</label><br>
+                                    <div class="form-check  form-check-inline">
+                                    {% with option_id=option.id value=error.options_selected%}
+                                        {% if option_id in  error.options_selected.id and value|get_item:option_id == 1 %}
+                                            <input type="radio" class="form-check-input btn-check btn-block" id="btn-check-2-outlined-{{option.id}}-a" checked autocomplete="off" name="{{option.id}}"  value="1">  
+                                            <label class="btn btn-outline-secondary" for="btn-check-2-outlined-{{option.id}}-a">Pessimo</label><br>
+                                        {%else%}
+                                            <input type="radio" class="form-check-input btn-check btn-block" id="btn-check-2-outlined-{{option.id}}-a" autocomplete="off" name="{{option.id}}"  value="1">
+                                            <label class="btn btn-outline-secondary" for="btn-check-2-outlined-{{option.id}}-a">Pessimo</label><br>
+                                        {% endif %}
+                                     {% endwith %}
+                                    
                                     </div>
                                 </div>
                                 <div class="col">
                                     <div class="form-check form-check-inline">
-                                        <input type="radio" class="form-check-input btn-check btn-block" id="btn-check-2-outlined-{{option.id}}-b" autocomplete="off" name="{{option.id}}" value="2">
-                                        <label class="btn btn-outline-secondary" for="btn-check-2-outlined-{{option.id}}-b">Insufficiente</label><br>
+                                    {% with option_id=option.id value=error.options_selected%}
+                                        {% if option_id in  error.options_selected.id and value|get_item:option_id == 2 %}
+                                            <input type="radio" class="form-check-input btn-check btn-block" id="btn-check-2-outlined-{{option.id}}-b" checked autocomplete="off" name="{{option.id}}"  value="2">  
+                                            <label class="btn btn-outline-secondary" for="btn-check-2-outlined-{{option.id}}-b">Insufficiente</label><br>
+                                        {%else%}
+                                            <input type="radio" class="form-check-input btn-check btn-block" id="btn-check-2-outlined-{{option.id}}-b" autocomplete="off" name="{{option.id}}"  value="2">
+                                            <label class="btn btn-outline-secondary" for="btn-check-2-outlined-{{option.id}}-b">Insufficiente</label><br>
+                                        {% endif %}
+                                    {% endwith %}
+                                    
                                     </div>
                                 </div>
                                 <div class="col">
                                     <div class="form-check form-check-inline">
-                                        <input type="radio" class="form-check-input btn-check btn-block" type="radio" id="btn-check-2-outlined-{{option.id}}-c" autocomplete="off" name="{{option.id}}" value="3">
-                                        <label class="btn btn-outline-secondary" for="btn-check-2-outlined-{{option.id}}-c">Sufficiente</label><br>
+                                    {% with option_id=option.id value=error.options_selected%}
+                                        {% if option_id in  error.options_selected.id and value|get_item:option_id == 3 %}
+                                            <input type="radio" class="form-check-input btn-check btn-block" id="btn-check-2-outlined-{{option.id}}-c" checked autocomplete="off" name="{{option.id}}"  value="3">  
+                                            <label class="btn btn-outline-secondary" for="btn-check-2-outlined-{{option.id}}-c">Sufficiente</label><br>
+                                        {%else%}
+                                            <input type="radio" class="form-check-input btn-check btn-block" id="btn-check-2-outlined-{{option.id}}-c" autocomplete="off" name="{{option.id}}"  value="3">
+                                            <label class="btn btn-outline-secondary" for="btn-check-2-outlined-{{option.id}}-c">Sufficiente</label><br>
+                                        {% endif %}
+                                    {% endwith %}
                                     </div>
                                 </div>
                                 <div class="col">
                                     <div class="form-check form-check-inline">
-                                        <input type="radio" class="form-check-input btn-check btn-block" type="radio" id="btn-check-2-outlined-{{option.id}}-d" autocomplete="off" name="{{option.id}}" value="4">
-                                        <label class="btn btn-outline-secondary" for="btn-check-2-outlined-{{option.id}}-d">Buono</label><br>
+                                    {% with option_id=option.id value=error.options_selected%}
+                                        {% if option_id in  error.options_selected.id and value|get_item:option_id == 4 %}
+                                            <input type="radio" class="form-check-input btn-check btn-block" id="btn-check-2-outlined-{{option.id}}-d" checked autocomplete="off" name="{{option.id}}"  value="4">  
+                                            <label class="btn btn-outline-secondary" for="btn-check-2-outlined-{{option.id}}-d">Buono</label><br>
+                                        {%else%}
+                                            <input type="radio" class="form-check-input btn-check btn-block" id="btn-check-2-outlined-{{option.id}}-d" autocomplete="off" name="{{option.id}}"  value="4">
+                                            <label class="btn btn-outline-secondary" for="btn-check-2-outlined-{{option.id}}-d">Buono</label><br>
+                                        {% endif %}
+                                    {% endwith %}
                                     </div>
                                 </div>
                                 <div class="col">
                                     <div class="form-check form-check-inline">
-                                        <input type="radio" class="form-check-input btn-check btn-block" type="radio" id="btn-check-2-outlined-{{option.id}}-e" autocomplete="off" name="{{option.id}}" value="5">
-                                        <label class="btn btn-outline-secondary" for="btn-check-2-outlined-{{option.id}}-e">Ottimo</label><br>
+                                    {% with option_id=option.id value=error.options_selected%}
+                                        {% if option_id in  error.options_selected.id and value|get_item:option_id == 5 %}
+                                            <input type="radio" class="form-check-input btn-check btn-block" id="btn-check-2-outlined-{{option.id}}-e" checked autocomplete="off" name="{{option.id}}"  value="5">  
+                                            <label class="btn btn-outline-secondary" for="btn-check-2-outlined-{{option.id}}-e">Ottimo</label><br>
+                                        {%else%}
+                                            <input type="radio" class="form-check-input btn-check btn-block" id="btn-check-2-outlined-{{option.id}}-e" autocomplete="off" name="{{option.id}}"  value="5">
+                                            <label class="btn btn-outline-secondary" for="btn-check-2-outlined-{{option.id}}-e">Ottimo</label><br>
+                                        {% endif %}
+                                    {% endwith %}
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 {% endfor %}
-            
 
             {# Confirm button #}
             <div class="container mt-5 mb-3">

@@ -160,10 +160,15 @@ def dummy_majority(request: HttpRequest):
                         'poll': poll, 
                         
                         'error': {
-                                     'message': "Attenzione non è stato sezionata una opzione.",
+                                     'message': "Attenzione! Non è stata selezionata nessuna opzione.",
                                      'options_selected': options_selected,
-                                 }
-                    })        
+                                 },
+                        'prova': {'1': {
+                                        '2':2
+                                        }
+                                }
+                        }
+                    )        
 
 def majority_vote_submit(request: HttpRequest, poll_id: int):
     """Render page with confirmation of majority vote validation."""
