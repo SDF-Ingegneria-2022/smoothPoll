@@ -34,24 +34,21 @@ class Command(BaseCommand):
         
         for index in range(1, new_polls_number + 1):
             try:
+                new_poll: PollModel = PollModel(name=f"Sondaggio di esempio NR#{index}", question=f"Qual è il tuo piatto preferito?", poll_type='majority_vote')
                 if options['majority']:
-                    new_poll: PollModel = PollModel(name=f"Poll sample name {index}", question=f"What is your favorite poll number {index}?", poll_type='majority_vote')
-                    new_poll.save()
-                else:
-                    new_poll: PollModel = PollModel(name=f"Poll sample name {index}", question=f"What is your favorite poll number {index}?")
-                    new_poll.save()
+                    new_poll.poll_type='majority_vote'
+                    new_poll.name = "Esempio di sondaggio a Giudizio Maggioritario"
+                new_poll.save()
+
             except Exception as exception:
                 raise CommandError('Error while creating poll: %s' % exception)
             
             try:
-                new_option: PollOptionModel = PollOptionModel(value="Poll 1", poll_fk_id=new_poll.id)
-                new_option.save()
-                new_option: PollOptionModel = PollOptionModel(value="Poll 2", poll_fk_id=new_poll.id)
-                new_option.save()
-                new_option: PollOptionModel = PollOptionModel(value="Poll 3", poll_fk_id=new_poll.id)
-                new_option.save()
-                new_option: PollOptionModel = PollOptionModel(value="Poll 4", poll_fk_id=new_poll.id)
-                new_option.save()
+                PollOptionModel(value="Pizza", poll_fk_id=new_poll.id).save()
+                PollOptionModel(value="Pasta", poll_fk_id=new_poll.id).save()
+                PollOptionModel(value="Carne", poll_fk_id=new_poll.id).save()
+                PollOptionModel(value="Pesce", poll_fk_id=new_poll.id).save()
+                PollOptionModel(value="Altro", poll_fk_id=new_poll.id).save()
             except Exception as exception:
                 raise CommandError('Error while creating options: %s' % exception)
         
