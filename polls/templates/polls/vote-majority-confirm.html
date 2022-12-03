@@ -95,7 +95,7 @@ function copyLink(url) {
             onclick="copyLink('{{request.get_host}}{% url 'polls:majority_vote_results' poll_id=vote.poll.id %}')">
             Copia link
         </button>
-        <a class="btn btn-secondary" href="{% url 'polls:dummy-majority' %}" role="button">Vota di nuovo</a>
+        <a class="btn btn-secondary" href="{% url 'polls:dummy_majority' %}" role="button">Vota di nuovo</a>
         
     </div>
 

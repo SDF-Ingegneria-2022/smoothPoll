@@ -3,81 +3,125 @@
 {% block pagename %}Esprimi il tuo voto{% endblock pagename %}
 
 {% block content %}
-<div class="container text-center m-5">
+{# SVG #}
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
+    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+  </symbol>
+  <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
+    <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+  </symbol>
+  <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
+    <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+  </symbol>
+</svg>
+
+<div class="container text-center">
     <h1>{{ poll.name }}</h1>
-    <h2 class="text-info">Esprimi il tuo voto</h2>
 </div>
 
 <div class="container border">
 
-    <div class="container mt-5 mb-5">
-        <h4 class="text-dark">Per votare un sondaggio con il metodo del giudizio maggioritario 
-            {% comment %} (<a href="https://youtu.be/J_UJ19t5vuY" target="_blank">metodo del voto maggioritario</a>) {% endcomment %}
-            dai la tua opinione su ciascuno delle opzioni tramite l'apposita scala di giudizi </h4>
-        <p class="text-secondary">Per valutare una opzione seleziona un valore della scala di giudizi 
-            attraverso l'apposita check-box </p>
+    {# Poll question #}
+    <div class="container mt-3">
+        <div class="row">
+            <div class="col-auto">
+                <p class="mb-0 fs-4 fw-bold">Domanda:</p>
+            </div>
+            <div class="col ps-0">
+                <p class="mb-0 fs-4">{{ poll.question }}</p>
+            </div>
+        </div>
     </div>
 
-    <div class="container mt-5 mb-5">
-        <p class="mb-0">Testo della domanda: </p>
-        <h3>{{ poll.question }}</h3>
-    </div>
-    
-    <div class="container mt-5 mb-5">
+    <div class="container mt-3">
+        <div class="alert alert-primary d-flex align-items-center" role="alert">
+            <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Info:"><use xlink:href="#info-fill"/></svg>
+            <div>
+                Per votare un sondaggio con il metodo del giudizio maggioritario dai la tua opinione su ciascuna delle opzioni tramite 
+                l'apposita scala di giudizi.
+            </div>
+        </div>
+        <div class="alert alert-secondary alert-dismissible fade show" role="alert">
+            Per valutare una opzione <strong>seleziona un valore</strong> della scala di giudizi attraverso l'apposita check-box.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>  
+                                                  
+    <div class="container ">
         <form action="{% url 'polls:majority_vote_submit' poll_id=poll.id %}" method="POST">
 
             {% csrf_token %}
             {# Form Options #}
-            <p class="text-secondary">Opzioni da valutare: </p>
-            <div class="container m-3">
+            <p class="fw-bold fs-4 ">Opzioni da valutare: </p>
                 {% for option in poll.options %}
-                    <div class="form-check m-2 pb-5">
+                    <div class="container border shadow-sm p-3 bg-body rounded mb-4">
                         <div class="row">
-                            <p class="fw-bold">
-                                {{option.value}}
-                            </p>
-                            <div class="col">
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="{{option.id}}" id="1" value="1">
-                                    <label class="form-check-label" for="inlineRadio1">Pessimo</label>
-                                </div>
+                             <div class="col-auto">
+                                    <p class="fw-bold mt-1 mb-0">
+                                        #{{ forloop.counter }}
+                                    </p>
                             </div>
-                            <div class="col">
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="{{option.id}}" id="2" value="2">
-                                    <label class="form-check-label" for="inlineRadio2">Insufficiente</label>
+                                <div class="col-auto ps-0 mb-0">
+                                    <p class=" fs-5 mb-1">
+                                        {{option.value}}
+                                    </p>
+                                    <hr class="mt-0" />
                                 </div>
-                            </div>
-                            <div class="col">
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="{{option.id}}" id="3" value="3">
-                                    <label class="form-check-label" for="inlineRadio3">Sufficiente</label>
+                                
+                        </div>
+                        <div class="form-check m-2">
+                            <div class="row">
+                                    
+                                    
+                                    {% load get_item %} {# TODO: integrate get_item filter#}
+                                    {% if option.id not in error.options_selected.id %}
+                                        <div class="alert alert-danger" role="alert">
+                                            {{ error.message }}
+                                        </div>
+                                    {% endif %}
+
+
+                                <div class="col">
+                                
+                                    <div class="form-check">
+
+                                    <input type="radio" class="form-check-input btn-check btn-block" id="btn-check-2-outlined-{{option.id}}-a"   autocomplete="off" name="{{option.id}}"  value="1">
+                                    <label class="btn btn-outline-secondary" for="btn-check-2-outlined-{{option.id}}-a">Pessimo</label><br>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col">
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="{{option.id}}" id="4" value="4">
-                                    <label class="form-check-label" for="inlineRadio3">Buono</label>
+                                <div class="col">
+                                    <div class="form-check form-check-inline">
+                                        <input type="radio" class="form-check-input btn-check btn-block" id="btn-check-2-outlined-{{option.id}}-b" autocomplete="off" name="{{option.id}}" value="2">
+                                        <label class="btn btn-outline-secondary" for="btn-check-2-outlined-{{option.id}}-b">Insufficiente</label><br>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col">
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="{{option.id}}" id="5" value="5">
-                                    <label class="form-check-label" for="inlineRadio3">Ottimo</label>
+                                <div class="col">
+                                    <div class="form-check form-check-inline">
+                                        <input type="radio" class="form-check-input btn-check btn-block" type="radio" id="btn-check-2-outlined-{{option.id}}-c" autocomplete="off" name="{{option.id}}" value="3">
+                                        <label class="btn btn-outline-secondary" for="btn-check-2-outlined-{{option.id}}-c">Sufficiente</label><br>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-check form-check-inline">
+                                        <input type="radio" class="form-check-input btn-check btn-block" type="radio" id="btn-check-2-outlined-{{option.id}}-d" autocomplete="off" name="{{option.id}}" value="4">
+                                        <label class="btn btn-outline-secondary" for="btn-check-2-outlined-{{option.id}}-d">Buono</label><br>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-check form-check-inline">
+                                        <input type="radio" class="form-check-input btn-check btn-block" type="radio" id="btn-check-2-outlined-{{option.id}}-e" autocomplete="off" name="{{option.id}}" value="5">
+                                        <label class="btn btn-outline-secondary" for="btn-check-2-outlined-{{option.id}}-e">Ottimo</label><br>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <hr />
                     </div>
                 {% endfor %}
-
-                {% if error is not None %}<div class="alert alert-danger" role="alert">
-                    {{error}}
-                </div>{% endif %}
-            </div>
+            
 
             {# Confirm button #}
-            <div class="container mt-5">
+            <div class="container mt-5 mb-3">
                 <button type="submit" class="btn btn-primary">Conferma</button>
                 <a class="btn btn-primary" href="{% url 'polls:majority_vote_results' poll_id=poll.id %}" role="button">Vedi risultati</a>
             </div>
