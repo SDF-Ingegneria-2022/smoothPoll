@@ -189,21 +189,21 @@ class TestMajorityVoteService:
         x: List[MajorityPollResultData] = MajorityVoteService.calculate_result(poll_id=poll.id)
         
         # verify options order
-        assert_that(x[0].poll_option_data).is_equal_to(poll.options()[0])
-        assert_that(x[1].poll_option_data).is_equal_to(poll.options()[2])
-        assert_that(x[2].poll_option_data).is_equal_to(poll.options()[1])
+        assert_that(x[0].option).is_equal_to(poll.options()[0])
+        assert_that(x[1].option).is_equal_to(poll.options()[2])
+        assert_that(x[2].option).is_equal_to(poll.options()[1])
 
         # verify option values
         for option in x:
 
-            if option.poll_option_data == poll.options()[0]:
+            if option.option == poll.options()[0]:
                 # votes on option 0: [1, 3, 5 ]
                 assert_that(option.median).is_equal_to(3)
                 assert_that(option.good_votes).is_equal_to(1)
                 assert_that(option.bad_votes).is_equal_to(1)
                 assert_that(option.positive_grade).is_false()
 
-            elif option.poll_option_data == poll.options()[1]:
+            elif option.option == poll.options()[1]:
                 # votes on option 1: [1, 2, 2] 
                 assert_that(option.median).is_equal_to(2)
                 assert_that(option.good_votes).is_equal_to(0)
@@ -296,21 +296,21 @@ class TestMajorityVoteService:
         x: List[MajorityPollResultData] = MajorityVoteService.calculate_result(poll_id=poll.id)
 
         # verify options order
-        assert_that(x[0].poll_option_data).is_equal_to(poll.options()[2])
-        assert_that(x[1].poll_option_data).is_equal_to(poll.options()[1])
-        assert_that(x[2].poll_option_data).is_equal_to(poll.options()[0])
+        assert_that(x[0].option).is_equal_to(poll.options()[2])
+        assert_that(x[1].option).is_equal_to(poll.options()[1])
+        assert_that(x[2].option).is_equal_to(poll.options()[0])
 
         # verify option values
         for option in x:
             
-            if option.poll_option_data == poll.options()[0]:
+            if option.option == poll.options()[0]:
                 # votes on option 0: [1, 1, 1, 2]
                 assert_that(option.median).is_equal_to(1)
                 assert_that(option.good_votes).is_equal_to(1)
                 assert_that(option.bad_votes).is_equal_to(0)
                 assert_that(option.positive_grade).is_true()
 
-            elif option.poll_option_data == poll.options()[1]:
+            elif option.option == poll.options()[1]:
                 # votes on option 1:  [4, 4, 5, 5]
                 assert_that(option.median).is_equal_to(4)
                 assert_that(option.good_votes).is_equal_to(2)
@@ -403,29 +403,29 @@ class TestMajorityVoteService:
         x: List[MajorityPollResultData] = MajorityVoteService.calculate_result(poll_id=poll.id)
 
                 # verify options order
-        assert_that(x[0].poll_option_data).is_equal_to(poll.options()[2])
-        assert_that(x[1].poll_option_data).is_equal_to(poll.options()[3])
-        assert_that(x[2].poll_option_data).is_equal_to(poll.options()[1])
-        assert_that(x[3].poll_option_data).is_equal_to(poll.options()[0])
+        assert_that(x[0].option).is_equal_to(poll.options()[2])
+        assert_that(x[1].option).is_equal_to(poll.options()[3])
+        assert_that(x[2].option).is_equal_to(poll.options()[1])
+        assert_that(x[3].option).is_equal_to(poll.options()[0])
 
         # verify option values
         for option in x:
             
-            if option.poll_option_data == poll.options()[0]:
+            if option.option == poll.options()[0]:
                 # votes on option 0: [1, 1, 2, 3]
                 assert_that(option.median).is_equal_to(1)
                 assert_that(option.good_votes).is_equal_to(2)
                 assert_that(option.bad_votes).is_equal_to(0)
                 assert_that(option.positive_grade).is_true()
 
-            elif option.poll_option_data == poll.options()[1]:
+            elif option.option == poll.options()[1]:
                 # votes on option 1:  [1, 2, 2, 2]
                 assert_that(option.median).is_equal_to(2)
                 assert_that(option.good_votes).is_equal_to(0)
                 assert_that(option.bad_votes).is_equal_to(1)
                 assert_that(option.positive_grade).is_false()
 
-            elif option.poll_option_data == poll.options()[2]:
+            elif option.option == poll.options()[2]:
                 # votes on option 1:  [1, 2, 4, 5]
                 assert_that(option.median).is_equal_to(2)
                 assert_that(option.good_votes).is_equal_to(2)
