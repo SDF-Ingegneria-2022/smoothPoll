@@ -76,7 +76,7 @@
                         </div>
                         {# Options form #}
                         <div class="form-check m-2">
-                            <div class="row">
+                            <div class="row row-cols-lg-auto">
                                     
                                     
                                     {% load get_item %}
@@ -86,7 +86,7 @@
                                         </div>
                                     {% endif %}
                                     
-                                <div class="col">
+                                <div class="col-12">
                                 
                                     <div class="form-check  form-check-inline">
                                     {% with option_id=option.id value=error.options_selected%}
@@ -101,7 +101,7 @@
                                     
                                     </div>
                                 </div>
-                                <div class="col">
+                                <div class="col-12">
                                     <div class="form-check form-check-inline">
                                     {% with option_id=option.id value=error.options_selected%}
                                         {% if option_id in  error.options_selected.id and value|get_item:option_id == 2 %}
@@ -115,7 +115,7 @@
                                     
                                     </div>
                                 </div>
-                                <div class="col">
+                                <div class="col-12">
                                     <div class="form-check form-check-inline">
                                     {% with option_id=option.id value=error.options_selected%}
                                         {% if option_id in  error.options_selected.id and value|get_item:option_id == 3 %}
@@ -128,7 +128,7 @@
                                     {% endwith %}
                                     </div>
                                 </div>
-                                <div class="col">
+                                <div class="col-12">
                                     <div class="form-check form-check-inline">
                                     {% with option_id=option.id value=error.options_selected%}
                                         {% if option_id in  error.options_selected.id and value|get_item:option_id == 4 %}
@@ -141,7 +141,7 @@
                                     {% endwith %}
                                     </div>
                                 </div>
-                                <div class="col">
+                                <div class="col-12">
                                     <div class="form-check form-check-inline">
                                     {% with option_id=option.id value=error.options_selected%}
                                         {% if option_id in  error.options_selected.id and value|get_item:option_id == 5 %}
