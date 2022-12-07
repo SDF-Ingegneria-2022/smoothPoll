@@ -22,27 +22,30 @@
 
         <h4>Risultati</h4>
         
-        <div class="container m-3">
-            <div class="row fw-bold text-dark">
-                <div class="col-4">
+        <div class="container m-md-3 m-0 m-t-5">
+
+            {% comment "Result table heading" %}{% endcomment %}
+            <div class="row fw-bold text-dark d-none d-md-table-row">
+                <div class="col-4 d-table-cell">
                     <p>Testo opzione:</p>
                 </div>
-                <div class="col-2">
+                <div class="col-2 d-table-cell">
                     <p>Giudizio mediano:</p>
                 </div>
-                <div class="col-2">
+                <div class="col-2 d-table-cell">
                     <p>Segno:</p>
                 </div>
-                <div class="col-2">
+                <div class="col-2 d-table-cell">
                     <p>Nro giudizi strettamente peggiori:</p>
                 </div>
-                <div class="col-2">
+                <div class="col-2 d-table-cell">
                     <p>Nro giudizi strettamente migliori:</p>
                 </div>
             </div>
+
             {%for voted_option in poll_results %}
                 <div class="row">
-                    <div class="col-4">
+                    <div class="col-md-4 col-12">
                         <p class="text-secondary">{{forloop.counter}}.
                             <span class="{% if forloop.counter == 1 %}text-success fw-bold
                             {% else %}text-dark{% endif %}">{{voted_option.option.value}}</span>
@@ -54,36 +57,36 @@
                                 role="button">Vedi voti</a> {% endcomment %}
                         </p>
                     </div>
-                    <div class="col-2">
-                        <p class="text-secondary pb-0 mb-0">
-                            {% comment %} Giudizio mediano:  {% endcomment %}
+                    <div class="col-md-2 col-12">
+                        <p class="pb-0 mb-0">
+                            <span class="text-secondary d-md-none">Giudizio mediano: </span>
                             <span class="fw-bold text-primary">
                                 {{voted_option.get_qualitative_median}}
                             </span>
                         </p>
                         
                     </div>
-                    <div class="col-2">
-                        <p class="text-secondary pb-0 mb-0">
-                            {% comment %} Segno:  {% endcomment %}
+                    <div class="col-md-2 col-12">
+                        <p class="pb-0 mb-0">
+                            <span class="text-secondary d-md-none">Segno:  </span>
                             <span class="fw-bold text-primary">
                                 {{voted_option.get_sign}}
                             </span>
                         </p>
                         
                     </div>
-                    <div class="col-2">
-                        <p class="text-secondary pb-0 mb-0">
-                            {% comment %} Nro giudizi strett. peggiori:  {% endcomment %}
+                    <div class="col-md-2 col-12">
+                        <p class="pb-0 mb-0">
+                            <span class="text-secondary d-md-none">Nro giudizi strett. peggiori:  </span>
                             <span class="fw-bold text-danger">
                                 {{voted_option.bad_votes}}
                             </span>
                         </p>
                         
                     </div>
-                    <div class="col-2">
-                        <p class="text-secondary pb-0 mb-0">
-                            {% comment %} Nro giudizi strett. migliori:  {% endcomment %}
+                    <div class="col-md-2 col-12">
+                        <p class="pb-0 mb-0">
+                            <span class="text-secondary d-md-none">Nro giudizi strett. migliori: </span>
                             <span class="fw-bold text-success">
                                 {{voted_option.good_votes}}
                             </span>
@@ -136,7 +139,7 @@
     </div>
 
 
-    <div class="container text-center m-5">
+    <div class="container text-center m-t-5 m-b-5">
         <a name="" id="" role="button"
             class="btn btn-primary" 
             href="{% url 'home' %}" >
