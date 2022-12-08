@@ -15,7 +15,7 @@
         <h3>{{ poll.question }}</h3>
     </div>
     
-    <div class="container mt-5 mb-5">
+    <div class="container md-auto mt-5 mb-5">
         <form action="{% url 'polls:submit_vote' poll_id=poll.id %}" method="POST">
 
             {% csrf_token %}
@@ -27,7 +27,7 @@
             {% endif %}
 
             {# Form Options #}
-            <div class="container m-3">
+            <div class="container md-3">
 
                 {% for option in poll.options %}
                     <div class="form-check m-2">
@@ -41,7 +41,9 @@
 
             {# Confirm button #}
             <div class="container mt-5">
-                <button type="submit" class="btn btn-primary">Conferma</button>
+                <div class="d-grid gap-2 d-md-block">
+                    <button type="submit" class="btn btn-primary">Conferma</button>
+                </div>
             </div>
 
             
