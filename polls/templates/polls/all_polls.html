@@ -7,17 +7,17 @@
     
     <div class="row">
         {# Title #}
-        <div class="col-8">
+        <div class="col-md-8">
             <h1> Tutti i sondaggi</h1>
         </div>
         {# New poll botton #}
-        <div class="col-4"> 
+        <div class="col-md-4"> 
             <a href="{% url 'polls:create-poll' %}"class="btn btn-success float-end w-45 mt-3 " role="button">Nuovo sondaggio</a>
         </div>
     </div>
     <hr class="mb-0"/>
     <div class="row justify-content-end ">
-        <div class="col-3">
+        <div class="col-xxl-3">
             <div class="dropdown mt-3 ms-5">
                 <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                     Elementi per pagina : {{per_page}}
@@ -31,7 +31,7 @@
             </div>
         </div>
         {# Page navigation bar #}
-        <div class="col-3">
+        <div class="col-xl-3">
             <nav aria-label="Page navigation example">
                 <ul class="pagination float-end mt-3">
                     {% if page.has_previous %}
