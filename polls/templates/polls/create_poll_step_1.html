@@ -23,21 +23,21 @@
             {% bootstrap_form form %}
             
             {% buttons %}
-            <button type="submit" class="btn btn-primary">Conferma</button>
+            <div class="d-grid gap-2 d-md-block">
+                <button type="submit" class="btn btn-primary">Conferma</button>
+            </div>
             {% endbuttons %}
         </form>
 
         {% if enable_save %}
-        <div class="container row">
-            <div class="col-9"></div>
-            <div class="col-3">
-                <form action="{% url 'polls:create-poll-confirm' %}" method="POST">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-success">Crea il Sondaggio</button>
-                </form>
-            </div>
-        </div>
+            <form action="{% url 'polls:create-poll-confirm' %}" method="POST">
+                {% csrf_token %}
+                <div class="d-grid gap-2 d-md-block">
+                    <button type="submit" class="btn btn-success float-end">Crea il Sondaggio</button>
+                </div>
+            </form>
         {% endif %}
+        
     </div>
 </div>
 
