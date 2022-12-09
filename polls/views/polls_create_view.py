@@ -14,6 +14,10 @@ def clean_session_key(session: SessionBase, keyname: str):
     if session.get(keyname) is not None:
         del session[keyname]
 
+def clean_session_keys(session: SessionBase, keys: list[str]):
+    for k in keys:
+        clean_session_key(session, k)
+
 class CreatePollStep1View(View):
     """
     View which handles step 1 of creation of a new poll. It has
@@ -51,9 +55,7 @@ class CreatePollStep1View(View):
             request.session['create-poll-s1-error'] = "Compila tutti i campi prima di proseguire"
             return HttpResponseRedirect(reverse('polls:create-poll-1'))
 
-        # request.session['create-poll-s1-form-data'] = request.POST
-        if request.session.get('create-poll-s1-error'):
-            del request.session['create-poll-s1-error']
+        clean_session_key(request.session, 'create-poll-s1-error')
 
         return HttpResponseRedirect(reverse('polls:create-poll-2'))
 
@@ -145,8 +147,7 @@ class CreatePollStep2View(View):
         # todo: check for duplicates
 
         # remove eventual errors
-        if request.session.get('create-poll-s2-error') is not None:
-            del request.session['create-poll-s2-error']
+        clean_session_key(request.session, 'create-poll-s2-error')
 
         # enable save
         request.session['create-poll-enable-save'] = True
@@ -172,20 +173,13 @@ def create_poll_confirm(request: HttpRequest):
         PollOptionModel(value=option, poll_fk=poll).save()
 
     # clear session
-    # request.session.delete('create-poll-s1-form-data')
-    # request.session.delete('create-poll-s2-options')
-    # request.session.delete('create-poll-s1-error')
-    # request.session.delete('create-poll-s2-error')
-    # request.session.delete('create-poll-enable-save')
-
-    del request.session['create-poll-s1-form-data']
-    del request.session['create-poll-s2-options']
-    if request.session.get('create-poll-s1-error') is not None:
-        del request.session['create-poll-s1-error']
-    if request.session.get('create-poll-s2-error') is not None:
-        del request.session['create-poll-s2-error']
-    if request.session.get('create-poll-enable-save') is not None:
-        del request.session['create-poll-enable-save']
+    clean_session_keys(request.session, [
+        'create-poll-s1-form-data', 
+        'create-poll-s2-options',
+        'create-poll-s1-error', 
+        'create-poll-s2-error', 
+        'create-poll-enable-save', 
+    ])
 
     return HttpResponseRedirect("%s?page=last&per_page=10" % reverse('polls:all_polls'))        
 
