@@ -13,6 +13,13 @@
     <div class="container">
         <form action="{% url 'polls:create-poll-1' %}" method="POST" class="form">
             {% csrf_token %}
+
+            {% if error is not None %}
+            <div class="alert alert-danger" role="alert">
+                {{ error }}
+            </div>
+            {% endif %}
+
             {% bootstrap_form form %}
             
             {% buttons %}

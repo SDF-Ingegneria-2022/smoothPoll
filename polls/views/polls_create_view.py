@@ -25,6 +25,7 @@ class CreatePollStep1View(View):
         return render(request, "polls/create_poll_step_1.html", {
             "form": form, 
             'enable_save': request.session.get('create-poll-enable-save'), 
+            'error': request.session.get('create-poll-s1-error'), 
         })
 
     def post(self, request: HttpRequest, *args, **kwargs):
@@ -34,19 +35,17 @@ class CreatePollStep1View(View):
         """
         
         form = PollForm(request.POST or None)
+        request.session['create-poll-s1-form-data'] = request.POST or None
 
         if not form.is_valid():
             # disable save
             request.session['create-poll-enable-save'] = False
 
             # display error w. session + redirect
-            # request.session['create-poll-s1-error'] = "Compila tutti i campi prima di proseguire"
+            request.session['create-poll-s1-error'] = "Compila tutti i campi prima di proseguire"
             return HttpResponseRedirect(reverse('polls:create-poll-1'))
 
-        # poll = form.save()
-        # request.session['form-poll-id'] = poll.id
-
-        request.session['create-poll-s1-form-data'] = request.POST
+        # request.session['create-poll-s1-form-data'] = request.POST
 
         return HttpResponseRedirect(reverse('polls:create-poll-2'))
 
@@ -73,7 +72,7 @@ class CreatePollStep2View(View):
             request.session['create-poll-enable-save'] = False
 
             # display error w. session + redirect
-            # request.session['create-poll-s1-error'] = "Compila tutti i campi prima di proseguire"
+            request.session['create-poll-s1-error'] = "Compila tutti i campi prima di proseguire"
             return HttpResponseRedirect(reverse('polls:create-poll'))
 
         return render(request, "polls/create_poll_step_2.html", {
@@ -96,7 +95,7 @@ class CreatePollStep2View(View):
             request.session['create-poll-enable-save'] = False
 
             # display error w. session + redirect
-            # request.session['create-poll-s1-error'] = "Compila tutti i campi prima di proseguire"
+            request.session['create-poll-s1-error'] = "Compila tutti i campi prima di proseguire"
             return HttpResponseRedirect(reverse('polls:create-poll'))
 
         options = request.POST.getlist("options[]")
@@ -165,8 +164,16 @@ def create_poll_confirm(request: HttpRequest):
         PollOptionModel(value=option, poll_fk=poll).save()
 
     # clear session
+    # request.session.delete('create-poll-s1-form-data')
+    # request.session.delete('create-poll-s2-options')
+    # request.session.delete('create-poll-s1-error')
+    # request.session.delete('create-poll-s2-error')
+    # request.session.delete('create-poll-enable-save')
+
     del request.session['create-poll-s1-form-data']
     del request.session['create-poll-s2-options']
+    if request.session.get('create-poll-s1-error') is not None:
+        del request.session['create-poll-s1-error']
     if request.session.get('create-poll-s2-error') is not None:
         del request.session['create-poll-s2-error']
     if request.session.get('create-poll-enable-save') is not None:
