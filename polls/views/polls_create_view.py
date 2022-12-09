@@ -1,12 +1,18 @@
 from polls.classes.poll_form import PollForm
 from polls.models.poll_option_model import PollOptionModel
 from django.http import HttpRequest, HttpResponseRedirect, HttpResponse
+from django.contrib.sessions.backends.base import SessionBase
 from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
 
+
 def create_poll_start(request: HttpRequest):
     return HttpResponseRedirect(reverse('polls:create-poll-1'))
+
+def clean_session_key(session: SessionBase, keyname: str):
+    if session.get(keyname) is not None:
+        del session[keyname]
 
 class CreatePollStep1View(View):
     """
@@ -46,6 +52,8 @@ class CreatePollStep1View(View):
             return HttpResponseRedirect(reverse('polls:create-poll-1'))
 
         # request.session['create-poll-s1-form-data'] = request.POST
+        if request.session.get('create-poll-s1-error'):
+            del request.session['create-poll-s1-error']
 
         return HttpResponseRedirect(reverse('polls:create-poll-2'))
 

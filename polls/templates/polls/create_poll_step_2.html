@@ -27,11 +27,11 @@
                 <div class="mb-2" id="poll-options-inputs">
                     {% for option in options %}
                     <div class="row mb-3" id="option-{{forloop.counter}}-container">
-                        <div class="col-9">
+                        <div class="col-11">
                             <input type="text" class="form-control" name="options[]" id="option-{{forloop.counter}}" placeholder="Testo opzione" value="{{option}}" />
                         </div>
-                        <div class="col-3">
-                            <a id="option-{{forloop.counter}}-remove" class="btn btn-danger" role="button" onclick="removeOption({{forloop.counter}})">Rimuovi Opzione</a>
+                        <div class="col-1">
+                            <a id="option-{{forloop.counter}}-remove" class="btn btn-danger" role="button" onclick="removeOption({{forloop.counter}})">X</a>
                         </div>
                     </div>
                     {% endfor %}
@@ -83,13 +83,13 @@
         
         const allOptionsBox = document.getElementById("poll-options-inputs");
         allOptionsBox.insertAdjacentHTML('beforeend', '<div class="row mb-3" id="option-' + optionCounter  + '-container"> \
-            <div class="col-9"> \
+            <div class="col-11"> \
                 <input type="text" class="form-control" name="options[]" \
                 id="option-' + optionCounter  + '" placeholder="Testo opzione" value="" /> \
             </div> \
-            <div class="col-3"> \
+            <div class="col-1"> \
                 <a id="option-3-remove" class="btn btn-danger" \
-                    role="button" onclick="removeOption(' + optionCounter  + ')">Rimuovi Opzione</a> \
+                    role="button" onclick="removeOption(' + optionCounter  + ')">X</a> \
             </div> \
         </div>')
     }
