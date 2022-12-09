@@ -15,7 +15,7 @@
         <h3>{{ poll.question }}</h3>
     </div>
     
-    <div class="container mt-5 mb-5">
+    <div class="container md-auto mt-5 mb-5">
         <form action="{% url 'polls:submit_vote' poll_id=poll.id %}" method="POST">
 
             {% csrf_token %}
@@ -30,7 +30,7 @@
             <div class="container md-3">
 
                 {% for option in poll.options %}
-                    <div class="form-check md-2">
+                    <div class="form-check m-2">
                         <input class="form-check-input" type="radio" id="option-{{option.id}}"" name="vote" value="{{option.id}}"> 
                         <label class="form-check-label" for="option-{{option.id}}"" >
                             {{option.value}}

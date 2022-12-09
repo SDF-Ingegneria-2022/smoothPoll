@@ -49,22 +49,18 @@
 
                         
             {% buttons %}
-            <div class="d-grid gap-2 d-md-block">
-                <a class="btn btn-warning" href="{% url 'polls:create-poll-1' %}" role="button">Indietro</a>
-                <button type="submit" class="btn btn-primary">Conferma</button>
-            </div>
+            <a class="btn btn-warning" href="{% url 'polls:create-poll-1' %}" role="button">Indietro</a>
+            <button type="submit" class="btn btn-primary">Conferma</button>
             {% endbuttons %}
         </form>
 
         {% if enable_save %}
         <div class="container row">
             <div class="col-9"></div>
-            <div class="col-md-3">
+            <div class="col-3">
                 <form action="{% url 'polls:create-poll-confirm' %}" method="POST">
                     {% csrf_token %}
-                    <div class="d-grid gap-2 d-md-block">
-                        <button type="submit" class="btn btn-success btn-lg ms-3 mt-3">Crea il Sondaggio</button>
-                    </div>
+                    <button type="submit" class="btn btn-success">Crea il Sondaggio</button>
                 </form>
             </div>
         </div>

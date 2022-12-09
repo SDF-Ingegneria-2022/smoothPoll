@@ -16,9 +16,7 @@
             {% bootstrap_form form %}
             
             {% buttons %}
-            <div class="d-grid gap-2 d-md-block">
-                <button type="submit" class="btn btn-primary">Conferma</button>
-            </div>
+            <button type="submit" class="btn btn-primary">Conferma</button>
             {% endbuttons %}
         </form>
 
@@ -28,9 +26,7 @@
             <div class="col-3">
                 <form action="{% url 'polls:create-poll-confirm' %}" method="POST">
                     {% csrf_token %}
-                    <div class="d-grid gap-2 d-md-block">
-                        <button type="submit" class="btn btn-success">Crea il Sondaggio</button>
-                    </div>
+                    <button type="submit" class="btn btn-success">Crea il Sondaggio</button>
                 </form>
             </div>
         </div>
