@@ -66,7 +66,7 @@
     <div class="list-group">
         
     {% for poll in page.object_list %}
-         
+        
             <div class="d-grid">
             <div class="row p-2 rounded border mb-2">
                 <div class="col-6">
@@ -78,6 +78,16 @@
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                     <a href="{% url 'polls:get_poll' poll_id=poll.id %}" class="btn btn-primary me-md-2 mt-2" role="button">Vai al voto</a>
                     <a href="{% url 'polls:results' poll_id=poll.id %}"class="btn btn-secondary mt-2"  role="button">Vai al risultato</a>
+                    {% comment %} Button for modifying and deleting polls {% endcomment %}
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle mt-2 float-end" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                            Altre operazioni
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                            {% comment %} <li><a class="dropdown-item" href="#">Action</a></li> {% endcomment %}
+                            <li><a class="dropdown-item" href="#">Elimina sondaggio</a></li>
+                        </ul>
+                    </div>
                 </div>
                 </div>
             </div>
@@ -91,7 +101,7 @@
     {# Page navigation bar #}
     <div class="row justify-content-end ">
         <div class="col-4">
-           <nav aria-label="Page navigation example">
+            <nav aria-label="Page navigation example">
                 <ul class="pagination float-end mt-3">
                     {% if page.has_previous %}
     
