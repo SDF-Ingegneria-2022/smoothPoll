@@ -79,30 +79,13 @@
                     <a href="{% url 'polls:get_poll' poll_id=poll.id %}" class="btn btn-primary me-md-2 mt-2" role="button">Vai al voto</a>
                     <a href="{% url 'polls:results' poll_id=poll.id %}"class="btn btn-secondary mt-2"  role="button">Vai al risultato</a>
                     {% comment %} Button for modifying and deleting polls {% endcomment %}
-                    <div class="dropdown">
+                    <div class="dropdown ms-2">
                         <button class="btn btn-secondary dropdown-toggle mt-2 float-end" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                             Altre operazioni
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                            {% comment %} <li><a class="dropdown-item" href="#">Action</a></li> {% endcomment %}
-                            <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#popup">Elimina sondaggio</a></li>
-                                <div id="popup" class="modal">
-                                    <div class="modal-dialog modal-dialog-centered">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <p> Cancellazione Sondaggio </p>
-                                            </div>
-                                            <div class="modal-body">
-                                                <p> Sei sicuro di voler eliminare questo sondaggio? </p>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <p> Attenzione: il sondaggio può essere eliminato solo se non è ancora stato registrato nessun voto</p>
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Conferma
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                            {% comment %} <li><a class="dropdown-item" href="#">Modifica sondaggio</a></li> {% endcomment %}
+                            <li><a class="dropdown-item " data-bs-toggle="modal" data-bs-target="#deletepoll">Elimina sondaggio</a></li>
                         </ul>
                     </div>
                 </div>
@@ -145,6 +128,30 @@
                     {% endif %}
                 </ul>
             </nav>
+        </div>
+    </div>
+</div>
+
+{% comment %} Popup for deleting a poll {% endcomment %}
+
+<div class="modal fade" id="deletepoll" tabindex="-1" aria-labelledby="deletepoll" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="deletepoll">Cancellazione sondaggio</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h4 class="modal-title" id="deletepoll">Sei sicuro di volere cancellare questo sondaggio?</h4>
+            </div>
+            <div class="modal-footer">
+                <div class="alert alert-info" role="alert">
+                    Attenzione: un sondaggio può essere eliminato soltanto se
+                    non è ancora stato registrato nessun voto 
+                </div>
+                <button type="button" class="btn btn-primary">Conferma</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Indietro</button>
+            </div>
         </div>
     </div>
 </div>
