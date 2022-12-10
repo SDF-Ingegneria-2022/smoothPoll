@@ -85,7 +85,24 @@
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                             {% comment %} <li><a class="dropdown-item" href="#">Action</a></li> {% endcomment %}
-                            <li><a class="dropdown-item" href="#">Elimina sondaggio</a></li>
+                            <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#popup">Elimina sondaggio</a></li>
+                                <div id="popup" class="modal">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <p> Cancellazione Sondaggio </p>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p> Sei sicuro di voler eliminare questo sondaggio? </p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <p> Attenzione: il sondaggio può essere eliminato solo se non è ancora stato registrato nessun voto</p>
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Conferma
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                         </ul>
                     </div>
                 </div>
