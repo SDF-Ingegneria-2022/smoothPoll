@@ -1,11 +1,11 @@
 
 {% extends 'global/skeleton.html' %}
 
-{% load static %}
 
 {# https://ngangasn.com/how-to-use-bootstrap-5-with-django-the-right-way/ #}
 {% load bootstrap5 %}
 {% load django_htmx %}
+{% load static %}
 
 {% block pagename %}Visualizza i risultati{% endblock pagename %}
 
@@ -27,21 +27,22 @@
         {% endif %}
 
         <div class="form-group mb-5">
-            <div class="mb-2" id="poll-options-inputs">
-                {% for option in options %}
-                <div class="row mb-3" id="option-{{forloop.counter}}-container">
-                    <div class="col-11">
-                        <input type="text" class="form-control" name="options[]" 
-                            id="option-{{option.id}}" placeholder="Testo opzione" value="{{option.value}}" />
-                    </div>
-                    <div class="col-1">
-                        <a role="button" class="btn btn-danger" 
-                            hx-delete="{% url 'polls:htmx-delete-option' 0 option.id %}">X</a>
-                    </div>
-                </div>
+            <div class="mb-2" id="options-inputs" >
+                {% for option in options %}         
+                    {% include "polls/components/htmx_option_input.html" with option=option poll=poll %}
                 {% endfor %}
             </div>
-            <a id="add-option-button" class="btn btn-primary" onclick="addOption()" role="button">Aggiungi Opzione</a>
+
+            {% comment %}
+                Button to add a new option, it will 
+                be added after last one (after proper
+                API call)
+            {% endcomment %}
+            <a id="add-option-button" class="btn btn-primary" role="button"
+                hx-post="{% url 'polls:htmx-create-option' poll.id %}"
+                hx-target="#options-inputs"
+                hx-swap="beforeend"
+                >Aggiungi Opzione</a>
         </div>
 
                     

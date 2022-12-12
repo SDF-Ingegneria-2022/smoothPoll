@@ -27,8 +27,21 @@ def htmx_example_page(request: HttpRequest, poll_id: int):
         raise Http404()
 
     return render(request, 'polls/create_poll_htmx.html', {
-        'options': poll.options()
+        'options': poll.options(), 
+        'poll': poll, 
     })
 
-def htmx_delete_option(request: HttpRequest, poll_id: int, option_id: int):
-    return HttpResponse("OK")
+def htmx_create_option(request: HttpRequest, poll_id: str):
+
+    try:
+        poll = PollService.get_poll_by_id(poll_id)
+    except PollDoesNotExistException:
+        raise Http404()
+
+    return render(request, 'polls/components/htmx_option_input.html', {
+        "option": poll.options()[0], 
+        'poll': poll, 
+    })
+
+def htmx_delete_option(request: HttpRequest, poll_id: str, option_id: int):
+    return HttpResponse("")
