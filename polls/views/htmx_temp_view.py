@@ -45,3 +45,7 @@ def htmx_create_option(request: HttpRequest, poll_id: str):
 
 def htmx_delete_option(request: HttpRequest, poll_id: str, option_id: int):
     return HttpResponse("")
+
+
+def htmx_edit_option(request: HttpRequest, poll_id: str, option_id: int):
+    return HttpResponse("")

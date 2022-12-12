@@ -25,7 +25,7 @@ urlpatterns = [
 
     # experiment htmx
     path('prova-htmx/<str:poll_id>/', views.htmx_example_page, name='htmx-create-poll'), 
-    path('prova-htmx/<str:poll_id>/aggiungi-opzione/', views.htmx_create_option, name='htmx-create-option'), 
-    path('prova-htmx/<str:poll_id>/cancella-opzione/<int:option_id>', views.htmx_delete_option, name='htmx-delete-option'), 
-
+    path('prova-htmx/<str:poll_id>/opzioni/aggiungi', views.htmx_create_option, name='htmx-create-option'), 
+    path('prova-htmx/<str:poll_id>/opzioni/<int:option_id>/elimina', views.htmx_delete_option, name='htmx-delete-option'), 
+    path('prova-htmx/<str:poll_id>/opzioni/<int:option_id>/modifica', views.htmx_edit_option, name='htmx-edit-option'), 
 ]

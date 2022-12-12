@@ -6,7 +6,11 @@
     <div class="col-11">
         <input type="text" class="form-control" name="options[]" 
             placeholder="Testo opzione" 
-            value="{{option.value}}" />
+            value="{{option.value}}" 
+            hx-trigger="keyup changed delay:500ms"
+            hx-target=""
+            hx-post="{% url 'polls:htmx-edit-option' poll.id option.id %}"
+            />
     </div>
     <div class="col-1">
         {% comment %}
