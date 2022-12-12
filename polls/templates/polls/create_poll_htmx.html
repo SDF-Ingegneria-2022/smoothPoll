@@ -1,0 +1,80 @@
+
+{% extends 'global/skeleton.html' %}
+
+{% load static %}
+
+{# https://ngangasn.com/how-to-use-bootstrap-5-with-django-the-right-way/ #}
+{% load bootstrap5 %}
+{% load django_htmx %}
+
+{% block pagename %}Visualizza i risultati{% endblock pagename %}
+
+{% block content %}
+<div class="container text-center mt-5 mb-5">
+    <h1>Crea nuovo sondaggio</h1>
+    <h2 class="text-info">Step 2 di 2: Definisci le opzioni</h2>
+</div>
+<div class="container mb-5"  hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+
+    <h4 class="text-secondary">Inserisci le opzioni del sondaggio e clicca "Conferma"</h4>
+    <form action="{% url 'polls:create-poll-2' %}" method="POST" class="form" >
+        {% csrf_token %}
+
+        {% if error is not None %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <div class="form-group mb-5">
+            <div class="mb-2" id="poll-options-inputs">
+                {% for option in options %}
+                <div class="row mb-3" id="option-{{forloop.counter}}-container">
+                    <div class="col-11">
+                        <input type="text" class="form-control" name="options[]" 
+                            id="option-{{option.id}}" placeholder="Testo opzione" value="{{option.value}}" />
+                    </div>
+                    <div class="col-1">
+                        <a role="button" class="btn btn-danger" 
+                            hx-delete="{% url 'polls:htmx-delete-option' 0 option.id %}">X</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <a id="add-option-button" class="btn btn-primary" onclick="addOption()" role="button">Aggiungi Opzione</a>
+        </div>
+
+                    
+        {% buttons %}
+        <div class="d-grid gap-2 d-md-block">
+            <a class="btn btn-warning" href="{% url 'polls:create-poll-1' %}" role="button">Indietro</a>
+            <button type="submit" class="btn btn-primary">Conferma</button>
+        </div>
+        {% endbuttons %}
+    </form>
+
+    {% if enable_save %}
+        <form action="{% url 'polls:create-poll-confirm' %}" method="POST">
+            {% csrf_token %}
+            <div class="d-grid gap-2 d-md-block">
+                <button type="submit" class="btn btn-success float-end">Crea il Sondaggio</button>
+            </div>
+        </form>
+    {% endif %}        
+</div>
+
+{% endblock content %}
+
+
+{% block customjs %}
+
+<script src="{% static 'js/htmx/htmx.min.js' %}" defer></script>{# or however you include htmx #}
+{% comment %} {% django_htmx_script %} {% endcomment %}
+
+<script>
+    document.body.addEventListener('htmx:configRequest', (event) => {
+      event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
+    })
+</script>
+
+{% endblock customjs %}

@@ -5,7 +5,6 @@ from . import views
 app_name = 'polls'
 urlpatterns = [
 
-
     # simple polls
     path('', views.all_polls, name='all_polls'),
     path('<int:poll_id>', views.get_poll, name='get_poll'),
@@ -23,4 +22,9 @@ urlpatterns = [
     path('crea-nuovo/step1', views.CreatePollStep1View.as_view(), name="create-poll-1"), 
     path('crea-nuovo/step2', views.CreatePollStep2View.as_view(), name="create-poll-2"), 
     path('crea-nuovo/conferma', views.create_poll_confirm, name="create-poll-confirm"),
+
+    # experiment htmx
+    path('prova-htmx/<int:poll_id>/', views.htmx_example_page, name='htmx-create-poll'), 
+    path('prova-htmx/<int:poll_id>/cancella-opzione/<int:option_id>', views.htmx_delete_option, name='htmx-delete-option'), 
+
 ]

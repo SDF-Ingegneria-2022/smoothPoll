@@ -13,7 +13,6 @@
 
     {# Load CSS and JavaScript #}
     {% bootstrap_css %}
-    {% bootstrap_javascript %}
 
     {# basic style #}
     <style>
@@ -39,6 +38,8 @@
 </head>
 <body class="body">
     {% block body %}{% endblock body %}
+
+    {% bootstrap_javascript %}
 
     {# Custom JS #}
     {% block customjs %}{% endblock customjs %} 
