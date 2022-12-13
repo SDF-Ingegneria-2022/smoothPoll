@@ -1,0 +1,27 @@
+{% load bootstrap5 %}
+{% load django_htmx %}
+{% load static %}
+
+<div class="row mb-3 align-items-center" id="option-{{i}}-input-row" >
+    <div class="col-11">
+        <input type="text" class="form-control" name="option-{{i}}" 
+            placeholder="Testo opzione" required
+            value="{{option}}" 
+            hx-trigger="keyup changed delay:500ms"
+            hx-post="{% url 'polls:poll_form_htmx_edit_option' i %}"
+            />         
+    </div>
+    <div class="col-1">
+        {% comment %}
+            Button that will call delete API 
+            and replace this option row with 
+            nothing 
+        {% endcomment %}
+        <a role="button" class="btn btn-danger" 
+            hx-delete="{% url 'polls:poll_form_htmx_delete_option' i %}"
+            hx-target="#option-{{i}}-input-row"
+            hx-swap="outerHTML"
+            {% comment %} hx-confirm="Sei sicuro di voler eliminare l'opzione?" {% endcomment %}
+            >X</a>
+    </div>
+</div>

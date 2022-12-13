@@ -13,13 +13,17 @@ django-bootstrap-v5 = "*"
 bumpversion = "*"
 pytest-django = "*"
 mkdocs = "*"
-mkdocstrings = {extras = ["python"], version = "*"}
 mkdocs-material = "*"
 assertpy = "*"
 python-dotenv = "*"
 gunicorn = "*"
+django-htmx = "*"
 
 [dev-packages]
 
 [requires]
 python_version = "3.9"
+
+[packages.mkdocstrings]
+extras = [ "python",]
+version = "*"
