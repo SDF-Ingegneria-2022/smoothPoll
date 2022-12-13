@@ -143,7 +143,7 @@
                 <h4 class="modal-title" id="deletepoll">Cancellazione sondaggio</h4>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body bg-warning text-dark">
                 <h5 class="modal-title" id="deletepoll">Sei sicuro di volere cancellare questo sondaggio?</h5>
             </div>
             <div class="modal-footer">
@@ -151,22 +151,25 @@
                     Attenzione: un sondaggio può essere eliminato soltanto se
                     non è ancora stato registrato nessun voto 
                 </div>
-                <button type="button" class="btn btn-primary" data-bs-target="#deletepoll2" data-bs-toggle="modal" data-bs-dismiss="modal">Conferma</button>
+                <button type="button" class="btn btn-primary" data-bs-target="#deletepollsuccess" data-bs-toggle="modal" data-bs-dismiss="modal">Conferma</button>
+                {% comment %} Insert operations to toggle success or error popup after trying to delete poll {% endcomment %}
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Indietro</button>
             </div>
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="deletepoll2" tabindex="-1" aria-labelledby="deletepoll2" aria-hidden="true">
+{% comment %} Popup for success of operation of delete poll {% endcomment %}
+
+<div class="modal fade" id="deletepollsuccess" tabindex="-1" aria-labelledby="deletepollsuccess" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-primary text-white">
-                <h4 class="modal-title" id="deletepoll2">Cancellazione sondaggio</h4>
+                <h4 class="modal-title" id="deletepollsuccess">Cancellazione sondaggio</h4>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <h5 class="modal-title" id="deletepoll2">Il sondaggio è stato cancellato con successo! </h5>
+            <div class="modal-body bg-success text-white">
+                <h5 class="modal-title" id="deletepollsuccess">Il sondaggio è stato cancellato con successo! </h5>
             </div>
             <div class="modal-footer">
                 <button onClick="window.location.reload();" type="button" class="btn btn-primary">Continua</button>
@@ -174,5 +177,26 @@
         </div>
     </div>
 </div>
+
+{% comment %} Popup for error of operation of delete poll {% endcomment %}
+
+<div class="modal fade" id="deletepollerror" tabindex="-1" aria-labelledby="deletepollerror" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h4 class="modal-title" id="deletepollerror">Cancellazione sondaggio</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body bg-danger text-white">
+                <h5 class="modal-title" id="deletepollerror"> Non è stato possibile cancellare il sondaggio in quanto sono già stati
+                registrati dei voti. </h5>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Continua</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 {% endblock content %}
