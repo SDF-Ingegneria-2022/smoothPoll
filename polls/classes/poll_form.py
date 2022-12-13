@@ -1,4 +1,5 @@
-from polls.models.poll_model import PollModel
+from polls.models.poll_model import PollModel, PollOptionModel
+
 from django.forms import ModelForm
 
 class PollForm(ModelForm):
@@ -8,4 +9,13 @@ class PollForm(ModelForm):
         labels={
             "name": "Nome", 
             "question": "Quesito"
+        }
+
+
+class PollOptionForm(ModelForm):
+    class Meta:
+        model = PollOptionModel
+        fields=['value']
+        labels={
+            "value": "Testo opzione"
         }
