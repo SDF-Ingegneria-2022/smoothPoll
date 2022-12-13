@@ -106,3 +106,15 @@ class TestPollService:
         items_per_page: int = 0
 
         assert_that(PollService.get_paginated_polls).raises(PaginatorPageSizeException).when_called_with(items_per_page)
+    
+    @pytest.mark.django_db
+    def test_delete_poll(self):
+        poll_created = PollService.create(self.name, self.question, self.options)
+        assert_that(poll_created).is_instance_of(models.Model)
+       
+        id = poll_created.id
+
+        assert_that(PollService.delete_poll()) \
+            .raises(PollDoesNotExistException) \
+            .when_called_with(id=id)
+

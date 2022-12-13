@@ -72,3 +72,20 @@ class PollService:
         paginator: Paginator = Paginator(polls, page_size)
         
         return paginator
+    
+    @staticmethod
+    def delete_poll(id:str):
+        """Delete a poll
+        Args:
+            id: Id of the poll
+        Raises:
+            PollDoesNotExistException: raised when you retrieve a non-existent poll
+        """
+        try:
+            poll : PollModel = PollModel.objects.get(id=id)
+        except ObjectDoesNotExist:
+            raise PollDoesNotExistException(f"Error: poll with id={id} does not exit")  
+        #when i delete a post i need to delete all related option 
+        poll.filter(id=id).delete()
+
+        return 
