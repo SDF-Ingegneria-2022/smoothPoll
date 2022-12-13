@@ -10,7 +10,10 @@ echo "Pull last version available: $NEW_VERSION"
 if [ "$OLD_VERSION" != "$NEW_VERSION" ]; then
     echo "New version available, deploying..."
     git checkout $NEW_VERSION &> /dev/null
+    echo "Installing dependencies..."
     pipenv install &> /dev/null
+    echo "Migrating database..."
+    pipenv run python manage.py migrate  &> /dev/null
     echo "Deployment done!"
     echo "Restarting gunicorn..."
     sudo -S <<< $1 systemctl restart gunicorn
