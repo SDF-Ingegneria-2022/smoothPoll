@@ -12,7 +12,7 @@
     <h1>Crea nuovo sondaggio</h1>
     <h2 class="text-info">Inserisci tutti i dati e premi "Salva"</h2>
 </div>
-<div class="container mb-5"  hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' hx-ext="class-tools">
+<div class="container mb-5"  hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' hx-ext="class-tools loading-states">
 
     <form action="{% url 'polls:create_poll_form' %}" method="POST">
 
@@ -57,7 +57,7 @@
         {% csrf_token %}
         <div class="d-grid gap-2 d-md-block">
             <a class="btn btn-warning" href="{% url 'polls:poll_form_clean_go_back_home' %}" role="button">Annulla</a>
-            <button type="submit" class="btn btn-success">Salva</button>
+            <button type="submit" class="btn btn-success" data-loading-disable >Salva</button>
         </div>
     </form>
 </div>
@@ -69,6 +69,8 @@
 
 <script src="{% static 'js/htmx/htmx.min.js' %}" defer></script>{# or however you include htmx #}
 <script src="{% static 'js/htmx/class-tools.js' %}" defer></script>
+<script src="{% static 'js/htmx/loading-states.js' %}" defer></script>
+
 
 
 {% endblock customjs %}
