@@ -113,13 +113,8 @@
                     non è ancora stato registrato nessun voto 
                 </div>
                 {% comment %} <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deletepollsuccess">Conferma</button> {% endcomment %}
-                <button type="button" href="{% url 'polls:poll_delete' poll_id=poll.id  %}" class="btn btn-primary" >Conferma</button>
+                <button type="button" class="btn btn-primary" onClick="toggleDeleteSuccessOrError({% url 'polls:poll_delete' poll_id=poll.id  %})">Conferma</button>
                 {% comment %} Insert operations to toggle success or error popup after trying to delete poll {% endcomment %}
-                {% comment %} {% if delete_success %}
-                    deletepollsuccess.toggle();
-                {% else %}
-                    deletepollerror.toggle();
-                {% endif %} {% endcomment %}
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Indietro</button>
             </div>
         </div>
@@ -208,5 +203,26 @@
     </div>
 </div>
 
+{% block customjs %}
+
+<script type="text/javascript">
+
+    var deletepopup = new bootstrap.Modal(document.getElementById('deletepoll'));
+    var deleteSuccess = new bootstrap.Modal(document.getElementById('deletepollsuccess'));
+    var deleteError = new bootstrap.Modal(document.getElementById('deletepollerror'));
+
+    function toggleDeleteSuccessOrError(url){
+
+        window.location.href = url;
+        if (delete_success) {
+            deletepopup.hide();
+            deleteSuccess.toggle();
+        }
+
+    }
+
+</script>
+
+{% endblock customjs %}
 
 {% endblock content %}
