@@ -1,4 +1,4 @@
-from polls.classes.poll_form import PollForm, PollOptionForm
+from polls.classes.poll_form import PollForm # , PollOptionForm
 
 from django.views.decorators.http import require_http_methods
 from django.http import HttpRequest, HttpResponseRedirect, HttpResponse, Http404, HttpResponseNotModified
@@ -10,9 +10,6 @@ from django.forms import formset_factory
 SESSION_FORMDATA = 'create-poll-form'
 SESSION_OPTIONS = 'create-poll-options'
 SESSION_DATA = [SESSION_FORMDATA, SESSION_OPTIONS]
-
-PollOptionFormset = formset_factory(PollOptionForm, extra=0)
-PollOptionFormsetNew = formset_factory(PollOptionForm, extra=1)
 
 
 class CreatePollHtmxView(View):
@@ -42,6 +39,8 @@ class CreatePollHtmxView(View):
             "1":"opzione 1", 
             "2":"opzione 2", 
         }
+
+        
         request.session[SESSION_FORMDATA] = form.data
         request.session[SESSION_OPTIONS] = options
 
@@ -67,7 +66,7 @@ class CreatePollHtmxView(View):
 
         # retrieve data from session
         form = PollForm(request.session.get(SESSION_FORMDATA) or None)
-        options = PollOptionFormset(initial=request.session.get(SESSION_OPTIONS) or [])
+        options = request.session.get(SESSION_OPTIONS) or {}
 
         # validate data
         # todo: ... 

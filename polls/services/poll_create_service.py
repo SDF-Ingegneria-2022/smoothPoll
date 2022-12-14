@@ -1,5 +1,5 @@
-from polls.exceptions.poll_not_valid_creation_exception import PollNotValidCreationException
-from polls.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
+from typing import List
+from polls.exceptions.poll_not_valid_creation_exception import *
 from polls.models import PollModel
 from polls.models.poll_option_model import PollOptionModel
 from polls.classes.poll_form import PollForm
@@ -11,10 +11,19 @@ class PollCreateService:
     """
 
     @staticmethod
-    def create_new_poll(poll_form: PollForm):
+    def create_new_poll(poll_form: PollForm, options: List[str]) -> PollModel:
         """
         Create a new poll starting from a PollForm object. 
-        New poll will be set as unvalid 
+        Args:
+            poll_form: form containing data of object you wanna create.
+            options: list of all options (as strings). 
+                They must be at least 2 and at most 10.
+        Return:
+            The initialized and saved PollModel object
+        Raise:
+            MissingNameOrQuestionExcetion: your form has not all required data.
+            TooFewOptionsExcetion: you put in too few options for this type of poll.
+            TooManyOptionsExcetion: you put in too many options for this type of poll.
         """
         pass
 
