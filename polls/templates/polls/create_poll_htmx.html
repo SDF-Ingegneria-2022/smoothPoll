@@ -12,9 +12,15 @@
     <h1>Crea nuovo sondaggio</h1>
     <h2 class="text-info">Inserisci tutti i dati e premi "Salva"</h2>
 </div>
-<div class="container mb-5"  hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+<div class="container mb-5"  hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' hx-ext="class-tools">
     
-    <h4 class="text-secondary">Nome del sondaggio e domanda</h4>
+    <h3>Nome del sondaggio e domanda</h3>
+
+    {% if pollform_error is not None %}
+    <div class="alert alert-danger" role="alert">
+        {{ pollform_error }}
+    </div>
+    {% endif %}
 
     <form class="form-group mb-5" 
         hx-trigger="input from:* delay:500ms"
@@ -24,7 +30,13 @@
         {% bootstrap_form poll_form %}
     </form>
 
-    <h4 class="text-secondary">Inserisci le opzioni del sondaggio e clicca "Conferma"</h4>
+    <h3>Inserisci le opzioni del sondaggio e clicca "Conferma"</h3>
+
+    {% if options_error is not None %}
+    <div class="alert alert-danger" role="alert">
+        {{ options_error }}
+    </div>
+    {% endif %}
 
     <div class="form-group mb-5">
         <div class="mb-2" id="options-inputs" >
@@ -61,5 +73,7 @@
 {% block customjs %}
 
 <script src="{% static 'js/htmx/htmx.min.js' %}" defer></script>{# or however you include htmx #}
+<script src="{% static 'js/htmx/class-tools.js' %}" defer></script>
+
 
 {% endblock customjs %}

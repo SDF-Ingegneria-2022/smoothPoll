@@ -7,8 +7,6 @@ from django.urls import reverse
 from django.views import View
 from django.forms import formset_factory
 
-
-
 SESSION_FORMDATA = 'create-poll-form'
 SESSION_OPTIONS = 'create-poll-options'
 SESSION_DATA = [SESSION_FORMDATA, SESSION_OPTIONS]
@@ -27,18 +25,23 @@ class CreatePollHtmxView(View):
     
     def get(self, request: HttpRequest, *args, **kwargs):
         """
-        Get request should render a form which allows user to fill it
-        with poll's basic data 
+        Get request should render a form which allows user to fill:
+        - main data form (to enter name and question)
+        - options form (to dynamically add, remove and edit options)
+
+        Eventual data in session will be displayed.
+
+        Occasionally, there may even be rendered errors.
         """
 
         # request.session.clear()
 
+        # get data from session or init it 
         form = PollForm(request.session.get(SESSION_FORMDATA) or None)
         options: dict = request.session.get(SESSION_OPTIONS) or {
             "1":"opzione 1", 
             "2":"opzione 2", 
         }
-
         request.session[SESSION_FORMDATA] = form.data
         request.session[SESSION_OPTIONS] = options
 
@@ -49,8 +52,17 @@ class CreatePollHtmxView(View):
 
     def post(self, request: HttpRequest, *args, **kwargs):
         """
-        Post request should take passed input as a form, 
-        validate it, and eventually redirect to next step
+        This post request has purpose of saving all poll 
+        data kept in session. It doesn't really receive 
+        any data from user, it just:
+        - take a confim
+        - get all data from session
+        - validate it
+        - perform save/creation of Poll and related Options
+        - clean session
+
+        In case of (validation) errors, it saves them in session
+        and redirect to GET so they may be displayed
         """
 
         # retrieve data from session
@@ -109,10 +121,9 @@ def poll_form_htmx_create_option(request: HttpRequest):
         # todo: raise error
         print(request.session[SESSION_OPTIONS])
         # return HttpResponseNotModified()
-        return HttpResponseNotModified()
-        # render(request, "polls/components/htmx_snack_error.html", {
-        #     "message": "Errore, non è possibile aggiungere più di 10 opzioni"
-        # })
+        return render(request, "polls/components/htmx_snack_warning.html", {
+            "message": "Attenzione, non è possibile creare più di 10 opzioni."
+        })
     
     # write in that index the option
     options[str(i)] = ""
