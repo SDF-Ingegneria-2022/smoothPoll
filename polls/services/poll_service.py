@@ -1,11 +1,14 @@
 from typing import List
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator
+from polls.classes.poll_result import PollResult
 from polls.exceptions.paginator_page_size_exception import PaginatorPageSizeException
+from polls.exceptions.poll_has_been_voted_exception import PollHasBeenVotedException
 from polls.exceptions.poll_not_valid_creation_exception import PollNotValidCreationException
 from polls.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
 from polls.models import PollModel
 from polls.models.poll_option_model import PollOptionModel
+from polls.services.vote_service import VoteService
 
 
 class PollService:
@@ -86,7 +89,14 @@ class PollService:
         except ObjectDoesNotExist:
             raise PollDoesNotExistException(f"Error: poll with id={id} does not exit")  
         #not possible to delete a poll if there's a vote
-
+        has_been_voted = False
+        options : PollOptionModel = poll.options()
+        poll_results: PollResult = VoteService.calculate_result(poll.id)
+        for option_result in poll_results.get_sorted_options():
+            if option_result.n_votes != 0:
+                has_been_voted = True
+        if has_been_voted:
+            raise PollHasBeenVotedException(f"Error: poll with id={id} can't be deleted: it has already been voted")
         poll.delete()
 
         return 

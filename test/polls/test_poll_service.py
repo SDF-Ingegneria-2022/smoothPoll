@@ -4,11 +4,13 @@ from assertpy import assert_that
 from django.db import models
 from django.core.paginator import Paginator
 from polls.exceptions.paginator_page_size_exception import PaginatorPageSizeException
+from polls.exceptions.poll_has_been_voted_exception import PollHasBeenVotedException
 from polls.models.poll_model import PollModel
 from polls.models.poll_option_model import PollOptionModel
 from polls.services.poll_service import PollService
 from polls.exceptions.poll_not_valid_creation_exception import PollNotValidCreationException
 from polls.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
+from polls.services.vote_service import VoteService
 
 
 class TestPollService:
@@ -114,7 +116,7 @@ class TestPollService:
         id = poll.id
         assert_that(poll).is_instance_of(models.Model)
         PollService.delete_poll(poll.id)
-        assert_that(PollService.get_poll_by_id)\
+        assert_that(PollService.delete_poll)\
             .raises(PollDoesNotExistException)\
             .when_called_with(id=id)
 
@@ -132,7 +134,12 @@ class TestPollService:
     def test_delete_already_voted_poll(self):
         """Test delete poll that has been already voted"""
         poll = PollService.create(self.name, self.question, self.options)
-        poll_created = PollService.get_poll_by_id(poll.id)
-        pass
+        VoteService.perform_vote(poll_id=poll.id, poll_choice_id=poll.options()[0].id)
+        id = poll.id
+        assert_that(PollService.delete_poll) \
+            .raises(PollHasBeenVotedException) \
+            .when_called_with(id=id)
+ 
+
 
 
