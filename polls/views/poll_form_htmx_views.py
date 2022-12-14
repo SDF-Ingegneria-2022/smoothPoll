@@ -1,5 +1,6 @@
 from polls.classes.poll_form import PollForm # , PollOptionForm
 from polls.services.poll_create_service import PollCreateService
+from polls.exceptions.poll_not_valid_creation_exception import *
 
 from django.views.decorators.http import require_http_methods
 from django.http import HttpRequest, HttpResponseRedirect, HttpResponse, Http404, HttpResponseNotModified
@@ -9,7 +10,8 @@ from django.views import View
 
 SESSION_FORMDATA = 'create-poll-form'
 SESSION_OPTIONS = 'create-poll-options'
-SESSION_DATA = [SESSION_FORMDATA, SESSION_OPTIONS]
+SESSION_ERROR = 'create-poll-error'
+_ALL_SESSION_KEYS = [SESSION_FORMDATA, SESSION_OPTIONS, SESSION_ERROR]
 
 
 class CreatePollHtmxView(View):
@@ -36,17 +38,16 @@ class CreatePollHtmxView(View):
         # get data from session or init it 
         form = PollForm(request.session.get(SESSION_FORMDATA) or None)
         options: dict = request.session.get(SESSION_OPTIONS) or {
-            "1":"opzione 1", 
-            "2":"opzione 2", 
+            "1":"", 
+            "2":"", 
         }
 
-        
         request.session[SESSION_FORMDATA] = form.data
         request.session[SESSION_OPTIONS] = options
 
         return render(request, "polls/create_poll_htmx.html", {
             "poll_form": form, "options": options, 
-            "error": request.session.get('create-poll-s1-error'), 
+            "error": request.session.get(SESSION_ERROR), 
         })
 
     def post(self, request: HttpRequest, *args, **kwargs):
@@ -71,16 +72,36 @@ class CreatePollHtmxView(View):
         # validate data
         # todo: ... 
 
-        # perform object creation
-        PollCreateService.create_new_poll(form, options.values())
+        try:
+            # perform object creation
+            PollCreateService.create_new_poll(form, options.values())
+        except NameOrQuestionNotValidException:
+            request.session[SESSION_ERROR] = "Attenzione, un sondaggio ha bisogno di un nome e di una domanda validi"
+            return HttpResponseRedirect(reverse('polls:create_poll_form'))
+        except TooFewOptionsException:
+            request.session[SESSION_ERROR] = "Attenzione, un sondaggio ha bisogno almeno 2 opzioni"
+            return HttpResponseRedirect(reverse('polls:create_poll_form'))
+        except TooManyOptionsException:
+            request.session[SESSION_ERROR] = "Attenzione, un sondaggio può avere al massimo 10 optioni"
+            return HttpResponseRedirect(reverse('polls:create_poll_form'))
 
         # clean session 
-        for key in SESSION_OPTIONS:
+        for key in _ALL_SESSION_KEYS:
             if request.session.get(key) is not None:
                 del request.session[key]
       
         return HttpResponseRedirect("%s?page=last&per_page=10" % reverse('polls:all_polls'))        
 
+
+def poll_form_clean_go_back_home(request: HttpRequest):
+    """Clean session and go back home"""
+
+    # clean session 
+    for key in _ALL_SESSION_KEYS:
+        if request.session.get(key) is not None:
+            del request.session[key]
+
+    return HttpResponseRedirect("%s?page=1&per_page=10" % reverse('polls:all_polls'))        
 
         
 @require_http_methods(["POST"])

@@ -25,6 +25,9 @@ class PollCreateService:
             TooFewOptionsExcetion: you put in too few options for this type of poll.
             TooManyOptionsExcetion: you put in too many options for this type of poll.
         """
+
+        if not poll_form.is_valid():
+            raise NameOrQuestionNotValidException()
         
         poll = poll_form.save()
 

@@ -25,6 +25,7 @@ urlpatterns = [
 
     # create poll proces urls
     path('crea-nuovo2/', views.CreatePollHtmxView.as_view(), name="create_poll_form"), 
+    path('crea-nuovo2/annulla', views.poll_form_clean_go_back_home, name="poll_form_clean_go_back_home"), 
     path('crea-nuovo2/htmx/modifica-dati', views.poll_form_htmx_edit, name="poll_form_htmx_edit"), 
     path('crea-nuovo2/htmx/aggiungi-opzione', views.poll_form_htmx_create_option, name="poll_form_htmx_create_option"), 
     path('crea-nuovo2/htmx/modifica-opzione/<int:option_rel_id>', views.poll_form_htmx_edit_option, name="poll_form_htmx_edit_option"), 

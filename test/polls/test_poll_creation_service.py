@@ -2,6 +2,7 @@ from polls.classes.poll_form import PollForm
 from polls.models.poll_model import PollModel
 from polls.models.poll_option_model import PollOptionModel
 from polls.services.poll_create_service import PollCreateService
+from polls.exceptions.poll_not_valid_creation_exception import *
 
 from typing import Dict, List
 import pytest
@@ -67,5 +68,29 @@ class TestPollCreationService:
             options_to_search.remove(o.value)
 
         assert_that(options_to_search.__len__()).is_equal_to(0)
+
+    @pytest.mark.django_db
+    def test_create_missing_name(self, make_forms):
+        """Check if """
+
+        form = make_forms["form1"]
+        form.data["name"] = " "
+
+        assert_that(PollCreateService.create_new_poll) \
+            .raises(NameOrQuestionNotValidException) \
+            .when_called_with(poll_form=form, options=self.options1)
+
+    @pytest.mark.django_db
+    def test_create_missing_question(self, make_forms):
+        """Check if """
+
+        form = make_forms["form1"]
+        form.data["question"] = None
+
+        assert_that(PollCreateService.create_new_poll) \
+            .raises(NameOrQuestionNotValidException) \
+            .when_called_with(poll_form=form, options=self.options1)
+
+    
 
 
