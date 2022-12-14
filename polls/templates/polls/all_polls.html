@@ -87,15 +87,48 @@
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end dropdown-menu-lg-start" aria-labelledby="dropdownMenuButton1">
                             {% comment %} <li><a class="dropdown-item" href="#">Modifica sondaggio</a></li> {% endcomment %}
-                            <li><a class="dropdown-item " data-bs-toggle="modal" data-id="{{ poll.id }}" data-bs-target="#{{ poll.id }}">Elimina sondaggio</a></li>
+                            <li><a class="dropdown-item " data-bs-toggle="modal" data-bs-target="#deletepoll">Elimina sondaggio</a></li>
                         </ul>
                     </div>
                 </div>
                 </div>
             </div>
         </div>
+
+{% comment %} Popup for deleting a poll {% endcomment %}
+
+<div class="modal fade" id="deletepoll" tabindex="-1" aria-labelledby="deletepoll" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h4 class="modal-title" id="deletepoll">Cancellazione sondaggio</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body bg-warning text-dark">
+                <h5 class="modal-title" id="deletepoll">Sei sicuro di volere cancellare questo sondaggio?</h5>
+            </div>
+            <div class="modal-footer">
+                <div class="alert alert-info text-center" role="alert">
+                    Attenzione: un sondaggio può essere eliminato soltanto se
+                    non è ancora stato registrato nessun voto 
+                </div>
+                {% comment %} <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deletepollsuccess">Conferma</button> {% endcomment %}
+                <button type="button" href="{% url 'polls:poll_delete' poll_id=poll.id  %}" class="btn btn-primary" >Conferma</button>
+                {% comment %} Insert operations to toggle success or error popup after trying to delete poll {% endcomment %}
+                {% comment %} {% if delete_success %}
+                    deletepollsuccess.toggle();
+                {% else %}
+                    deletepollerror.toggle();
+                {% endif %} {% endcomment %}
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Indietro</button>
+            </div>
+        </div>
+    </div>
+</div>
+
         {% empty %}
         <p class="fs-3 fw-bold mt-5"> Attualmente non ci sono sondaggi! </p>
+
         
     {% endfor %}
     </div>
@@ -134,36 +167,7 @@
     </div>
 </div>
 
-{% comment %} Popup for deleting a poll {% endcomment %}
 
-<div class="modal fade" id="{{ poll.id }}" tabindex="-1" aria-labelledby="deletepoll" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
-                <h4 class="modal-title" id="deletepoll">Cancellazione sondaggio</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body bg-warning text-dark">
-                <h5 class="modal-title" id="deletepoll">Sei sicuro di volere cancellare questo sondaggio?</h5>
-            </div>
-            <div class="modal-footer">
-                <div class="alert alert-info text-center" role="alert">
-                    Attenzione: un sondaggio può essere eliminato soltanto se
-                    non è ancora stato registrato nessun voto 
-                </div>
-
-                {% comment %} <a href="{% url 'polls:poll_delete' poll_id:id  %}" class="btn btn-primary" role="Button">Conferma</button> {% endcomment %}
-                {% comment %} Insert operations to toggle success or error popup after trying to delete poll {% endcomment %}
-                {% if delete_success %}
-                    deletepollsuccess.toggle();
-                {% else %}
-                    deletepollerror.toggle();
-                {% endif %}
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Indietro</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 {% comment %} Popup for success of operation of delete poll {% endcomment %}
 
