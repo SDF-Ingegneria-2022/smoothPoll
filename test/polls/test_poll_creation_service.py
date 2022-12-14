@@ -20,10 +20,9 @@ class TestPollCreationService:
     question2: str = "Ti piace il pesce crudo?"
     options2: List[str] = ["Si", "No",]
 
-    options2_empty: List[str] = ["Si", "No", " "]
-
-    unvalid_options1: List[str] = ["Si :)", ]
-    unvalid_options2: List[str] = [str(i) for i in range(1,12)] 
+    options_few1: List[str] = ["Si :)", ]
+    options_few2: List[str] = ["Si :)", " "]
+    options_many: List[str] = [str(i) for i in range(1,12)] 
     """numbers from 1 to 11 as str 
     (too many for current options constrains)"""
 
@@ -71,7 +70,7 @@ class TestPollCreationService:
 
     @pytest.mark.django_db
     def test_create_missing_name(self, make_forms):
-        """Check if """
+        """Check what happend if I don't insert name"""
 
         form = make_forms["form1"]
         form.data["name"] = " "
@@ -82,7 +81,7 @@ class TestPollCreationService:
 
     @pytest.mark.django_db
     def test_create_missing_question(self, make_forms):
-        """Check if """
+        """Check what happend if I don't insert question"""
 
         form = make_forms["form1"]
         form.data["question"] = None
@@ -90,6 +89,23 @@ class TestPollCreationService:
         assert_that(PollCreateService.create_new_poll) \
             .raises(NameOrQuestionNotValidException) \
             .when_called_with(poll_form=form, options=self.options1)
+
+    @pytest.mark.django_db
+    def test_create_few_options_1(self, make_forms):
+        """Check what happend if I don't insert enough options"""
+
+        assert_that(PollCreateService.create_new_poll) \
+            .raises(TooFewOptionsException) \
+            .when_called_with(poll_form=make_forms["form1"], options=self.options_few1)
+
+    @pytest.mark.django_db
+    def test_create_few_options_2(self, make_forms):
+        """Check what happend if I don't insert enough options
+        (ensuring empty space is not consiederd a valid option)"""
+
+        assert_that(PollCreateService.create_new_poll) \
+            .raises(TooFewOptionsException) \
+            .when_called_with(poll_form=make_forms["form1"], options=self.options_few2)
 
     
 

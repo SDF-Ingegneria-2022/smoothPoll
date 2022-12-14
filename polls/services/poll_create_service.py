@@ -26,12 +26,27 @@ class PollCreateService:
             TooManyOptionsExcetion: you put in too many options for this type of poll.
         """
 
+        # validate form
         if not poll_form.is_valid():
             raise NameOrQuestionNotValidException()
+
+        # validate options
+        valid_options = list()
+        for o in options:
+            if o.strip() != "":
+                valid_options.append(o)
+
+        if len(valid_options) < 2:
+            raise TooFewOptionsException()
+
+        if len(valid_options) > 10:
+            raise TooManyOptionsException()
         
+        # create poll object from form
         poll = poll_form.save()
 
-        for o_str in options:
+        # create option objects
+        for o_str in valid_options:
             option = PollOptionModel(value=o_str)
             option.poll_fk = poll
             option.save()
