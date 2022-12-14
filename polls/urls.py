@@ -18,16 +18,16 @@ urlpatterns = [
 
 
     # create poll proces urls
-    path('crea-nuovo/', views.create_poll_start, name="create-poll"), 
-    path('crea-nuovo/step1', views.CreatePollStep1View.as_view(), name="create-poll-1"), 
-    path('crea-nuovo/step2', views.CreatePollStep2View.as_view(), name="create-poll-2"), 
-    path('crea-nuovo/conferma', views.create_poll_confirm, name="create-poll-confirm"),
+    path('crea-nuovo-deprecated/', views.create_poll_start, name="create-poll"), 
+    path('crea-nuovo-deprecated/step1', views.CreatePollStep1View.as_view(), name="create-poll-1"), 
+    path('crea-nuovo-deprecated/step2', views.CreatePollStep2View.as_view(), name="create-poll-2"), 
+    path('crea-nuovo-deprecated/conferma', views.create_poll_confirm, name="create-poll-confirm"),
 
     # create poll proces urls
-    path('crea-nuovo2/', views.CreatePollHtmxView.as_view(), name="create_poll_form"), 
-    path('crea-nuovo2/annulla', views.poll_form_clean_go_back_home, name="poll_form_clean_go_back_home"), 
-    path('crea-nuovo2/htmx/modifica-dati', views.poll_form_htmx_edit, name="poll_form_htmx_edit"), 
-    path('crea-nuovo2/htmx/aggiungi-opzione', views.poll_form_htmx_create_option, name="poll_form_htmx_create_option"), 
-    path('crea-nuovo2/htmx/modifica-opzione/<int:option_rel_id>', views.poll_form_htmx_edit_option, name="poll_form_htmx_edit_option"), 
-    path('crea-nuovo2/htmx/elimina-opzione/<int:option_rel_id>', views.poll_form_htmx_delete_option, name="poll_form_htmx_delete_option"), 
+    path('crea-nuovo/', views.CreatePollHtmxView.as_view(), name="create_poll_form"), 
+    path('crea-nuovo/annulla', views.poll_form_clean_go_back_home, name="poll_form_clean_go_back_home"), 
+    path('crea-nuovo/htmx/modifica-dati', views.poll_form_htmx_edit, name="poll_form_htmx_edit"), 
+    path('crea-nuovo/htmx/aggiungi-opzione', views.poll_form_htmx_create_option, name="poll_form_htmx_create_option"), 
+    path('crea-nuovo/htmx/modifica-opzione/<int:option_rel_id>', views.poll_form_htmx_edit_option, name="poll_form_htmx_edit_option"), 
+    path('crea-nuovo/htmx/elimina-opzione/<int:option_rel_id>', views.poll_form_htmx_delete_option, name="poll_form_htmx_delete_option"), 
 ]
