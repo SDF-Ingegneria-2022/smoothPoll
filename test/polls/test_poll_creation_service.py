@@ -107,6 +107,14 @@ class TestPollCreationService:
             .raises(TooFewOptionsException) \
             .when_called_with(poll_form=make_forms["form1"], options=self.options_few2)
 
+    @pytest.mark.django_db
+    def test_create_too_many_options(self, make_forms):
+        """Check what happend if I insert too many options"""
+
+        assert_that(PollCreateService.create_new_poll) \
+            .raises(TooManyOptionsException) \
+            .when_called_with(poll_form=make_forms["form1"], options=self.options_many)
+
     
 
 

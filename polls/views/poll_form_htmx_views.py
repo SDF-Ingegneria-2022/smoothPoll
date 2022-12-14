@@ -69,9 +69,6 @@ class CreatePollHtmxView(View):
         form = PollForm(request.session.get(SESSION_FORMDATA) or None)
         options = request.session.get(SESSION_OPTIONS) or {}
 
-        # validate data
-        # todo: ... 
-
         try:
             # perform object creation
             PollCreateService.create_new_poll(form, options.values())
