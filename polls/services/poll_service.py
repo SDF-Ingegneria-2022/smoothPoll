@@ -85,7 +85,6 @@ class PollService:
             poll : PollModel = PollModel.objects.get(id=id)
         except ObjectDoesNotExist:
             raise PollDoesNotExistException(f"Error: poll with id={id} does not exit")  
-        #when i delete a post i need to delete all related option 
-        poll.filter(id=id).delete()
+        poll.delete()
 
         return 

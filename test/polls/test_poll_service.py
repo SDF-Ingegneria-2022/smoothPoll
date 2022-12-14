@@ -108,13 +108,22 @@ class TestPollService:
         assert_that(PollService.get_paginated_polls).raises(PaginatorPageSizeException).when_called_with(items_per_page)
     
     @pytest.mark.django_db
-    def test_delete_poll(self):
-        poll_created = PollService.create(self.name, self.question, self.options)
+    def test_delete_notexists_poll(self):
+        """Test delete poll that doesn't exists"""
+        poll = PollService.create(self.name, self.question, self.options)
+        poll_created = PollService.get_poll_by_id(poll.id)
         assert_that(poll_created).is_instance_of(models.Model)
-       
-        id = poll_created.id
-
-        assert_that(PollService.delete_poll()) \
+        #hardcode, need to verify
+        id = 0
+        assert_that(PollService.delete_poll) \
             .raises(PollDoesNotExistException) \
             .when_called_with(id=id)
+    
+    @pytest.mark.django_db
+    def test_delete_already_voted_poll(self):
+        """Test delete poll that has been already voted"""
+        poll = PollService.create(self.name, self.question, self.options)
+        poll_created = PollService.get_poll_by_id(poll.id)
+        pass
+
 
