@@ -85,6 +85,8 @@ class PollService:
             poll : PollModel = PollModel.objects.get(id=id)
         except ObjectDoesNotExist:
             raise PollDoesNotExistException(f"Error: poll with id={id} does not exit")  
+        #not possible to delete a poll if there's a vote
+
         poll.delete()
 
         return 
