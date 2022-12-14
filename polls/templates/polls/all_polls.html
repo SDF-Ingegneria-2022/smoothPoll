@@ -87,7 +87,7 @@
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end dropdown-menu-lg-start" aria-labelledby="dropdownMenuButton1">
                             {% comment %} <li><a class="dropdown-item" href="#">Modifica sondaggio</a></li> {% endcomment %}
-                            <li><a class="dropdown-item " data-bs-toggle="modal" data-bs-target="#deletepoll">Elimina sondaggio</a></li>
+                            <li><a class="dropdown-item " data-bs-toggle="modal" data-id="{{ poll.id }}" data-bs-target="#{{ poll.id }}">Elimina sondaggio</a></li>
                         </ul>
                     </div>
                 </div>
@@ -136,7 +136,7 @@
 
 {% comment %} Popup for deleting a poll {% endcomment %}
 
-<div class="modal fade" id="deletepoll" tabindex="-1" aria-labelledby="deletepoll" aria-hidden="true">
+<div class="modal fade" id="{{ poll.id }}" tabindex="-1" aria-labelledby="deletepoll" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-primary text-white">
@@ -151,8 +151,14 @@
                     Attenzione: un sondaggio può essere eliminato soltanto se
                     non è ancora stato registrato nessun voto 
                 </div>
-                <button type="button" class="btn btn-primary" data-bs-target="#deletepollsuccess" data-bs-toggle="modal" data-bs-dismiss="modal">Conferma</button>
+
+                {% comment %} <a href="{% url 'polls:poll_delete' poll_id:id  %}" class="btn btn-primary" role="Button">Conferma</button> {% endcomment %}
                 {% comment %} Insert operations to toggle success or error popup after trying to delete poll {% endcomment %}
+                {% if delete_success %}
+                    deletepollsuccess.toggle();
+                {% else %}
+                    deletepollerror.toggle();
+                {% endif %}
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Indietro</button>
             </div>
         </div>
