@@ -12,6 +12,6 @@ jobs:
         host: ${{ secrets.HOST_PRODUCTION }}
         username: ${{ secrets.USERNAME_PRODUCTION }}
         password: ${{ secrets.PASSWORD_PRODUCTION }}
-         script: |
-            whoami
-            ls -al
+        script: |
+          whoami
+          ls -al
