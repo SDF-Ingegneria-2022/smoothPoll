@@ -1,11 +1,11 @@
 from polls.classes.poll_form import PollForm # , PollOptionForm
+from polls.services.poll_create_service import PollCreateService
 
 from django.views.decorators.http import require_http_methods
 from django.http import HttpRequest, HttpResponseRedirect, HttpResponse, Http404, HttpResponseNotModified
 from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
-from django.forms import formset_factory
 
 SESSION_FORMDATA = 'create-poll-form'
 SESSION_OPTIONS = 'create-poll-options'
@@ -72,7 +72,7 @@ class CreatePollHtmxView(View):
         # todo: ... 
 
         # perform object creation
-        # todo: ...
+        PollCreateService.create_new_poll(form, options.values())
 
         # clean session 
         for key in SESSION_OPTIONS:

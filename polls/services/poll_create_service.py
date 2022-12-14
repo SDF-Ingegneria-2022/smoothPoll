@@ -25,6 +25,15 @@ class PollCreateService:
             TooFewOptionsExcetion: you put in too few options for this type of poll.
             TooManyOptionsExcetion: you put in too many options for this type of poll.
         """
-        pass
+        
+        poll = poll_form.save()
+
+        for o_str in options:
+            option = PollOptionModel(value=o_str)
+            option.poll_fk = poll
+            option.save()
+
+        return poll
+
 
 
