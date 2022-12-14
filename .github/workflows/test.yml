@@ -8,9 +8,9 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Check out repository code
-      - uses: actions/checkout@v3
+        uses: actions/checkout@v3
       - name: Setup Python 3.9
-      - uses: actions/setup-python@v4
+        uses: actions/setup-python@v4
         with:
           python-version: '3.9'
       - name: Install pipenv
