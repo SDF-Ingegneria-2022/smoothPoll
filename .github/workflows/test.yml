@@ -5,6 +5,9 @@ on: [push, pull_request]
 jobs:
   test_code:
     runs-on: ubuntu-latest
+    env:
+      DEBUG_CONFIGURATION: True
+      ALLOWED_HOSTS_CONFIGURATION: ""
     timeout-minutes: 10
     steps:
       - name: Check out repository code
