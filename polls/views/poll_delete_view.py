@@ -14,17 +14,11 @@ def poll_delete(request: HttpRequest, poll_id: int):
         except Exception:
             raise Http404(f"Poll with id {poll_id} not found.")
 
-        # poll_delete_service(poll_id)
+        # try:
+        #     poll_delete_service(poll_id)
+        # except Exception:
+        #     request.session['delete_error'] = True
 
-        # return HttpResponseRedirect(request.path_info, {
-        #                 'delete_success': True
-        #                 })
+        request.session['delete_success'] = True
 
-        # return HttpResponseRedirect(reverse('polls:poll_delete', args=(poll_id, )))
-
-        return render(  request, 
-                    'polls/all_polls.html', 
-                    {
-                    'delete_success': True
-                    }
-                )
+        return HttpResponseRedirect("%s?page=last&per_page=10" % reverse('polls:all_polls'))
