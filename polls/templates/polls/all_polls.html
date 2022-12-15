@@ -3,6 +3,21 @@
 {% block pagename %}Visualizza i risultati{% endblock pagename %}
 
 {% block content %}
+
+{% if delete_success %}
+<script type="text/javascript">
+    $(document).ready(function(){
+        $("#deletepollsuccess").modal('show');
+        });
+</script>
+{% comment %} {% elif delete_error %}
+<script type="text/javascript">
+    $(document).ready(function(){
+        $("#deletepollerror").modal('show');
+        });
+</script> {% endcomment %}
+{% endif %}
+
 <div class="container text-left">
     
     <div class="row">
@@ -112,9 +127,11 @@
                     Attenzione: un sondaggio può essere eliminato soltanto se
                     non è ancora stato registrato nessun voto 
                 </div>
-                {% comment %} <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deletepollsuccess">Conferma</button> {% endcomment %}
-                <button type="button" class="btn btn-primary" onClick="toggleDeleteSuccessOrError({% url 'polls:poll_delete' poll_id=poll.id  %})">Conferma</button>
-                {% comment %} Insert operations to toggle success or error popup after trying to delete poll {% endcomment %}
+                <form action="{% url 'polls:poll_delete' poll_id=poll.id %}" method="POST">
+                    {% csrf_token %}
+                    
+                    <button type="submit" class="btn btn-primary">Conferma</button>
+                </form>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Indietro</button>
             </div>
         </div>
@@ -203,7 +220,7 @@
     </div>
 </div>
 
-{% block customjs %}
+{% comment %} {% block customjs %}
 
 <script type="text/javascript">
 
@@ -223,6 +240,6 @@
 
 </script>
 
-{% endblock customjs %}
+{% endblock customjs %} {% endcomment %}
 
 {% endblock content %}
