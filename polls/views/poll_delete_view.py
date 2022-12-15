@@ -18,6 +18,7 @@ def poll_delete(request: HttpRequest, poll_id: int):
         #     poll_delete_service(poll_id)
         # except Exception:
         #     request.session['delete_error'] = True
+        #     return HttpResponseRedirect("%s?page=last&per_page=10" % reverse('polls:all_polls'))
 
         request.session['delete_success'] = True
 

@@ -1,5 +1,4 @@
 {% extends 'global/skeleton.html' %}
-{% load bootstrap5 %}
 
 {% block pagename %}Visualizza i risultati{% endblock pagename %}
 
@@ -188,16 +187,24 @@
 
 <script type="text/javascript">
 
-    var successToggle = document.getElementById('deletepollsuccess');
-    successToggle.show();
+    $(window).on('load', function() {
+        $('#deletepollsuccess').modal('show');
+    });
+    {% comment %} document.getElementById('deletepollsuccess').show(); {% endcomment %}
 
 </script>
+
+{% comment %} <div class="alert alert-warning smooth-transitions" role="alert" 
+classes="add opacity-0:{{duration_seconds|default:2}}s, add d-none" >
+Warning
+</div> {% endcomment %}
+
 
 {% endif %}
 
 {% comment %} Popup for error of operation of delete poll {% endcomment %}
 
-{% comment %} {% if delete_error %}
+{% if delete_error %}
 
 <div class="modal fade" id="deletepollerror" tabindex="-1" aria-labelledby="deletepollerrorlabel" aria-hidden="false">
     <div class="modal-dialog modal-dialog-centered">
@@ -219,12 +226,13 @@
 
 <script type="text/javascript">
 
-    var errorToggle = document.getElementById('deletepollerror');
-    errorToggle.show();
+    $(window).on('load', function() {
+        $('#deletepollerror').modal('show');
+    });
 
 </script>
 
-{% endif %} {% endcomment %}
+{% endif %}
 
 
 {% endblock content %}

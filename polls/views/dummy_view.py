@@ -159,13 +159,13 @@ def all_polls(request: HttpRequest):
         page: int = int(page_information)
 
     delete_success = request.session.get('delete_success')
-    # delete_error = request.session.get('delete_error')
+    delete_error = request.session.get('delete_error')
 
     if delete_success:
         del request.session['delete_success']
 
-    # if delete_error:
-    #     del request.session['delete_error']
+    if delete_error:
+        del request.session['delete_error']
     
     return render(  request, 
                     'polls/all_polls.html', 
@@ -173,7 +173,7 @@ def all_polls(request: HttpRequest):
                     'per_page': per_page,
                     'page': paginator.page(page),
                     'delete_success': delete_success,
-                    # 'delete_error': delete_error
+                    'delete_error': delete_error
                     }
                 )
 
