@@ -6,9 +6,9 @@ from django.core.paginator import Paginator
 from polls.classes.poll_result import PollResult, PollResultVoice
 from polls.exceptions.paginator_page_size_exception import PaginatorPageSizeException
 from polls.exceptions.poll_has_been_voted_exception import PollHasBeenVotedException
+from polls.exceptions.poll_option_unvalid_exception import PollOptionUnvalidException
 from polls.models.poll_model import PollModel
 from polls.models.poll_option_model import PollOptionModel
-from polls.services.poll_option_service import PollOptionService
 from polls.services.poll_service import PollService
 from polls.exceptions.poll_not_valid_creation_exception import PollNotValidCreationException
 from polls.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
@@ -141,21 +141,15 @@ class TestPollService:
         assert_that(PollService.delete_poll) \
             .raises(PollHasBeenVotedException) \
             .when_called_with(id=id)
-<<<<<<< HEAD
     
     @pytest.mark.django_db
     def test_delete_check_istance_option(self):
         """Test delete poll and also its option"""
         poll = PollService.create(self.name, self.question, self.options)
         assert_that(poll).is_instance_of(PollModel)
+        option_id = poll.options()[0].id
         id = poll.id
-        result = VoteService.calculate_result(poll.id)
-        assert_that(result).is_instance_of(PollResult)
-        for voted_option in VoteService.calculate_result(poll.id).get_sorted_options(): 
-            assert_that(voted_option).is_instance_of(PollResultVoice)
-=======
- 
-
-
-
->>>>>>> parent of 7c508b9 (feat: adding test to verify delete on cascade)
+        PollService.delete_poll(id)
+        assert_that(VoteService.perform_vote) \
+            .raises(PollDoesNotExistException) \
+            .when_called_with(poll_id=id, poll_choice_id=option_id)
