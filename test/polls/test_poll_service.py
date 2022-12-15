@@ -139,7 +139,19 @@ class TestPollService:
         assert_that(PollService.delete_poll) \
             .raises(PollHasBeenVotedException) \
             .when_called_with(id=id)
- 
+    
+    @pytest.mark.django_db
+    def test_delete_check_istance_option(self):
+        """Test delete poll and also its option"""
+        poll = PollService.create(self.name, self.question, self.options)
+        assert_that(poll).is_instance_of(models.Model)
+        id = poll.id
+        assert_that(PollService.delete_poll) \
+            .raises(PollDoesNotExistException) \
+            .when_called_with(id=id)
+        
+    
+
 
 
 
