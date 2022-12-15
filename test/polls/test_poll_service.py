@@ -141,6 +141,7 @@ class TestPollService:
         assert_that(PollService.delete_poll) \
             .raises(PollHasBeenVotedException) \
             .when_called_with(id=id)
+<<<<<<< HEAD
     
     @pytest.mark.django_db
     def test_delete_check_istance_option(self):
@@ -152,3 +153,9 @@ class TestPollService:
         assert_that(result).is_instance_of(PollResult)
         for voted_option in VoteService.calculate_result(poll.id).get_sorted_options(): 
             assert_that(voted_option).is_instance_of(PollResultVoice)
+=======
+ 
+
+
+
+>>>>>>> parent of 7c508b9 (feat: adding test to verify delete on cascade)

@@ -77,15 +77,12 @@ class PollService:
         return paginator
     
     @staticmethod
-    def delete_poll(id:str) -> PollModel:
+    def delete_poll(id:str):
         """Delete a poll
         Args:
             id: Id of the poll
         Raises:
             PollDoesNotExistException: raised when you retrieve a non-existent poll
-            PollHasBeenVotedException: raised when trying to delete a poll already voted
-        Returns:
-            poll: the deleted poll
         """
         try:
             poll : PollModel = PollModel.objects.get(id=id)
@@ -102,4 +99,4 @@ class PollService:
             raise PollHasBeenVotedException(f"Error: poll with id={id} can't be deleted: it has already been voted")
         poll.delete()
 
-        return poll
+        return 
