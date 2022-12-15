@@ -88,7 +88,7 @@
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end dropdown-menu-lg-start" aria-labelledby="dropdownMenuButton1">
                             {% comment %} <li><a class="dropdown-item" href="#">Modifica sondaggio</a></li> {% endcomment %}
-                            <li><a class="dropdown-item " data-bs-toggle="modal" data-bs-target="#deletepoll">Elimina sondaggio</a></li>
+                            <li><a class="dropdown-item " data-bs-toggle="modal" data-bs-target="#deletepoll-{{poll.id}}">Elimina sondaggio</a></li>
                         </ul>
                     </div>
                 </div>
@@ -98,7 +98,7 @@
 
         {% comment %} Popup for deleting a poll {% endcomment %}
 
-        <div class="modal fade" id="deletepoll" tabindex="-1" aria-labelledby="deletepolllabel" aria-hidden="true">
+        <div class="modal fade" id="deletepoll-{{poll.id}}" tabindex="-1" aria-labelledby="deletepollabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header bg-primary text-white">
@@ -190,7 +190,6 @@
     $(window).on('load', function() {
         $('#deletepollsuccess').modal('show');
     });
-    {% comment %} document.getElementById('deletepollsuccess').show(); {% endcomment %}
 
 </script>
 
