@@ -29,7 +29,7 @@ class PollCreateService:
 
         # validate form
         if not poll_form.is_valid():
-            raise NameOrQuestionNotValidException()
+            raise PollMainDataNotValidException(f"Some data of passed poll_form is not valid. See errors:\n{poll_form.errors}")
 
         # validate options
         valid_options = list()
@@ -37,11 +37,14 @@ class PollCreateService:
             if o.strip() != "":
                 valid_options.append(o)
 
-        if len(valid_options) < 2:
-            raise TooFewOptionsException()
+        # ensuring is passed at least a certain number of options
+        if len(valid_options) < poll_form.get_min_options():
+            raise TooFewOptionsException(f"{poll_form.data.get('poll_type')} poll needs at least " +
+            f"{poll_form.get_min_options()} options, {len(valid_options)} has given")
 
+        # all polls can have at most 10 options
         if len(valid_options) > 10:
-            raise TooManyOptionsException()
+            raise TooManyOptionsException(f"A poll accepts at most 10 options, {len(valid_options)} has given")
         
         # create poll object from form
         poll = poll_form.save()

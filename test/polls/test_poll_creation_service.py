@@ -12,13 +12,15 @@ from assertpy import assert_that
 class TestPollCreationService:
     """Test suite that covers all methods in the PollService class"""
 
-    name1: str = "Sondaggio cibo"
-    question1: str = "Qual è il tuo cibo preferito?"
-    options1: List[str] = ["Pizza", "Pasta", "Carne", "Pesce", "Altro", ]
-
+    
+    name1: str = "Sondaggio cibo pt. 2"
+    question1: str = "Ti piace la pizza?"
+    options1: List[str] = ["Si", "No",]
+    
     name2: str = "Sondaggio cibo pt. 2"
-    question2: str = "Ti piace il pesce crudo?"
-    options2: List[str] = ["Si", "No",]
+    question2: str = "Qual è il tuo cibo preferito?"
+    options2: List[str] = ["Pizza", "Pasta", "Carne", "Pesce", "Altro", ]
+    type2: str = PollModel.PollType.MAJORITY_JUDJMENT
 
     options_few1: List[str] = ["Si :)", ]
     options_few2: List[str] = ["Si :)", " "]
@@ -30,8 +32,13 @@ class TestPollCreationService:
     @pytest.fixture
     def make_forms(self):
         """Create needed forms"""
+
         form1 = PollForm({"name": self.name1, "question": self.question1})
-        form2 = PollForm({"name": self.name2, "question": self.question2})
+        form2 = PollForm({
+            "name": self.name2, 
+            "question": self.question2, 
+            "poll_type": self.type2
+            })
 
         return {"form1": form1, "form2": form2,}
 
@@ -76,7 +83,7 @@ class TestPollCreationService:
         form.data["name"] = " "
 
         assert_that(PollCreateService.create_new_poll) \
-            .raises(NameOrQuestionNotValidException) \
+            .raises(PollMainDataNotValidException) \
             .when_called_with(poll_form=form, options=self.options1)
 
     @pytest.mark.django_db
@@ -87,7 +94,7 @@ class TestPollCreationService:
         form.data["question"] = None
 
         assert_that(PollCreateService.create_new_poll) \
-            .raises(NameOrQuestionNotValidException) \
+            .raises(PollMainDataNotValidException) \
             .when_called_with(poll_form=form, options=self.options1)
 
     @pytest.mark.django_db
@@ -115,6 +122,64 @@ class TestPollCreationService:
             .raises(TooManyOptionsException) \
             .when_called_with(poll_form=make_forms["form1"], options=self.options_many)
 
-    
+    ## ------------------------------------
+    ## Test Majoriry Judjment creation
+
+    @pytest.mark.django_db
+    def test_create_missing_type(self, make_forms):
+        """Check what happend if I don't set type
+        (I expect a classic single option poll)"""
+
+        poll = PollCreateService.create_new_poll(
+            make_forms["form1"], 
+            self.options1)
+
+        assert_that(poll.poll_type).is_equal_to(PollModel.PollType.SINGLE_OPTION)
+
+
+    @pytest.mark.django_db
+    def test_create_majority_judjment(self, make_forms):
+        """Create a majority judment poll and 
+        ensure type is right"""
+
+        poll = PollCreateService.create_new_poll(
+            make_forms["form2"], 
+            self.options2)
+
+        # ensure type is MajorityJudment
+        assert_that(poll.poll_type).is_equal_to(self.type2)
+
+    @pytest.mark.django_db
+    def test_create_majority_judjment_few_options(self, make_forms):
+        """A majority judment poll should have at least 3 options. 
+        We try passing 2 and we expect an exception"""
+
+        assert_that(PollCreateService.create_new_poll) \
+            .raises(TooFewOptionsException) \
+            .when_called_with(
+                poll_form=make_forms["form2"], 
+                # pass just 2 options instead of 3
+                options=self.options1)
+
+    @pytest.mark.django_db
+    def test_form_get_min_options(self, make_forms):
+        """ensure form objects return correct number
+        of min options foreach poll type"""
+
+        assert_that(make_forms["form1"].get_min_options()).is_equal_to(2)
+        assert_that(make_forms["form2"].get_min_options()).is_equal_to(3)
+
+    @pytest.mark.django_db
+    def test_form_get_type_verbose_name(self, make_forms):
+        """ensure form objects return correct 
+        verbose name forach poll type"""
+
+        assert_that(make_forms["form1"].get_type_verbose_name()).is_equal_to("Opzione Singola")
+        assert_that(make_forms["form2"].get_type_verbose_name()).is_equal_to("Giudizio Maggioritario")
+
+
+
+
+
 
 

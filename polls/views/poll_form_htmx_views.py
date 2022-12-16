@@ -72,11 +72,11 @@ class CreatePollHtmxView(View):
         try:
             # perform object creation
             PollCreateService.create_new_poll(form, options.values())
-        except NameOrQuestionNotValidException:
+        except PollMainDataNotValidException:
             request.session[SESSION_ERROR] = "Attenzione, un sondaggio ha bisogno di un nome e di una domanda validi"
             return HttpResponseRedirect(reverse('polls:create_poll_form'))
         except TooFewOptionsException:
-            request.session[SESSION_ERROR] = "Attenzione, un sondaggio ha bisogno almeno 2 opzioni"
+            request.session[SESSION_ERROR] = f"Attenzione, un sondaggio di tipo {form.get_type_verbose_name()} ha bisogno almeno {form.get_min_options()} opzioni"
             return HttpResponseRedirect(reverse('polls:create_poll_form'))
         except TooManyOptionsException:
             request.session[SESSION_ERROR] = "Attenzione, un sondaggio può avere al massimo 10 optioni"
@@ -110,11 +110,10 @@ def poll_form_htmx_edit(request: HttpRequest):
     if not request.htmx:
         raise Http404()
 
+    # update main form data
     poll_form = PollForm(request.POST or None)
     request.session[SESSION_FORMDATA] = poll_form.data
-
     print(request.session[SESSION_FORMDATA])
-
     return HttpResponse()
 
 
@@ -166,9 +165,7 @@ def poll_form_htmx_edit_option(request: HttpRequest, option_rel_id: int):
         raise Http404()
 
     options = request.session.get(SESSION_OPTIONS)
-
     options[str(option_rel_id)] = request.POST[f"option-{option_rel_id}"]
-
     request.session[SESSION_OPTIONS] = options
 
     print(request.session[SESSION_OPTIONS])

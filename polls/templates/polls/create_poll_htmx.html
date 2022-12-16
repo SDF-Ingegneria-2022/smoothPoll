@@ -25,9 +25,10 @@
         <h5>Nome del sondaggio e domanda</h5>
 
         <div class="form-group mb-5" 
-            hx-trigger="keyup from:input delay:500ms"
+            hx-trigger="keyup delay:500ms, change"
             hx-post="{% url 'polls:poll_form_htmx_edit' %}"
-            hx-swap="none" >
+            hx-swap="none" 
+            hx-params="name, question, poll_type">
 
             {% bootstrap_form poll_form %}
         </div>

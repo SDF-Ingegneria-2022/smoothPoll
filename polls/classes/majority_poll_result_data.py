@@ -1,5 +1,6 @@
 from polls.models.majority_judgment_model import MajorityJudgmentModel
 from polls.models.poll_option_model import PollOptionModel
+from polls.exceptions.poll_not_yet_voted_exception import PollNotYetVodedException
 
 from dataclasses import dataclass
 import math
@@ -35,6 +36,9 @@ class MajorityPollResultData(object):
         option_votes = MajorityJudgmentModel.objects \
             .filter(poll_option=option.id) \
             .order_by('rating')
+
+        if option_votes.count() < 1:
+            raise PollNotYetVodedException()
 
         # calculate median (or worse of two)
         self.median = option_votes[math.floor((option_votes.count()-1)/2)].rating
