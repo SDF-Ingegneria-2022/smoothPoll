@@ -3,6 +3,7 @@
 {% block pagename %}Visualizza i risultati{% endblock pagename %}
 
 {% block content %}
+
 <div class="container text-left">
     
     <div class="row">
@@ -90,15 +91,44 @@
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end dropdown-menu-lg-start" aria-labelledby="dropdownMenuButton1">
                             {% comment %} <li><a class="dropdown-item" href="#">Modifica sondaggio</a></li> {% endcomment %}
-                            <li><a class="dropdown-item " data-bs-toggle="modal" data-bs-target="#deletepoll">Elimina sondaggio</a></li>
+                            <li><a class="dropdown-item " data-bs-toggle="modal" data-bs-target="#deletepoll-{{poll.id}}">Elimina sondaggio</a></li>
                         </ul>
                     </div>
                 </div>
                 </div>
             </div>
         </div>
+
+        {% comment %} Popup for deleting a poll {% endcomment %}
+
+        <div class="modal fade" id="deletepoll-{{poll.id}}" tabindex="-1" aria-labelledby="deletepollabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary text-white">
+                        <h4 class="modal-title">Cancellazione sondaggio</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body bg-warning text-dark">
+                        <h5 class="modal-title">Sei sicuro di volere cancellare questo sondaggio?</h5>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="alert alert-info text-center" role="alert">
+                            Attenzione: un sondaggio può essere eliminato soltanto se
+                            non è ancora stato registrato nessun voto 
+                        </div>
+                        <form action="{% url 'polls:poll_delete' poll_id=poll.id %}" method="POST">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-primary">Conferma</button>
+                        </form>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Indietro</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         {% empty %}
         <p class="fs-3 fw-bold mt-5"> Attualmente non ci sono sondaggi! </p>
+
         
     {% endfor %}
     </div>
@@ -137,42 +167,19 @@
     </div>
 </div>
 
-{% comment %} Popup for deleting a poll {% endcomment %}
-
-<div class="modal fade" id="deletepoll" tabindex="-1" aria-labelledby="deletepoll" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
-                <h4 class="modal-title" id="deletepoll">Cancellazione sondaggio</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body bg-warning text-dark">
-                <h5 class="modal-title" id="deletepoll">Sei sicuro di volere cancellare questo sondaggio?</h5>
-            </div>
-            <div class="modal-footer">
-                <div class="alert alert-info text-center" role="alert">
-                    Attenzione: un sondaggio può essere eliminato soltanto se
-                    non è ancora stato registrato nessun voto 
-                </div>
-                <button type="button" class="btn btn-primary" data-bs-target="#deletepollsuccess" data-bs-toggle="modal" data-bs-dismiss="modal">Conferma</button>
-                {% comment %} Insert operations to toggle success or error popup after trying to delete poll {% endcomment %}
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Indietro</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 {% comment %} Popup for success of operation of delete poll {% endcomment %}
 
-<div class="modal fade" id="deletepollsuccess" tabindex="-1" aria-labelledby="deletepollsuccess" aria-hidden="true">
+{% if delete_success %}
+
+<div class="modal fade" id="deletepollsuccess" tabindex="-1" aria-labelledby="deletepollsuccesslabel" aria-hidden="false">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-primary text-white">
-                <h4 class="modal-title" id="deletepollsuccess">Cancellazione sondaggio</h4>
+                <h4 class="modal-title">Cancellazione sondaggio</h4>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body bg-success text-white">
-                <h5 class="modal-title" id="deletepollsuccess">Il sondaggio è stato cancellato con successo! </h5>
+                <h5 class="modal-title">Il sondaggio è stato cancellato con successo! </h5>
             </div>
             <div class="modal-footer">
                 <button onClick="window.location.reload();" type="button" class="btn btn-primary">Continua</button>
@@ -181,17 +188,35 @@
     </div>
 </div>
 
+<script type="text/javascript">
+
+    $(window).on('load', function() {
+        $('#deletepollsuccess').modal('show');
+    });
+
+</script>
+
+{% comment %} <div class="alert alert-warning smooth-transitions" role="alert" 
+classes="add opacity-0:{{duration_seconds|default:2}}s, add d-none" >
+Warning
+</div> {% endcomment %}
+
+
+{% endif %}
+
 {% comment %} Popup for error of operation of delete poll {% endcomment %}
 
-<div class="modal fade" id="deletepollerror" tabindex="-1" aria-labelledby="deletepollerror" aria-hidden="true">
+{% if delete_error %}
+
+<div class="modal fade" id="deletepollerror" tabindex="-1" aria-labelledby="deletepollerrorlabel" aria-hidden="false">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-primary text-white">
-                <h4 class="modal-title" id="deletepollerror">Cancellazione sondaggio</h4>
+                <h4 class="modal-title">Cancellazione sondaggio</h4>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body bg-danger text-white">
-                <h5 class="modal-title" id="deletepollerror"> Non è stato possibile cancellare il sondaggio in quanto sono già stati
+                <h5 class="modal-title"> Non è stato possibile cancellare il sondaggio in quanto sono già stati
                 registrati dei voti. </h5>
             </div>
             <div class="modal-footer">
@@ -201,5 +226,16 @@
     </div>
 </div>
 
+<script type="text/javascript">
+
+    $(window).on('load', function() {
+        $('#deletepollerror').modal('show');
+    });
+
+</script>
+
+{% endif %}
+
 
 {% endblock content %}
+

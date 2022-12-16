@@ -173,12 +173,24 @@ def all_polls(request: HttpRequest):
         page = paginator.num_pages
     else:
         page: int = int(page_information)
+
+    # session variables for modal toggle of delete poll result
+    delete_success = request.session.get('delete_success')
+    delete_error = request.session.get('delete_error')
+
+    if delete_success:
+        del request.session['delete_success']
+
+    if delete_error:
+        del request.session['delete_error']
     
     return render(  request, 
                     'polls/all_polls.html', 
                     {
                     'per_page': per_page,
-                    'page': paginator.page(page)
+                    'page': paginator.page(page),
+                    'delete_success': delete_success,
+                    'delete_error': delete_error
                     }
                 )
 
