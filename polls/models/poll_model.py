@@ -35,5 +35,22 @@ class PollModel(models.Model):
         })
 
     def options(self) -> List[PollOptionModel]:
-        return list(PollOptionModel.objects.filter(poll_fk=self.id))         
-        
+        return list(PollOptionModel.objects.filter(poll_fk=self.id))
+
+    def get_type_verbose_name(self) -> str:
+
+        if self.poll_type == PollModel.PollType.MAJORITY_JUDJMENT:
+            return "Giudizio Maggioritario"
+        elif self.poll_type == PollModel.PollType.SINGLE_OPTION:
+            return "Opzione Singola"
+
+        return "Nessun Tipo"
+
+    def get_type_color(self) -> str:
+
+        if self.poll_type == PollModel.PollType.MAJORITY_JUDJMENT:
+            return "#253495"
+        elif self.poll_type == PollModel.PollType.SINGLE_OPTION:
+            return "#F6AA1C"
+
+        return "#363732"

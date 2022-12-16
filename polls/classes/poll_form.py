@@ -49,13 +49,14 @@ class PollForm(ModelForm):
         return 2
 
     def get_type_verbose_name(self) -> str:
+        """Get verbose name of current poll_type 
+        (the one you may display on UI)"""
 
-        if self.data.get("poll_type") == PollModel.PollType.MAJORITY_JUDJMENT:
-            return "Giudizio Maggioritario"
-        elif self.data.get("poll_type") == PollModel.PollType.SINGLE_OPTION:
-            return "Opzione Singola"
-
-        return "Nessun Tipo"
+        return PollModel(
+            name = self.data["name"], 
+            question = self.data["question"], 
+            poll_type = self.data["poll_type"], 
+            ).get_type_verbose_name()
 
 
 # class PollOptionForm(ModelForm):

@@ -170,7 +170,7 @@ class TestPollCreationService:
         assert_that(make_forms["form2"].get_min_options()).is_equal_to(3)
 
     @pytest.mark.django_db
-    def test_form_get_min_options(self, make_forms):
+    def test_form_get_type_verbose_name(self, make_forms):
         """ensure form objects return correct 
         verbose name forach poll type"""
 
