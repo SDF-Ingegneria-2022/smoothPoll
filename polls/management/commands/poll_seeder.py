@@ -36,7 +36,7 @@ class Command(BaseCommand):
             try:
                 new_poll: PollModel = PollModel(name=f"Sondaggio di esempio NR#{index}", question=f"Qual è il tuo piatto preferito?", poll_type='majority_vote')
                 if options['majority']:
-                    new_poll.poll_type='majority_judjment'
+                    new_poll.poll_type=PollModel.PollType.MAJORITY_JUDJMENT
                     new_poll.name = "Esempio di sondaggio a Giudizio Maggioritario"
                 new_poll.save()
 
