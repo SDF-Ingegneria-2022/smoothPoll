@@ -110,11 +110,10 @@ def poll_form_htmx_edit(request: HttpRequest):
     if not request.htmx:
         raise Http404()
 
+    # update main form data
     poll_form = PollForm(request.POST or None)
     request.session[SESSION_FORMDATA] = poll_form.data
-
     print(request.session[SESSION_FORMDATA])
-
     return HttpResponse()
 
 
@@ -166,9 +165,7 @@ def poll_form_htmx_edit_option(request: HttpRequest, option_rel_id: int):
         raise Http404()
 
     options = request.session.get(SESSION_OPTIONS)
-
     options[str(option_rel_id)] = request.POST[f"option-{option_rel_id}"]
-
     request.session[SESSION_OPTIONS] = options
 
     print(request.session[SESSION_OPTIONS])
