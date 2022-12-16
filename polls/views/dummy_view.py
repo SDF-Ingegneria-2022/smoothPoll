@@ -158,6 +158,7 @@ def all_polls(request: HttpRequest):
     else:
         page: int = int(page_information)
 
+    # session variables for modal toggle of delete poll result
     delete_success = request.session.get('delete_success')
     delete_error = request.session.get('delete_error')
 

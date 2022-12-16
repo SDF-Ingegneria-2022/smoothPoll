@@ -1,12 +1,18 @@
-from django.shortcuts import render
 from django.http import Http404, HttpRequest, HttpResponseRedirect
 from django.urls import reverse
 from polls.models.poll_model import PollModel
 from polls.services.poll_service import PollService
 
 def poll_delete(request: HttpRequest, poll_id: int):
-    """View method that deletes a poll"""
+    """View method that deletes a poll
+        Args:
+        request (HttpRequest): Request object.
+        poll_id (int): The poll id.
+    Returns:
+        HttpResponseRedirect: Reload the all polls page.
+    """
 
+    # the POST method is used because the operation is going to potentially modify the database
     if request.method == "POST":
         try:
             # Retrieve poll
@@ -14,6 +20,8 @@ def poll_delete(request: HttpRequest, poll_id: int):
         except Exception:
             raise Http404(f"Poll with id {poll_id} not found.")
 
+        # If the delete poll service fails an error session variabile is setted to True
+        # otherwise a success variable is setted to True and then reloaded the all_polls page in both cases
         try:
             PollService.delete_poll(str(poll_id))
         except Exception:
