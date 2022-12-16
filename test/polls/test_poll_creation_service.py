@@ -83,7 +83,7 @@ class TestPollCreationService:
         form.data["name"] = " "
 
         assert_that(PollCreateService.create_new_poll) \
-            .raises(NameOrQuestionNotValidException) \
+            .raises(PollMainDataNotValidException) \
             .when_called_with(poll_form=form, options=self.options1)
 
     @pytest.mark.django_db
@@ -94,7 +94,7 @@ class TestPollCreationService:
         form.data["question"] = None
 
         assert_that(PollCreateService.create_new_poll) \
-            .raises(NameOrQuestionNotValidException) \
+            .raises(PollMainDataNotValidException) \
             .when_called_with(poll_form=form, options=self.options1)
 
     @pytest.mark.django_db
@@ -148,6 +148,18 @@ class TestPollCreationService:
 
         # ensure type is MajorityJudment
         assert_that(poll.poll_type).is_equal_to(self.type2)
+
+    @pytest.mark.django_db
+    def test_create_majority_judjment_few_options(self, make_forms):
+        """A majority judment poll should have at least 3 options. 
+        We try passing 2 and we expect an exception"""
+
+        assert_that(PollCreateService.create_new_poll) \
+            .raises(TooFewOptionsException) \
+            .when_called_with(
+                poll_form=make_forms["form2"], 
+                # pass just 2 options instead of 3
+                options=self.options1)
 
 
 

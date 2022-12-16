@@ -7,7 +7,7 @@ class PollNotValidCreationException(Exception):
         super().__init__(*args)
     
 
-class NameOrQuestionNotValidException(PollNotValidCreationException):
+class PollMainDataNotValidException(PollNotValidCreationException):
     """You tried to create a poll without passing a valid 
     name or question through form. Reasons may be many."""
 
