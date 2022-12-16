@@ -161,6 +161,25 @@ class TestPollCreationService:
                 # pass just 2 options instead of 3
                 options=self.options1)
 
+    @pytest.mark.django_db
+    def test_form_get_min_options(self, make_forms):
+        """ensure form objects return correct number
+        of min options foreach poll type"""
+
+        assert_that(make_forms["form1"].get_min_options()).is_equal_to(2)
+        assert_that(make_forms["form2"].get_min_options()).is_equal_to(3)
+
+    @pytest.mark.django_db
+    def test_form_get_min_options(self, make_forms):
+        """ensure form objects return correct 
+        verbose name forach poll type"""
+
+        assert_that(make_forms["form1"].get_type_verbose_name()).is_equal_to("Opzione Singola")
+        assert_that(make_forms["form2"].get_type_verbose_name()).is_equal_to("Giudizio Maggioritario")
+
+
+
+
 
 
 

@@ -41,6 +41,23 @@ class PollForm(ModelForm):
             }
         }
 
+    def get_min_options(self) -> int: 
+        """Get poll min options (according to poll_type)"""
+
+        if self.data.get("poll_type") == PollModel.PollType.MAJORITY_JUDJMENT:
+            return 3
+        return 2
+
+    def get_type_verbose_name(self) -> str:
+
+        if self.data.get("poll_type") == PollModel.PollType.MAJORITY_JUDJMENT:
+            return "Giudizio Maggioritario"
+        elif self.data.get("poll_type") == PollModel.PollType.SINGLE_OPTION:
+            return "Opzione Singola"
+
+        return "Nessun Tipo"
+
+
 # class PollOptionForm(ModelForm):
 #     """(Not used) form to input option.
 #     TODO: study how to use it properly """

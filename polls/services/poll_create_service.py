@@ -37,13 +37,10 @@ class PollCreateService:
             if o.strip() != "":
                 valid_options.append(o)
 
-        # majorirty option poll needs at least 3 options,
-        # others are ok with 2
-        if len(valid_options) < 3 and \
-            poll_form.data.get("poll_type")==PollModel.PollType.MAJORITY_JUDJMENT:
-            raise TooFewOptionsException(f"Majority judment poll needs at least 3 options, {len(valid_options)} has given")
-        elif len(valid_options) < 2:
-            raise TooFewOptionsException(f"Single option poll needs at least 2 options, {len(valid_options)} has given")
+        # ensuring is passed at least a certain number of options
+        if len(valid_options) < poll_form.get_min_options():
+            raise TooFewOptionsException(f"{poll_form.data.get('poll_type')} poll needs at least " +
+            f"{poll_form.get_min_options()} options, {len(valid_options)} has given")
 
         # all polls can have at most 10 options
         if len(valid_options) > 10:
