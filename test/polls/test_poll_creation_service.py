@@ -12,13 +12,15 @@ from assertpy import assert_that
 class TestPollCreationService:
     """Test suite that covers all methods in the PollService class"""
 
-    name1: str = "Sondaggio cibo"
-    question1: str = "Qual è il tuo cibo preferito?"
-    options1: List[str] = ["Pizza", "Pasta", "Carne", "Pesce", "Altro", ]
-
+    
+    name1: str = "Sondaggio cibo pt. 2"
+    question1: str = "Ti piace la pizza?"
+    options1: List[str] = ["Si", "No",]
+    
     name2: str = "Sondaggio cibo pt. 2"
-    question2: str = "Ti piace il pesce crudo?"
-    options2: List[str] = ["Si", "No",]
+    question2: str = "Qual è il tuo cibo preferito?"
+    options2: List[str] = ["Pizza", "Pasta", "Carne", "Pesce", "Altro", ]
+    type2: str = PollModel.PollType.MAJORITY_JUDJMENT
 
     options_few1: List[str] = ["Si :)", ]
     options_few2: List[str] = ["Si :)", " "]
@@ -30,8 +32,13 @@ class TestPollCreationService:
     @pytest.fixture
     def make_forms(self):
         """Create needed forms"""
+
         form1 = PollForm({"name": self.name1, "question": self.question1})
-        form2 = PollForm({"name": self.name2, "question": self.question2})
+        form2 = PollForm({
+            "name": self.name2, 
+            "question": self.question2, 
+            "poll_type": self.type2
+            })
 
         return {"form1": form1, "form2": form2,}
 
@@ -115,6 +122,33 @@ class TestPollCreationService:
             .raises(TooManyOptionsException) \
             .when_called_with(poll_form=make_forms["form1"], options=self.options_many)
 
-    
+    ## ------------------------------------
+    ## Test Majoriry Judjment creation
+
+    @pytest.mark.django_db
+    def test_create_missing_type(self, make_forms):
+        """Check what happend if I don't set type
+        (I expect a classic single option poll)"""
+
+        poll = PollCreateService.create_new_poll(
+            make_forms["form1"], 
+            self.options1)
+
+        assert_that(poll.poll_type).is_equal_to(PollModel.PollType.SINGLE_OPTION)
+
+
+    @pytest.mark.django_db
+    def test_create_majority_judjment(self, make_forms):
+        """Create a majority judment poll and 
+        ensure type is right"""
+
+        poll = PollCreateService.create_new_poll(
+            make_forms["form2"], 
+            self.options2)
+
+        # ensure type is MajorityJudment
+        assert_that(poll.poll_type).is_equal_to(self.type2)
+
+
 
 

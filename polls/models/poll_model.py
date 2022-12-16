@@ -22,7 +22,7 @@ class PollModel(models.Model):
         max_length=200, verbose_name=_("Quesito"))
 
     poll_type: CharField = models.CharField(
-        max_length=200, 
+        max_length=200,
         choices=PollType.choices, 
         default=PollType.SINGLE_OPTION)
 
