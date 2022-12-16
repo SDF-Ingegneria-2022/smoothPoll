@@ -3,12 +3,16 @@ import pytest
 from assertpy import assert_that
 from django.db import models
 from django.core.paginator import Paginator
+from polls.classes.poll_result import PollResult, PollResultVoice
 from polls.exceptions.paginator_page_size_exception import PaginatorPageSizeException
+from polls.exceptions.poll_has_been_voted_exception import PollHasBeenVotedException
+from polls.exceptions.poll_option_unvalid_exception import PollOptionUnvalidException
 from polls.models.poll_model import PollModel
 from polls.models.poll_option_model import PollOptionModel
 from polls.services.poll_service import PollService
 from polls.exceptions.poll_not_valid_creation_exception import PollNotValidCreationException
 from polls.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
+from polls.services.vote_service import VoteService
 
 
 class TestPollService:
@@ -106,3 +110,46 @@ class TestPollService:
         items_per_page: int = 0
 
         assert_that(PollService.get_paginated_polls).raises(PaginatorPageSizeException).when_called_with(items_per_page)
+    
+    @pytest.mark.django_db
+    def test_delete_poll(self):
+        """Test delete poll, basic verification that it works"""
+        poll = PollService.create(self.name, self.question, self.options)
+        id = poll.id
+        assert_that(poll).is_instance_of(PollModel)
+        PollService.delete_poll(poll.id)
+        assert_that(PollService.delete_poll)\
+            .raises(PollDoesNotExistException)\
+            .when_called_with(id=id)
+
+
+    @pytest.mark.django_db
+    def test_delete_notexists_poll(self):
+        """Test delete poll that doesn't exists"""
+        #hardcode, need to verify
+        id = 0
+        assert_that(PollService.delete_poll) \
+            .raises(PollDoesNotExistException) \
+            .when_called_with(id=id)
+    
+    @pytest.mark.django_db
+    def test_delete_already_voted_poll(self):
+        """Test delete poll that has been already voted"""
+        poll = PollService.create(self.name, self.question, self.options)
+        VoteService.perform_vote(poll_id=poll.id, poll_choice_id=poll.options()[0].id)
+        id = poll.id
+        assert_that(PollService.delete_poll) \
+            .raises(PollHasBeenVotedException) \
+            .when_called_with(id=id)
+    
+    @pytest.mark.django_db
+    def test_delete_check_istance_option(self):
+        """Test delete poll and also its option"""
+        poll = PollService.create(self.name, self.question, self.options)
+        assert_that(poll).is_instance_of(PollModel)
+        option_id = poll.options()[0].id
+        id = poll.id
+        PollService.delete_poll(id)
+        assert_that(VoteService.perform_vote) \
+            .raises(PollDoesNotExistException) \
+            .when_called_with(poll_id=id, poll_choice_id=option_id)

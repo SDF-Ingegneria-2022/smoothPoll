@@ -12,18 +12,19 @@ class PollCreateService:
 
     @staticmethod
     def create_new_poll(poll_form: PollForm, options: List[str]) -> PollModel:
-        """
-        Create a new poll starting from a PollForm object. 
+        """Create a new poll starting from a PollForm object. 
         Args:
             poll_form: form containing data of object you wanna create.
             options: list of all options (as strings). 
                 They must be at least 2 and at most 10.
-        Return:
-            The initialized and saved PollModel object
-        Raise:
+        
+        Raises:
             MissingNameOrQuestionExcetion: your form has not all required data.
             TooFewOptionsExcetion: you put in too few options for this type of poll.
             TooManyOptionsExcetion: you put in too many options for this type of poll.
+                
+        Returns:
+            The initialized and saved PollModel object
         """
 
         # validate form

@@ -1,0 +1,20 @@
+name: Depoly in Production
+on:
+  push:
+    tags:
+      - '*' 
+jobs:
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Executing deploy script
+      uses: appleboy/ssh-action@v0.1.6
+      with:
+        host: ${{ secrets.HOST_PRODUCTION }}
+        username: ${{ secrets.USERNAME_PRODUCTION }}
+        password: ${{ secrets.PASSWORD_PRODUCTION }}
+        script: |
+          cd smoothPoll
+          ./deployment.sh ${{ secrets.PASSWORD_PRODUCTION }}
