@@ -88,6 +88,15 @@ def majority_vote_submit(request: HttpRequest, poll_id: int):
 def majority_vote_results(request: HttpRequest, poll_id: int):
     """Render page with majority poll results"""
 
+    # poll should be Majority type
+    try:
+        poll = PollService.get_poll_by_id(poll_id)
+    except PollDoesNotExistException:
+        raise Http404()
+
+    if poll.poll_type != PollModel.PollType.MAJORITY_JUDJMENT:
+        raise Http404()
+    
     try:
         poll_results: List[MajorityPollResultData] = MajorityVoteService.calculate_result(poll_id=str(poll_id))
     except PollDoesNotExistException:
@@ -95,7 +104,7 @@ def majority_vote_results(request: HttpRequest, poll_id: int):
     except PollNotYetVodedException:
         poll_results = None
 
-        
+
     # except Exception:
     #     # Internal error: you should inizialize DB first (error 500)
     #     return HttpResponseServerError("Dummy survey is not initialized. Please see README.md and create it.")
