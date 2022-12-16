@@ -1,0 +1,77 @@
+
+{% extends 'global/skeleton.html' %}
+
+{% load bootstrap5 %}
+{% load django_htmx %}
+{% load static %}
+
+{% block pagename %}Crea nuovo sondaggio{% endblock pagename %}
+
+{% block content %}
+<div class="container text-center mt-5 mb-5">
+    <h1>Crea nuovo sondaggio</h1>
+    <h2 class="text-info">Inserisci tutti i dati e premi "Salva"</h2>
+</div>
+<div class="container mb-5"  hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' hx-ext="class-tools loading-states">
+
+    <form action="{% url 'polls:create_poll_form' %}" method="POST">
+
+        {% if error is not None %}
+        <div class="alert alert-danger mb-5" role="alert" >
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <h5>Nome del sondaggio e domanda</h5>
+
+        <div class="form-group mb-5" 
+            hx-trigger="keyup delay:500ms, change"
+            hx-post="{% url 'polls:poll_form_htmx_edit' %}"
+            hx-swap="none" 
+            hx-params="name, question, poll_type">
+
+            {% bootstrap_form poll_form %}
+        </div>
+
+        <h5>Opzioni votabili</h5>
+
+        <div class="form-group mb-5">
+            <div class="mb-2" id="options-inputs" >
+                {% comment %} <form 
+                    hx-trigger="input from:* delay:500ms"
+                    hx-post="{% url 'polls:poll_form_htmx_edit_option' 0 %}"
+                    hx-swap="none" >  {% endcomment %}
+                    
+                    {% for i,option in options.items %}         
+                        {% include "polls/components/htmx_option_input.html" with option=option i=i %}
+                    {% endfor %}
+                {% comment %} </form> {% endcomment %}
+            </div>
+            <a id="add-option-button" class="btn btn-primary" role="button"
+                hx-post="{% url 'polls:poll_form_htmx_create_option' %}"
+                hx-target="#options-inputs"
+                hx-swap="beforeend"
+                >Aggiungi Opzione</a>
+            {% comment "TODO" %}Find a way to show alerts in htmx{% endcomment %}
+        </div>
+
+        {% csrf_token %}
+        <div class="d-grid gap-2 d-md-block">
+            <a class="btn btn-warning" href="{% url 'polls:poll_form_clean_go_back_home' %}" role="button">Annulla</a>
+            <button type="submit" class="btn btn-success" data-loading-disable >Salva</button>
+        </div>
+    </form>
+</div>
+
+{% endblock content %}
+
+
+{% block customjs %}
+
+<script src="{% static 'js/htmx/htmx.min.js' %}" defer></script>{# or however you include htmx #}
+<script src="{% static 'js/htmx/class-tools.js' %}" defer></script>
+<script src="{% static 'js/htmx/loading-states.js' %}" defer></script>
+
+
+
+{% endblock customjs %}

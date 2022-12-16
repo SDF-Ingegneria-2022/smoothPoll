@@ -25,10 +25,10 @@
     {# Poll question #}
     <div class="container mt-3">
         <div class="row">
-            <div class="col-auto">
+            <div class="col-md-auto">
                 <p class="mb-0 fs-4 fw-bold">Domanda:</p>
             </div>
-            <div class="col ps-0">
+            <div class="col">
                 <p class="mb-0 fs-4">{{ poll.question }}</p>
             </div>
         </div>
@@ -39,7 +39,11 @@
             <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Info:"><use xlink:href="#info-fill"/></svg>
             <div>
                 Per votare un sondaggio con il metodo del giudizio maggioritario dai la tua opinione su ciascuna delle opzioni tramite 
-                l'apposita scala di giudizi.
+                l'apposita scala di giudizi. Se vuoi farti un'idea di come funziona il metodo del giudizio maggioritario, 
+                <a href="https://copernicani.it/eleggere-il-candidato-migliore/" target="_black">leggi questa breve guida</a>. Se 
+                invece vuoi approfondire, 
+                <a href="https://it.frwiki.wiki/wiki/Jugement_majoritaire#D%C3%A9partage_des_%C3%A9galit%C3%A9s" target="_black">qui</a>
+                trovi il metodo matematico con cui verranno calcolati i risultati.
             </div>
         </div>
         <div class="alert alert-secondary alert-dismissible fade show" role="alert">
@@ -72,7 +76,7 @@
                         </div>
                         {# Options form #}
                         <div class="form-check m-2">
-                            <div class="row">
+                            <div class="row row-cols-lg-auto">
                                     
                                     
                                     {% load get_item %}
@@ -82,7 +86,7 @@
                                         </div>
                                     {% endif %}
                                     
-                                <div class="col">
+                                <div class="col-12">
                                 
                                     <div class="form-check  form-check-inline">
                                     {% with option_id=option.id value=error.options_selected%}
@@ -97,7 +101,7 @@
                                     
                                     </div>
                                 </div>
-                                <div class="col">
+                                <div class="col-12">
                                     <div class="form-check form-check-inline">
                                     {% with option_id=option.id value=error.options_selected%}
                                         {% if option_id in  error.options_selected.id and value|get_item:option_id == 2 %}
@@ -111,7 +115,7 @@
                                     
                                     </div>
                                 </div>
-                                <div class="col">
+                                <div class="col-12">
                                     <div class="form-check form-check-inline">
                                     {% with option_id=option.id value=error.options_selected%}
                                         {% if option_id in  error.options_selected.id and value|get_item:option_id == 3 %}
@@ -124,7 +128,7 @@
                                     {% endwith %}
                                     </div>
                                 </div>
-                                <div class="col">
+                                <div class="col-12">
                                     <div class="form-check form-check-inline">
                                     {% with option_id=option.id value=error.options_selected%}
                                         {% if option_id in  error.options_selected.id and value|get_item:option_id == 4 %}
@@ -137,7 +141,7 @@
                                     {% endwith %}
                                     </div>
                                 </div>
-                                <div class="col">
+                                <div class="col-12">
                                     <div class="form-check form-check-inline">
                                     {% with option_id=option.id value=error.options_selected%}
                                         {% if option_id in  error.options_selected.id and value|get_item:option_id == 5 %}

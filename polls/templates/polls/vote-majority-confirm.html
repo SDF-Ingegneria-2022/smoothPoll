@@ -24,14 +24,14 @@ function copyLink(url) {
 
 {% block content %}
 
-<div class="container">
+<div class="container text-center mt-5 mb-5">
     {# Poll summary #}
     <h2 class="text-success">Grazie di aver votato! Il tuo voto è stato registrato.</h2>
     <div class="row">
         <div class="col-md-auto">
             <p class="fw-bold fs-5 ">Nome del sondaggio:</p>    
         </div>
-        <div class="col ps-0">
+        <div class="col">
             <p class="mt-1">{{vote.poll.name}}</p>
         </div>
     </div>
@@ -39,18 +39,18 @@ function copyLink(url) {
         <div class="col-md-auto">
             <p class="fw-bold fs-5">Quesito:</p>
         </div>
-        <div class="col  ps-0">
+        <div class="col">
             <p class="mt-1">{{vote.poll.question}}</p>
         </div>
     </div>
     <div class="row">
-        <div class="col-2">
+        <div class="col-md-auto">
             <p class="fw-bold fs-5">Riassunto del voto:</p>
         </div>
     </div>
     {# Table #}
     <div class="row">
-        <div class="col-5">
+        <div class="col-md-5">
             <table class="table table-secondary shadow p-3 mb-5 bg-body rounded">
                 <thead>
                     <tr>
@@ -89,14 +89,14 @@ function copyLink(url) {
     
     {# Buttons #}
     <div class="container mt-5 ps-0" >
-        <a class="btn btn-primary" href="{% url 'polls:majority_vote_results' poll_id=vote.poll.id %}" role="button">Vedi risultati</a>
-
-        <button type="button" class="btn btn-secondary" 
-            onclick="copyLink('{{request.get_host}}{% url 'polls:majority_vote_results' poll_id=vote.poll.id %}')">
-            Copia link
-        </button>
-        <a class="btn btn-secondary" href="{% url 'polls:dummy_majority' %}" role="button">Vota di nuovo</a>
-        
+        <div class="d-grid gap-2 d-md-block">
+            <a class="btn btn-primary mt-2" href="{% url 'polls:majority_vote_results' poll_id=vote.poll.id %}" role="button">Vedi risultati</a>
+            <button type="button" class="btn btn-secondary mt-2" 
+                onclick="copyLink('{{request.get_host}}{% url 'polls:majority_vote_results' poll_id=vote.poll.id %}')">
+                Copia link
+            </button>
+            <a class="btn btn-secondary mt-2" href="{% url 'polls:dummy_majority' %}" role="button">Vota di nuovo</a>
+        </div>
     </div>
 
 </div> 

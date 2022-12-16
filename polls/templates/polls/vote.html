@@ -11,7 +11,7 @@
 <div class="container border">
 
     <div class="container mt-5 mb-5">
-        <p class="mb-0">Testo della domanda: </p>
+        <p class="fw-bold fs-3 mb-0">Testo della domanda: </p>
         <h3>{{ poll.question }}</h3>
     </div>
     
@@ -27,10 +27,10 @@
             {% endif %}
 
             {# Form Options #}
-            <div class="container m-3">
+            <div class="container md-3">
 
                 {% for option in poll.options %}
-                    <div class="form-check m-2">
+                    <div class="form-check md-2">
                         <input class="form-check-input" type="radio" id="option-{{option.id}}"" name="vote" value="{{option.id}}"> 
                         <label class="form-check-label" for="option-{{option.id}}"" >
                             {{option.value}}
@@ -41,7 +41,9 @@
 
             {# Confirm button #}
             <div class="container mt-5">
-                <button type="submit" class="btn btn-primary">Conferma</button>
+                <div class="d-grid gap-2 d-md-block">
+                    <button type="submit" class="btn btn-primary">Conferma</button>
+                </div>
             </div>
 
             

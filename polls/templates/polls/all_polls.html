@@ -3,23 +3,24 @@
 {% block pagename %}Visualizza i risultati{% endblock pagename %}
 
 {% block content %}
+
 <div class="container text-left">
     
     <div class="row">
         {# Title #}
-        <div class="col-8">
+        <div class="col-md-8">
             <h1> Tutti i sondaggi</h1>
         </div>
         {# New poll botton #}
-        <div class="col-4"> 
-            <a href="{% url 'polls:create-poll' %}"class="btn btn-success float-end w-45 mt-3 " role="button">Nuovo sondaggio</a>
+        <div class="col-md-4"> 
+            <a href="{% url 'polls:create_poll_form' %}"class="btn btn-success float-end w-45 mt-3 " role="button">Nuovo sondaggio</a>
         </div>
     </div>
     <hr class="mb-0"/>
     <div class="row justify-content-end ">
-        <div class="col-3">
+        <div class="col-xl-3">
             <div class="dropdown mt-3 ms-5">
-                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                <a class="btn btn-secondary dropdown-toggle float-end" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                     Elementi per pagina : {{per_page}}
                 </a>
 
@@ -31,7 +32,7 @@
             </div>
         </div>
         {# Page navigation bar #}
-        <div class="col-3">
+        <div class="col-xl-3">
             <nav aria-label="Page navigation example">
                 <ul class="pagination float-end mt-3">
                     {% if page.has_previous %}
@@ -66,24 +67,68 @@
     <div class="list-group">
         
     {% for poll in page.object_list %}
-         
+        
             <div class="d-grid">
             <div class="row p-2 rounded border mb-2">
-                <div class="col-6">
-                <p  class="fw-bold m-0"> {{poll.name}} </p>
-                <p class="text-muted m-0" > {{poll.question}} </p>
-                
+                <div class="col-12 col-md-6">
+                    <p class="fw-bold m-0"> {{poll.name}} </p>
+                    <p class="text-muted m-0" > {{poll.question}} </p>
                 </div>
-                <div class="col-6">
+                <div class="col-12 col-md-2">
+                    <p class="fw-bold" style="color:{{poll.get_type_color}}">{{poll.get_type_verbose_name}}</p>
+                </div>
+                <div class="col-12 col-md-4">
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                     <a href="{% url 'polls:get_poll' poll_id=poll.id %}" class="btn btn-primary me-md-2 mt-2" role="button">Vai al voto</a>
-                    <a href="{% url 'polls:results' poll_id=poll.id %}"class="btn btn-secondary mt-2"  role="button">Vai al risultato</a>
+                    <a href="{% url 'polls:results' poll_id=poll.id %}"class="btn btn-secondary me-md-2 mt-2"  role="button">Vai al risultato</a>
+                    {% comment %} Button for modifying and deleting polls {% endcomment %}
+                    <div class="dropdown d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button class="btn btn-outline-secondary mt-2 float-end" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="24" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
+                                <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                            </svg>
+                            {% comment %} Altre azioni {% endcomment %}
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-lg-start" aria-labelledby="dropdownMenuButton1">
+                            {% comment %} <li><a class="dropdown-item" href="#">Modifica sondaggio</a></li> {% endcomment %}
+                            <li><a class="dropdown-item " data-bs-toggle="modal" data-bs-target="#deletepoll-{{poll.id}}">Elimina sondaggio</a></li>
+                        </ul>
+                    </div>
                 </div>
                 </div>
             </div>
         </div>
+
+        {% comment %} Popup for deleting a poll {% endcomment %}
+
+        <div class="modal fade" id="deletepoll-{{poll.id}}" tabindex="-1" aria-labelledby="deletepollabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary text-white">
+                        <h4 class="modal-title">Cancellazione sondaggio</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body bg-warning text-dark">
+                        <h5 class="modal-title">Sei sicuro di volere cancellare questo sondaggio?</h5>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="alert alert-info text-center" role="alert">
+                            Attenzione: un sondaggio può essere eliminato soltanto se
+                            non è ancora stato registrato nessun voto 
+                        </div>
+                        <form action="{% url 'polls:poll_delete' poll_id=poll.id %}" method="POST">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-primary">Conferma</button>
+                        </form>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Indietro</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         {% empty %}
         <p class="fs-3 fw-bold mt-5"> Attualmente non ci sono sondaggi! </p>
+
         
     {% endfor %}
     </div>
@@ -91,7 +136,7 @@
     {# Page navigation bar #}
     <div class="row justify-content-end ">
         <div class="col-4">
-           <nav aria-label="Page navigation example">
+            <nav aria-label="Page navigation example">
                 <ul class="pagination float-end mt-3">
                     {% if page.has_previous %}
     
@@ -122,4 +167,75 @@
     </div>
 </div>
 
+{% comment %} Popup for success of operation of delete poll {% endcomment %}
+
+{% if delete_success %}
+
+<div class="modal fade" id="deletepollsuccess" tabindex="-1" aria-labelledby="deletepollsuccesslabel" aria-hidden="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h4 class="modal-title">Cancellazione sondaggio</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body bg-success text-white">
+                <h5 class="modal-title">Il sondaggio è stato cancellato con successo! </h5>
+            </div>
+            <div class="modal-footer">
+                <button onClick="window.location.reload();" type="button" class="btn btn-primary">Continua</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(window).on('load', function() {
+        $('#deletepollsuccess').modal('show');
+    });
+
+</script>
+
+{% comment %} <div class="alert alert-warning smooth-transitions" role="alert" 
+classes="add opacity-0:{{duration_seconds|default:2}}s, add d-none" >
+Warning
+</div> {% endcomment %}
+
+
+{% endif %}
+
+{% comment %} Popup for error of operation of delete poll {% endcomment %}
+
+{% if delete_error %}
+
+<div class="modal fade" id="deletepollerror" tabindex="-1" aria-labelledby="deletepollerrorlabel" aria-hidden="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h4 class="modal-title">Cancellazione sondaggio</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body bg-danger text-white">
+                <h5 class="modal-title"> Non è stato possibile cancellare il sondaggio in quanto sono già stati
+                registrati dei voti. </h5>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Continua</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(window).on('load', function() {
+        $('#deletepollerror').modal('show');
+    });
+
+</script>
+
+{% endif %}
+
+
 {% endblock content %}
+

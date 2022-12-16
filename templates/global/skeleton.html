@@ -1,5 +1,7 @@
 {% extends 'global/base.html' %}
 
+{% load static %}
+
 {% block body %}
 
     {# Page header #}
@@ -10,7 +12,6 @@
                 <span class="text-center">
                     <a href="{% url 'home' %}" >
                         <span class="logo">
-                            {% load static %}
                             <img src="{% static 'logo-smooth-poll.svg' %}" 
                                 alt="SmoothPoll" title="SmoothPoll Logo" 
                                 class="navbar-brand" />

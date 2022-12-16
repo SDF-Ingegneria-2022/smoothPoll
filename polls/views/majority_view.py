@@ -5,27 +5,40 @@ from django.shortcuts import render
 from django.urls import reverse
 from polls.classes.majority_poll_result_data import MajorityPollResultData
 from polls.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
+from polls.exceptions.poll_not_yet_voted_exception import PollNotYetVodedException
 from polls.exceptions.poll_option_rating_unvalid_exception import PollOptionRatingUnvalidException
 from polls.models.majority_vote_model import MajorityVoteModel
 from polls.models.poll_model import PollModel
 from polls.services.majority_vote_service import MajorityVoteService
+from polls.services.poll_service import PollService
 
 
-def dummy_majority(request: HttpRequest): 
+def dummy_majority(request: HttpRequest, poll_id=None): 
     """
     Dummy poll page, here user can try to vote.
     
     """
+
+    if poll_id is None:
+        try:
+            poll = PollModel.objects.filter(poll_type='majority_judjment').first()
+        except Exception:
+            raise HttpResponseServerError("Error: if you are seeing this message " \
+                + "it means developer didn't seeded the database with a majority " \
+                + "judgment dummy poll")
+    else: 
+        try:
+            poll = PollService.get_poll_by_id(poll_id)
+        except PollDoesNotExistException:
+            raise Http404()
+
+    if poll.poll_type != PollModel.PollType.MAJORITY_JUDJMENT:
+        raise Http404()
+
     options_selected = request.session.get('majvote-submit-error')
     if options_selected is not None:
         del request.session['majvote-submit-error']
-
-    try:
-        poll = PollModel.objects.filter(poll_type='majority_vote').first()
-    except Exception:
-        raise HttpResponseServerError("Error: if you are seeing this message " \
-            + "it means developer didn't seeded the database with a majority " \
-            + "judgment dummy poll")
+    
 
     return render(
                     request, 
@@ -75,13 +88,26 @@ def majority_vote_submit(request: HttpRequest, poll_id: int):
 def majority_vote_results(request: HttpRequest, poll_id: int):
     """Render page with majority poll results"""
 
+    # poll should be Majority type
+    try:
+        poll = PollService.get_poll_by_id(poll_id)
+    except PollDoesNotExistException:
+        raise Http404()
+
+    if poll.poll_type != PollModel.PollType.MAJORITY_JUDJMENT:
+        raise Http404()
+    
     try:
         poll_results: List[MajorityPollResultData] = MajorityVoteService.calculate_result(poll_id=str(poll_id))
     except PollDoesNotExistException:
         raise Http404
-    except Exception:
-        # Internal error: you should inizialize DB first (error 500)
-        return HttpResponseServerError("Dummy survey is not initialized. Please see README.md and create it.")
+    except PollNotYetVodedException:
+        poll_results = None
+
+
+    # except Exception:
+    #     # Internal error: you should inizialize DB first (error 500)
+    #     return HttpResponseServerError("Dummy survey is not initialized. Please see README.md and create it.")
 
     return render(request, 'polls/majority-results.html', {
         'poll_results': poll_results, 

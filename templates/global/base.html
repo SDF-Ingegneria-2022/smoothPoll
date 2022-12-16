@@ -13,7 +13,6 @@
 
     {# Load CSS and JavaScript #}
     {% bootstrap_css %}
-    {% bootstrap_javascript %}
 
     {# basic style #}
     <style>
@@ -26,19 +25,28 @@
             max-width: 570px;
             width: 100%;
         }
-
+        
         @media only screen and (max-width: 1023px) {
             .hide-mobile {
                 display: none;
             }
         }
 
+        .smooth-transitions {
+            transition: all 0.2s ease-in;
+        }
+
         
     </style>
+
+    {% load static %}
+    <script src="{% static 'js/jquery/jquery-3.6.2.min.js' %}"></script>
 
 </head>
 <body class="body">
     {% block body %}{% endblock body %}
+
+    {% bootstrap_javascript %}
 
     {# Custom JS #}
     {% block customjs %}{% endblock customjs %} 

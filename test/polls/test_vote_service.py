@@ -166,11 +166,3 @@ class TestPollService:
             .raises(VoteDoesNotExistException) \
             .when_called_with(vote_id=id)
         
-
-
-
-
-
-
-
-        
