@@ -71,6 +71,9 @@ class MajorityVoteService:
     def calculate_result(poll_id: str) -> List[MajorityPollResultData]:
         """
         Calculate result of a majority poll.
+        Raises:
+            PollDoesNotExistException: poll does not exists
+            PollNotYetVodedException: poll didn't received votes
         """
 
         try:

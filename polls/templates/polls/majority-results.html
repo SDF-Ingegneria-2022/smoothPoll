@@ -19,9 +19,11 @@
 
     {% comment "View judment button" %}{% endcomment %}
 
-    
+    {% if poll_results %}
 
     <div class="mb-3 mt-3">
+
+        
 
         <h4>Risultati</h4>
 
@@ -183,6 +185,21 @@
             </div>
         </div>
     </div>
+
+    {% else %}
+
+    <div class="container text-center mt-5 mb-5">
+        <p class="fw-bold text-danger">
+            Questo sondaggio purtroppo non ha ricevuto ancora alcun voto, 
+            quindi non è possibile calcolare i risultati.
+        </p>
+        <a class="btn btn-primary mt-2" 
+            href="{% url 'polls:get_poll' poll_id=poll.id  %}" 
+            role="button">Inizia a votare</a>
+    </div>
+
+    {% endif %}
+    
     
     <div class="d-grid gap-2 d-md-block text-center mt-5">
         <a name="" id="" role="button"

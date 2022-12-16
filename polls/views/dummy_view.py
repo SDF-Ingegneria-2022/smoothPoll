@@ -34,6 +34,9 @@ def get_poll(request: HttpRequest, poll_id: int):
     except Exception:
         raise Http404(f"Poll with id {poll_id} not found.")
 
+    if poll.poll_type == PollModel.PollType.MAJORITY_JUDJMENT:
+        return HttpResponseRedirect(reverse('polls:majority_vote', args=(poll_id,)))
+
     # Get eventual error message and clean it
     eventual_error = request.session.get('vote-submit-error')
     if eventual_error is not None:
@@ -127,16 +130,29 @@ def results(request: HttpRequest, poll_id: int):
         HttpResponse: Rendered results page.
         HttpResponseServerError: If DB is not initialized.
     """
+
+
+    # if poll type is majority, we need to redirect 
+    # to majority results page
+    try:
+        # Retrieve poll
+        poll: PollModel = PollService.get_poll_by_id(poll_id)
+    except Exception:
+        raise Http404(f"Poll with id {poll_id} not found.")
+
+    if poll.poll_type == PollModel.PollType.MAJORITY_JUDJMENT:
+        return HttpResponseRedirect(reverse('polls:majority_vote_results', args=(poll_id,)))
+
+    # regular results page 
     try:
         poll_results: PollResult = VoteService.calculate_result(poll_id)
     except PollDoesNotExistException:
         raise Http404
     except Exception:
         # Internal error: you should inizialize DB first (error 500)
-        return HttpResponseServerError("Dummy survey is not initialized. Please see README.md and create it.")
+        return HttpResponseServerError("Something got (slighly) terribly wrong. Please contact developers")
 
     return render(request, 'polls/results.html', 
-        
         {'poll_results': poll_results}
         )
 

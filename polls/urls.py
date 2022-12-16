@@ -13,6 +13,7 @@ urlpatterns = [
 
     # dummy majority judjment poll
     path('dummy/maggioritario/', views.dummy_majority, name='dummy_majority'),
+    path('<int:poll_id>/voto-giudizio-maggioritario/', views.dummy_majority, name='majority_vote'),
     path('<int:poll_id>/conferma-voto-maggioritario/', views.majority_vote_submit, name='majority_vote_submit'),
     path('<int:poll_id>/risultati-maggioritario', views.majority_vote_results, name='majority_vote_results'),
 
