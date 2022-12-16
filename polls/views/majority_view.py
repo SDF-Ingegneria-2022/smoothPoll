@@ -21,7 +21,7 @@ def dummy_majority(request: HttpRequest, poll_id=None):
 
     if poll_id is None:
         try:
-            poll = PollModel.objects.filter(poll_type='majority_vote').first()
+            poll = PollModel.objects.filter(poll_type='majority_judjment').first()
         except Exception:
             raise HttpResponseServerError("Error: if you are seeing this message " \
                 + "it means developer didn't seeded the database with a majority " \
