@@ -1,5 +1,7 @@
 site_name: SmoothPoll docs
 repo_url: https://github.com/SDF-Ingegneria-2022/smoothPoll
+docs_dir: documentation
+site_dir: docs
 
 theme:
   name: "material"
