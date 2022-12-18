@@ -24,4 +24,4 @@ jobs:
           pipenv install --deploy --dev
       - name: Deploy documentation
         run: |
-          pipenv run mkdocs gh-deploy
+          pipenv run mkdocs gh-deploy --strict --force
