@@ -266,5 +266,5 @@ pyvenv.cfg
 pip-selfcheck.json
 # Visual studio code
 .vscode/*
-
+docs/*
 # End of https://www.toptal.com/developers/gitignore/api/python,django,venv
