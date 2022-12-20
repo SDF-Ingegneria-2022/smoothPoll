@@ -14,7 +14,7 @@
 </div>
 <div class="container mb-5"  hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' hx-ext="class-tools loading-states">
 
-    <form action="{% url 'polls:create_poll_form' %}" method="POST">
+    <form action="{% url 'polls:poll_form' %}" method="POST">
 
         {% if error is not None %}
         <div class="alert alert-danger mb-5" role="alert" >

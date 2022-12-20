@@ -13,6 +13,28 @@ SESSION_OPTIONS = 'create-poll-options'
 SESSION_ERROR = 'create-poll-error'
 _ALL_SESSION_KEYS = [SESSION_FORMDATA, SESSION_OPTIONS, SESSION_ERROR]
 
+def create_poll_init_view(request: HttpRequest):
+    """View to inizialize form for new poll creation"""
+
+    # create new form for poll and init session 
+    form = PollForm(request.session.get(SESSION_FORMDATA) or None)
+    options: dict = request.session.get(SESSION_OPTIONS) or {
+        "1":"", 
+        "2":"", 
+    }
+
+    request.session[SESSION_FORMDATA] = form.data
+    request.session[SESSION_OPTIONS] = options
+    
+    # redirect to form to permit edit
+    return HttpResponseRedirect(reverse('polls:poll_form'))        
+
+
+
+def edit_poll_init_view(request: HttpRequest):
+    """View to inizialize form for new poll creation"""
+    pass
+
 
 class CreatePollHtmxView(View):
     """
@@ -33,17 +55,14 @@ class CreatePollHtmxView(View):
         Occasionally, there may even be rendered errors.
         """
 
-        # request.session.clear()
+        # clean session 
+        for key in _ALL_SESSION_KEYS:
+            if request.session.get(key) is not None:
+                del request.session[key]
 
         # get data from session or init it 
         form = PollForm(request.session.get(SESSION_FORMDATA) or None)
-        options: dict = request.session.get(SESSION_OPTIONS) or {
-            "1":"", 
-            "2":"", 
-        }
-
-        request.session[SESSION_FORMDATA] = form.data
-        request.session[SESSION_OPTIONS] = options
+        options: dict = request.session.get(SESSION_OPTIONS) or {}
 
         return render(request, "polls/create_poll_htmx.html", {
             "poll_form": form, "options": options, 
