@@ -27,7 +27,7 @@ urlpatterns = [
 
     # create poll proces urls
     path('crea-nuovo/', views.create_poll_init_view, name="create_poll_form"), 
-
+    path('<int:poll_id>/modifica', views.edit_poll_init_view, name="edit_poll_form"), 
 
     path('form-sondaggio/', views.CreatePollHtmxView.as_view(), name="poll_form"), 
     path('form-sondaggio/annulla', views.poll_form_clean_go_back_home, name="poll_form_clean_go_back_home"), 
