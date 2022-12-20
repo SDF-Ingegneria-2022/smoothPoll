@@ -119,9 +119,13 @@ class CreatePollHtmxView(View):
         form = get_poll_form(request)
         options: dict = request.session.get(SESSION_OPTIONS) or {}
 
+        print(form.instance)
+
         return render(request, "polls/create_poll_htmx.html", {
             "poll_form": form, "options": options, 
             "error": request.session.get(SESSION_ERROR), 
+
+            "edit": request.session.get(SESSION_POLL_ID) is not None
         })
 
     def post(self, request: HttpRequest, *args, **kwargs):
