@@ -9,7 +9,7 @@ import pytest
 from assertpy import assert_that
 
 
-class TestPollCreationService:
+class TestPollCreate:
     """Test suite that covers all methods in the PollService class"""
 
     
@@ -46,14 +46,14 @@ class TestPollCreationService:
     def test_create_poll_runs(self, make_forms):
         """Simple test to check if creation does not crash (it runs)"""
     
-        PollCreateService.create_new_poll(make_forms["form1"], self.options1)
+        PollCreateService.create_or_edit_poll(make_forms["form1"], self.options1)
         
 
     @pytest.mark.django_db
     def test_create_poll_ok1(self, make_forms):
         """Check if object is created, aside with all options"""
     
-        poll = PollCreateService.create_new_poll(make_forms["form1"], self.options1)
+        poll = PollCreateService.create_or_edit_poll(make_forms["form1"], self.options1)
 
         # check data 
         assert_that(poll).is_instance_of(PollModel)
@@ -82,7 +82,7 @@ class TestPollCreationService:
         form = make_forms["form1"]
         form.data["name"] = " "
 
-        assert_that(PollCreateService.create_new_poll) \
+        assert_that(PollCreateService.create_or_edit_poll) \
             .raises(PollMainDataNotValidException) \
             .when_called_with(poll_form=form, options=self.options1)
 
@@ -93,7 +93,7 @@ class TestPollCreationService:
         form = make_forms["form1"]
         form.data["question"] = None
 
-        assert_that(PollCreateService.create_new_poll) \
+        assert_that(PollCreateService.create_or_edit_poll) \
             .raises(PollMainDataNotValidException) \
             .when_called_with(poll_form=form, options=self.options1)
 
@@ -101,7 +101,7 @@ class TestPollCreationService:
     def test_create_few_options_1(self, make_forms):
         """Check what happend if I don't insert enough options"""
 
-        assert_that(PollCreateService.create_new_poll) \
+        assert_that(PollCreateService.create_or_edit_poll) \
             .raises(TooFewOptionsException) \
             .when_called_with(poll_form=make_forms["form1"], options=self.options_few1)
 
@@ -110,7 +110,7 @@ class TestPollCreationService:
         """Check what happend if I don't insert enough options
         (ensuring empty space is not consiederd a valid option)"""
 
-        assert_that(PollCreateService.create_new_poll) \
+        assert_that(PollCreateService.create_or_edit_poll) \
             .raises(TooFewOptionsException) \
             .when_called_with(poll_form=make_forms["form1"], options=self.options_few2)
 
@@ -118,7 +118,7 @@ class TestPollCreationService:
     def test_create_too_many_options(self, make_forms):
         """Check what happend if I insert too many options"""
 
-        assert_that(PollCreateService.create_new_poll) \
+        assert_that(PollCreateService.create_or_edit_poll) \
             .raises(TooManyOptionsException) \
             .when_called_with(poll_form=make_forms["form1"], options=self.options_many)
 
@@ -130,7 +130,7 @@ class TestPollCreationService:
         """Check what happend if I don't set type
         (I expect a classic single option poll)"""
 
-        poll = PollCreateService.create_new_poll(
+        poll = PollCreateService.create_or_edit_poll(
             make_forms["form1"], 
             self.options1)
 
@@ -142,7 +142,7 @@ class TestPollCreationService:
         """Create a majority judment poll and 
         ensure type is right"""
 
-        poll = PollCreateService.create_new_poll(
+        poll = PollCreateService.create_or_edit_poll(
             make_forms["form2"], 
             self.options2)
 
@@ -154,7 +154,7 @@ class TestPollCreationService:
         """A majority judment poll should have at least 3 options. 
         We try passing 2 and we expect an exception"""
 
-        assert_that(PollCreateService.create_new_poll) \
+        assert_that(PollCreateService.create_or_edit_poll) \
             .raises(TooFewOptionsException) \
             .when_called_with(
                 poll_form=make_forms["form2"], 
@@ -177,8 +177,7 @@ class TestPollCreationService:
         assert_that(make_forms["form1"].get_type_verbose_name()).is_equal_to("Opzione Singola")
         assert_that(make_forms["form2"].get_type_verbose_name()).is_equal_to("Giudizio Maggioritario")
 
-
-
+    
 
 
 

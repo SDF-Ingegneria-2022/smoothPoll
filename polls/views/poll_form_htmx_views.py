@@ -149,7 +149,7 @@ class CreatePollHtmxView(View):
 
         try:
             # perform object creation
-            PollCreateService.create_new_poll(form, options.values())
+            PollCreateService.create_or_edit_poll(form, options.values())
         except PollMainDataNotValidException:
             request.session[SESSION_ERROR] = "Attenzione, un sondaggio ha bisogno di un nome e di una domanda validi"
             return HttpResponseRedirect(reverse('polls:create_poll_form'))
