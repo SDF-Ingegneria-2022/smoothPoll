@@ -157,7 +157,7 @@ class CreatePollHtmxView(View):
             request.session[SESSION_ERROR] = f"Attenzione, un sondaggio di tipo {form.get_type_verbose_name()} ha bisogno almeno {form.get_min_options()} opzioni"
             return HttpResponseRedirect(reverse('polls:create_poll_form'))
         except TooManyOptionsException:
-            request.session[SESSION_ERROR] = "Attenzione, un sondaggio può avere al massimo 10 optioni"
+            request.session[SESSION_ERROR] = "Attenzione, un sondaggio può avere al massimo 10 opzioni"
             return HttpResponseRedirect(reverse('polls:create_poll_form'))
 
         clean_session(request)
