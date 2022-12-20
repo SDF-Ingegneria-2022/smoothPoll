@@ -1,14 +1,18 @@
-from typing import List
+from typing import List, Tuple
 import pytest
 from assertpy import assert_that
 from django.db import models
 from django.core.paginator import Paginator
+from polls.classes.poll_form import PollForm
 from polls.classes.poll_result import PollResult, PollResultVoice
 from polls.exceptions.paginator_page_size_exception import PaginatorPageSizeException
 from polls.exceptions.poll_has_been_voted_exception import PollHasBeenVotedException
 from polls.exceptions.poll_option_unvalid_exception import PollOptionUnvalidException
+from polls.models.majority_vote_model import MajorityVoteModel
 from polls.models.poll_model import PollModel
 from polls.models.poll_option_model import PollOptionModel
+from polls.services.majority_vote_service import MajorityVoteService
+from polls.services.poll_create_service import PollCreateService
 from polls.services.poll_service import PollService
 from polls.exceptions.poll_not_valid_creation_exception import PollNotValidCreationException
 from polls.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
@@ -31,8 +35,21 @@ class TestPollService:
             new_poll.save()
             for option_index in range(2):
                 PollOptionModel(value=f"Option {option_index}", poll_fk_id=new_poll.id).save()
+    
+    @pytest.fixture
+    def create_majority_poll(self) -> PollModel:
+        """Creates a majotiry poll"""
+        MAJORITY_JUDJMENT = "majority_judjment"
+        majority_judjment_form: PollForm = PollForm({"name": "Form name", "question": "Form question", "poll_type": MAJORITY_JUDJMENT})
+        majority_judjment_options: List[str] = ["Option 1", "Option 2", "Option 3"]
+        return PollCreateService.create_new_poll(majority_judjment_form, majority_judjment_options)
         
+         
+    
     ## Tests
+    
+    # =================== Legacy creation mode in the following tests ===================
+    
     
     @pytest.mark.django_db
     def test_create(self):
@@ -97,6 +114,7 @@ class TestPollService:
             .raises(PollDoesNotExistException) \
             .when_called_with(id=id)
 
+    
     @pytest.mark.django_db
     def test_get_paginated_polls_check_instance(self, create_20_polls):
         """Test get paginated polls with 20 polls and 5 polls per page and check the instance of the returned object"""
@@ -111,6 +129,7 @@ class TestPollService:
 
         assert_that(PollService.get_paginated_polls).raises(PaginatorPageSizeException).when_called_with(items_per_page)
     
+    # ====== Delete poll ======
     @pytest.mark.django_db
     def test_delete_poll(self):
         """Test delete poll, basic verification that it works"""
@@ -153,3 +172,24 @@ class TestPollService:
         assert_that(VoteService.perform_vote) \
             .raises(PollDoesNotExistException) \
             .when_called_with(poll_id=id, poll_choice_id=option_id)
+            
+    # =================== END legacy creation mode ===================
+    @pytest.mark.django_db      
+    def test_delete_majority_poll(self, create_majority_poll):
+        """Test delete poll with majority"""
+        poll: PollModel = create_majority_poll
+        
+        deletion: Tuple = PollService.delete_poll(poll.id)
+        assert_that(deletion[0]).is_greater_than(0)
+    
+    @pytest.mark.django_db
+    def test_delete_already_voted_majority_poll(self, create_majority_poll):
+        majority_poll: PollModel = create_majority_poll
+        majority_poll_options:  List[PollOptionModel] = majority_poll.options()
+        majority_vote_choices: List = [{'poll_choice_id': option.id, 'rating': 1 } for option in majority_poll_options]
+        
+        MajorityVoteService.perform_vote(majority_vote_choices, majority_poll.id)
+        
+        assert_that(PollService.delete_poll) \
+            .raises(PollHasBeenVotedException) \
+            .when_called_with(id=majority_poll.id)

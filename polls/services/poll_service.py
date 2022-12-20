@@ -1,19 +1,23 @@
 from typing import List
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator
+from polls.classes.majority_poll_result_data import MajorityPollResultData
 from polls.classes.poll_result import PollResult
 from polls.exceptions.paginator_page_size_exception import PaginatorPageSizeException
 from polls.exceptions.poll_has_been_voted_exception import PollHasBeenVotedException
 from polls.exceptions.poll_not_valid_creation_exception import PollNotValidCreationException
 from polls.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
+from polls.exceptions.poll_not_yet_voted_exception import PollNotYetVodedException
 from polls.models import PollModel
 from polls.models.poll_option_model import PollOptionModel
+from polls.services.majority_vote_service import MajorityVoteService
 from polls.services.vote_service import VoteService
-
+from polls.models.poll_model import PollModel
 
 class PollService:
     """Class to handle all poll related operations"""
     
+    #TODO: check if this method is legacy
     @staticmethod
     def create(name: str, question: str, options: List[str]) -> PollModel: 
         """Creates a new poll.
@@ -82,25 +86,42 @@ class PollService:
     
     @staticmethod
     def delete_poll(id:str):
-        """Delete a poll
+        """Delete a poll by id. If a poll has already received at least one vote, it can't be deleted.
+        
         Args:
-            id: Id of the poll
+            id: Id of the poll to delete. The poll can be a majotiry poll or a siglone option poll.
+        
         Raises:
-            PollDoesNotExistException: raised when you retrieve a non-existent poll
+            PollDoesNotExistException: If the poll not exist.
+            PollHasBeenVotedException: If the poll has already received at least one vote.
+            
+        Returns: 
+            Tuple: A tuple with first element the total number of deletions made
+            and the second element a dict with the relative details about deletion from the model perspective.
+            
+        Example:
+            {3, {'polls.PollModel': 1, 'polls.PollOptionModel': 2}}
         """
         try:
-            poll : PollModel = PollModel.objects.get(id=id)
+            poll: PollModel = PollModel.objects.get(id=id)
+            poll_type: PollModel.PollType = poll.PollType
         except ObjectDoesNotExist:
-            raise PollDoesNotExistException(f"Error: poll with id={id} does not exit")  
-        #not possible to delete a poll if there's a vote
-        has_been_voted = False
-        options : PollOptionModel = poll.options()
-        poll_results: PollResult = VoteService.calculate_result(poll.id)
-        for option_result in poll_results.get_sorted_options():
-            if option_result.n_votes != 0:
-                has_been_voted = True
-        if has_been_voted:
-            raise PollHasBeenVotedException(f"Error: poll with id={id} can't be deleted: it has already been voted")
-        poll.delete()
+            raise PollDoesNotExistException(f"Poll with id={id} does not exit.")  
+        
+        if poll.poll_type == poll_type.MAJORITY_JUDJMENT:
+            # Check if the majotiry judment poll has already received at least one vote
+            try:
+                MajorityVoteService.calculate_result(poll.id)
+            except PollNotYetVodedException:
+                pass
+            else:
+                raise PollHasBeenVotedException(f"Error: poll with id={id} can't be deleted: it has already been voted")
+            
+        else:
+            # Check if the single option poll has already received at least one vote
+            poll_results: PollResult = VoteService.calculate_result(poll.id)
+            for option_result in poll_results.get_sorted_options():
+                if option_result.n_votes != 0:
+                    raise PollHasBeenVotedException(f"Error: poll with id={id} can't be deleted: it has already been voted")
 
-        return 
+        return poll.delete()
