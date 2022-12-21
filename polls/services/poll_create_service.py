@@ -51,6 +51,12 @@ class PollCreateService:
         # create poll object from form
         poll = poll_form.save()
 
+        # check if there are already options in the poll object
+        # and delete them (edit case)
+        if poll.options():
+            for previous_option in poll.options():
+                previous_option.delete()
+
         # create option objects
         for o_str in valid_options:
             option = PollOptionModel(value=o_str)
