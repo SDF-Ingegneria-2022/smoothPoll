@@ -196,12 +196,6 @@
 
 </script>
 
-{% comment %} <div class="alert alert-warning smooth-transitions" role="alert" 
-classes="add opacity-0:{{duration_seconds|default:2}}s, add d-none" >
-Warning
-</div> {% endcomment %}
-
-
 {% endif %}
 
 {% comment %} Popup for error of operation of delete poll {% endcomment %}
@@ -236,6 +230,37 @@ Warning
 
 {% endif %}
 
+{% comment %} Popup for edit alert message {% endcomment %}
+
+{% if cannot_edit %}
+
+<div class="modal fade" id="editpollerror" tabindex="-1" aria-labelledby="editpollerrorlabel" aria-hidden="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h4 class="modal-title">Modifica sondaggio</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body bg-danger text-white">
+                <h5 class="modal-title"> Non è stato possibile modificare il sondaggio in quanto sono già stati
+                registrati dei voti. </h5>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Continua</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(window).on('load', function() {
+        $('#editpollerror').modal('show');
+    });
+
+</script>
+
+{% endif %}
 
 {% endblock content %}
 

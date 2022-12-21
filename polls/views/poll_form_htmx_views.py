@@ -1,5 +1,12 @@
+from typing import List
+from polls.classes.majority_poll_result_data import MajorityPollResultData
 from polls.classes.poll_form import PollForm
-from polls.models.poll_model import PollModel # , PollOptionForm
+from polls.classes.poll_result import PollResult
+from polls.exceptions.poll_has_been_voted_exception import PollHasBeenVotedException
+from polls.exceptions.poll_not_yet_voted_exception import PollNotYetVodedException
+from polls.models.poll_model import PollModel
+from polls.models.poll_option_model import PollOptionModel
+from polls.services.majority_vote_service import MajorityVoteService # , PollOptionForm
 from polls.services.poll_create_service import PollCreateService
 from polls.exceptions.poll_not_valid_creation_exception import *
 
@@ -10,6 +17,7 @@ from django.urls import reverse
 from django.views import View
 
 from polls.services.poll_service import PollService
+from polls.services.vote_service import VoteService
 
 SESSION_FORMDATA = 'create-poll-form'
 SESSION_POLL_ID = 'poll-instance'
@@ -71,6 +79,29 @@ def edit_poll_init_view(request: HttpRequest, poll_id: int):
         poll: PollModel = PollService.get_poll_by_id(poll_id)
     except Exception:
         raise Http404(f"Poll with id {poll_id} not found.")
+
+    # Add control if poll is already voted
+    if poll.poll_type == PollModel.PollType.SINGLE_OPTION:
+
+        has_been_voted = False
+        options : PollOptionModel = poll.options()
+        poll_results: PollResult = VoteService.calculate_result(poll.id)
+
+        for option_result in poll_results.get_sorted_options():
+            if option_result.n_votes != 0:
+                has_been_voted = True
+
+        if has_been_voted:
+            request.session['cannot_edit'] = True
+            return HttpResponseRedirect("%s?page=last&per_page=10" % reverse('polls:all_polls'))
+
+    elif poll.poll_type == PollModel.PollType.MAJORITY_JUDJMENT:
+
+        try:
+            poll_majority_results: List[MajorityPollResultData] = MajorityVoteService.calculate_result(poll_id=poll.id)
+        except PollNotYetVodedException:
+            request.session['cannot_edit'] = True
+            return HttpResponseRedirect("%s?page=last&per_page=10" % reverse('polls:all_polls'))
 
     form = PollForm({
         "name": poll.name, 
