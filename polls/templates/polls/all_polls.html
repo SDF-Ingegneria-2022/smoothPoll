@@ -90,7 +90,7 @@
                             {% comment %} Altre azioni {% endcomment %}
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end dropdown-menu-lg-start" aria-labelledby="dropdownMenuButton1">
-                            {% comment %} <li><a class="dropdown-item" href="#">Modifica sondaggio</a></li> {% endcomment %}
+                            <li><a class="dropdown-item" href="{% url 'polls:edit_poll_form' poll_id=poll.id %}">Modifica sondaggio</a></li>
                             <li><a class="dropdown-item " data-bs-toggle="modal" data-bs-target="#deletepoll-{{poll.id}}">Elimina sondaggio</a></li>
                         </ul>
                     </div>
