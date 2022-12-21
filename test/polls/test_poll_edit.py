@@ -37,7 +37,7 @@ class TestPollEdit:
         
 
     @pytest.mark.django_db
-    def test_edit_poll_ok(self, make_forms):
+    def test_edit_poll_ok1(self, make_forms):
         """Check if object is edited, aside with all correct options"""
     
         poll = PollCreateService.create_or_edit_poll(make_forms["form1"], self.options1)
@@ -63,6 +63,7 @@ class TestPollEdit:
         assert_that(options_to_search.__len__()).is_equal_to(0)
 
         # now check that edit works as expected
+        # in this case we edit the poll adding an option
         poll2 = PollCreateService.create_or_edit_poll(make_forms["form1"], self.options2)
 
         # check it has been edited correctly
@@ -75,6 +76,98 @@ class TestPollEdit:
 
         # assert that all and only the input passed options are returned
         options_to_search = self.options2.copy()
+        for o in poll2.options():
+            assert_that(o.value in options_to_search).is_true()
+            options_to_search.remove(o.value)
+
+        assert_that(options_to_search.__len__()).is_equal_to(0)
+
+    @pytest.mark.django_db
+    def test_edit_poll_ok2(self, make_forms):
+        """Check if object is edited, aside with all correct options"""
+    
+        poll = PollCreateService.create_or_edit_poll(make_forms["form1"], self.options1)
+
+        # check data 
+        assert_that(poll).is_instance_of(PollModel)
+        assert_that(poll.name).is_equal_to(self.name1)
+        assert_that(poll.question).is_equal_to(self.question1)
+
+        # check it has been saved correctly
+        assert_that(PollModel.objects.get(id=poll.id)).is_equal_to(poll)
+
+        # check each options have been saved correctly
+        assert_that(PollOptionModel.objects.filter(poll_fk=poll).count()).is_equal_to(self.options1.__len__())
+        assert_that(poll.options().__len__()).is_equal_to(self.options1.__len__())
+
+        # assert that all and only the input passed options are returned
+        options_to_search = self.options1.copy()
+        for o in poll.options():
+            assert_that(o.value in options_to_search).is_true()
+            options_to_search.remove(o.value)
+
+        assert_that(options_to_search.__len__()).is_equal_to(0)
+
+        # now check that edit works as expected
+        # in this case we edit the poll adding two options
+        poll2 = PollCreateService.create_or_edit_poll(make_forms["form1"], self.options3)
+
+        # check it has been edited correctly
+        assert_that(PollModel.objects.get(id=poll2.id)).is_equal_to(poll)
+        assert_that(poll2.id).is_equal_to(poll.id)
+
+        # check each options have been saved correctly
+        assert_that(PollOptionModel.objects.filter(poll_fk=poll2).count()).is_equal_to(self.options3.__len__())
+        assert_that(poll.options().__len__()).is_equal_to(self.options3.__len__())
+
+        # assert that all and only the input passed options are returned
+        options_to_search = self.options3.copy()
+        for o in poll2.options():
+            assert_that(o.value in options_to_search).is_true()
+            options_to_search.remove(o.value)
+
+        assert_that(options_to_search.__len__()).is_equal_to(0)
+
+    @pytest.mark.django_db
+    def test_edit_poll_ok2(self, make_forms):
+        """Check if object is edited, aside with all correct options"""
+    
+        poll = PollCreateService.create_or_edit_poll(make_forms["form1"], self.options3)
+
+        # check data 
+        assert_that(poll).is_instance_of(PollModel)
+        assert_that(poll.name).is_equal_to(self.name1)
+        assert_that(poll.question).is_equal_to(self.question1)
+
+        # check it has been saved correctly
+        assert_that(PollModel.objects.get(id=poll.id)).is_equal_to(poll)
+
+        # check each options have been saved correctly
+        assert_that(PollOptionModel.objects.filter(poll_fk=poll).count()).is_equal_to(self.options3.__len__())
+        assert_that(poll.options().__len__()).is_equal_to(self.options3.__len__())
+
+        # assert that all and only the input passed options are returned
+        options_to_search = self.options3.copy()
+        for o in poll.options():
+            assert_that(o.value in options_to_search).is_true()
+            options_to_search.remove(o.value)
+
+        assert_that(options_to_search.__len__()).is_equal_to(0)
+
+        # now check that edit works as expected
+        # in this case we edit the poll deleting two options
+        poll2 = PollCreateService.create_or_edit_poll(make_forms["form1"], self.options1)
+
+        # check it has been edited correctly
+        assert_that(PollModel.objects.get(id=poll2.id)).is_equal_to(poll)
+        assert_that(poll2.id).is_equal_to(poll.id)
+
+        # check each options have been saved correctly
+        assert_that(PollOptionModel.objects.filter(poll_fk=poll2).count()).is_equal_to(self.options1.__len__())
+        assert_that(poll.options().__len__()).is_equal_to(self.options1.__len__())
+
+        # assert that all and only the input passed options are returned
+        options_to_search = self.options1.copy()
         for o in poll2.options():
             assert_that(o.value in options_to_search).is_true()
             options_to_search.remove(o.value)
