@@ -17,9 +17,9 @@
         </div>
     </div>
     <hr class="mb-0"/>
-    <div class="row justify-content-end ">
-        <div class="col-md-auto">
-            <div class="dropdown mt-3 ms-5">
+    <div class="row justify-content-end">
+        <div class="col-md-auto mb-3">
+            <div class="dropdown mt-3 ms-5" >
                 <a class="btn btn-secondary dropdown-toggle float-end" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                     Elementi per pagina : {{per_page}}
                 </a>
@@ -102,8 +102,8 @@
     </div>
 
     {# Page navigation bar #}
-    <div class="row justify-content-center ">
-        <div class="col-4">
+    <div class="row justify-content-around">
+        <div class="col-auto">
             <nav aria-label="Page navigation example">
                 <ul class="pagination float-end mt-3">
                     {% if page.has_previous %}
