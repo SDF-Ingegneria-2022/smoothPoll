@@ -44,7 +44,7 @@ def get_poll(request: HttpRequest, poll_id: int):
     
     # Render vote form (with eventual error message)
     return render(request, 
-                'polls/vote.html', 
+                'polls_management/vote.html', 
                 { 
                     'poll': poll, 
                     'error': eventual_error 
@@ -81,7 +81,7 @@ def submit_vote(request: HttpRequest, poll_id: int):
             return HttpResponseRedirect(reverse('polls:get_poll', args=(poll_id,)))
         
         # show confirm page
-        return render(request, 'polls/vote_confirm.html', {'vote': vote})
+        return render(request, 'polls_management/vote_confirm.html', {'vote': vote})
 
     # POST REQUEST --> I wanna save the vote, save it in session and reload
     # this request as a GET one (so user will be able to refresh without
@@ -152,7 +152,7 @@ def results(request: HttpRequest, poll_id: int):
         # Internal error: you should inizialize DB first (error 500)
         return HttpResponseServerError("Something got (slighly) terribly wrong. Please contact developers")
 
-    return render(request, 'polls/results.html', 
+    return render(request, 'polls_management/results.html', 
         {'poll_results': poll_results}
         )
 
@@ -191,7 +191,7 @@ def all_polls(request: HttpRequest):
         del request.session['cannot_edit']
     
     return render(  request, 
-                    'polls/all_polls.html', 
+                    'polls_management/all_polls.html', 
                     {
                     'per_page': per_page,
                     'page': paginator.page(page),

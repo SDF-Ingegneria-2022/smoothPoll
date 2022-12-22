@@ -143,7 +143,7 @@ class CreatePollHtmxView(View):
 
         print(form.instance)
 
-        return render(request, "polls/create_poll_htmx.html", {
+        return render(request, "polls_management/create_poll_htmx.html", {
             "poll_form": form, "options": options, 
             "error": request.session.get(SESSION_ERROR), 
 
@@ -191,7 +191,7 @@ def poll_form_clean_go_back_home(request: HttpRequest):
     """Clean session and go back home"""
 
     # clean session 
-    clean_session()
+    clean_session(request)
 
     return HttpResponseRedirect("%s?page=1&per_page=10" % reverse('polls:all_polls'))        
 
@@ -232,7 +232,7 @@ def poll_form_htmx_create_option(request: HttpRequest):
         # todo: raise error
         print(request.session[SESSION_OPTIONS])
         # return HttpResponseNotModified()
-        return render(request, "polls/components/htmx_snack_warning.html", {
+        return render(request, "polls_management/components/htmx_snack_warning.html", {
             "message": "Attenzione, non è possibile creare più di 10 opzioni."
         })
     
@@ -244,7 +244,7 @@ def poll_form_htmx_create_option(request: HttpRequest):
 
     print(request.session[SESSION_OPTIONS])
 
-    return render(request, 'polls/components/htmx_option_input.html', {
+    return render(request, 'polls_management/components/htmx_option_input.html', {
         "option": "", 
         'i': i, 
     })

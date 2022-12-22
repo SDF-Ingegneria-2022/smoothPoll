@@ -42,7 +42,7 @@ def dummy_majority(request: HttpRequest, poll_id=None):
 
     return render(
                     request, 
-                    'polls/majority-vote.html', 
+                    'polls_management/majority-vote.html', 
                     {
                         'poll': poll, 
                         
@@ -83,7 +83,7 @@ def majority_vote_submit(request: HttpRequest, poll_id: int):
         return HttpResponseRedirect(reverse('polls:dummy_majority' ))
     except Exception as e:
         raise Http404
-    return render(request, 'polls/vote-majority-confirm.html', {'vote': vote})
+    return render(request, 'polls_management/vote-majority-confirm.html', {'vote': vote})
 
 def majority_vote_results(request: HttpRequest, poll_id: int):
     """Render page with majority poll results"""
@@ -109,7 +109,7 @@ def majority_vote_results(request: HttpRequest, poll_id: int):
     #     # Internal error: you should inizialize DB first (error 500)
     #     return HttpResponseServerError("Dummy survey is not initialized. Please see README.md and create it.")
 
-    return render(request, 'polls/majority-results.html', {
+    return render(request, 'polls_management/majority-results.html', {
         'poll_results': poll_results, 
         'poll': PollModel.objects.get(id=poll_id)
         })

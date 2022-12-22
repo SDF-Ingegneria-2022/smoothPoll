@@ -55,7 +55,7 @@
                     hx-swap="none" >  {% endcomment %}
                     
                     {% for i,option in options.items %}         
-                        {% include "polls/components/htmx_option_input.html" with option=option i=i %}
+                        {% include "polls_management/components/htmx_option_input.html" with option=option i=i %}
                     {% endfor %}
                 {% comment %} </form> {% endcomment %}
             </div>

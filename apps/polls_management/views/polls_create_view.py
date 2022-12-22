@@ -32,7 +32,7 @@ class CreatePollStep1View(View):
         """
 
         form = PollForm(request.session.get('create-poll-s1-form-data') or None)
-        return render(request, "polls/create_poll_step_1.html", {
+        return render(request, "polls_management/create_poll_step_1.html", {
             "form": form, 
             'enable_save': request.session.get('create-poll-enable-save'), 
             'error': request.session.get('create-poll-s1-error'), 
@@ -85,7 +85,7 @@ class CreatePollStep2View(View):
             request.session['create-poll-s1-error'] = "Compila tutti i campi prima di proseguire"
             return HttpResponseRedirect(reverse('polls:create-poll'))
 
-        return render(request, "polls/create_poll_step_2.html", {
+        return render(request, "polls_management/create_poll_step_2.html", {
             'options': request.session.get('create-poll-s2-options'), 
             'error': request.session.get('create-poll-s2-error'), 
             'enable_save': request.session.get('create-poll-enable-save'), 
