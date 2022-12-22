@@ -13,7 +13,7 @@
         </div>
         {# New poll botton #}
         <div class="col-md-4"> 
-            <a href="{% url 'polls:create_poll_form' %}"class="btn btn-success float-end w-45 mt-3 " role="button">Nuovo sondaggio</a>
+            <a href="{% url 'apps.polls_management:create_poll_form' %}"class="btn btn-success float-end w-45 mt-3 " role="button">Nuovo sondaggio</a>
         </div>
     </div>
     <hr class="mb-0"/>
@@ -79,8 +79,8 @@
                 </div>
                 <div class="col-12 col-md-4">
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                    <a href="{% url 'polls:get_poll' poll_id=poll.id %}" class="btn btn-primary me-md-2 mt-2" role="button">Vai al voto</a>
-                    <a href="{% url 'polls:results' poll_id=poll.id %}"class="btn btn-secondary me-md-2 mt-2"  role="button">Vai al risultato</a>
+                    <a href="{% url 'apps.polls_management:get_poll' poll_id=poll.id %}" class="btn btn-primary me-md-2 mt-2" role="button">Vai al voto</a>
+                    <a href="{% url 'apps.polls_management:results' poll_id=poll.id %}"class="btn btn-secondary me-md-2 mt-2"  role="button">Vai al risultato</a>
                     {% comment %} Button for modifying and deleting polls {% endcomment %}
                     <div class="dropdown d-grid gap-2 d-md-flex justify-content-md-end">
                         <button class="btn btn-outline-secondary mt-2 float-end" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
@@ -90,7 +90,7 @@
                             {% comment %} Altre azioni {% endcomment %}
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end dropdown-menu-lg-start" aria-labelledby="dropdownMenuButton1">
-                            <li><a class="dropdown-item" href="{% url 'polls:edit_poll_form' poll_id=poll.id %}">Modifica sondaggio</a></li>
+                            <li><a class="dropdown-item" href="{% url 'apps.polls_management:edit_poll_form' poll_id=poll.id %}">Modifica sondaggio</a></li>
                             <li><a class="dropdown-item " data-bs-toggle="modal" data-bs-target="#deletepoll-{{poll.id}}">Elimina sondaggio</a></li>
                         </ul>
                     </div>
@@ -116,7 +116,7 @@
                             Attenzione: un sondaggio può essere eliminato soltanto se
                             non è ancora stato registrato nessun voto 
                         </div>
-                        <form action="{% url 'polls:poll_delete' poll_id=poll.id %}" method="POST">
+                        <form action="{% url 'apps.polls_management:poll_delete' poll_id=poll.id %}" method="POST">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-primary">Conferma</button>
                         </form>

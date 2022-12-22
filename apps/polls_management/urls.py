@@ -2,7 +2,7 @@ from django.urls import path
 
 from apps.polls_management import views
 
-app_name = 'polls'
+app_name = 'apps.polls_management'
 urlpatterns = [
 
     # simple polls

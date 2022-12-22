@@ -11,7 +11,7 @@
 </div>
 <div class="container">
     <div class="container">
-        <form action="{% url 'polls:create-poll-1' %}" method="POST" class="form">
+        <form action="{% url 'apps.polls_management:create-poll-1' %}" method="POST" class="form">
             {% csrf_token %}
 
             {% if error is not None %}
@@ -30,7 +30,7 @@
         </form>
 
         {% if enable_save %}
-            <form action="{% url 'polls:create-poll-confirm' %}" method="POST">
+            <form action="{% url 'apps.polls_management:create-poll-confirm' %}" method="POST">
                 {% csrf_token %}
                 <div class="d-grid gap-2 d-md-block">
                     <button type="submit" class="btn btn-success float-end">Crea il Sondaggio</button>

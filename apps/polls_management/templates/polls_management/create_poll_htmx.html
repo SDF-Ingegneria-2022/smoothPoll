@@ -26,7 +26,7 @@
 </div>
 <div class="container mb-5"  hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' hx-ext="class-tools loading-states">
 
-    <form action="{% url 'polls:poll_form' %}" method="POST">
+    <form action="{% url 'apps.polls_management:poll_form' %}" method="POST">
 
         {% if error is not None %}
         <div class="alert alert-danger mb-5" role="alert" >
@@ -38,7 +38,7 @@
 
         <div class="form-group mb-5" 
             hx-trigger="keyup delay:500ms, change"
-            hx-post="{% url 'polls:poll_form_htmx_edit' %}"
+            hx-post="{% url 'apps.polls_management:poll_form_htmx_edit' %}"
             hx-swap="none" 
             hx-params="name, question, poll_type">
 
@@ -51,7 +51,7 @@
             <div class="mb-2" id="options-inputs" >
                 {% comment %} <form 
                     hx-trigger="input from:* delay:500ms"
-                    hx-post="{% url 'polls:poll_form_htmx_edit_option' 0 %}"
+                    hx-post="{% url 'apps.polls_management:poll_form_htmx_edit_option' 0 %}"
                     hx-swap="none" >  {% endcomment %}
                     
                     {% for i,option in options.items %}         
@@ -60,7 +60,7 @@
                 {% comment %} </form> {% endcomment %}
             </div>
             <a id="add-option-button" class="btn btn-primary" role="button"
-                hx-post="{% url 'polls:poll_form_htmx_create_option' %}"
+                hx-post="{% url 'apps.polls_management:poll_form_htmx_create_option' %}"
                 hx-target="#options-inputs"
                 hx-swap="beforeend"
                 >Aggiungi Opzione</a>
@@ -69,7 +69,7 @@
 
         {% csrf_token %}
         <div class="d-grid gap-2 d-md-block">
-            <a class="btn btn-warning" href="{% url 'polls:poll_form_clean_go_back_home' %}" role="button">Annulla</a>
+            <a class="btn btn-warning" href="{% url 'apps.polls_management:poll_form_clean_go_back_home' %}" role="button">Annulla</a>
             <button type="submit" class="btn btn-success" data-loading-disable >Salva</button>
         </div>
     </form>

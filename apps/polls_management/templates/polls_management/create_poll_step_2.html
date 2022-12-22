@@ -12,7 +12,7 @@
 <div class="container mb-5">
     {% comment %} <div class="container"> {% endcomment %}
         <h4 class="text-secondary">Inserisci le opzioni del sondaggio e clicca "Conferma"</h4>
-        <form action="{% url 'polls:create-poll-2' %}" method="POST" class="form">
+        <form action="{% url 'apps.polls_management:create-poll-2' %}" method="POST" class="form">
             {% csrf_token %}
 
             {% if error is not None %}
@@ -48,14 +48,14 @@
                         
             {% buttons %}
             <div class="d-grid gap-2 d-md-block">
-                <a class="btn btn-warning" href="{% url 'polls:create-poll-1' %}" role="button">Indietro</a>
+                <a class="btn btn-warning" href="{% url 'apps.polls_management:create-poll-1' %}" role="button">Indietro</a>
                 <button type="submit" class="btn btn-primary">Conferma</button>
             </div>
             {% endbuttons %}
         </form>
 
         {% if enable_save %}
-            <form action="{% url 'polls:create-poll-confirm' %}" method="POST">
+            <form action="{% url 'apps.polls_management:create-poll-confirm' %}" method="POST">
                 {% csrf_token %}
                 <div class="d-grid gap-2 d-md-block">
                     <button type="submit" class="btn btn-success float-end">Crea il Sondaggio</button>

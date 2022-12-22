@@ -62,7 +62,7 @@ def create_poll_init_view(request: HttpRequest):
     request.session[SESSION_OPTIONS] = options
     
     # redirect to form to permit edit
-    return HttpResponseRedirect(reverse('polls:poll_form'))        
+    return HttpResponseRedirect(reverse('apps.polls_management:poll_form'))        
 
 
 def edit_poll_init_view(request: HttpRequest, poll_id: int):
@@ -83,7 +83,7 @@ def edit_poll_init_view(request: HttpRequest, poll_id: int):
 
         if votes > 0:
             request.session['cannot_edit'] = True
-            return HttpResponseRedirect("%s?page=last&per_page=10" % reverse('polls:all_polls'))
+            return HttpResponseRedirect("%s?page=last&per_page=10" % reverse('apps.polls_management:all_polls'))
 
     elif poll.poll_type == PollModel.PollType.MAJORITY_JUDJMENT:
 
@@ -91,7 +91,7 @@ def edit_poll_init_view(request: HttpRequest, poll_id: int):
 
         if majority_votes > 0:
             request.session['cannot_edit'] = True
-            return HttpResponseRedirect("%s?page=last&per_page=10" % reverse('polls:all_polls'))
+            return HttpResponseRedirect("%s?page=last&per_page=10" % reverse('apps.polls_management:all_polls'))
 
 
     form = PollForm({
@@ -115,7 +115,7 @@ def edit_poll_init_view(request: HttpRequest, poll_id: int):
     request.session[SESSION_OPTIONS] = options
 
     # redirect to form to permit edit
-    return HttpResponseRedirect(reverse('polls:poll_form'))   
+    return HttpResponseRedirect(reverse('apps.polls_management:poll_form'))   
 
 
 class CreatePollHtmxView(View):
@@ -174,17 +174,17 @@ class CreatePollHtmxView(View):
             PollCreateService.create_or_edit_poll(form, options.values())
         except PollMainDataNotValidException:
             request.session[SESSION_ERROR] = "Attenzione, un sondaggio ha bisogno di un nome e di una domanda validi"
-            return HttpResponseRedirect(reverse('polls:create_poll_form'))
+            return HttpResponseRedirect(reverse('apps.polls_management:create_poll_form'))
         except TooFewOptionsException:
             request.session[SESSION_ERROR] = f"Attenzione, un sondaggio di tipo {form.get_type_verbose_name()} ha bisogno almeno {form.get_min_options()} opzioni"
-            return HttpResponseRedirect(reverse('polls:create_poll_form'))
+            return HttpResponseRedirect(reverse('apps.polls_management:create_poll_form'))
         except TooManyOptionsException:
             request.session[SESSION_ERROR] = "Attenzione, un sondaggio può avere al massimo 10 opzioni"
-            return HttpResponseRedirect(reverse('polls:create_poll_form'))
+            return HttpResponseRedirect(reverse('apps.polls_management:create_poll_form'))
 
         clean_session(request)
       
-        return HttpResponseRedirect("%s?page=last&per_page=10" % reverse('polls:all_polls'))        
+        return HttpResponseRedirect("%s?page=last&per_page=10" % reverse('apps.polls_management:all_polls'))        
 
 
 def poll_form_clean_go_back_home(request: HttpRequest):
@@ -193,7 +193,7 @@ def poll_form_clean_go_back_home(request: HttpRequest):
     # clean session 
     clean_session(request)
 
-    return HttpResponseRedirect("%s?page=1&per_page=10" % reverse('polls:all_polls'))        
+    return HttpResponseRedirect("%s?page=1&per_page=10" % reverse('apps.polls_management:all_polls'))        
 
         
 @require_http_methods(["POST"])

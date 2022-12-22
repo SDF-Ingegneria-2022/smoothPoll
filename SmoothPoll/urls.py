@@ -23,7 +23,7 @@ urlpatterns = [
     # home page
     path('', views.home, name="home"),
     # path('admin/', admin.site.urls),
-    path('sondaggi/', include('polls.urls'), name="polls"),
+    path('sondaggi/', include('apps.polls_management.urls'), name="polls_management"),
 ]
 
 handler404 = 'SmoothPoll.views.error_404_view'

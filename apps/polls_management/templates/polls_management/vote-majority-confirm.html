@@ -90,12 +90,12 @@ function copyLink(url) {
     {# Buttons #}
     <div class="container mt-5 ps-0" >
         <div class="d-grid gap-2 d-md-block">
-            <a class="btn btn-primary mt-2" href="{% url 'polls:majority_vote_results' poll_id=vote.poll.id %}" role="button">Vedi risultati</a>
+            <a class="btn btn-primary mt-2" href="{% url 'apps.polls_management:majority_vote_results' poll_id=vote.poll.id %}" role="button">Vedi risultati</a>
             <button type="button" class="btn btn-secondary mt-2" 
-                onclick="copyLink('{{request.get_host}}{% url 'polls:majority_vote_results' poll_id=vote.poll.id %}')">
+                onclick="copyLink('{{request.get_host}}{% url 'apps.polls_management:majority_vote_results' poll_id=vote.poll.id %}')">
                 Copia link
             </button>
-            <a class="btn btn-secondary mt-2" href="{% url 'polls:dummy_majority' %}" role="button">Vota di nuovo</a>
+            <a class="btn btn-secondary mt-2" href="{% url 'apps.polls_management:dummy_majority' %}" role="button">Vota di nuovo</a>
         </div>
     </div>
 

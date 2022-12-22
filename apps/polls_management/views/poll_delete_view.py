@@ -28,8 +28,8 @@ def poll_delete(request: HttpRequest, poll_id: int):
             PollService.delete_poll(str(poll_id))
         except PollHasBeenVotedException:
             request.session['delete_error'] = True
-            return HttpResponseRedirect("%s?page=last&per_page=10" % reverse('polls:all_polls'))
+            return HttpResponseRedirect("%s?page=last&per_page=10" % reverse('apps.polls_management:all_polls'))
 
         request.session['delete_success'] = True
 
-        return HttpResponseRedirect("%s?page=last&per_page=10" % reverse('polls:all_polls'))
+        return HttpResponseRedirect("%s?page=last&per_page=10" % reverse('apps.polls_management:all_polls'))
