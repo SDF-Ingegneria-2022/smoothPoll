@@ -42,7 +42,7 @@ class TestPollService:
         MAJORITY_JUDJMENT = "majority_judjment"
         majority_judjment_form: PollForm = PollForm({"name": "Form name", "question": "Form question", "poll_type": MAJORITY_JUDJMENT})
         majority_judjment_options: List[str] = ["Option 1", "Option 2", "Option 3"]
-        return PollCreateService.create_new_poll(majority_judjment_form, majority_judjment_options)
+        return PollCreateService.create_or_edit_poll(majority_judjment_form, majority_judjment_options)
         
          
     
