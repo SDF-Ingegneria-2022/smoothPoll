@@ -1,6 +1,6 @@
 from django.db import models
-from polls.models.poll_option_model import PollOptionModel
-from polls.models.poll_model import PollModel
+from apps.polls_management.models.poll_option_model import PollOptionModel
+from apps.polls_management.models.poll_model import PollModel
 
 class VoteModel(models.Model):
     """

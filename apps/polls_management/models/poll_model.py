@@ -1,4 +1,4 @@
-from polls.models.poll_option_model import PollOptionModel
+from apps.polls_management.models.poll_option_model import PollOptionModel
 
 from typing import List
 from django.db import models

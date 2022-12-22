@@ -1,5 +1,5 @@
-from polls.models.majority_judgment_model import MajorityJudgmentModel
-from polls.models.poll_option_model import PollOptionModel
+from apps.polls_management.models.majority_judgment_model import MajorityJudgmentModel
+from apps.polls_management.models.poll_option_model import PollOptionModel
 from apps.polls_management.exceptions.poll_not_yet_voted_exception import PollNotYetVodedException
 
 from dataclasses import dataclass

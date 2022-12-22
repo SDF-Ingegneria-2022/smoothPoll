@@ -1,6 +1,7 @@
 from typing import List
 
-from polls.models.majority_judgment_model import MajorityJudgmentModel
+from apps.polls_management.models.majority_judgment_model import MajorityJudgmentModel
+
 from apps.polls_management.constants.models_constants import POLL_MODEL_NAME
 from django.db import models
 

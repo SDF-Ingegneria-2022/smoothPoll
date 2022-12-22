@@ -1,9 +1,9 @@
 from apps.polls_management.classes.poll_result import PollResult, PollResultVoice
-from polls.models.vote_model import VoteModel
+from apps.polls_management.models.vote_model import VoteModel
 import pytest
 from assertpy import assert_that
-from polls.models.poll_model import PollModel
-from polls.models.poll_option_model import PollOptionModel
+from apps.polls_management.models.poll_model import PollModel
+from apps.polls_management.models.poll_option_model import PollOptionModel
 from apps.polls_management.services.vote_service import VoteService
 from apps.polls_management.exceptions.poll_option_unvalid_exception import PollOptionUnvalidException
 from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException

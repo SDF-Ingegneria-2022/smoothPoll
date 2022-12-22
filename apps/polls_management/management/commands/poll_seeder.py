@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand, CommandError, CommandParser
-from polls.models.poll_model import PollModel
-from polls.models.poll_option_model import PollOptionModel
+from apps.polls_management.models.poll_model import PollModel
+from apps.polls_management.models.poll_option_model import PollOptionModel
 
 class Command(BaseCommand):
     help = 'Seed the DB with a dummy poll'

@@ -1,6 +1,6 @@
 from apps.polls_management.classes.vote_builder import VoteBuilder
-from polls.models.poll_model import PollModel
-from polls.models.vote_model import VoteModel
+from apps.polls_management.models.poll_model import PollModel
+from apps.polls_management.models.vote_model import VoteModel
 from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
 # from apps.polls_management.exceptions.poll_option_unvalid_exception import PollOptionUnvalidException
 from apps.polls_management.exceptions.vote_does_not_exixt_exception import VoteDoesNotExistException

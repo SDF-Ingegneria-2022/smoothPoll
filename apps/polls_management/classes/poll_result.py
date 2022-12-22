@@ -1,9 +1,9 @@
 from typing import List
 from dataclasses import dataclass
 from typing import Optional
-from polls.models.poll_model import PollModel
-from polls.models.poll_option_model import PollOptionModel
-from polls.models.vote_model import VoteModel
+from apps.polls_management.models.poll_model import PollModel
+from apps.polls_management.models.poll_option_model import PollOptionModel
+from apps.polls_management.models.vote_model import VoteModel
 
 @dataclass
 class PollResultVoice:

@@ -1,5 +1,5 @@
 from typing import Any, Mapping, Optional
-from polls.models.poll_model import PollModel, PollOptionModel
+from apps.polls_management.models.poll_model import PollModel, PollOptionModel
 
 from django.forms import ModelForm
 from django.utils.translation import gettext as _

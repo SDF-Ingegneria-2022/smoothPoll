@@ -8,9 +8,9 @@ from apps.polls_management.classes.poll_result import PollResult, PollResultVoic
 from apps.polls_management.exceptions.paginator_page_size_exception import PaginatorPageSizeException
 from apps.polls_management.exceptions.poll_has_been_voted_exception import PollHasBeenVotedException
 from apps.polls_management.exceptions.poll_option_unvalid_exception import PollOptionUnvalidException
-from polls.models.majority_vote_model import MajorityVoteModel
-from polls.models.poll_model import PollModel
-from polls.models.poll_option_model import PollOptionModel
+from apps.polls_management.models.majority_vote_model import MajorityVoteModel
+from apps.polls_management.models.poll_model import PollModel
+from apps.polls_management.models.poll_option_model import PollOptionModel
 from apps.polls_management.services.majority_vote_service import MajorityVoteService
 from apps.polls_management.services.poll_create_service import PollCreateService
 from apps.polls_management.services.poll_service import PollService

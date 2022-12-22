@@ -1,7 +1,7 @@
 from typing import List
 from apps.polls_management.exceptions.poll_not_valid_creation_exception import *
-from polls.models.poll_model import PollModel
-from polls.models.poll_option_model import PollOptionModel
+from apps.polls_management.models.poll_model import PollModel
+from apps.polls_management.models.poll_option_model import PollOptionModel
 from apps.polls_management.classes.poll_form import PollForm
 
 

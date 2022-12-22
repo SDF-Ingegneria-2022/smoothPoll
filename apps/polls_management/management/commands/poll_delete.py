@@ -1,6 +1,6 @@
 from typing import Dict, Tuple
 from django.core.management.base import BaseCommand
-from polls.models.poll_model import PollModel
+from apps.polls_management.models.poll_model import PollModel
 
 
 class Command(BaseCommand):
