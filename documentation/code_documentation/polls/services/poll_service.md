@@ -1,4 +1,4 @@
 # Poll service
-::: polls.services.poll_service
+::: apps.polls_management.services.poll_service
 
 

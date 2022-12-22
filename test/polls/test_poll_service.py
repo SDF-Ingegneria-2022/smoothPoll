@@ -3,20 +3,20 @@ import pytest
 from assertpy import assert_that
 from django.db import models
 from django.core.paginator import Paginator
-from polls.classes.poll_form import PollForm
-from polls.classes.poll_result import PollResult, PollResultVoice
-from polls.exceptions.paginator_page_size_exception import PaginatorPageSizeException
-from polls.exceptions.poll_has_been_voted_exception import PollHasBeenVotedException
-from polls.exceptions.poll_option_unvalid_exception import PollOptionUnvalidException
-from polls.models.majority_vote_model import MajorityVoteModel
-from polls.models.poll_model import PollModel
-from polls.models.poll_option_model import PollOptionModel
-from polls.services.majority_vote_service import MajorityVoteService
-from polls.services.poll_create_service import PollCreateService
-from polls.services.poll_service import PollService
-from polls.exceptions.poll_not_valid_creation_exception import PollNotValidCreationException
-from polls.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
-from polls.services.vote_service import VoteService
+from apps.polls_management.classes.poll_form import PollForm
+from apps.polls_management.classes.poll_result import PollResult, PollResultVoice
+from apps.polls_management.exceptions.paginator_page_size_exception import PaginatorPageSizeException
+from apps.polls_management.exceptions.poll_has_been_voted_exception import PollHasBeenVotedException
+from apps.polls_management.exceptions.poll_option_unvalid_exception import PollOptionUnvalidException
+from apps.polls_management.models.majority_vote_model import MajorityVoteModel
+from apps.polls_management.models.poll_model import PollModel
+from apps.polls_management.models.poll_option_model import PollOptionModel
+from apps.polls_management.services.majority_vote_service import MajorityVoteService
+from apps.polls_management.services.poll_create_service import PollCreateService
+from apps.polls_management.services.poll_service import PollService
+from apps.polls_management.exceptions.poll_not_valid_creation_exception import PollNotValidCreationException
+from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
+from apps.polls_management.services.vote_service import VoteService
 
 
 class TestPollService:

@@ -1,8 +1,8 @@
-from polls.classes.poll_form import PollForm
-from polls.models.poll_model import PollModel
-from polls.models.poll_option_model import PollOptionModel
-from polls.services.poll_create_service import PollCreateService
-from polls.exceptions.poll_not_valid_creation_exception import *
+from apps.polls_management.classes.poll_form import PollForm
+from apps.polls_management.models.poll_model import PollModel
+from apps.polls_management.models.poll_option_model import PollOptionModel
+from apps.polls_management.services.poll_create_service import PollCreateService
+from apps.polls_management.exceptions.poll_not_valid_creation_exception import *
 
 from typing import Dict, List
 import pytest
