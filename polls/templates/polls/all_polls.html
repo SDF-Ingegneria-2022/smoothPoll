@@ -5,16 +5,16 @@
 {% block content %}
 
 <div class="container text-left">
-    
     <div class="row">
         {# Title #}
-        <div class="col-md-8">
+        <div class="col-8">
             <h1> Tutti i sondaggi</h1>
         </div>
         {# New poll botton #}
-        <div class="col-md-4"> 
-            <a href="{% url 'polls:create_poll_form' %}"class="btn btn-success float-end w-45 mt-3 " role="button">+</a>
+        <div class="col-4"> 
+            <a href="{% url 'polls:create_poll_form' %}"class="btn btn-success float-end w-45 mt-1 " role="button">Crea sondaggio</a>
         </div>
+    </div>
     </div>
     <hr class="mb-0"/>
     <div class="row justify-content-end">
