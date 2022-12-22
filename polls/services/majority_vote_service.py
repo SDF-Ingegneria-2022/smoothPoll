@@ -69,11 +69,17 @@ class MajorityVoteService:
 
     @staticmethod
     def calculate_result(poll_id: str) -> List[MajorityPollResultData]:
-        """
-        Calculate result of a majority poll.
+        """Calculate result of a majority poll.
+        
+        Args:
+            poll_id: The id of the poll.
+        
         Raises:
-            PollDoesNotExistException: poll does not exists
-            PollNotYetVodedException: poll didn't received votes
+            PollDoesNotExistException: If the poll does not exist.
+            PollNotYetVodedException: If the poll didn't received votes.
+        
+        Returns: 
+            List[MajorityPollResultData]: List of calculated result for each option.
         """
 
         try:
