@@ -11,8 +11,10 @@ class PollCreateService:
     """
 
     @staticmethod
-    def create_new_poll(poll_form: PollForm, options: List[str]) -> PollModel:
-        """Create a new poll starting from a PollForm object. 
+    def create_or_edit_poll(poll_form: PollForm, options: List[str]) -> PollModel:
+        """Create a new poll starting from a PollForm object (or
+        apply the edits on the existing object)
+         
         Args:
             poll_form: form containing data of object you wanna create.
             options: list of all options (as strings). 
@@ -48,6 +50,12 @@ class PollCreateService:
         
         # create poll object from form
         poll = poll_form.save()
+
+        # check if there are already options in the poll object
+        # and delete them (edit case)
+        if poll.options():
+            for previous_option in poll.options():
+                previous_option.delete()
 
         # create option objects
         for o_str in valid_options:

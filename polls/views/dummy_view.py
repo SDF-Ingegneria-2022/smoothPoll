@@ -178,11 +178,17 @@ def all_polls(request: HttpRequest):
     delete_success = request.session.get('delete_success')
     delete_error = request.session.get('delete_error')
 
+    # session variable for edit alert message
+    not_editable = request.session.get('cannot_edit')
+
     if delete_success:
         del request.session['delete_success']
 
     if delete_error:
         del request.session['delete_error']
+
+    if not_editable:
+        del request.session['cannot_edit']
     
     return render(  request, 
                     'polls/all_polls.html', 
@@ -190,7 +196,8 @@ def all_polls(request: HttpRequest):
                     'per_page': per_page,
                     'page': paginator.page(page),
                     'delete_success': delete_success,
-                    'delete_error': delete_error
+                    'delete_error': delete_error,
+                    'cannot_edit': not_editable
                     }
                 )
 

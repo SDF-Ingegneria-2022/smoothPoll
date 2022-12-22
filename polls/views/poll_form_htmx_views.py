@@ -1,17 +1,121 @@
-from polls.classes.poll_form import PollForm # , PollOptionForm
+from polls.classes.poll_form import PollForm
+from polls.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
+from polls.models.majority_vote_model import MajorityVoteModel
+from polls.models.poll_model import PollModel
+from polls.models.poll_option_model import PollOptionModel
+from polls.models.vote_model import VoteModel
 from polls.services.poll_create_service import PollCreateService
 from polls.exceptions.poll_not_valid_creation_exception import *
+from polls.services.poll_service import PollService
 
 from django.views.decorators.http import require_http_methods
-from django.http import HttpRequest, HttpResponseRedirect, HttpResponse, Http404, HttpResponseNotModified
+from django.http import HttpRequest, HttpResponseRedirect, HttpResponse, Http404
 from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
 
+
 SESSION_FORMDATA = 'create-poll-form'
+SESSION_POLL_ID = 'poll-instance'
 SESSION_OPTIONS = 'create-poll-options'
 SESSION_ERROR = 'create-poll-error'
-_ALL_SESSION_KEYS = [SESSION_FORMDATA, SESSION_OPTIONS, SESSION_ERROR]
+_ALL_SESSION_KEYS = [SESSION_FORMDATA, SESSION_OPTIONS, SESSION_ERROR, SESSION_POLL_ID]
+
+def clean_session(request: HttpRequest) -> None: 
+    # clean session 
+    for key in _ALL_SESSION_KEYS:
+        if request.session.get(key) is not None:
+            del request.session[key]
+
+def get_poll_form(request: HttpRequest) -> PollForm:
+    """Factory method to get current form 
+    from session"""
+
+    if request.session.get(SESSION_POLL_ID) is None:
+        return PollForm(request.POST or request.session.get(SESSION_FORMDATA) or None)
+
+    try:
+        # Retrieve poll
+        return PollForm(
+            request.POST or request.session.get(SESSION_FORMDATA) or None, 
+            instance=PollService.get_poll_by_id(
+                request.session.get(SESSION_POLL_ID)
+                )
+            )
+    except Exception:
+        raise Http404(f"Poll with id {request.session.get(SESSION_POLL_ID)} not found.")
+
+
+def create_poll_init_view(request: HttpRequest):
+    """View to inizialize form for new poll creation"""
+
+    clean_session(request)
+
+    # create new form for poll and init session 
+    form = PollForm(request.session.get(SESSION_FORMDATA) or None)
+    options: dict = request.session.get(SESSION_OPTIONS) or {
+        "1":"", 
+        "2":"", 
+    }
+
+    request.session[SESSION_FORMDATA] = form.data
+    request.session[SESSION_OPTIONS] = options
+    
+    # redirect to form to permit edit
+    return HttpResponseRedirect(reverse('polls:poll_form'))        
+
+
+def edit_poll_init_view(request: HttpRequest, poll_id: int):
+    """View to inizialize form for new poll creation"""
+
+    clean_session(request)
+    
+    try:
+        # Retrieve poll
+        poll: PollModel = PollService.get_poll_by_id(poll_id)
+    except PollDoesNotExistException:
+        raise Http404(f"Poll with id {poll_id} not found.")
+
+    # Add control if poll is already voted
+    if poll.poll_type == PollModel.PollType.SINGLE_OPTION:
+
+        votes: int = VoteModel.objects.filter(poll_option__in=PollOptionModel.objects.filter(poll_fk=poll)).count()
+
+        if votes > 0:
+            request.session['cannot_edit'] = True
+            return HttpResponseRedirect("%s?page=last&per_page=10" % reverse('polls:all_polls'))
+
+    elif poll.poll_type == PollModel.PollType.MAJORITY_JUDJMENT:
+
+        majority_votes: int = MajorityVoteModel.objects.filter(poll=poll.id).count()
+
+        if majority_votes > 0:
+            request.session['cannot_edit'] = True
+            return HttpResponseRedirect("%s?page=last&per_page=10" % reverse('polls:all_polls'))
+
+
+    form = PollForm({
+        "name": poll.name, 
+        "question": poll.question, 
+        "poll_type": poll.poll_type
+    }, instance=poll)
+
+    # form.data["name"] = poll.name
+    # form.data["question"] = poll.question
+    # form.data["poll_type"] = poll.poll_type
+
+    options: dict = {}
+    i: int = 1
+    for o in poll.options():
+        options[str(i)] = o.value
+        i += 1
+
+    request.session[SESSION_FORMDATA] = form.data
+    request.session[SESSION_POLL_ID] = poll.id
+    request.session[SESSION_OPTIONS] = options
+
+    # redirect to form to permit edit
+    return HttpResponseRedirect(reverse('polls:poll_form'))   
 
 
 class CreatePollHtmxView(View):
@@ -33,21 +137,17 @@ class CreatePollHtmxView(View):
         Occasionally, there may even be rendered errors.
         """
 
-        # request.session.clear()
-
         # get data from session or init it 
-        form = PollForm(request.session.get(SESSION_FORMDATA) or None)
-        options: dict = request.session.get(SESSION_OPTIONS) or {
-            "1":"", 
-            "2":"", 
-        }
+        form = get_poll_form(request)
+        options: dict = request.session.get(SESSION_OPTIONS) or {}
 
-        request.session[SESSION_FORMDATA] = form.data
-        request.session[SESSION_OPTIONS] = options
+        print(form.instance)
 
         return render(request, "polls/create_poll_htmx.html", {
             "poll_form": form, "options": options, 
             "error": request.session.get(SESSION_ERROR), 
+
+            "edit": request.session.get(SESSION_POLL_ID) is not None
         })
 
     def post(self, request: HttpRequest, *args, **kwargs):
@@ -66,12 +166,12 @@ class CreatePollHtmxView(View):
         """
 
         # retrieve data from session
-        form = PollForm(request.session.get(SESSION_FORMDATA) or None)
+        form = get_poll_form(request)
         options = request.session.get(SESSION_OPTIONS) or {}
 
         try:
             # perform object creation
-            PollCreateService.create_new_poll(form, options.values())
+            PollCreateService.create_or_edit_poll(form, options.values())
         except PollMainDataNotValidException:
             request.session[SESSION_ERROR] = "Attenzione, un sondaggio ha bisogno di un nome e di una domanda validi"
             return HttpResponseRedirect(reverse('polls:create_poll_form'))
@@ -79,13 +179,10 @@ class CreatePollHtmxView(View):
             request.session[SESSION_ERROR] = f"Attenzione, un sondaggio di tipo {form.get_type_verbose_name()} ha bisogno almeno {form.get_min_options()} opzioni"
             return HttpResponseRedirect(reverse('polls:create_poll_form'))
         except TooManyOptionsException:
-            request.session[SESSION_ERROR] = "Attenzione, un sondaggio può avere al massimo 10 optioni"
+            request.session[SESSION_ERROR] = "Attenzione, un sondaggio può avere al massimo 10 opzioni"
             return HttpResponseRedirect(reverse('polls:create_poll_form'))
 
-        # clean session 
-        for key in _ALL_SESSION_KEYS:
-            if request.session.get(key) is not None:
-                del request.session[key]
+        clean_session(request)
       
         return HttpResponseRedirect("%s?page=last&per_page=10" % reverse('polls:all_polls'))        
 
@@ -94,9 +191,7 @@ def poll_form_clean_go_back_home(request: HttpRequest):
     """Clean session and go back home"""
 
     # clean session 
-    for key in _ALL_SESSION_KEYS:
-        if request.session.get(key) is not None:
-            del request.session[key]
+    clean_session()
 
     return HttpResponseRedirect("%s?page=1&per_page=10" % reverse('polls:all_polls'))        
 
@@ -111,7 +206,7 @@ def poll_form_htmx_edit(request: HttpRequest):
         raise Http404()
 
     # update main form data
-    poll_form = PollForm(request.POST or None)
+    poll_form = get_poll_form(request)
     request.session[SESSION_FORMDATA] = poll_form.data
     print(request.session[SESSION_FORMDATA])
     return HttpResponse()

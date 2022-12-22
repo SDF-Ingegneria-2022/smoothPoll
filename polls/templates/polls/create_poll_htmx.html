@@ -5,16 +5,28 @@
 {% load django_htmx %}
 {% load static %}
 
-{% block pagename %}Crea nuovo sondaggio{% endblock pagename %}
+{% block pagename %}
+    {% if edit  %}
+        Modifica sondaggio
+    {% else %}
+        Crea nuovo sondaggio
+    {% endif %}
+{% endblock pagename %}
 
 {% block content %}
 <div class="container text-center mt-5 mb-5">
-    <h1>Crea nuovo sondaggio</h1>
+    <h1>
+        {% if edit  %}
+            Modifica sondaggio
+        {% else %}
+            Crea nuovo sondaggio
+        {% endif %}
+    </h1>
     <h2 class="text-info">Inserisci tutti i dati e premi "Salva"</h2>
 </div>
 <div class="container mb-5"  hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' hx-ext="class-tools loading-states">
 
-    <form action="{% url 'polls:create_poll_form' %}" method="POST">
+    <form action="{% url 'polls:poll_form' %}" method="POST">
 
         {% if error is not None %}
         <div class="alert alert-danger mb-5" role="alert" >
