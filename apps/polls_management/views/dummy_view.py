@@ -4,19 +4,19 @@ from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest, HttpR
 from django.shortcuts import render
 from django.urls import reverse
 from django.core.paginator import Paginator
-from polls.classes.majority_poll_result_data import MajorityPollResultData
-from polls.classes.poll_result import PollResult, PollResultVoice
-from polls.classes.poll_result import PollResult
-from polls.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
-from polls.exceptions.poll_option_rating_unvalid_exception import PollOptionRatingUnvalidException
-from polls.exceptions.vote_does_not_exixt_exception import VoteDoesNotExistException
+from apps.polls_management.classes.majority_poll_result_data import MajorityPollResultData
+from apps.polls_management.classes.poll_result import PollResult, PollResultVoice
+from apps.polls_management.classes.poll_result import PollResult
+from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
+from apps.polls_management.exceptions.poll_option_rating_unvalid_exception import PollOptionRatingUnvalidException
+from apps.polls_management.exceptions.vote_does_not_exixt_exception import VoteDoesNotExistException
 from polls.models.majority_vote_model import MajorityVoteModel
 from polls.models.poll_model import PollModel
 from polls.models.poll_option_model import PollOptionModel
-from polls.services.majority_vote_service import MajorityVoteService
-from polls.services.poll_service import PollService
-from polls.exceptions.poll_option_unvalid_exception import PollOptionUnvalidException
-from polls.services.vote_service import VoteService
+from apps.polls_management.services.majority_vote_service import MajorityVoteService
+from apps.polls_management.services.poll_service import PollService
+from apps.polls_management.exceptions.poll_option_unvalid_exception import PollOptionUnvalidException
+from apps.polls_management.services.vote_service import VoteService
 
 def get_poll(request: HttpRequest, poll_id: int): 
     """

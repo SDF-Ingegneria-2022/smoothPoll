@@ -1,12 +1,12 @@
-from polls.classes.poll_form import PollForm
-from polls.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
+from apps.polls_management.classes.poll_form import PollForm
+from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
 from polls.models.majority_vote_model import MajorityVoteModel
 from polls.models.poll_model import PollModel
 from polls.models.poll_option_model import PollOptionModel
 from polls.models.vote_model import VoteModel
-from polls.services.poll_create_service import PollCreateService
-from polls.exceptions.poll_not_valid_creation_exception import *
-from polls.services.poll_service import PollService
+from apps.polls_management.services.poll_create_service import PollCreateService
+from apps.polls_management.exceptions.poll_not_valid_creation_exception import *
+from apps.polls_management.services.poll_service import PollService
 
 from django.views.decorators.http import require_http_methods
 from django.http import HttpRequest, HttpResponseRedirect, HttpResponse, Http404

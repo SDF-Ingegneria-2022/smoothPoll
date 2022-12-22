@@ -1,8 +1,8 @@
 from polls.models.vote_model import VoteModel
 from polls.models.poll_model import PollModel
 from polls.models.poll_option_model import PollOptionModel
-from polls.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
-from polls.exceptions.poll_option_unvalid_exception import PollOptionUnvalidException
+from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
+from apps.polls_management.exceptions.poll_option_unvalid_exception import PollOptionUnvalidException
 
 from django.core.exceptions import ObjectDoesNotExist
 

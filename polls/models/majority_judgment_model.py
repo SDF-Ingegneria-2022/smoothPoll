@@ -1,5 +1,5 @@
 from django.db import models
-from polls.constants.models_constants import MAJORITY_VOTE_MODEL_NAME, POLL_OPTION_MODEL_NAME
+from apps.polls_management.constants.models_constants import MAJORITY_VOTE_MODEL_NAME, POLL_OPTION_MODEL_NAME
 
 class MajorityJudgmentModel(models.Model):
     """Class which represents a single rating voted on a

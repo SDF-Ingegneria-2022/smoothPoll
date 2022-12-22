@@ -1,6 +1,6 @@
 from django.db import models
 from django.db.models import CharField
-from ..constants.models_constants import POLL_MODEL_NAME
+from apps.polls_management.constants.models_constants import POLL_MODEL_NAME
 
 class PollOptionModel(models.Model): 
 

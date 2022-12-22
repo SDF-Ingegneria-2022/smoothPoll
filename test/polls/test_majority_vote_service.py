@@ -1,15 +1,15 @@
 from typing import List
 import pytest
 from assertpy import assert_that
-from polls.classes.majority_poll_result_data import MajorityPollResultData
-from polls.exceptions.majority_number_of_ratings_not_valid import MajorityNumberOfRatingsNotValid
-from polls.exceptions.poll_option_rating_unvalid_exception import PollOptionRatingUnvalidException
+from apps.polls_management.classes.majority_poll_result_data import MajorityPollResultData
+from apps.polls_management.exceptions.majority_number_of_ratings_not_valid import MajorityNumberOfRatingsNotValid
+from apps.polls_management.exceptions.poll_option_rating_unvalid_exception import PollOptionRatingUnvalidException
 from polls.models.majority_judgment_model import MajorityJudgmentModel
 from polls.models.majority_vote_model import MajorityVoteModel
 from polls.models.poll_model import PollModel
 from polls.models.poll_option_model import PollOptionModel
-from polls.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
-from polls.services.majority_vote_service import MajorityVoteService
+from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
+from apps.polls_management.services.majority_vote_service import MajorityVoteService
 
 
 @pytest.fixture()

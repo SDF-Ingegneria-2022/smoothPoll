@@ -1,2 +1,2 @@
 # Vote service
-::: polls.services.vote_service
+::: apps.polls_management.services.vote_service

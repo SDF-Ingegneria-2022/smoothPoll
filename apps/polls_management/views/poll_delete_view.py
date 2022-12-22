@@ -1,9 +1,9 @@
 from django.http import Http404, HttpRequest, HttpResponseRedirect
 from django.urls import reverse
-from polls.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
-from polls.exceptions.poll_has_been_voted_exception import PollHasBeenVotedException
+from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
+from apps.polls_management.exceptions.poll_has_been_voted_exception import PollHasBeenVotedException
 from polls.models.poll_model import PollModel
-from polls.services.poll_service import PollService
+from apps.polls_management.services.poll_service import PollService
 
 def poll_delete(request: HttpRequest, poll_id: int):
     """View method that deletes a poll

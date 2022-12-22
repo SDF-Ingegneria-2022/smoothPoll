@@ -1,2 +1,2 @@
 # Majority vote service
-::: polls.services.majority_vote_service
+::: apps.polls_management.services.majority_vote_service

@@ -1,17 +1,16 @@
 from typing import List
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator
-from polls.classes.majority_poll_result_data import MajorityPollResultData
-from polls.classes.poll_result import PollResult
-from polls.exceptions.paginator_page_size_exception import PaginatorPageSizeException
-from polls.exceptions.poll_has_been_voted_exception import PollHasBeenVotedException
-from polls.exceptions.poll_not_valid_creation_exception import PollNotValidCreationException
-from polls.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
-from polls.exceptions.poll_not_yet_voted_exception import PollNotYetVodedException
-from polls.models import PollModel
+from apps.polls_management.classes.majority_poll_result_data import MajorityPollResultData
+from apps.polls_management.classes.poll_result import PollResult
+from apps.polls_management.exceptions.paginator_page_size_exception import PaginatorPageSizeException
+from apps.polls_management.exceptions.poll_has_been_voted_exception import PollHasBeenVotedException
+from apps.polls_management.exceptions.poll_not_valid_creation_exception import PollNotValidCreationException
+from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
+from apps.polls_management.exceptions.poll_not_yet_voted_exception import PollNotYetVodedException
 from polls.models.poll_option_model import PollOptionModel
-from polls.services.majority_vote_service import MajorityVoteService
-from polls.services.vote_service import VoteService
+from apps.polls_management.services.majority_vote_service import MajorityVoteService
+from apps.polls_management.services.vote_service import VoteService
 from polls.models.poll_model import PollModel
 
 class PollService:

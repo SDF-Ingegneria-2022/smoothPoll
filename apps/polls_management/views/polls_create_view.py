@@ -1,4 +1,4 @@
-from polls.classes.poll_form import PollForm
+from apps.polls_management.classes.poll_form import PollForm
 from polls.models.poll_option_model import PollOptionModel
 from django.http import HttpRequest, HttpResponseRedirect, HttpResponse
 from django.contrib.sessions.backends.base import SessionBase
