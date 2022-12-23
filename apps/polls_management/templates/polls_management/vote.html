@@ -22,24 +22,13 @@
     </div>
     
     <div class="container mt-3">
-        <div class="alert alert-primary d-flex align-items-center" role="alert">
-            <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Info:"><use xlink:href="#info-fill"/></svg>
-            <div>
-                Per votare un sondaggio con il metodo del giudizio maggioritario dai la tua opinione su ciascuna delle opzioni tramite 
-                l'apposita scala di giudizi. Se vuoi farti un'idea di come funziona il metodo del giudizio maggioritario, 
-                <a href="https://copernicani.it/eleggere-il-candidato-migliore/" target="_black">leggi questa breve guida</a>. Se 
-                invece vuoi approfondire, 
-                <a href="https://it.frwiki.wiki/wiki/Jugement_majoritaire#D%C3%A9partage_des_%C3%A9galit%C3%A9s" target="_black">qui</a>
-                trovi il metodo matematico con cui verranno calcolati i risultati.
-            </div>
-        </div>
         <div class="alert alert-secondary alert-dismissible fade show" role="alert">
-            Per valutare una opzione <strong>seleziona un valore</strong> della scala di giudizi attraverso l'apposita check-box.
+            Per valutare una opzione <strong>seleziona un valore</strong> attraverso l'apposita check-box.
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     </div>  
  
-    <div class="container mt-5 mb-5">
+    <div class="container my-3">
         <form action="{% url 'apps.polls_management:submit_vote' poll_id=poll.id %}" method="POST">
 
             {% csrf_token %}
@@ -52,7 +41,7 @@
 
             {# Form Options #}
             <div class="container md-3">
-
+                <p class="fw-bold fs-4 ">Opzioni da valutare: </p>
                 {% for option in poll.options %}
                     <div class="form-check md-2">
                         <input class="form-check-input" type="radio" id="option-{{option.id}}"" name="vote" value="{{option.id}}"> 
