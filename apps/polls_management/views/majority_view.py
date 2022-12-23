@@ -80,7 +80,7 @@ def majority_vote_submit(request: HttpRequest, poll_id: int):
     except PollOptionRatingUnvalidException:
        
         request.session['majvote-submit-error'] = session_object
-        return HttpResponseRedirect(reverse('apps.votes_results:dummy_majority' ))
+        return HttpResponseRedirect(reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))
     except Exception as e:
         raise Http404
     return render(request, 'polls_management/vote-majority-confirm.html', {'vote': vote})
