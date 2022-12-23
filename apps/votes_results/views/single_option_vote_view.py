@@ -37,7 +37,7 @@ def single_option_vote(request: HttpRequest, poll_id: int):
     
     # Render vote form (with eventual error message)
     return render(request, 
-                'polls_management/vote.html', 
+                'votes_results/single_option_vote.html', 
                 { 
                     'poll': poll, 
                     'error': eventual_error 
@@ -74,7 +74,7 @@ def single_option_recap(request: HttpRequest, poll_id: int):
             return HttpResponseRedirect(reverse('apps.votes_results:single_option_vote', args=(poll_id,)))
         
         # show confirm page
-        return render(request, 'polls_management/vote_confirm.html', {'vote': vote})
+        return render(request, 'votes_results/single_option_recap.html', {'vote': vote})
 
     # POST REQUEST --> I wanna save the vote, save it in session and reload
     # this request as a GET one (so user will be able to refresh without
@@ -145,6 +145,6 @@ def single_option_results(request: HttpRequest, poll_id: int):
         # Internal error: you should inizialize DB first (error 500)
         return HttpResponseServerError("Something got (slighly) terribly wrong. Please contact developers")
 
-    return render(request, 'polls_management/results.html', 
+    return render(request, 'votes_results/single_option_results.html', 
         {'poll_results': poll_results}
         )
