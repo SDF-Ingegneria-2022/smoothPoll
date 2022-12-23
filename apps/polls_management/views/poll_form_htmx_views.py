@@ -169,21 +169,23 @@ class CreatePollHtmxView(View):
         form = get_poll_form(request)
         options = request.session.get(SESSION_OPTIONS) or {}
 
+        # create object or apply changes
+        # (if an error occours, re-render the form)
         try:
-            # perform object creation
             PollCreateService.create_or_edit_poll(form, options.values())
         except PollMainDataNotValidException:
             request.session[SESSION_ERROR] = "Attenzione, un sondaggio ha bisogno di un nome e di una domanda validi"
-            return HttpResponseRedirect(reverse('apps.polls_management:poll_create'))
+            return HttpResponseRedirect(reverse('apps.polls_management:poll_form'))
         except TooFewOptionsException:
             request.session[SESSION_ERROR] = f"Attenzione, un sondaggio di tipo {form.get_type_verbose_name()} ha bisogno almeno {form.get_min_options()} opzioni"
-            return HttpResponseRedirect(reverse('apps.polls_management:poll_create'))
+            return HttpResponseRedirect(reverse('apps.polls_management:poll_form'))
         except TooManyOptionsException:
             request.session[SESSION_ERROR] = "Attenzione, un sondaggio può avere al massimo 10 opzioni"
-            return HttpResponseRedirect(reverse('apps.polls_management:poll_create'))
+            return HttpResponseRedirect(reverse('apps.polls_management:poll_form'))
 
+        # after changes are applied, clean session and go back
+        # at all polls page
         clean_session(request)
-      
         return HttpResponseRedirect("%s?page=last&per_page=10" % reverse('apps.polls_management:all_polls'))        
 
 
