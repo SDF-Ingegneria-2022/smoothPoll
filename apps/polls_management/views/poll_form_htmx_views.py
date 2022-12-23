@@ -174,13 +174,13 @@ class CreatePollHtmxView(View):
             PollCreateService.create_or_edit_poll(form, options.values())
         except PollMainDataNotValidException:
             request.session[SESSION_ERROR] = "Attenzione, un sondaggio ha bisogno di un nome e di una domanda validi"
-            return HttpResponseRedirect(reverse('apps.polls_management:create_poll_form'))
+            return HttpResponseRedirect(reverse('apps.polls_management:poll_create'))
         except TooFewOptionsException:
             request.session[SESSION_ERROR] = f"Attenzione, un sondaggio di tipo {form.get_type_verbose_name()} ha bisogno almeno {form.get_min_options()} opzioni"
-            return HttpResponseRedirect(reverse('apps.polls_management:create_poll_form'))
+            return HttpResponseRedirect(reverse('apps.polls_management:poll_create'))
         except TooManyOptionsException:
             request.session[SESSION_ERROR] = "Attenzione, un sondaggio può avere al massimo 10 opzioni"
-            return HttpResponseRedirect(reverse('apps.polls_management:create_poll_form'))
+            return HttpResponseRedirect(reverse('apps.polls_management:poll_create'))
 
         clean_session(request)
       

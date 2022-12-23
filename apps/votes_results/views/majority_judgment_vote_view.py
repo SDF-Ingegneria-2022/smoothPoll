@@ -13,7 +13,7 @@ from apps.polls_management.services.majority_vote_service import MajorityVoteSer
 from apps.polls_management.services.poll_service import PollService
 
 
-def dummy_majority(request: HttpRequest, poll_id=None): 
+def majority_judgment_vote(request: HttpRequest, poll_id=None): 
     """
     Dummy poll page, here user can try to vote.
     
@@ -42,7 +42,7 @@ def dummy_majority(request: HttpRequest, poll_id=None):
 
     return render(
                     request, 
-                    'polls_management/majority-vote.html', 
+                    'votes_results/majority_judgment_vote.html', 
                     {
                         'poll': poll, 
                         
@@ -57,7 +57,7 @@ def dummy_majority(request: HttpRequest, poll_id=None):
                         }
                     )        
 
-def majority_vote_submit(request: HttpRequest, poll_id: int):
+def majority_judgment_recap(request: HttpRequest, poll_id: int):
     """Render page with confirmation of majority vote validation."""
 
     ratings: List[dict] = []
@@ -80,12 +80,12 @@ def majority_vote_submit(request: HttpRequest, poll_id: int):
     except PollOptionRatingUnvalidException:
        
         request.session['majvote-submit-error'] = session_object
-        return HttpResponseRedirect(reverse('apps.polls_management:dummy_majority' ))
+        return HttpResponseRedirect(reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))
     except Exception as e:
         raise Http404
-    return render(request, 'polls_management/vote-majority-confirm.html', {'vote': vote})
+    return render(request, 'votes_results/majority_judgment_recap.html', {'vote': vote})
 
-def majority_vote_results(request: HttpRequest, poll_id: int):
+def majority_judgment_results(request: HttpRequest, poll_id: int):
     """Render page with majority poll results"""
 
     # poll should be Majority type
@@ -109,7 +109,7 @@ def majority_vote_results(request: HttpRequest, poll_id: int):
     #     # Internal error: you should inizialize DB first (error 500)
     #     return HttpResponseServerError("Dummy survey is not initialized. Please see README.md and create it.")
 
-    return render(request, 'polls_management/majority-results.html', {
+    return render(request, 'votes_results/majority_judgment_results.html', {
         'poll_results': poll_results, 
         'poll': PollModel.objects.get(id=poll_id)
         })

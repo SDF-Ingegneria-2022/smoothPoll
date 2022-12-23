@@ -58,18 +58,18 @@ function copyLink(url) {
         <div class="d-grid gap-2 d-md-block">
         <p class="secondary">
             {% comment %} Quando il sondaggio sarà chiuso, potrai vedere il risultato 
-            <a href="{% url 'apps.polls_management:results' %}" title="Esiti sondaggio">su questa pagina</a>.  {% endcomment %}
+            <a href="{% url 'apps.votes_results:single_option_results' %}" title="Esiti sondaggio">su questa pagina</a>.  {% endcomment %}
             
         </p>
-            <a class="btn btn-primary mt-2" href="{% url 'apps.polls_management:results' poll_id=vote.poll.id %}" role="button">Vedi risultati</a>
+            <a class="btn btn-primary mt-2" href="{% url 'apps.votes_results:single_option_results' poll_id=vote.poll.id %}" role="button">Vedi risultati</a>
 
 
             <button type="button" class="btn btn-secondary mt-2" 
-                onclick="copyLink('{{request.get_host}}{% url 'apps.polls_management:results' poll_id=vote.poll.id %}')">
+                onclick="copyLink('{{request.get_host}}{% url 'apps.votes_results:single_option_results' poll_id=vote.poll.id %}')">
                 Copia link
             </button>
 
-            <a class="btn btn-secondary mt-2" href="{% url 'apps.polls_management:get_poll' poll_id=vote.poll.id  %}" role="button">Vota di nuovo</a>
+            <a class="btn btn-secondary mt-2" href="{% url 'apps.votes_results:single_option_vote' poll_id=vote.poll.id  %}" role="button">Vota di nuovo</a>
         </div>
     </div>
 </div>

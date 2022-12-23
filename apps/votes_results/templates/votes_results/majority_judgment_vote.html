@@ -53,7 +53,7 @@
     </div>  
                                                   
     <div class="container ">
-        <form action="{% url 'apps.polls_management:majority_vote_submit' poll_id=poll.id %}" method="POST">
+        <form action="{% url 'apps.votes_results:majority_judgment_recap' poll_id=poll.id %}" method="POST">
 
             {% csrf_token %}
             {# Form Options #}
@@ -162,7 +162,7 @@
             {# Confirm button #}
             <div class="container mt-5 mb-3">
                 <button type="submit" class="btn btn-primary">Conferma</button>
-                {% comment %} <a class="btn btn-primary" href="{% url 'apps.polls_management:majority_vote_results' poll_id=poll.id %}" role="button">Vedi risultati</a> {% endcomment %}
+                {% comment %} <a class="btn btn-primary" href="{% url 'apps.votes_results:majority_judgment_results' poll_id=poll.id %}" role="button">Vedi risultati</a> {% endcomment %}
             </div>
 
 
