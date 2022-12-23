@@ -5,21 +5,21 @@
 {% block content %}
 
 <div class="container text-left">
-    
     <div class="row">
         {# Title #}
-        <div class="col-md-8">
+        <div class="col-8">
             <h1> Tutti i sondaggi</h1>
         </div>
         {# New poll botton #}
-        <div class="col-md-4"> 
-            <a href="{% url 'apps.polls_management:poll_create' %}"class="btn btn-success float-end w-45 mt-3 " role="button">Nuovo sondaggio</a>
+        <div class="col-4"> 
+            <a href="{% url 'apps.polls_management:poll_create' %}"class="btn btn-success float-end w-45 mt-1 " role="button">Crea sondaggio</a>
         </div>
     </div>
+    </div>
     <hr class="mb-0"/>
-    <div class="row justify-content-end ">
-        <div class="col-xl-3">
-            <div class="dropdown mt-3 ms-5">
+    <div class="row justify-content-end">
+        <div class="col-md-auto mb-3">
+            <div class="dropdown mt-3 ms-5" >
                 <a class="btn btn-secondary dropdown-toggle float-end" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                     Elementi per pagina : {{per_page}}
                 </a>
@@ -31,39 +31,6 @@
                 </ul>
             </div>
         </div>
-        {# Page navigation bar #}
-        <div class="col-xl-3">
-            <nav aria-label="Page navigation example">
-                <ul class="pagination float-end mt-3">
-                    {% if page.has_previous %}
-    
-                        <li class="page-item ">
-                            <a class="page-link" href="?page={{page.previous_page_number}}&per_page={{per_page}}" tabindex="-1" aria-disabled="true">Precedente</a>
-                        </li>
-                        <li class="page-item"><a class="page-link " href="?page={{page.previous_page_number}}&per_page={{per_page}}">{{page.previous_page_number}}</a></li>
-                    {% else %}
-                        <li class="page-item  disabled">
-                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Precedente</a>
-                        </li>
-                    {% endif %} 
-                        <li class="page-item active"><a class="page-link " href="?page={{page.number}}&per_page={{per_page}}">{{page.number}}</a></li>
-
-                    {% if page.has_next %}
-                        <li class="page-item"><a class="page-link " href="?page={{page.next_page_number}}&per_page={{per_page}}">{{page.next_page_number}}</a></li>
-                        <li class="page-item">
-                            <a class="page-link" href="?page={{page.next_page_number}}&per_page={{per_page}}">Successiva</a>
-                        </li>
-                    {% else %}
-                        <li class="page-item disabled">
-                            <a class="page-link" href="#">Successiva</a>
-                        </li>
-                    {% endif %}
-                </ul>
-            </nav>
-        </div>
-    </div>
-    
-    {# Poll list#}
     <div class="list-group">
         
     {% for poll in page.object_list %}
@@ -134,8 +101,8 @@
     </div>
 
     {# Page navigation bar #}
-    <div class="row justify-content-end ">
-        <div class="col-4">
+    <div class="row justify-content-around">
+        <div class="col-auto">
             <nav aria-label="Page navigation example">
                 <ul class="pagination float-end mt-3">
                     {% if page.has_previous %}
@@ -263,4 +230,3 @@
 {% endif %}
 
 {% endblock content %}
-
