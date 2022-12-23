@@ -4,13 +4,17 @@ from apps.votes_results import views
 
 app_name = 'apps.votes_results'
 urlpatterns = [
-    path('<int:poll_id>/', views.get_poll, name='single_option_vote'),
-    path('<int:poll_id>/conferma-voto/', views.submit_vote, name='single_option_recap'),
-    path('<int:poll_id>/risultati/', views.results, name='single_option_results'),
+
+    # vote-recap-results process for single option
+    path('<int:poll_id>/vota/scelta-singola/', views.single_option_vote, name='single_option_vote'),
+    path('<int:poll_id>/riepilogo-voto/scelta-singola/', views.single_option_recap, name='single_option_recap'),
+    path('<int:poll_id>/risultati/scelta-singola/', views.single_option_results, name='single_option_results'),
+
+    # vote-recap-results process for majority judgment
+    path('<int:poll_id>/vota/giudizio-maggioritario/', views.majority_judgment_vote, name='majority_judgment_vote'),
+    path('<int:poll_id>/riepilogo-voto/giudizio-maggioritario/', views.majority_judgment_recap, name='majority_judgment_recap'),
+    path('<int:poll_id>/risultati/giudizio-maggioritario/', views.majority_judgment_results, name='majority_judgment_results'),
 
     # dummy majority judjment poll
-    path('dummy/maggioritario/', views.dummy_majority, name='dummy_majority'),
-    path('<int:poll_id>/voto-giudizio-maggioritario/', views.dummy_majority, name='majority_judgment_vote'),
-    path('<int:poll_id>/conferma-voto-maggioritario/', views.majority_vote_submit, name='majority_judgment_recap'),
-    path('<int:poll_id>/risultati-maggioritario', views.majority_vote_results, name='majority_judgment_results'),
+    path('prova-voto-maggioritario/', views.majority_judgment_vote, name='dummy_majority'),
 ]

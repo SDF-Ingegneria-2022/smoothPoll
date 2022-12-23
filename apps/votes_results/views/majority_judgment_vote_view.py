@@ -13,7 +13,7 @@ from apps.polls_management.services.majority_vote_service import MajorityVoteSer
 from apps.polls_management.services.poll_service import PollService
 
 
-def dummy_majority(request: HttpRequest, poll_id=None): 
+def majority_judgment_vote(request: HttpRequest, poll_id=None): 
     """
     Dummy poll page, here user can try to vote.
     
@@ -57,7 +57,7 @@ def dummy_majority(request: HttpRequest, poll_id=None):
                         }
                     )        
 
-def majority_vote_submit(request: HttpRequest, poll_id: int):
+def majority_judgment_recap(request: HttpRequest, poll_id: int):
     """Render page with confirmation of majority vote validation."""
 
     ratings: List[dict] = []
@@ -85,7 +85,7 @@ def majority_vote_submit(request: HttpRequest, poll_id: int):
         raise Http404
     return render(request, 'polls_management/vote-majority-confirm.html', {'vote': vote})
 
-def majority_vote_results(request: HttpRequest, poll_id: int):
+def majority_judgment_results(request: HttpRequest, poll_id: int):
     """Render page with majority poll results"""
 
     # poll should be Majority type

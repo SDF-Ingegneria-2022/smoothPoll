@@ -11,7 +11,7 @@ from apps.polls_management.services.poll_service import PollService
 from apps.polls_management.exceptions.poll_option_unvalid_exception import PollOptionUnvalidException
 from apps.polls_management.services.vote_service import VoteService
 
-def get_poll(request: HttpRequest, poll_id: int): 
+def single_option_vote(request: HttpRequest, poll_id: int): 
     """
     Get poll by id and render it.
     Args:
@@ -43,7 +43,7 @@ def get_poll(request: HttpRequest, poll_id: int):
                     'error': eventual_error 
                 })
     
-def submit_vote(request: HttpRequest, poll_id: int): 
+def single_option_recap(request: HttpRequest, poll_id: int): 
     """Submit the vote.
     Args:
         request (HttpRequest): Request object.
@@ -114,7 +114,7 @@ def submit_vote(request: HttpRequest, poll_id: int):
     # RE-direct to get request.
     return HttpResponseRedirect(reverse('apps.votes_results:single_option_recap', args=(poll_id, )))    
 
-def results(request: HttpRequest, poll_id: int):
+def single_option_results(request: HttpRequest, poll_id: int):
     """Render page with results.
     Args:
         request (HttpRequest): Request object.
