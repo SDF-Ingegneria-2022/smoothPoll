@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'apps.polls_management', 
+    'apps.votes_results', 
 
     'bootstrap5', 
     "django_htmx",

@@ -8,15 +8,6 @@ urlpatterns = [
     # simple polls
     path('', views.all_polls, name='all_polls'),
     path('<int:poll_id>/cancellazione/', views.poll_delete, name='poll_delete'),
-    path('<int:poll_id>', views.get_poll, name='get_poll'),
-    path('<int:poll_id>/conferma-voto/', views.submit_vote, name='submit_vote'),
-    path('<int:poll_id>/risultati/', views.results, name='results'),
-
-    # dummy majority judjment poll
-    path('dummy/maggioritario/', views.dummy_majority, name='dummy_majority'),
-    path('<int:poll_id>/voto-giudizio-maggioritario/', views.dummy_majority, name='majority_vote'),
-    path('<int:poll_id>/conferma-voto-maggioritario/', views.majority_vote_submit, name='majority_vote_submit'),
-    path('<int:poll_id>/risultati-maggioritario', views.majority_vote_results, name='majority_vote_results'),
 
 
     # create poll proces urls

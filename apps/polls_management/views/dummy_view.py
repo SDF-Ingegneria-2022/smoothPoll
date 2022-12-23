@@ -35,7 +35,7 @@ def get_poll(request: HttpRequest, poll_id: int):
         raise Http404(f"Poll with id {poll_id} not found.")
 
     if poll.poll_type == PollModel.PollType.MAJORITY_JUDJMENT:
-        return HttpResponseRedirect(reverse('apps.polls_management:majority_vote', args=(poll_id,)))
+        return HttpResponseRedirect(reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))
 
     # Get eventual error message and clean it
     eventual_error = request.session.get('vote-submit-error')
@@ -70,7 +70,7 @@ def submit_vote(request: HttpRequest, poll_id: int):
         if vote_id is None:
             request.session['vote-submit-error'] = "Errore! Non hai ancora caricato " \
                 + "nessun voto. Usa questo form per esprimere la tua preferenza."
-            return HttpResponseRedirect(reverse('apps.polls_management:get_poll', args=(poll_id,)))
+            return HttpResponseRedirect(reverse('apps.votes_results:single_option_vote', args=(poll_id,)))
 
         # retrieve vote 
         try:
@@ -78,7 +78,7 @@ def submit_vote(request: HttpRequest, poll_id: int):
         except VoteDoesNotExistException:
             request.session['vote-submit-error'] = "Errore! Non hai ancora caricato " \
                 + "nessun voto. Usa questo form per esprimere la tua preferenza."
-            return HttpResponseRedirect(reverse('apps.polls_management:get_poll', args=(poll_id,)))
+            return HttpResponseRedirect(reverse('apps.votes_results:single_option_vote', args=(poll_id,)))
         
         # show confirm page
         return render(request, 'polls_management/vote_confirm.html', {'vote': vote})
@@ -92,13 +92,13 @@ def submit_vote(request: HttpRequest, poll_id: int):
         request.session['vote-submit-error'] = "Errore! Il voto deve essere " \
             + "inviato tramite l'apposito form. Se continui a vedere questo " \
             + "messaggio contatta gli sviluppatori."
-        return HttpResponseRedirect(reverse('apps.polls_management:get_poll', args=(poll_id,)))
+        return HttpResponseRedirect(reverse('apps.votes_results:single_option_vote', args=(poll_id,)))
     
     # Check is passed any data.
     if 'vote' not in request.POST:
         request.session['vote-submit-error'] = "Errore! Per confermare il voto " \
             + "devi esprimere una preferenza."
-        return HttpResponseRedirect(reverse('apps.polls_management:get_poll', args=(poll_id,)))
+        return HttpResponseRedirect(reverse('apps.votes_results:single_option_vote', args=(poll_id,)))
 
     # Perform vote and handle missing vote or poll exception.
     try:
@@ -107,7 +107,7 @@ def submit_vote(request: HttpRequest, poll_id: int):
         request.session['vote-submit-error'] = "Errore! Il voto deve essere " \
             + "inviato tramite l'apposito form. Se continui a vedere questo " \
             + "messaggio contatta gli sviluppatori."
-        return HttpResponseRedirect(reverse('apps.polls_management:get_poll', args=(poll_id,)))
+        return HttpResponseRedirect(reverse('apps.votes_results:single_option_vote', args=(poll_id,)))
     except PollDoesNotExistException:
         raise Http404
 
@@ -119,7 +119,7 @@ def submit_vote(request: HttpRequest, poll_id: int):
     request.session['vote-submit-id'] = vote.id
 
     # RE-direct to get request.
-    return HttpResponseRedirect(reverse('apps.polls_management:submit_vote', args=(poll_id, )))    
+    return HttpResponseRedirect(reverse('apps.votes_results:single_option_recap', args=(poll_id, )))    
 
 def results(request: HttpRequest, poll_id: int):
     """Render page with results.
@@ -141,7 +141,7 @@ def results(request: HttpRequest, poll_id: int):
         raise Http404(f"Poll with id {poll_id} not found.")
 
     if poll.poll_type == PollModel.PollType.MAJORITY_JUDJMENT:
-        return HttpResponseRedirect(reverse('apps.polls_management:majority_vote_results', args=(poll_id,)))
+        return HttpResponseRedirect(reverse('apps.votes_results:majority_judgment_results', args=(poll_id,)))
 
     # regular results page 
     try:
