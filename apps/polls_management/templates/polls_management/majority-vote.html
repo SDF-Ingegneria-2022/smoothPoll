@@ -159,13 +159,21 @@
                         </div>
                     </div>
                 {% endfor %}
-
+            <div class="row">
+                <div class="col">
+                    <p>Voti totali: 54</p>
+                </div>
+                <div class="col">
+                    <p>5 giorni mancanti</p>
+                </div>
             {# Confirm button #}
-            <div class="container mt-5 mb-3">
-                <button type="submit" class="btn btn-primary">Conferma</button>
-                {% comment %} <a class="btn btn-primary" href="{% url 'apps.polls_management:majority_vote_results' poll_id=poll.id %}" role="button">Vedi risultati</a> {% endcomment %}
+                <div class="col ">
+                    <div class="container d-flex justify-content-end">
+                        <button type="submit" class="btn btn-primary">Conferma</button>
+                        {% comment %} <a class="btn btn-primary" href="{% url 'apps.polls_management:majority_vote_results' poll_id=poll.id %}" role="button">Vedi risultati</a> {% endcomment %}
+                    </div>
+                </div>
             </div>
-
 
             
         </form>

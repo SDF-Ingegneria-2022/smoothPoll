@@ -41,7 +41,6 @@
 
             {# Form Options #}
             <div class="container md-3">
-                <p class="fw-bold fs-4 ">Opzioni da valutare: </p>
                 {% for option in poll.options %}
                     <div class="form-check md-2">
                         <input class="form-check-input" type="radio" id="option-{{option.id}}"" name="vote" value="{{option.id}}"> 
