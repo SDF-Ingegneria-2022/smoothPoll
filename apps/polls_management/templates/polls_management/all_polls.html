@@ -13,7 +13,7 @@
         </div>
         {# New poll botton #}
         <div class="col-md-4"> 
-            <a href="{% url 'apps.polls_management:create_poll_form' %}"class="btn btn-success float-end w-45 mt-3 " role="button">Nuovo sondaggio</a>
+            <a href="{% url 'apps.polls_management:poll_create' %}"class="btn btn-success float-end w-45 mt-3 " role="button">Nuovo sondaggio</a>
         </div>
     </div>
     <hr class="mb-0"/>
@@ -90,7 +90,7 @@
                             {% comment %} Altre azioni {% endcomment %}
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end dropdown-menu-lg-start" aria-labelledby="dropdownMenuButton1">
-                            <li><a class="dropdown-item" href="{% url 'apps.polls_management:edit_poll_form' poll_id=poll.id %}">Modifica sondaggio</a></li>
+                            <li><a class="dropdown-item" href="{% url 'apps.polls_management:poll_edit' poll_id=poll.id %}">Modifica sondaggio</a></li>
                             <li><a class="dropdown-item " data-bs-toggle="modal" data-bs-target="#deletepoll-{{poll.id}}">Elimina sondaggio</a></li>
                         </ul>
                     </div>
