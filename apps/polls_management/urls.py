@@ -22,10 +22,4 @@ urlpatterns = [
     path('form/htmx/aggiungi-opzione', views.poll_form_htmx_create_option, name="poll_form_htmx_create_option"), 
     path('form/htmx/modifica-opzione/<int:option_rel_id>', views.poll_form_htmx_edit_option, name="poll_form_htmx_edit_option"), 
     path('form/htmx/elimina-opzione/<int:option_rel_id>', views.poll_form_htmx_delete_option, name="poll_form_htmx_delete_option"), 
-
-    # create poll proces urls (TODO: delete, it is deprecated)
-    path('crea-nuovo-deprecated/', views.create_poll_start, name="create-poll"), 
-    path('crea-nuovo-deprecated/step1', views.CreatePollStep1View.as_view(), name="create-poll-1"), 
-    path('crea-nuovo-deprecated/step2', views.CreatePollStep2View.as_view(), name="create-poll-2"), 
-    path('crea-nuovo-deprecated/conferma', views.create_poll_confirm, name="create-poll-confirm"),
 ]
