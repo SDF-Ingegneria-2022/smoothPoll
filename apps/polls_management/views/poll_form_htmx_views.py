@@ -97,7 +97,8 @@ def edit_poll_init_view(request: HttpRequest, poll_id: int):
     form = PollForm({
         "name": poll.name, 
         "question": poll.question, 
-        "poll_type": poll.poll_type
+        "poll_type": poll.poll_type, 
+        "open_datetime": poll.open_datetime,  
     }, instance=poll)
 
     # form.data["name"] = poll.name
