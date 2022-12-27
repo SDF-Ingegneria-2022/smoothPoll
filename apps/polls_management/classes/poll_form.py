@@ -1,7 +1,7 @@
 from typing import Any, Mapping, Optional
 from apps.polls_management.models.poll_model import PollModel, PollOptionModel
 
-from django.forms import ModelForm
+from django.forms import ModelForm, DateTimeInput
 from django.utils.translation import gettext as _
 
 
@@ -16,16 +16,18 @@ class PollForm(ModelForm):
 
     class Meta:
         model = PollModel
-        fields=['name','question', 'poll_type']
+        fields=['name','question', 'poll_type', 'open_datetime']
         labels={
             "name": _("Nome"), 
             "question": _("Quesito"), 
             "poll_type": _("Tipologia"), 
+            "open_datetime": _("Data Apertura"), 
         }
         help_texts={
             "name": _("Un nome sintetico che descrive il sondaggio"), 
             "question": _("La domanda che vuoi porre al tuo votante"), 
             "poll_type": _("Il metodo che verrà usato per esprimere il voto e calcolare i risultati"), 
+            "open_datetime": _("La data dalla quale sarà possibile votare il sondaggio"), 
         }
         error_messages = {
             'name': {
@@ -39,6 +41,16 @@ class PollForm(ModelForm):
             'poll_type': {
                 # 'required': _("Seleziona una tipologia di sondaggio"), 
             }
+        }
+        widgets = {
+            'open_datetime': DateTimeInput(
+                format=('%Y-%m-%d %H:%M'), 
+                attrs={
+                    'class':'form-control', 
+                    'placeholder':'Scegli la data di apertura del sondaggio', 
+                    'type':'datetime-local'
+                }
+            ),
         }
 
     def get_min_options(self) -> int: 
