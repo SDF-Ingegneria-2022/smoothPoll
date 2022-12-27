@@ -7,6 +7,10 @@ from apps.polls_management.exceptions.poll_not_valid_creation_exception import *
 from typing import Dict, List
 import pytest
 from assertpy import assert_that
+# from django.db import models
+import datetime
+import pytz
+
 
 
 class TestPollCreate:
@@ -74,6 +78,43 @@ class TestPollCreate:
             options_to_search.remove(o.value)
 
         assert_that(options_to_search.__len__()).is_equal_to(0)
+
+    @pytest.mark.django_db
+    def test_create_missing_open_date(self, make_forms): 
+        """Check what happen if I don't put open date"""
+
+        poll = PollCreateService.create_or_edit_poll(make_forms["form1"], self.options1)
+        assert_that(poll.open_datetime).is_none()
+
+    @pytest.mark.django_db
+    def test_create_w_open_date(self, make_forms): 
+        """Check what happen if I insert open date"""
+
+        form = make_forms["form1"]
+        form.data["open_datetime"] = "31/12/2022 23:59"
+
+        poll = PollCreateService.create_or_edit_poll(form, self.options1)
+
+        assert_that(poll.open_datetime).is_instance_of(datetime.datetime)
+
+        assert_that(poll.open_datetime.year).is_equal_to(2022)
+        assert_that(poll.open_datetime.month).is_equal_to(12)
+        assert_that(poll.open_datetime.day).is_equal_to(31)
+        assert_that(poll.open_datetime.hour).is_equal_to(23)
+        assert_that(poll.open_datetime.minute).is_equal_to(59)
+
+    @pytest.mark.django_db
+    def test_create_w_wrong_date(self, make_forms): 
+        """Check what happen if I insert a bad open date
+        (I expect an exception)"""
+
+        form = make_forms["form1"]
+        form.data["open_datetime"] = "31/13/2022 23:59"
+
+        assert_that(PollCreateService.create_or_edit_poll) \
+            .raises(PollMainDataNotValidException) \
+            .when_called_with(poll_form=form, options=self.options1)
+
 
     @pytest.mark.django_db
     def test_create_missing_name(self, make_forms):

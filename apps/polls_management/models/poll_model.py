@@ -26,13 +26,23 @@ class PollModel(models.Model):
         choices=PollType.choices, 
         default=PollType.SINGLE_OPTION)
 
+    open_datetime: models.DateTimeField = models.DateTimeField(
+        default=None, blank=True, null=True, 
+        verbose_name=_("Data Apertura")
+    )
+
     def __str__(self):
         return str({
             'id': self.id, 
             'name': self.name,
             'question': self.question,
             'poll_type': self.poll_type, 
+            'open_datetime': self.open_datetime, 
         })
+
+    def is_open(self) -> bool:
+        """Check if Poll is open"""
+        return True
 
     def options(self) -> List[PollOptionModel]:
         return list(PollOptionModel.objects.filter(poll_fk=self.id))

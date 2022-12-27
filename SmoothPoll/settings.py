@@ -60,6 +60,8 @@ MIDDLEWARE = [
     "django_htmx.middleware.HtmxMiddleware",
 ]
 
+SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
+
 ROOT_URLCONF = 'SmoothPoll.urls'
 
 TEMPLATES = [
