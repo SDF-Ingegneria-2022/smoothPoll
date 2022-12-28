@@ -81,7 +81,7 @@
                     <div class="modal-footer">
                         <div class="alert alert-info text-center" role="alert">
                             Attenzione: un sondaggio può essere eliminato soltanto se
-                            non è ancora stato registrato nessun voto 
+                            non è ancora stato aperto
                         </div>
                         <form action="{% url 'apps.polls_management:poll_delete' poll_id=poll.id %}" method="POST">
                             {% csrf_token %}
@@ -177,8 +177,8 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body bg-danger text-white">
-                <h5 class="modal-title"> Non è stato possibile cancellare il sondaggio in quanto sono già stati
-                registrati dei voti. </h5>
+                <h5 class="modal-title"> Non è stato possibile cancellare il sondaggio in quanto il sondaggio
+                    è stato già aperto. </h5>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Continua</button>
@@ -209,8 +209,8 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body bg-danger text-white">
-                <h5 class="modal-title"> Non è stato possibile modificare il sondaggio in quanto sono già stati
-                registrati dei voti. </h5>
+                <h5 class="modal-title"> Non è stato possibile modificare il sondaggio in quanto il sondaggio
+                    è stato già aperto. </h5>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Continua</button>
