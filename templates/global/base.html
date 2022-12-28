@@ -35,9 +35,9 @@
         .smooth-transitions {
             transition: all 0.2s ease-in;
         }
-
-        
     </style>
+
+    {% block pagestyle %}{% endblock pagestyle %}
 
     {% load static %}
     <script src="{% static 'js/jquery/jquery-3.6.2.min.js' %}"></script>

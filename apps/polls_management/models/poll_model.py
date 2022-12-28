@@ -5,6 +5,7 @@ from typing import List
 from django.db import models
 from django.db.models import CharField
 from django.utils.translation import gettext as _
+from django.utils import timezone
 
 
 class PollModel(models.Model): 
@@ -41,17 +42,31 @@ class PollModel(models.Model):
             'open_datetime': self.open_datetime, 
         })
 
-    def is_open(self) -> bool:
-        """Check if Poll is open"""
-        
-        # without timezone info
-        if self.open_datetime is not None:
-            return datetime.datetime.now().replace(tzinfo=None) > self.open_datetime.replace(tzinfo=None)
-        else:
-            return True
-
     def options(self) -> List[PollOptionModel]:
         return list(PollOptionModel.objects.filter(poll_fk=self.id))
+
+
+    def is_open(self) -> bool:
+        """Check if Poll is open"""
+
+        if self.open_datetime is None:
+            return False
+
+        return timezone.now() > self.open_datetime
+
+    def get_state_label(self) -> str: 
+        """Get a label rappresentative of the state"""
+        if self.is_open():
+            return "APERTO"
+        else:
+            return "NON APERTO"
+
+    def get_state_color(self) -> str: 
+        """Get a color associateto to the state"""
+        if self.is_open():
+            return "#198754" # green-success
+        else:
+            return "#6C757D" # muted grey
 
     def get_type_verbose_name(self) -> str:
 
