@@ -96,7 +96,7 @@ class MajorityJudgmentVoteView(View):
 
 
 
-def majority_judgment_recap(request: HttpRequest, poll_id: int):
+def majority_judgment_recap_view(request: HttpRequest, poll_id: int):
     """Render page with confirmation of majority vote validation."""
 
     # Retrieve session saved vote ID
@@ -116,7 +116,7 @@ def majority_judgment_recap(request: HttpRequest, poll_id: int):
 
     return render(request, 'votes_results/majority_judgment_recap.html', {'vote': vote})
 
-def majority_judgment_results(request: HttpRequest, poll_id: int):
+def majority_judgment_results_view(request: HttpRequest, poll_id: int):
     """Render page with majority poll results"""
 
     # poll should be Majority type
