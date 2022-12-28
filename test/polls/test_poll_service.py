@@ -9,12 +9,12 @@ from apps.polls_management.exceptions.paginator_page_size_exception import Pagin
 from apps.polls_management.exceptions.poll_is_open_exception import PollIsOpenException
 from apps.polls_management.models.poll_model import PollModel
 from apps.polls_management.models.poll_option_model import PollOptionModel
-from apps.polls_management.services.majority_vote_service import MajorityVoteService
+from apps.votes_results.services.majority_judgment_vote_service import MajorityJudjmentVoteService
 from apps.polls_management.services.poll_create_service import PollCreateService
 from apps.polls_management.services.poll_service import PollService
 from apps.polls_management.exceptions.poll_not_valid_creation_exception import PollNotValidCreationException
 from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
-from apps.polls_management.services.vote_service import VoteService
+from apps.votes_results.services.single_option_vote_service import SingleOptionVoteService
 
 
 class TestPollService:
@@ -193,7 +193,7 @@ class TestPollService:
         poll.save()
 
         PollService.delete_poll(id)
-        assert_that(VoteService.perform_vote) \
+        assert_that(SingleOptionVoteService.perform_vote) \
             .raises(PollDoesNotExistException) \
             .when_called_with(poll_id=id, poll_choice_id=option_id)
             
@@ -226,7 +226,7 @@ class TestPollService:
         # to update the open_datetime value and is_open method of the model
         majority_poll.save()
 
-        MajorityVoteService.perform_vote(majority_vote_choices, majority_poll.id)
+        MajorityJudjmentVoteService.perform_vote(majority_vote_choices, majority_poll.id)
         
         assert_that(PollService.delete_poll) \
             .raises(PollIsOpenException) \
