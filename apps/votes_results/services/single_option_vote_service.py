@@ -7,7 +7,7 @@ from apps.polls_management.exceptions.vote_does_not_exixt_exception import VoteD
 from django.core.exceptions import ObjectDoesNotExist
 from apps.polls_management.classes.poll_result import PollResult
 
-class VoteService: 
+class SingleOptionVoteService: 
     """
     Handle vote procedures like:
 

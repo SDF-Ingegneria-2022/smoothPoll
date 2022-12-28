@@ -11,12 +11,12 @@ from apps.polls_management.exceptions.poll_option_unvalid_exception import PollO
 from apps.polls_management.models.majority_vote_model import MajorityVoteModel
 from apps.polls_management.models.poll_model import PollModel
 from apps.polls_management.models.poll_option_model import PollOptionModel
-from apps.polls_management.services.majority_vote_service import MajorityVoteService
+from apps.votes_results.services.majority_judgment_vote_service import MajorityJudjmentVoteService
 from apps.polls_management.services.poll_create_service import PollCreateService
 from apps.polls_management.services.poll_service import PollService
 from apps.polls_management.exceptions.poll_not_valid_creation_exception import PollNotValidCreationException
 from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
-from apps.polls_management.services.vote_service import VoteService
+from apps.votes_results.services.single_option_vote_service import SingleOptionVoteService
 
 
 class TestPollService:
@@ -155,7 +155,7 @@ class TestPollService:
     def test_delete_already_voted_poll(self):
         """Test delete poll that has been already voted"""
         poll = PollService.create(self.name, self.question, self.options)
-        VoteService.perform_vote(poll_id=poll.id, poll_choice_id=poll.options()[0].id)
+        SingleOptionVoteService.perform_vote(poll_id=poll.id, poll_choice_id=poll.options()[0].id)
         id = poll.id
         assert_that(PollService.delete_poll) \
             .raises(PollHasBeenVotedException) \
@@ -169,7 +169,7 @@ class TestPollService:
         option_id = poll.options()[0].id
         id = poll.id
         PollService.delete_poll(id)
-        assert_that(VoteService.perform_vote) \
+        assert_that(SingleOptionVoteService.perform_vote) \
             .raises(PollDoesNotExistException) \
             .when_called_with(poll_id=id, poll_choice_id=option_id)
             
@@ -188,7 +188,7 @@ class TestPollService:
         majority_poll_options:  List[PollOptionModel] = majority_poll.options()
         majority_vote_choices: List = [{'poll_choice_id': option.id, 'rating': 1 } for option in majority_poll_options]
         
-        MajorityVoteService.perform_vote(majority_vote_choices, majority_poll.id)
+        MajorityJudjmentVoteService.perform_vote(majority_vote_choices, majority_poll.id)
         
         assert_that(PollService.delete_poll) \
             .raises(PollHasBeenVotedException) \

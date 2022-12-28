@@ -9,8 +9,8 @@ from apps.polls_management.exceptions.poll_not_valid_creation_exception import P
 from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
 from apps.polls_management.exceptions.poll_not_yet_voted_exception import PollNotYetVodedException
 from apps.polls_management.models.poll_option_model import PollOptionModel
-from apps.polls_management.services.majority_vote_service import MajorityVoteService
-from apps.polls_management.services.vote_service import VoteService
+from apps.votes_results.services.majority_judgment_vote_service import MajorityJudjmentVoteService
+from apps.votes_results.services.single_option_vote_service import SingleOptionVoteService
 from apps.polls_management.models.poll_model import PollModel
 
 class PollService:
@@ -110,7 +110,7 @@ class PollService:
         if poll.poll_type == poll_type.MAJORITY_JUDJMENT:
             # Check if the majotiry judment poll has already received at least one vote
             try:
-                MajorityVoteService.calculate_result(poll.id)
+                MajorityJudjmentVoteService.calculate_result(poll.id)
             except PollNotYetVodedException:
                 pass
             else:
@@ -118,7 +118,7 @@ class PollService:
             
         else:
             # Check if the single option poll has already received at least one vote
-            poll_results: PollResult = VoteService.calculate_result(poll.id)
+            poll_results: PollResult = SingleOptionVoteService.calculate_result(poll.id)
             for option_result in poll_results.get_sorted_options():
                 if option_result.n_votes != 0:
                     raise PollHasBeenVotedException(f"Error: poll with id={id} can't be deleted: it has already been voted")

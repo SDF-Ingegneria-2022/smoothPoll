@@ -5,13 +5,14 @@ from apps.polls_management.classes.majority_poll_result_data import MajorityPoll
 from apps.polls_management.exceptions.majority_number_of_ratings_not_valid import MajorityNumberOfRatingsNotValid
 from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
 from apps.polls_management.exceptions.poll_option_rating_unvalid_exception import PollOptionRatingUnvalidException
+from apps.polls_management.exceptions.vote_does_not_exixt_exception import VoteDoesNotExistException
 from apps.polls_management.models.majority_judgment_model import MajorityJudgmentModel
 from apps.polls_management.models.majority_vote_model import MajorityVoteModel
 from apps.polls_management.models.poll_model import PollModel
 from apps.polls_management.models.poll_option_model import PollOptionModel
 
 
-class MajorityVoteService:
+class MajorityJudjmentVoteService:
     """Class that handles vote procedures for the majority vote case"""
 
     @staticmethod
@@ -101,3 +102,19 @@ class MajorityVoteService:
         majority_vote_result_unsorted.sort(reverse=True)
 
         return majority_vote_result_unsorted
+
+    @staticmethod
+    def get_vote_by_id(vote_id: str) -> MajorityVoteModel:
+        """
+        Retrieve a vote by its ID 
+        (temporary method! In future we will wanna use <poll_id, user_id>)
+        Args:
+            vote_id: id of the vote object you want to retrieve
+        Raises:
+            VoteDoesNotExistException: if vote does not exists
+        """
+
+        try:
+            return MajorityVoteModel.objects.get(id=vote_id)
+        except ObjectDoesNotExist:
+            raise VoteDoesNotExistException()
