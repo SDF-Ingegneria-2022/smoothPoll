@@ -11,10 +11,10 @@ urlpatterns = [
     path('<int:poll_id>/risultati/scelta-singola/', views.single_option_results_view, name='single_option_results'),
 
     # vote-recap-results process for majority judgment
-    path('<int:poll_id>/vota/giudizio-maggioritario/', views.majority_judgment_vote, name='majority_judgment_vote'),
+    path('<int:poll_id>/vota/giudizio-maggioritario/', views.MajorityJudgmentVoteView.as_view(), name='majority_judgment_vote'),
     path('<int:poll_id>/riepilogo-voto/giudizio-maggioritario/', views.majority_judgment_recap, name='majority_judgment_recap'),
     path('<int:poll_id>/risultati/giudizio-maggioritario/', views.majority_judgment_results, name='majority_judgment_results'),
 
     # dummy majority judjment poll
-    path('prova-voto-maggioritario/', views.majority_judgment_vote, name='dummy_majority'),
+    path('prova-voto-maggioritario/', views.MajorityJudgmentVoteView.as_view(), name='dummy_majority'),
 ]
