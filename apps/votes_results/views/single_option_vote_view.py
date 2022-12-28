@@ -9,7 +9,7 @@ from apps.polls_management.exceptions.vote_does_not_exixt_exception import VoteD
 from apps.polls_management.models.poll_model import PollModel
 from apps.polls_management.services.poll_service import PollService
 from apps.polls_management.exceptions.poll_option_unvalid_exception import PollOptionUnvalidException
-from apps.polls_management.services.vote_service import VoteService
+from apps.votes_results.services.vote_service import VoteService
 
 def single_option_vote(request: HttpRequest, poll_id: int): 
     """

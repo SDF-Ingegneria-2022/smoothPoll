@@ -9,7 +9,7 @@ from apps.polls_management.exceptions.poll_not_yet_voted_exception import PollNo
 from apps.polls_management.exceptions.poll_option_rating_unvalid_exception import PollOptionRatingUnvalidException
 from apps.polls_management.models.majority_vote_model import MajorityVoteModel
 from apps.polls_management.models.poll_model import PollModel
-from apps.polls_management.services.majority_vote_service import MajorityVoteService
+from apps.votes_results.services.majority_vote_service import MajorityVoteService
 from apps.polls_management.services.poll_service import PollService
 
 

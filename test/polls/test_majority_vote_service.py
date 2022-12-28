@@ -9,7 +9,7 @@ from apps.polls_management.models.majority_vote_model import MajorityVoteModel
 from apps.polls_management.models.poll_model import PollModel
 from apps.polls_management.models.poll_option_model import PollOptionModel
 from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
-from apps.polls_management.services.majority_vote_service import MajorityVoteService
+from apps.votes_results.services.majority_vote_service import MajorityVoteService
 
 
 @pytest.fixture()

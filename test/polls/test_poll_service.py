@@ -11,12 +11,12 @@ from apps.polls_management.exceptions.poll_option_unvalid_exception import PollO
 from apps.polls_management.models.majority_vote_model import MajorityVoteModel
 from apps.polls_management.models.poll_model import PollModel
 from apps.polls_management.models.poll_option_model import PollOptionModel
-from apps.polls_management.services.majority_vote_service import MajorityVoteService
+from apps.votes_results.services.majority_vote_service import MajorityVoteService
 from apps.polls_management.services.poll_create_service import PollCreateService
 from apps.polls_management.services.poll_service import PollService
 from apps.polls_management.exceptions.poll_not_valid_creation_exception import PollNotValidCreationException
 from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
-from apps.polls_management.services.vote_service import VoteService
+from apps.votes_results.services.vote_service import VoteService
 
 
 class TestPollService:
