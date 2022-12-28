@@ -1,3 +1,4 @@
+import datetime
 from typing import List, Tuple
 import pytest
 from assertpy import assert_that
@@ -135,8 +136,18 @@ class TestPollService:
         """Test delete poll, basic verification that it works"""
         poll = PollService.create(self.name, self.question, self.options)
         id = poll.id
+
+        open_date = datetime.datetime(year=2022, month=12, day=31, hour=12, minute=12)
+        poll.open_datetime = open_date
+
+        assert_that(poll.open_datetime).is_not_none()
+
+        assert_that(poll.is_open()).is_false()
+
         assert_that(poll).is_instance_of(PollModel)
+
         PollService.delete_poll(poll.id)
+
         assert_that(PollService.delete_poll)\
             .raises(PollDoesNotExistException)\
             .when_called_with(id=id)

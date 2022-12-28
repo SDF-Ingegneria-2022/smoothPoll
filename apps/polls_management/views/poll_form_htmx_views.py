@@ -76,23 +76,10 @@ def edit_poll_init_view(request: HttpRequest, poll_id: int):
     except PollDoesNotExistException:
         raise Http404(f"Poll with id {poll_id} not found.")
 
-    # Add control if poll is already voted
-    if poll.poll_type == PollModel.PollType.SINGLE_OPTION:
-
-        votes: int = VoteModel.objects.filter(poll_option__in=PollOptionModel.objects.filter(poll_fk=poll)).count()
-
-        if votes > 0:
-            request.session['cannot_edit'] = True
-            return HttpResponseRedirect("%s?page=last&per_page=10" % reverse('apps.polls_management:all_polls'))
-
-    elif poll.poll_type == PollModel.PollType.MAJORITY_JUDJMENT:
-
-        majority_votes: int = MajorityVoteModel.objects.filter(poll=poll.id).count()
-
-        if majority_votes > 0:
-            request.session['cannot_edit'] = True
-            return HttpResponseRedirect("%s?page=last&per_page=10" % reverse('apps.polls_management:all_polls'))
-
+    # Add control if poll is open
+    if poll.is_open():
+        request.session['cannot_edit'] = True
+        return HttpResponseRedirect("%s?page=last&per_page=10" % reverse('apps.polls_management:all_polls'))
 
     form = PollForm({
         "name": poll.name, 

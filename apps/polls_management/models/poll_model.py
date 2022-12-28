@@ -1,3 +1,4 @@
+import datetime
 from apps.polls_management.models.poll_option_model import PollOptionModel
 
 from typing import List
@@ -42,7 +43,12 @@ class PollModel(models.Model):
 
     def is_open(self) -> bool:
         """Check if Poll is open"""
-        return True
+        
+        # without timezone info
+        if self.open_datetime is not None:
+            return datetime.datetime.now().replace(tzinfo=None) > self.open_datetime.replace(tzinfo=None)
+        else:
+            return True
 
     def options(self) -> List[PollOptionModel]:
         return list(PollOptionModel.objects.filter(poll_fk=self.id))
