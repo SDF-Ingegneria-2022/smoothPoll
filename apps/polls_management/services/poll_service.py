@@ -9,7 +9,7 @@ from apps.polls_management.exceptions.poll_not_valid_creation_exception import P
 from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
 from apps.polls_management.exceptions.poll_not_yet_voted_exception import PollNotYetVodedException
 from apps.polls_management.models.poll_option_model import PollOptionModel
-from apps.votes_results.services.majority_judjment_vote_service import MajorityJudjmentVoteService
+from apps.votes_results.services.majority_judgment_vote_service import MajorityJudjmentVoteService
 from apps.votes_results.services.single_option_vote_service import SingleOptionVoteService
 from apps.polls_management.models.poll_model import PollModel
 

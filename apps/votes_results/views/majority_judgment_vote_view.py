@@ -5,7 +5,7 @@ from apps.polls_management.exceptions.poll_option_rating_unvalid_exception impor
 from apps.polls_management.exceptions.vote_does_not_exixt_exception import VoteDoesNotExistException
 from apps.polls_management.models.majority_vote_model import MajorityVoteModel
 from apps.polls_management.models.poll_model import PollModel
-from apps.votes_results.services.majority_judjment_vote_service import MajorityJudjmentVoteService
+from apps.votes_results.services.majority_judgment_vote_service import MajorityJudjmentVoteService
 from apps.polls_management.services.poll_service import PollService
 
 from typing import List
