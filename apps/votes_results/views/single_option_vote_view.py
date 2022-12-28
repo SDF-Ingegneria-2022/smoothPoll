@@ -9,7 +9,7 @@ from apps.polls_management.exceptions.vote_does_not_exixt_exception import VoteD
 from apps.polls_management.models.poll_model import PollModel
 from apps.polls_management.services.poll_service import PollService
 from apps.polls_management.exceptions.poll_option_unvalid_exception import PollOptionUnvalidException
-from apps.votes_results.services.vote_service import VoteService
+from apps.votes_results.services.single_option_vote_service import SingleOptionVoteService
 
 def single_option_vote(request: HttpRequest, poll_id: int): 
     """
@@ -67,7 +67,7 @@ def single_option_recap(request: HttpRequest, poll_id: int):
 
         # retrieve vote 
         try:
-            vote = VoteService.get_vote_by_id(vote_id)
+            vote = SingleOptionVoteService.get_vote_by_id(vote_id)
         except VoteDoesNotExistException:
             request.session['vote-submit-error'] = "Errore! Non hai ancora caricato " \
                 + "nessun voto. Usa questo form per esprimere la tua preferenza."
@@ -95,7 +95,7 @@ def single_option_recap(request: HttpRequest, poll_id: int):
 
     # Perform vote and handle missing vote or poll exception.
     try:
-        vote = VoteService.perform_vote(poll_id, request.POST["vote"])
+        vote = SingleOptionVoteService.perform_vote(poll_id, request.POST["vote"])
     except PollOptionUnvalidException:
         request.session['vote-submit-error'] = "Errore! Il voto deve essere " \
             + "inviato tramite l'apposito form. Se continui a vedere questo " \
@@ -138,7 +138,7 @@ def single_option_results(request: HttpRequest, poll_id: int):
 
     # regular results page 
     try:
-        poll_results: PollResult = VoteService.calculate_result(poll_id)
+        poll_results: PollResult = SingleOptionVoteService.calculate_result(poll_id)
     except PollDoesNotExistException:
         raise Http404
     except Exception:

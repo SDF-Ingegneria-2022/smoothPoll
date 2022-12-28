@@ -9,7 +9,7 @@ from apps.polls_management.exceptions.poll_not_yet_voted_exception import PollNo
 from apps.polls_management.exceptions.poll_option_rating_unvalid_exception import PollOptionRatingUnvalidException
 from apps.polls_management.models.majority_vote_model import MajorityVoteModel
 from apps.polls_management.models.poll_model import PollModel
-from apps.votes_results.services.majority_vote_service import MajorityVoteService
+from apps.votes_results.services.majority_judjment_vote_service import MajorityJudjmentVoteService
 from apps.polls_management.services.poll_service import PollService
 
 
@@ -76,7 +76,7 @@ def majority_judgment_recap(request: HttpRequest, poll_id: int):
 
 
     try:
-        vote: MajorityVoteModel = MajorityVoteService.perform_vote(ratings, poll_id=str(poll_id))
+        vote: MajorityVoteModel = MajorityJudjmentVoteService.perform_vote(ratings, poll_id=str(poll_id))
     except PollOptionRatingUnvalidException:
        
         request.session['majvote-submit-error'] = session_object
@@ -98,7 +98,7 @@ def majority_judgment_results(request: HttpRequest, poll_id: int):
         raise Http404()
     
     try:
-        poll_results: List[MajorityPollResultData] = MajorityVoteService.calculate_result(poll_id=str(poll_id))
+        poll_results: List[MajorityPollResultData] = MajorityJudjmentVoteService.calculate_result(poll_id=str(poll_id))
     except PollDoesNotExistException:
         raise Http404
     except PollNotYetVodedException:

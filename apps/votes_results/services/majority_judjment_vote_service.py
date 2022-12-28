@@ -11,7 +11,7 @@ from apps.polls_management.models.poll_model import PollModel
 from apps.polls_management.models.poll_option_model import PollOptionModel
 
 
-class MajorityVoteService:
+class MajorityJudjmentVoteService:
     """Class that handles vote procedures for the majority vote case"""
 
     @staticmethod

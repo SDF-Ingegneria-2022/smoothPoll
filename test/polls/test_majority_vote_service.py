@@ -9,7 +9,7 @@ from apps.polls_management.models.majority_vote_model import MajorityVoteModel
 from apps.polls_management.models.poll_model import PollModel
 from apps.polls_management.models.poll_option_model import PollOptionModel
 from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
-from apps.votes_results.services.majority_vote_service import MajorityVoteService
+from apps.votes_results.services.majority_judjment_vote_service import MajorityJudjmentVoteService
 
 
 @pytest.fixture()
@@ -58,7 +58,7 @@ class TestMajorityVoteService:
                             {'poll_choice_id': poll.options()[1].id, 'rating': 2 },
                             {'poll_choice_id': poll.options()[2].id, 'rating': 3 }]
 
-        MajorityVoteService.perform_vote(votes, poll_id=poll.id)
+        MajorityJudjmentVoteService.perform_vote(votes, poll_id=poll.id)
 
     @pytest.mark.django_db
     def test_majority_vote_perform_works_correctly(self, test_polls):
@@ -70,7 +70,7 @@ class TestMajorityVoteService:
                             {'poll_choice_id': poll.options()[1].id, 'rating': 2 },
                             {'poll_choice_id': poll.options()[2].id, 'rating': 3 }]
 
-        performed_vote: MajorityVoteModel = MajorityVoteService.perform_vote(votes, poll_id=poll.id)
+        performed_vote: MajorityVoteModel = MajorityJudjmentVoteService.perform_vote(votes, poll_id=poll.id)
 
         assert_that(performed_vote).is_instance_of(MajorityVoteModel)
 
@@ -96,7 +96,7 @@ class TestMajorityVoteService:
         id = voted_poll.id
         voted_poll.delete()
 
-        assert_that(MajorityVoteService.perform_vote) \
+        assert_that(MajorityJudjmentVoteService.perform_vote) \
             .raises(PollDoesNotExistException) \
             .when_called_with(votes, poll_id=id)
 
@@ -112,7 +112,7 @@ class TestMajorityVoteService:
         votes: List[dict] = [{'poll_choice_id': poll.options()[0].id, 'rating': 2 },
                             {'poll_choice_id': poll.options()[1].id, 'rating': 2 }]
 
-        assert_that(MajorityVoteService.perform_vote) \
+        assert_that(MajorityJudjmentVoteService.perform_vote) \
             .raises(PollOptionRatingUnvalidException) \
             .when_called_with(votes, poll_id=poll.id)
 
@@ -129,7 +129,7 @@ class TestMajorityVoteService:
                             {'poll_choice_id': poll.options()[1].id, 'rating': 7 },
                             {'poll_choice_id': poll.options()[2].id, 'rating': 3 }]
 
-        assert_that(MajorityVoteService.perform_vote) \
+        assert_that(MajorityJudjmentVoteService.perform_vote) \
             .raises(MajorityNumberOfRatingsNotValid) \
             .when_called_with(votes, poll_id=poll.id)
 
@@ -146,9 +146,9 @@ class TestMajorityVoteService:
                             {'poll_choice_id': poll.options()[1].id, 'rating': 2 },
                             {'poll_choice_id': poll.options()[2].id, 'rating': 3 }]
 
-        performed_vote: MajorityVoteModel = MajorityVoteService.perform_vote(votes, poll_id=poll.id)
+        performed_vote: MajorityVoteModel = MajorityJudjmentVoteService.perform_vote(votes, poll_id=poll.id)
 
-        MajorityVoteService.calculate_result(poll_id=poll.id)
+        MajorityJudjmentVoteService.calculate_result(poll_id=poll.id)
 
     @pytest.mark.django_db
     def test_majority_vote_result_notexist_poll(self, test_polls):
@@ -160,7 +160,7 @@ class TestMajorityVoteService:
         id = voted_poll.id
         voted_poll.delete()
 
-        assert_that(MajorityVoteService.calculate_result) \
+        assert_that(MajorityJudjmentVoteService.calculate_result) \
             .raises(PollDoesNotExistException) \
             .when_called_with(poll_id=id)
 
@@ -171,22 +171,22 @@ class TestMajorityVoteService:
         """
         poll: PollModel = test_polls['voted_poll']
 
-        MajorityVoteService.perform_vote(
+        MajorityJudjmentVoteService.perform_vote(
             [{'poll_choice_id': poll.options()[0].id, 'rating': 5 },
             {'poll_choice_id': poll.options()[1].id, 'rating': 2 },
             {'poll_choice_id': poll.options()[2].id, 'rating': 2 }], poll_id=poll.id)
 
-        MajorityVoteService.perform_vote(
+        MajorityJudjmentVoteService.perform_vote(
             [{'poll_choice_id': poll.options()[0].id, 'rating': 3 },
             {'poll_choice_id': poll.options()[1].id, 'rating': 1 },
             {'poll_choice_id': poll.options()[2].id, 'rating': 5 }], poll_id=poll.id)
 
-        MajorityVoteService.perform_vote(
+        MajorityJudjmentVoteService.perform_vote(
             [{'poll_choice_id': poll.options()[0].id, 'rating': 1 },
             {'poll_choice_id': poll.options()[1].id, 'rating': 2 },
             {'poll_choice_id': poll.options()[2].id, 'rating': 2 }], poll_id=poll.id)
 
-        x: List[MajorityPollResultData] = MajorityVoteService.calculate_result(poll_id=poll.id)
+        x: List[MajorityPollResultData] = MajorityJudjmentVoteService.calculate_result(poll_id=poll.id)
         
         # verify options order
         assert_that(x[0].option).is_equal_to(poll.options()[0])
@@ -273,27 +273,27 @@ class TestMajorityVoteService:
         """
         poll: PollModel = test_polls['voted_poll']
 
-        MajorityVoteService.perform_vote(
+        MajorityJudjmentVoteService.perform_vote(
             [{'poll_choice_id': poll.options()[0].id, 'rating': 1 },
              {'poll_choice_id': poll.options()[1].id, 'rating': 5 },
              {'poll_choice_id': poll.options()[2].id, 'rating': 5 }], poll_id=poll.id)
 
-        MajorityVoteService.perform_vote(
+        MajorityJudjmentVoteService.perform_vote(
             [{'poll_choice_id': poll.options()[0].id, 'rating': 2 },
              {'poll_choice_id': poll.options()[1].id, 'rating': 5 },
              {'poll_choice_id': poll.options()[2].id, 'rating': 5 }], poll_id=poll.id)
 
-        MajorityVoteService.perform_vote(
+        MajorityJudjmentVoteService.perform_vote(
             [{'poll_choice_id': poll.options()[0].id, 'rating': 1 },
              {'poll_choice_id': poll.options()[1].id, 'rating': 4 },
              {'poll_choice_id': poll.options()[2].id, 'rating': 5 }], poll_id=poll.id)
 
-        MajorityVoteService.perform_vote(
+        MajorityJudjmentVoteService.perform_vote(
             [{'poll_choice_id': poll.options()[0].id, 'rating': 1 },
              {'poll_choice_id': poll.options()[1].id, 'rating': 4 },
              {'poll_choice_id': poll.options()[2].id, 'rating': 5 }], poll_id=poll.id)
 
-        x: List[MajorityPollResultData] = MajorityVoteService.calculate_result(poll_id=poll.id)
+        x: List[MajorityPollResultData] = MajorityJudjmentVoteService.calculate_result(poll_id=poll.id)
 
         # verify options order
         assert_that(x[0].option).is_equal_to(poll.options()[2])
@@ -376,31 +376,31 @@ class TestMajorityVoteService:
         """
         poll: PollModel = test_polls['control_poll']
 
-        MajorityVoteService.perform_vote(
+        MajorityJudjmentVoteService.perform_vote(
             [{'poll_choice_id': poll.options()[0].id, 'rating': 1 },
             {'poll_choice_id': poll.options()[1].id, 'rating': 2 },
             {'poll_choice_id': poll.options()[2].id, 'rating': 4 },
             {'poll_choice_id': poll.options()[3].id, 'rating': 4 }], poll_id=poll.id)
 
-        MajorityVoteService.perform_vote(
+        MajorityJudjmentVoteService.perform_vote(
             [{'poll_choice_id': poll.options()[0].id, 'rating': 2 },
             {'poll_choice_id': poll.options()[1].id, 'rating': 2 },
             {'poll_choice_id': poll.options()[2].id, 'rating': 5 },
             {'poll_choice_id': poll.options()[3].id, 'rating': 2 }], poll_id=poll.id)
 
-        MajorityVoteService.perform_vote(
+        MajorityJudjmentVoteService.perform_vote(
             [{'poll_choice_id': poll.options()[0].id, 'rating': 1 },
             {'poll_choice_id': poll.options()[1].id, 'rating': 1 },
             {'poll_choice_id': poll.options()[2].id, 'rating': 1 },
             {'poll_choice_id': poll.options()[3].id, 'rating': 2 }], poll_id=poll.id)
 
-        MajorityVoteService.perform_vote(
+        MajorityJudjmentVoteService.perform_vote(
             [{'poll_choice_id': poll.options()[0].id, 'rating': 3 },
             {'poll_choice_id': poll.options()[1].id, 'rating': 2 },
             {'poll_choice_id': poll.options()[2].id, 'rating': 2 },
             {'poll_choice_id': poll.options()[3].id, 'rating': 2 }], poll_id=poll.id)
 
-        x: List[MajorityPollResultData] = MajorityVoteService.calculate_result(poll_id=poll.id)
+        x: List[MajorityPollResultData] = MajorityJudjmentVoteService.calculate_result(poll_id=poll.id)
 
                 # verify options order
         assert_that(x[0].option).is_equal_to(poll.options()[2])
