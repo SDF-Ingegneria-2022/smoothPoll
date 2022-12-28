@@ -130,7 +130,7 @@ class TestPollService:
     # ====== Delete poll ======
     @pytest.mark.django_db
     def test_delete_poll(self):
-        """Test delete poll, basic verification that it works"""
+        """Test delete poll, basic verification that it works (not open poll)"""
         poll = PollService.create(self.name, self.question, self.options)
         id = poll.id
 
@@ -164,7 +164,7 @@ class TestPollService:
     
     @pytest.mark.django_db
     def test_delete_is_open(self):
-        """Test delete poll that has been already voted"""
+        """Test delete poll that is already open"""
         poll = PollService.create(self.name, self.question, self.options)
         id = poll.id
 
@@ -200,7 +200,7 @@ class TestPollService:
     # =================== END legacy creation mode ===================
     @pytest.mark.django_db      
     def test_delete_majority_poll(self, create_majority_poll):
-        """Test delete poll with majority"""
+        """Test delete poll with majority (not open)"""
         poll: PollModel = create_majority_poll
 
         open_date = datetime.datetime(year=2025, month=12, day=30, hour=12, minute=12, tzinfo=datetime.timezone.utc)
@@ -214,6 +214,8 @@ class TestPollService:
     
     @pytest.mark.django_db
     def test_delete_is_open_majority_poll(self, create_majority_poll):
+        """Test if an open majority poll is called to be deleted"""
+
         majority_poll: PollModel = create_majority_poll
         majority_poll_options:  List[PollOptionModel] = majority_poll.options()
         majority_vote_choices: List = [{'poll_choice_id': option.id, 'rating': 1 } for option in majority_poll_options]
