@@ -29,6 +29,29 @@
                 <h4>{{ poll.get_type_verbose_name }}</h4>
             </div>
 
+            {% if poll.is_open %}
+            <div class="container mt-5 mb-5">
+                <p class="fw-bold fs-3 mb-0">Stato del sondaggio: </p>
+                <h4>APERTO</h4>
+            </div>
+            {% else %}
+            <div class="container mt-5 mb-5">
+                <p class="fw-bold fs-3 mb-0">Stato del sondaggio: </p>
+                <h4>NON APERTO</h4>
+            </div>
+            {% endif %}
+
+                {% if poll.is_open %}
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <a href="{% url 'apps.votes_results:single_option_vote' poll_id=poll.id %}" 
+                        class="btn btn-primary me-md-2 mt-2" 
+                        role="button">Vota</a>
+                    <a href="{% url 'apps.votes_results:single_option_results' poll_id=poll.id %}" 
+                        class="btn btn-secondary me-md-2 mt-2"  
+                        role="button">Vedi risultati</a>
+                </div>
+                {% endif %}
+
             {% comment %} Poll open date if present {% endcomment %}
             {% if poll.open_datetime %}
             <div class="container mt-5 mb-5">
@@ -39,47 +62,38 @@
 
             {# Return button #}
             <div class="container mt-5">
-                <div class="d-grid gap-2 d-md-block">
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                     <a name="" id="" role="button"
                         class="btn btn-primary m-2" 
                         href="{% url 'apps.polls_management:all_polls' %}?page=1&per_page=10" >
                         Ritorna alla lista di tutti i sondaggi
                     </a>
-                </div>
-            </div>
 
-            {% comment %} Edit and delete buttons {% endcomment %}
+            {% comment %} Edit, delete and open poll buttons {% endcomment %}
 
-            <div class="container mt-5">
-                <div class="d-grid gap-2 d-md-block">
                     <a name="" id="" role="button"
-                        class="btn btn-primary m-2" 
+                        class="btn btn-warning m-2" 
                         href="{% url 'apps.polls_management:poll_edit' poll_id=poll.id %}" >
                         Modifica sondaggio
                     </a>
-                </div>
-            </div>
 
-            <div class="container mt-5">
-                <div class="d-grid gap-2 d-md-block">
                     <form action="{% url 'apps.polls_management:poll_delete' poll_id=poll.id %}" method="POST">
                         {% csrf_token %}
-                        <button type="submit" class="btn btn-primary">Elimina sondaggio</button>
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <button type="submit" class="btn btn-danger m-2">Elimina sondaggio</button>
+                        </div>
                     </form>
-                </div>
-            </div>
 
             {% comment %} Open poll button {% endcomment %}
 
-            <div class="container mt-5">
-                <div class="d-grid gap-2 d-md-block">
                     <a name="" id="" role="button"
-                        class="btn btn-primary m-2" 
+                        class="btn btn-info m-2" 
                         href="" >
                         Apri sondaggio
                     </a>
                 </div>
             </div>
+        </div>
 
 </div>
 {% endblock content %}
