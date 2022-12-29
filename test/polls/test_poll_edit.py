@@ -1,4 +1,5 @@
 from apps.polls_management.classes.poll_form import PollForm
+from apps.polls_management.exceptions.poll_is_open_exception import PollIsOpenException
 from apps.polls_management.models.poll_model import PollModel
 from apps.polls_management.models.poll_option_model import PollOptionModel
 from apps.polls_management.services.poll_create_service import PollCreateService
@@ -280,55 +281,13 @@ class TestPollEdit:
 
         assert_that(options_to_search.__len__()).is_equal_to(0)
 
-    # @pytest.mark.django_db
-    # def test_edit_poll_ok6(self, make_forms):
-    #     """Check if object is edited, (from single option to majority) aside with all correct options"""
+    @pytest.mark.django_db
+    def test_edit_poll_w_date_open(self, make_forms):
+        """Check that if object is edited when poll is open"""
     
-    #     poll = PollCreateService.create_or_edit_poll(make_forms["form1"], self.options1)
+        form = make_forms["form1"]
+        form.data["open_datetime"] = "11/12/2022 23:59"
 
-    #     # check data 
-    #     assert_that(poll).is_instance_of(PollModel)
-    #     assert_that(poll.name).is_equal_to(self.name1)
-    #     assert_that(poll.question).is_equal_to(self.question1)
-
-    #     # check it has been saved correctly
-    #     assert_that(PollModel.objects.get(id=poll.id)).is_equal_to(poll)
-
-    #     # check each options have been saved correctly
-    #     assert_that(PollOptionModel.objects.filter(poll_fk=poll).count()).is_equal_to(self.options1.__len__())
-    #     assert_that(poll.options().__len__()).is_equal_to(self.options1.__len__())
-
-    #     # assert that all and only the input passed options are returned
-    #     options_to_search = self.options1.copy()
-    #     for o in poll.options():
-    #         assert_that(o.value in options_to_search).is_true()
-    #         options_to_search.remove(o.value)
-
-    #     assert_that(options_to_search.__len__()).is_equal_to(0)
-
-    #     # now check that edit works as expected
-    #     # in this case we edit the poll deleting two options
-    #     poll2 = PollCreateService.create_or_edit_poll(make_forms["form2"], self.options4)
-
-    #     # check data 
-    #     assert_that(poll2).is_instance_of(PollModel)
-    #     assert_that(poll2.name).is_equal_to(self.name2)
-    #     assert_that(poll2.question).is_equal_to(self.question2)
-    #     assert_that(poll2.poll_type).is_equal_to(self.type2)
-
-    #     # check it has been edited correctly
-    #     assert_that(PollModel.objects.get(id=poll2.id)).is_equal_to(poll)
-    #     assert_that(poll2.id).is_equal_to(poll.id)
-
-    #     # check each options have been saved correctly
-    #     assert_that(PollOptionModel.objects.filter(poll_fk=poll2).count()).is_equal_to(self.options4.__len__())
-    #     assert_that(poll.options().__len__()).is_equal_to(self.options4.__len__())
-
-    #     # assert that all and only the input passed options are returned
-    #     options_to_search = self.options4.copy()
-    #     for o in poll2.options():
-    #         assert_that(o.value in options_to_search).is_true()
-    #         options_to_search.remove(o.value)
-
-    #     assert_that(options_to_search.__len__()).is_equal_to(0)
-
+        assert_that(PollCreateService.create_or_edit_poll) \
+            .raises(PollIsOpenException) \
+            .when_called_with(poll_form=form, options=self.options1)
