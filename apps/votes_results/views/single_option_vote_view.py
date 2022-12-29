@@ -26,6 +26,10 @@ class SingleOptionVoteView(View):
         except Exception:
             raise Http404(f"Poll with id {poll_id} not found.")
 
+        # redirect to details page if poll is not yet open
+        if not poll.is_open():
+            return render(request, 'votes_results/poll_details.html', {'poll': poll})
+
         if poll.poll_type == PollModel.PollType.MAJORITY_JUDJMENT:
             return HttpResponseRedirect(reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))
 
@@ -45,6 +49,16 @@ class SingleOptionVoteView(View):
     def post(self, request: HttpRequest, poll_id: int, *args, **kwargs):
         """Handle vote perform and redirect to recap (or 
         redirect to form w errors)"""
+
+        try:
+            # Retrieve poll
+            poll: PollModel = PollService.get_poll_by_id(poll_id)
+        except Exception:
+            raise Http404(f"Poll with id {poll_id} not found.")
+
+        # redirect to details page if poll is not yet open
+        if not poll.is_open():
+            return render(request, 'votes_results/poll_details.html', {'poll': poll})
 
         # Check is passed any data.
         if 'vote' not in request.POST:
@@ -87,6 +101,16 @@ def single_option_recap_view(request: HttpRequest, poll_id: int):
     # GET REQUEST --> I wanna render a page wich shows performed vote
     # (reloadable as many times user wants)
 
+    try:
+        # Retrieve poll
+        poll: PollModel = PollService.get_poll_by_id(poll_id)
+    except Exception:
+        raise Http404(f"Poll with id {poll_id} not found.")
+
+    # redirect to details page if poll is not yet open
+    if not poll.is_open():
+        return render(request, 'votes_results/poll_details.html', {'poll': poll})
+
     # Retrieve session saved vote ID
     vote_id = request.session.get("vote-submit-id")
     if vote_id is None:
@@ -116,7 +140,6 @@ def single_option_results_view(request: HttpRequest, poll_id: int):
         HttpResponseServerError: If DB is not initialized.
     """
 
-
     # if poll type is majority, we need to redirect 
     # to majority results page
     try:
@@ -124,6 +147,10 @@ def single_option_results_view(request: HttpRequest, poll_id: int):
         poll: PollModel = PollService.get_poll_by_id(poll_id)
     except Exception:
         raise Http404(f"Poll with id {poll_id} not found.")
+
+    # redirect to details page if poll is not yet open
+    if not poll.is_open():
+        return render(request, 'votes_results/poll_details.html', {'poll': poll})
 
     if poll.poll_type == PollModel.PollType.MAJORITY_JUDJMENT:
         return HttpResponseRedirect(reverse('apps.votes_results:majority_judgment_results', args=(poll_id,)))
