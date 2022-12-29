@@ -58,7 +58,7 @@ class SingleOptionVoteView(View):
 
         # redirect to details page if poll is not yet open
         if not poll.is_open():
-            return render(request, 'votes_results/poll_details.html', {'poll': poll})
+            return HttpResponseRedirect(reverse('apps.votes_results:poll_details', args=(poll_id,)))
 
         # Check is passed any data.
         if 'vote' not in request.POST:
@@ -109,7 +109,7 @@ def single_option_recap_view(request: HttpRequest, poll_id: int):
 
     # redirect to details page if poll is not yet open
     if not poll.is_open():
-        return render(request, 'votes_results/poll_details.html', {'poll': poll})
+        return HttpResponseRedirect(reverse('apps.votes_results:poll_details', args=(poll_id,)))
 
     # Retrieve session saved vote ID
     vote_id = request.session.get("vote-submit-id")
@@ -150,7 +150,7 @@ def single_option_results_view(request: HttpRequest, poll_id: int):
 
     # redirect to details page if poll is not yet open
     if not poll.is_open():
-        return render(request, 'votes_results/poll_details.html', {'poll': poll})
+        return HttpResponseRedirect(reverse('apps.votes_results:poll_details', args=(poll_id,)))
 
     if poll.poll_type == PollModel.PollType.MAJORITY_JUDJMENT:
         return HttpResponseRedirect(reverse('apps.votes_results:majority_judgment_results', args=(poll_id,)))
