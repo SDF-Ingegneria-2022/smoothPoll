@@ -8,6 +8,7 @@ from apps.polls_management.classes.majority_poll_result_data import MajorityPoll
 from apps.polls_management.classes.poll_result import PollResult, PollResultVoice
 from apps.polls_management.classes.poll_result import PollResult
 from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
+from apps.polls_management.exceptions.poll_is_open_exception import PollIsOpenException
 from apps.polls_management.exceptions.poll_option_rating_unvalid_exception import PollOptionRatingUnvalidException
 from apps.polls_management.exceptions.vote_does_not_exixt_exception import VoteDoesNotExistException
 from apps.polls_management.models.majority_vote_model import MajorityVoteModel
@@ -62,4 +63,3 @@ def all_polls(request: HttpRequest):
                     'cannot_edit': not_editable
                     }
                 )
-

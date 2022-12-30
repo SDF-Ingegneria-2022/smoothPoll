@@ -41,6 +41,10 @@ class MajorityJudgmentVoteView(View):
             except PollDoesNotExistException:
                 raise Http404()
 
+        # redirect to details page if poll is not yet open
+        if not poll.is_open():
+            return render(request, 'votes_results/poll_details.html', {'poll': poll})
+
         if poll.poll_type != PollModel.PollType.MAJORITY_JUDJMENT:
             raise Http404()
 
@@ -61,6 +65,15 @@ class MajorityJudgmentVoteView(View):
         """Handle vote perform and redirect to recap (or 
         redirect to form w errors)"""
 
+        try:
+            poll = PollService.get_poll_by_id(poll_id)
+        except PollDoesNotExistException:
+            raise Http404()
+        
+        # redirect to details page if poll is not yet open
+        if not poll.is_open():
+            return HttpResponseRedirect(reverse('apps.votes_results:poll_details', args=(poll_id,)))
+        
         ratings: List[dict] = []
         session_object: dict = {
             'id': []
@@ -99,6 +112,15 @@ class MajorityJudgmentVoteView(View):
 def majority_judgment_recap_view(request: HttpRequest, poll_id: int):
     """Render page with confirmation of majority vote validation."""
 
+    try:
+        poll = PollService.get_poll_by_id(poll_id)
+    except PollDoesNotExistException:
+        raise Http404()
+        
+    # redirect to details page if poll is not yet open
+    if not poll.is_open():
+        return HttpResponseRedirect(reverse('apps.votes_results:poll_details', args=(poll_id,)))
+
     # Retrieve session saved vote ID
     vote_id = request.session.get("majvote-submit-id")
     if vote_id is None:
@@ -124,6 +146,10 @@ def majority_judgment_results_view(request: HttpRequest, poll_id: int):
         poll = PollService.get_poll_by_id(poll_id)
     except PollDoesNotExistException:
         raise Http404()
+
+    # redirect to details page if poll is not yet open
+    if not poll.is_open():
+        return HttpResponseRedirect(reverse('apps.votes_results:poll_details', args=(poll_id,)))
 
     if poll.poll_type != PollModel.PollType.MAJORITY_JUDJMENT:
         raise Http404()

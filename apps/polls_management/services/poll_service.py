@@ -5,6 +5,7 @@ from apps.polls_management.classes.majority_poll_result_data import MajorityPoll
 from apps.polls_management.classes.poll_result import PollResult
 from apps.polls_management.exceptions.paginator_page_size_exception import PaginatorPageSizeException
 from apps.polls_management.exceptions.poll_has_been_voted_exception import PollHasBeenVotedException
+from apps.polls_management.exceptions.poll_is_open_exception import PollIsOpenException
 from apps.polls_management.exceptions.poll_not_valid_creation_exception import PollNotValidCreationException
 from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
 from apps.polls_management.exceptions.poll_not_yet_voted_exception import PollNotYetVodedException
@@ -12,6 +13,7 @@ from apps.polls_management.models.poll_option_model import PollOptionModel
 from apps.votes_results.services.majority_judgment_vote_service import MajorityJudjmentVoteService
 from apps.votes_results.services.single_option_vote_service import SingleOptionVoteService
 from apps.polls_management.models.poll_model import PollModel
+from django.utils import timezone
 
 class PollService:
     """Class to handle all poll related operations"""
@@ -85,14 +87,14 @@ class PollService:
     
     @staticmethod
     def delete_poll(id:str):
-        """Delete a poll by id. If a poll has already received at least one vote, it can't be deleted.
+        """Delete a poll by id. If a poll has already been opened, it can't be deleted.
         
         Args:
-            id: Id of the poll to delete. The poll can be a majotiry poll or a siglone option poll.
+            id: Id of the poll to delete. The poll can be a majority poll or a single option poll.
         
         Raises:
             PollDoesNotExistException: If the poll not exist.
-            PollHasBeenVotedException: If the poll has already received at least one vote.
+            PollIsOpenException: If the poll is open.
             
         Returns: 
             Tuple: A tuple with first element the total number of deletions made
@@ -103,24 +105,38 @@ class PollService:
         """
         try:
             poll: PollModel = PollModel.objects.get(id=id)
-            poll_type: PollModel.PollType = poll.PollType
         except ObjectDoesNotExist:
             raise PollDoesNotExistException(f"Poll with id={id} does not exit.")  
         
-        if poll.poll_type == poll_type.MAJORITY_JUDJMENT:
-            # Check if the majotiry judment poll has already received at least one vote
-            try:
-                MajorityJudjmentVoteService.calculate_result(poll.id)
-            except PollNotYetVodedException:
-                pass
-            else:
-                raise PollHasBeenVotedException(f"Error: poll with id={id} can't be deleted: it has already been voted")
-            
-        else:
-            # Check if the single option poll has already received at least one vote
-            poll_results: PollResult = SingleOptionVoteService.calculate_result(poll.id)
-            for option_result in poll_results.get_sorted_options():
-                if option_result.n_votes != 0:
-                    raise PollHasBeenVotedException(f"Error: poll with id={id} can't be deleted: it has already been voted")
+        if poll.is_open():
+            raise PollIsOpenException(f"Poll with id={id} is open.")
 
         return poll.delete()
+
+    @staticmethod
+    def open_poll(id:str):
+        """Open a poll by id. If a poll has already been opened, it can't be opened.
+        
+        Args:
+            id: Id of the poll to open. The poll can be a majority poll or a single option poll.
+        
+        Raises:
+            PollDoesNotExistException: If the poll not exist.
+            PollIsOpenException: If the poll is already open.
+            
+        Returns: 
+            PollModel: the opened poll.
+        """
+        try:
+            poll: PollModel = PollModel.objects.get(id=id)
+        except ObjectDoesNotExist:
+            raise PollDoesNotExistException(f"Poll with id={id} does not exit.")  
+        
+        if poll.is_open():
+            raise PollIsOpenException(f"Poll with id={id} is already open.")
+
+        poll.open_datetime = timezone.now()
+
+        poll.save()
+
+        return poll

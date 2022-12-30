@@ -1,4 +1,5 @@
 from apps.polls_management.classes.poll_form import PollForm
+from apps.polls_management.exceptions.poll_is_open_exception import PollIsOpenException
 from apps.polls_management.models.poll_model import PollModel
 from apps.polls_management.models.poll_option_model import PollOptionModel
 from apps.polls_management.services.poll_create_service import PollCreateService
@@ -9,8 +10,6 @@ import pytest
 from assertpy import assert_that
 # from django.db import models
 import datetime
-import pytz
-
 
 
 class TestPollCreate:
@@ -114,7 +113,6 @@ class TestPollCreate:
         assert_that(PollCreateService.create_or_edit_poll) \
             .raises(PollMainDataNotValidException) \
             .when_called_with(poll_form=form, options=self.options1)
-
 
     @pytest.mark.django_db
     def test_create_missing_name(self, make_forms):
