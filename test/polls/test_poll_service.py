@@ -231,3 +231,75 @@ class TestPollService:
         assert_that(PollService.delete_poll) \
             .raises(PollIsOpenException) \
             .when_called_with(id=majority_poll.id)
+
+    # ====== Open poll ======
+
+    @pytest.mark.django_db
+    def test_open_poll2(self):
+        """Test delete poll, basic verification that it works (not open poll)"""
+        poll = PollService.create(self.name, self.question, self.options)
+        id = poll.id
+
+        PollService.delete_poll(id)
+
+        assert_that(PollService.open_poll) \
+            .raises(PollDoesNotExistException) \
+            .when_called_with(id=id)
+
+    @pytest.mark.django_db
+    def test_open_poll2(self):
+        """Test delete poll, basic verification that it works (not open poll)"""
+        poll = PollService.create(self.name, self.question, self.options)
+        id = poll.id
+
+        open_date = datetime.datetime(year=2020, month=12, day=31, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+        poll.open_datetime = open_date
+
+        # to update the open_datetime value and is_open method of the model
+        poll.save()
+
+        assert_that(poll.open_datetime).is_not_none()
+
+        assert_that(poll.is_open()).is_true()
+
+        assert_that(PollService.open_poll) \
+            .raises(PollIsOpenException) \
+            .when_called_with(id=id)
+
+    @pytest.mark.django_db
+    def test_open_poll1(self):
+        """Test delete poll, basic verification that it works (not open poll)"""
+        poll = PollService.create(self.name, self.question, self.options)
+        id = poll.id
+
+        open_date = datetime.datetime(year=2025, month=12, day=31, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+        poll.open_datetime = open_date
+
+        # to update the open_datetime value and is_open method of the model
+        poll.save()
+
+        assert_that(poll.open_datetime).is_not_none()
+
+        assert_that(poll.is_open()).is_false()
+
+        assert_that(poll).is_instance_of(PollModel)
+
+        poll = PollService.open_poll(id)
+
+        assert_that(poll.is_open()).is_true()
+
+    @pytest.mark.django_db
+    def test_open_poll2(self):
+        """Test delete poll, basic verification that it works (not open poll)"""
+        poll = PollService.create(self.name, self.question, self.options)
+        id = poll.id
+
+        assert_that(poll.open_datetime).is_none()
+
+        assert_that(poll.is_open()).is_false()
+
+        assert_that(poll).is_instance_of(PollModel)
+
+        poll = PollService.open_poll(id)
+
+        assert_that(poll.is_open()).is_true()

@@ -63,20 +63,3 @@ def all_polls(request: HttpRequest):
                     'cannot_edit': not_editable
                     }
                 )
-
-def open_poll_by_id(request: HttpRequest, poll_id: int):
-
-    # the POST method is used because the operation is going to potentially modify the database
-    if request.method == "POST":
-        try:
-            # Retrieve poll
-            poll: PollModel = PollService.get_poll_by_id(poll_id)
-        except PollDoesNotExistException:
-            raise Http404(f"Poll with id {poll_id} not found.")
-
-        try:
-            PollService.open_poll(poll_id)
-        except PollIsOpenException:
-            return HttpResponseRedirect("%s?page=last&per_page=10" % reverse('apps.polls_management:all_polls'))
-
-    return HttpResponseRedirect("%s?page=last&per_page=10" % reverse('apps.polls_management:all_polls'))
