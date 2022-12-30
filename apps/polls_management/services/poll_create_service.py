@@ -52,10 +52,6 @@ class PollCreateService:
         # create poll object from form
         poll = poll_form.save()
 
-        # chech if poll is open
-        if poll.is_open():
-            raise PollIsOpenException("The poll cannot be edited")
-
         # check if there are already options in the poll object
         # and delete them (edit case)
         if poll.options():

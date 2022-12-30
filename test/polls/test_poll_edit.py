@@ -280,14 +280,3 @@ class TestPollEdit:
             options_to_search.remove(o.value)
 
         assert_that(options_to_search.__len__()).is_equal_to(0)
-
-    @pytest.mark.django_db
-    def test_edit_poll_w_date_open(self, make_forms):
-        """Check that if object is edited when poll is open"""
-    
-        form = make_forms["form1"]
-        form.data["open_datetime"] = "11/12/2022 23:59"
-
-        assert_that(PollCreateService.create_or_edit_poll) \
-            .raises(PollIsOpenException) \
-            .when_called_with(poll_form=form, options=self.options1)
