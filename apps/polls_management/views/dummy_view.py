@@ -8,6 +8,7 @@ from apps.polls_management.classes.majority_poll_result_data import MajorityPoll
 from apps.polls_management.classes.poll_result import PollResult, PollResultVoice
 from apps.polls_management.classes.poll_result import PollResult
 from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
+from apps.polls_management.exceptions.poll_is_open_exception import PollIsOpenException
 from apps.polls_management.exceptions.poll_option_rating_unvalid_exception import PollOptionRatingUnvalidException
 from apps.polls_management.exceptions.vote_does_not_exixt_exception import VoteDoesNotExistException
 from apps.polls_management.models.majority_vote_model import MajorityVoteModel
@@ -63,3 +64,19 @@ def all_polls(request: HttpRequest):
                     }
                 )
 
+def open_poll_by_id(request: HttpRequest, poll_id: int):
+
+    # the POST method is used because the operation is going to potentially modify the database
+    if request.method == "POST":
+        try:
+            # Retrieve poll
+            poll: PollModel = PollService.get_poll_by_id(poll_id)
+        except PollDoesNotExistException:
+            raise Http404(f"Poll with id {poll_id} not found.")
+
+        try:
+            PollService.open_poll(poll_id)
+        except PollIsOpenException:
+            return HttpResponseRedirect("%s?page=last&per_page=10" % reverse('apps.polls_management:all_polls'))
+
+    return HttpResponseRedirect("%s?page=last&per_page=10" % reverse('apps.polls_management:all_polls'))

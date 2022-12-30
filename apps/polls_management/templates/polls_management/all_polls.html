@@ -93,12 +93,15 @@
                                 class="btn btn-secondary me-md-2 mt-2"  
                                 role="button">Vedi risultati</a>
                         {% else %}
-                            <a href="{% url 'apps.polls_management:poll_edit' poll_id=poll.id %}" 
+                            <a href="{% url 'apps.votes_results:poll_details' poll_id=poll.id %}" 
+                                class="btn btn-info me-md-2 mt-2" 
+                                role="button">Riepilogo sondaggio</a>
+                            {% comment %} <a href="{% url 'apps.polls_management:poll_edit' poll_id=poll.id %}" 
                                 class="btn btn-warning me-md-2 mt-2" 
                                 role="button">Modifica</a>
                             <a data-bs-toggle="modal" data-bs-target="#deletepoll-{{poll.id}}" 
                                 class="btn btn-danger me-md-2 mt-2"  
-                                role="button">Elimina</a>
+                                role="button">Elimina</a> {% endcomment %}
                         {% endif %}
                     </div>
                 </div>

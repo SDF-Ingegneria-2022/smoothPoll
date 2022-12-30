@@ -86,11 +86,12 @@
 
             {% comment %} Open poll button {% endcomment %}
 
-                    <a name="" id="" role="button"
-                        class="btn btn-info m-2" 
-                        href="" >
-                        Apri sondaggio
-                    </a>
+                <form action="{% url 'apps.polls_management:poll_open' poll_id=poll.id %}" method="POST">
+                    {% csrf_token %}
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button type="submit" class="btn btn-info m-2">Apri sondaggio</button>
+                    </div>
+                </form>
                 </div>
             </div>
         </div>
