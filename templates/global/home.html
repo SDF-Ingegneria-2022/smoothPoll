@@ -49,15 +49,13 @@
         </div>        
     </div>
 
-    
-
-<div class="position-relative overflow-hidden">
+    <div class="position-relative overflow-hidden">
         <div class="swiper mySwiper mt-4 mb-2">
           <div class="swiper-wrapper">
             <div class="swiper-slide">
               <div>
                 <div class="card card-background shadow-none border-radius-xl card-background-after-none align-items-start mb-0">
-                  <div class="full-background bg-cover" style="background-image: url('https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/img-2.jpg')"></div>
+                  <div class="full-background bg-cover" style="background-image: url('/static/img-1.jpg');"></div>
                   <div class="card-body text-start px-3 py-0 w-100">
                     <div class="row mt-12">
                       <div class="col-sm-3 mt-auto">
@@ -76,7 +74,7 @@
             </div>
             <div class="swiper-slide">
               <div class="card card-background shadow-none border-radius-xl card-background-after-none align-items-start mb-0">
-                <div class="full-background bg-cover" style="background-image: url('https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/img-1.jpg')"></div>
+                <div class="full-background bg-cover" style="background-image: url('/static/img-2.jpg')"></div>
                 <div class="card-body text-start px-3 py-0 w-100">
                   <div class="row mt-12">
                     <div class="col-sm-3 mt-auto">
@@ -94,7 +92,7 @@
             </div>
             <div class="swiper-slide">
               <div class="card card-background shadow-none border-radius-xl card-background-after-none align-items-start mb-0">
-                <div class="full-background bg-cover" style="background-image: url('https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/img-3.jpg')"></div>
+                <div class="full-background bg-cover" style="background-image: url('/static/img-3.jpg')"></div>
                 <div class="card-body text-start px-3 py-0 w-100">
                   <div class="row mt-12">
                     <div class="col-sm-3 mt-auto">
@@ -112,7 +110,7 @@
             </div>
             <div class="swiper-slide">
               <div class="card card-background shadow-none border-radius-xl card-background-after-none align-items-start mb-0">
-                <div class="full-background bg-cover" style="background-image: url('https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/img-4.jpg')"></div>
+                <div class="full-background bg-cover" style="background-image: url('/static/img-3.jpg')"></div>
                 <div class="card-body text-start px-3 py-0 w-100">
                   <div class="row mt-12">
                     <div class="col-sm-3 mt-auto">
@@ -130,7 +128,7 @@
             </div>
             <div class="swiper-slide">
               <div class="card card-background shadow-none border-radius-xl card-background-after-none align-items-start mb-0">
-                <div class="full-background bg-cover" style="background-image: url('https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/img-5.jpg')"></div>
+                <div class="full-background bg-cover" style="background-image: url('/static/img-4.jpg')"></div>
                 <div class="card-body text-start px-3 py-0 w-100">
                   <div class="row mt-12">
                     <div class="col-sm-3 mt-auto">
@@ -148,7 +146,7 @@
             </div>
             <div class="swiper-slide">
               <div class="card card-background shadow-none border-radius-xl card-background-after-none align-items-start mb-0">
-                <div class="full-background bg-cover" style="background-image: url('https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/img-1.jpg')"></div>
+                <div class="full-background bg-cover" style="background-image: url('/static/img-5.jpg')"></div>
                 <div class="card-body text-start px-3 py-0 w-100">
                   <div class="row mt-12">
                     <div class="col-sm-3 mt-auto">
@@ -171,27 +169,23 @@
         <div class="swiper-button-next"></div>
       
       </div>
-
-<!-- Icons -->
-<link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
-<link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
-
-<!-- Font Awesome Icons -->
-<script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
-
-<!-- CSS Files -->
-<link id="pagestyle" href="/css/corporate-ui-dashboard.css" rel="stylesheet" />
-<script>
-
+  
+<script src="/static/js/plugins/swiper-bundle.min.js"></script>
+      <!-- Initialize Swiper -->
+      <script>
         var swiper = new Swiper(".mySwiper", {
-          effect: "cards",
-          grabCursor: true,
+            effect: "cards",
+            grabCursor: true,
           navigation: {
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev',
+            nextEl: ".swiper-button-next",
+            prevEl: ".swiper-button-prev",
           },
         });
-        
-        </script>
+      </script>
+      <!-- Core -->
+<script src="/static/js/core/popper.min.js"></script>
+<script src="/static/js/core/bootstrap.min.js"></script>
 
+<!-- Theme JS -->
+<script src="/static/js/corporate-ui-dashboard.min.js"></script>
 {% endblock content %}
