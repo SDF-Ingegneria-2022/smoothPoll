@@ -163,11 +163,27 @@
             <div class="container mt-5 mb-3">
                 <button type="submit" class="btn btn-primary">Conferma</button>
                 {% comment %} <a class="btn btn-primary" href="{% url 'apps.votes_results:majority_judgment_results' poll_id=poll.id %}" role="button">Vedi risultati</a> {% endcomment %}
-            </div>
-
-
-            
+            </div> 
         </form>
     </div>
+    
 </div>
+    <div class="container position-fixed  bottom-0 end-0 translate-middle-y">
+
+        <div class="shadow-lg bg-body rounded">
+            <div class="card ">
+                <div class="card-header fs-5" >
+                Scopri di più sul sondaggio maggioritario!
+                </div>
+                <div class="card-body">
+                <p class="card-text">Se vuoi farti un'idea di <b>come funziona il metodo del giudizio maggioritario</b>, vedi la nostra <i>guida</i>. <br>
+                    Se invece vuoi <b>approfondire</b>, dai un'occhiata al <i>metodo matematico</i> con cui verranno calcolati i risultati.</p>
+                <a href="#" class="btn btn-primary">Guida</a>
+                <a href="#" class="btn btn-primary">Metodo matematico</a>
+                </div>
+            </div>
+    </div>
+    </div>
+    
+
 {% endblock content %}
