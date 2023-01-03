@@ -170,7 +170,16 @@
         <div class="swiper-button-next"></div>
       
       </div>
-{% endblock content %}
 
-    {% load static %}
-    <script src="{% static 'js/swiper/swiper-bundle.min.js' %}"></script>
+    <script>
+        var swiper = new Swiper(".mySwiper", {
+        effect: "cards",
+        grabCursor: true,
+        navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+    },
+    });
+
+</script>
+{% endblock content %}
