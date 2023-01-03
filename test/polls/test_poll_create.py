@@ -137,6 +137,17 @@ class TestPollCreate:
             .when_called_with(poll_form=form, options=self.options1)
 
     @pytest.mark.django_db
+    def test_create_missing_closedate(self, make_forms):
+        """Check what happend if I don't insert close date"""
+
+        form = make_forms["form1"]
+        form.data["close_datetime"] = " "
+
+        assert_that(PollCreateService.create_or_edit_poll) \
+            .raises(PollMainDataNotValidException) \
+            .when_called_with(poll_form=form, options=self.options1)
+
+    @pytest.mark.django_db
     def test_create_few_options_1(self, make_forms):
         """Check what happend if I don't insert enough options"""
 
