@@ -42,7 +42,7 @@ class MajorityJudgmentVoteView(View):
                 raise Http404()
 
         # redirect to details page if poll is not yet open
-        if not poll.is_open():
+        if not poll.is_open() or poll.is_closed():
             return render(request, 'votes_results/poll_details.html', {'poll': poll})
 
         if poll.poll_type != PollModel.PollType.MAJORITY_JUDJMENT:
@@ -71,7 +71,7 @@ class MajorityJudgmentVoteView(View):
             raise Http404()
         
         # redirect to details page if poll is not yet open
-        if not poll.is_open():
+        if not poll.is_open() or poll.is_closed():
             return HttpResponseRedirect(reverse('apps.votes_results:poll_details', args=(poll_id,)))
         
         ratings: List[dict] = []
@@ -118,7 +118,7 @@ def majority_judgment_recap_view(request: HttpRequest, poll_id: int):
         raise Http404()
         
     # redirect to details page if poll is not yet open
-    if not poll.is_open():
+    if not poll.is_open() or poll.is_closed():
         return HttpResponseRedirect(reverse('apps.votes_results:poll_details', args=(poll_id,)))
 
     # Retrieve session saved vote ID

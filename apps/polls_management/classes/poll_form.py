@@ -16,18 +16,20 @@ class PollForm(ModelForm):
 
     class Meta:
         model = PollModel
-        fields=['name','question', 'poll_type', 'open_datetime']
+        fields=['name','question', 'poll_type', 'open_datetime', 'close_datetime']
         labels={
             "name": _("Nome"), 
             "question": _("Quesito"), 
             "poll_type": _("Tipologia"), 
             "open_datetime": _("Data Apertura"), 
+            "close_datetime": _("Data Chiusura"),
         }
         help_texts={
             "name": _("Un nome sintetico che descrive il sondaggio"), 
             "question": _("La domanda che vuoi porre al tuo votante"), 
             "poll_type": _("Il metodo che verrà usato per esprimere il voto e calcolare i risultati"), 
             "open_datetime": _("La data dalla quale sarà possibile votare il sondaggio"), 
+            "close_datetime": _("La data dalla quale non sarà più possibile votare il sondaggio"), 
         }
         error_messages = {
             'name': {
@@ -40,6 +42,9 @@ class PollForm(ModelForm):
             },
             'poll_type': {
                 # 'required': _("Seleziona una tipologia di sondaggio"), 
+            },
+            'close_datetime': {
+                'required': _("Inserisci una data di chiusura per il sondaggio"), 
             }
         }
         widgets = {
@@ -49,6 +54,15 @@ class PollForm(ModelForm):
                     'class':'form-control', 
                     'placeholder':'Scegli la data di apertura del sondaggio', 
                     'type':'datetime-local'
+                }
+            ),
+            'close_datetime': DateTimeInput(
+                format=('%Y-%m-%d %H:%M'), 
+                attrs={
+                    'class':'form-control', 
+                    'placeholder':'Scegli la data di chiusura del sondaggio', 
+                    'type':'datetime-local',
+                    'required':True
                 }
             ),
         }
@@ -67,9 +81,17 @@ class PollForm(ModelForm):
         return PollModel(
             name = self.data["name"], 
             question = self.data["question"], 
-            poll_type = self.data["poll_type"], 
+            poll_type = self.data["poll_type"],
             ).get_type_verbose_name()
 
+    # def clean(self):
+    #     cleaned_data = super().clean()
+    #     open_date = cleaned_data.get("open_datetime")
+    #     close_date = cleaned_data.get("close_datetime")
+
+    #     if open_date > close_date:
+    #         msg = "La data di apertura non è valida rispetto alla data di chiusura del sondaggio"
+    #         self.add_error('close_date', msg=msg)
 
 # class PollOptionForm(ModelForm):
 #     """(Not used) form to input option.

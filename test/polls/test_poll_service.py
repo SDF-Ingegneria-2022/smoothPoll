@@ -134,8 +134,10 @@ class TestPollService:
         poll = PollService.create(self.name, self.question, self.options)
         id = poll.id
 
-        open_date = datetime.datetime(year=2025, month=12, day=31, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+        open_date = datetime.datetime(year=2050, month=12, day=31, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+        close_date = datetime.datetime(year=2100, month=12, day=31, hour=12, minute=12, tzinfo=datetime.timezone.utc)
         poll.open_datetime = open_date
+        poll.close_datetime = close_date
 
         # to update the open_datetime value and is_open method of the model
         poll.save()
@@ -186,8 +188,10 @@ class TestPollService:
         option_id = poll.options()[0].id
         id = poll.id
 
-        open_date = datetime.datetime(year=2025, month=12, day=30, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+        open_date = datetime.datetime(year=2050, month=12, day=30, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+        close_date = datetime.datetime(year=2100, month=12, day=31, hour=12, minute=12, tzinfo=datetime.timezone.utc)
         poll.open_datetime = open_date
+        poll.close_datetime = close_date
 
         # to update the open_datetime value and is_open method of the model
         poll.save()
@@ -203,8 +207,10 @@ class TestPollService:
         """Test delete poll with majority (not open)"""
         poll: PollModel = create_majority_poll
 
-        open_date = datetime.datetime(year=2025, month=12, day=30, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+        open_date = datetime.datetime(year=2050, month=12, day=30, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+        close_date = datetime.datetime(year=2100, month=12, day=31, hour=12, minute=12, tzinfo=datetime.timezone.utc)
         poll.open_datetime = open_date
+        poll.close_datetime = close_date
 
         # to update the open_datetime value and is_open method of the model
         poll.save()

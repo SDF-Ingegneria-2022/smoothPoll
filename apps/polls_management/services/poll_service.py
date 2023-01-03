@@ -108,7 +108,7 @@ class PollService:
         except ObjectDoesNotExist:
             raise PollDoesNotExistException(f"Poll with id={id} does not exit.")  
         
-        if poll.is_open():
+        if poll.is_open() or poll.is_closed():
             raise PollIsOpenException(f"Poll with id={id} is open.")
 
         return poll.delete()
