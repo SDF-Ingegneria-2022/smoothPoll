@@ -84,6 +84,14 @@ class PollForm(ModelForm):
             poll_type = self.data["poll_type"],
             ).get_type_verbose_name()
 
+    # def clean(self):
+    #     cleaned_data = super().clean()
+    #     open_date = cleaned_data.get("open_datetime")
+    #     close_date = cleaned_data.get("close_datetime")
+
+    #     if open_date > close_date:
+    #         msg = "La data di apertura non è valida rispetto alla data di chiusura del sondaggio"
+    #         self.add_error('close_date', msg=msg)
 
 # class PollOptionForm(ModelForm):
 #     """(Not used) form to input option.

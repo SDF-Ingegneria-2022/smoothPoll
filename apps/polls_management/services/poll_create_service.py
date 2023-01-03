@@ -1,5 +1,4 @@
 from typing import List
-from apps.polls_management.exceptions.poll_is_open_exception import PollIsOpenException
 from apps.polls_management.exceptions.poll_not_valid_creation_exception import *
 from apps.polls_management.models.poll_model import PollModel
 from apps.polls_management.models.poll_option_model import PollOptionModel
@@ -30,12 +29,9 @@ class PollCreateService:
             The initialized and saved PollModel object
         """
 
-        # validate form (+ case where open date is greater than close date)
+        # validate form
         if not poll_form.is_valid():
             raise PollMainDataNotValidException(f"Some data of passed poll_form is not valid. See errors:\n{poll_form.errors}")
-        elif poll_form.data['open_datetime']:
-            if poll_form.data['open_datetime'] > poll_form.data['close_datetime']:
-                raise PollMainDataNotValidException(f"Some data of passed poll_form is not valid. See errors:\n{poll_form.errors}")
 
         # validate options
         valid_options = list()
