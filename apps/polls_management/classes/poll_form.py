@@ -82,8 +82,6 @@ class PollForm(ModelForm):
             name = self.data["name"], 
             question = self.data["question"], 
             poll_type = self.data["poll_type"],
-            open_date = self.data["open_datetime"],
-            close_date = self.data["close_datetime"], 
             ).get_type_verbose_name()
 
 
