@@ -30,9 +30,12 @@ class PollCreateService:
             The initialized and saved PollModel object
         """
 
-        # validate form
+        # validate form (+ case where open date is greater than close date)
         if not poll_form.is_valid():
             raise PollMainDataNotValidException(f"Some data of passed poll_form is not valid. See errors:\n{poll_form.errors}")
+        elif poll_form.data['open_datetime']:
+            if poll_form.data['open_datetime'] > poll_form.data['close_datetime']:
+                raise PollMainDataNotValidException(f"Some data of passed poll_form is not valid. See errors:\n{poll_form.errors}")
 
         # validate options
         valid_options = list()
