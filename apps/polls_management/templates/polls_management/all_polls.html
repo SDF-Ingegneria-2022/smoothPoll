@@ -68,6 +68,7 @@
                                 {% if not poll.is_open and poll.open_datetime %}
                                     <br><span class="fw-normal">(Apertura: {{poll.open_datetime}})</span>
                                 {% endif %}
+                                <br><span class="fw-normal">(Chiusura: {{poll.close_datetime}})</span>
                             </p>
                         </div>
                     </div>
@@ -86,9 +87,11 @@
                     class="col-12 col-lg-3 collapse dont-collapse-md" >
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                         {% if poll.is_open %}
-                            <a href="{% url 'apps.votes_results:single_option_vote' poll_id=poll.id %}" 
-                                class="btn btn-primary me-md-2 mt-2" 
-                                role="button">Vota</a>
+                            {% if not poll.is_closed %}
+                                <a href="{% url 'apps.votes_results:single_option_vote' poll_id=poll.id %}" 
+                                    class="btn btn-primary me-md-2 mt-2" 
+                                    role="button">Vota</a>
+                            {% endif %}
                             <a href="{% url 'apps.votes_results:single_option_results' poll_id=poll.id %}" 
                                 class="btn btn-secondary me-md-2 mt-2"  
                                 role="button">Vedi risultati</a>

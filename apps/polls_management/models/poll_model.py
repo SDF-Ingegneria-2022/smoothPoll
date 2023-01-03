@@ -33,6 +33,11 @@ class PollModel(models.Model):
         verbose_name=_("Data Apertura")
     )
 
+    close_datetime: models.DateTimeField = models.DateTimeField(
+        default=None, blank=True, null=True,
+        verbose_name=_("Data Chiusura")
+    )
+
     def __str__(self):
         return str({
             'id': self.id, 
@@ -40,6 +45,7 @@ class PollModel(models.Model):
             'question': self.question,
             'poll_type': self.poll_type, 
             'open_datetime': self.open_datetime, 
+            'close_datetime': self.close_datetime,
         })
 
     def options(self) -> List[PollOptionModel]:
@@ -54,16 +60,26 @@ class PollModel(models.Model):
 
         return timezone.now() > self.open_datetime
 
+    def is_closed(self) -> bool:
+        """Chech if Poll is closed"""
+        
+        return timezone.now() > self.close_datetime
+
     def get_state_label(self) -> str: 
         """Get a label rappresentative of the state"""
-        if self.is_open():
+
+        if self.is_closed():
+            return "CHIUSO"
+        elif self.is_open():
             return "APERTO"
-        else:
+        elif not self.is_open():
             return "NON APERTO"
 
     def get_state_color(self) -> str: 
         """Get a color associateto to the state"""
-        if self.is_open():
+        if self.is_closed():
+            return "#D42828" # red
+        elif self.is_open():
             return "#198754" # green-success
         else:
             return "#6C757D" # muted grey

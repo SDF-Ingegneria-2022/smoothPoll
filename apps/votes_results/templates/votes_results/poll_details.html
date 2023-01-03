@@ -30,25 +30,36 @@
             </div>
 
             {% if poll.is_open %}
-            <div class="container mt-5 mb-5">
-                <p class="fw-bold fs-3 mb-0">Stato del sondaggio: </p>
-                <h4>APERTO</h4>
-            </div>
-            {% else %}
-            <div class="container mt-5 mb-5">
-                <p class="fw-bold fs-3 mb-0">Stato del sondaggio: </p>
-                <h4>NON APERTO</h4>
-            </div>
+                {% if not poll.is_closed %}
+                    <div class="container mt-5 mb-5">
+                        <p class="fw-bold fs-3 mb-0">Stato del sondaggio: </p>
+                        <h4>APERTO</h4>
+                    </div>
+                    {% else %}
+                    <div class="container mt-5 mb-5">
+                        <p class="fw-bold fs-3 mb-0">Stato del sondaggio: </p>
+                        <h4>CHIUSO</h4>
+                    </div>
+                    {% endif %}
+                {% else %}
+                    <div class="container mt-5 mb-5">
+                        <p class="fw-bold fs-3 mb-0">Stato del sondaggio: </p>
+                        <h4>NON APERTO </h4>
+                    </div>
             {% endif %}
 
                 {% if poll.is_open %}
-                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                    <a href="{% url 'apps.votes_results:single_option_vote' poll_id=poll.id %}" 
-                        class="btn btn-primary me-md-2 mt-2" 
-                        role="button">Vota</a>
-                    <a href="{% url 'apps.votes_results:single_option_results' poll_id=poll.id %}" 
-                        class="btn btn-secondary me-md-2 mt-2"  
-                        role="button">Vedi risultati</a>
+                    {% if not poll.is_closed %}
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end m-2">
+                        <a href="{% url 'apps.votes_results:single_option_vote' poll_id=poll.id %}" 
+                            class="btn btn-primary me-md-2 mt-2" 
+                            role="button">Vota</a>
+                    {% endif %}
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end m-2">
+                        <a href="{% url 'apps.votes_results:single_option_results' poll_id=poll.id %}" 
+                            class="btn btn-secondary me-md-2 mt-2"  
+                            role="button">Vedi risultati</a>
+                    </div>
                 </div>
                 {% endif %}
 
@@ -60,17 +71,27 @@
             </div>
             {% endif %}
 
+            {% comment %} Poll close date {% endcomment %}
+            {% if poll.close_datetime %}
+            <div class="container mt-5 mb-5">
+                <p class="fw-bold fs-3 mb-0">Data di chiusura del sondaggio: </p>
+                <h4>{{ poll.close_datetime }}</h4>
+            </div>
+            {% endif %}
+
             {# Return button #}
             <div class="container mt-5">
-                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end m-2">
                     <a name="" id="" role="button"
                         class="btn btn-primary m-2" 
                         href="{% url 'apps.polls_management:all_polls' %}?page=1&per_page=10" >
                         Ritorna alla lista di tutti i sondaggi
                     </a>
+            </div>
 
             {% comment %} Edit, delete and open poll buttons {% endcomment %}
-
+            {% if not poll.is_open %}
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end m-2">
                     <a name="" id="" role="button"
                         class="btn btn-warning m-2" 
                         href="{% url 'apps.polls_management:poll_edit' poll_id=poll.id %}" >
@@ -79,7 +100,7 @@
 
                     <form action="{% url 'apps.polls_management:poll_delete' poll_id=poll.id %}" method="POST">
                         {% csrf_token %}
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end m-2">
                             <button type="submit" class="btn btn-danger m-2">Elimina sondaggio</button>
                         </div>
                     </form>
@@ -88,13 +109,14 @@
 
                 <form action="{% url 'apps.polls_management:poll_open' poll_id=poll.id %}" method="POST">
                     {% csrf_token %}
-                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end m-2">
                         <button type="submit" class="btn btn-info m-2">Apri sondaggio</button>
                     </div>
                 </form>
-                </div>
             </div>
+            {% endif %}
         </div>
+    </div>
 
 </div>
 {% endblock content %}

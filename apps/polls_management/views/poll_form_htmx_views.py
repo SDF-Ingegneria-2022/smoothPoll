@@ -77,7 +77,7 @@ def edit_poll_init_view(request: HttpRequest, poll_id: int):
         raise Http404(f"Poll with id {poll_id} not found.")
 
     # Add control if poll is open
-    if poll.is_open():
+    if poll.is_open() or poll.is_closed():
         request.session['cannot_edit'] = True
         return HttpResponseRedirect("%s?page=last&per_page=10" % reverse('apps.polls_management:all_polls'))
 
@@ -85,7 +85,8 @@ def edit_poll_init_view(request: HttpRequest, poll_id: int):
         "name": poll.name, 
         "question": poll.question, 
         "poll_type": poll.poll_type, 
-        "open_datetime": poll.open_datetime,  
+        "open_datetime": poll.open_datetime,
+        "close_datetime": poll.close_datetime,  
     }, instance=poll)
 
     # form.data["name"] = poll.name
@@ -162,7 +163,7 @@ class CreatePollHtmxView(View):
         try:
             PollCreateService.create_or_edit_poll(form, options.values())
         except PollMainDataNotValidException:
-            request.session[SESSION_ERROR] = "Attenzione, un sondaggio ha bisogno di un nome e di una domanda validi"
+            request.session[SESSION_ERROR] = "Attenzione, un sondaggio ha bisogno di un nome, di una domanda e di una data di chiusura validi"
             return HttpResponseRedirect(reverse('apps.polls_management:poll_form'))
         except TooFewOptionsException:
             request.session[SESSION_ERROR] = f"Attenzione, un sondaggio di tipo {form.get_type_verbose_name()} ha bisogno almeno {form.get_min_options()} opzioni"
