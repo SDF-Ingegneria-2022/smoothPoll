@@ -4,15 +4,21 @@
 
     {% load static %}
 
+    {% if GA_TAG %}
+    <input type="hidden" id="jsTag" name="variable" value="{{ GA_TAG }}">
+
     <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MBK1KQ5EGT"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ GA_TAG }}"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
 
-        gtag('config', 'G-MBK1KQ5EGT');
+        gtag('config', document.getElementById("jsTag").value);
+        // console.log(document.getElementById("jsTag").value);
     </script>
+    {% endif %}
+    
 
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
