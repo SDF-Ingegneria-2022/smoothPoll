@@ -100,4 +100,13 @@ mkdocs serve
 ```
 
 
+## Admin panel
+
+To use admin panel you have to create a super-user. You can do it through command:
+
+```bash
+python manage.py createsuperuser --username NAME --email EMAIL
+```
+
+System will make you set your password.
 

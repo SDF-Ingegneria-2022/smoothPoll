@@ -78,6 +78,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                
+                # make available env GA tag to templates
+                'SmoothPoll.context_processors.ga_tag', 
             ],
         },
     },
