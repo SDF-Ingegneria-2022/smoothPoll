@@ -42,7 +42,7 @@
             <div id="carouselExampleDark" class="carousel carousel-dark slide " data-bs-ride="carousel"> 
                 <div class="carousel-inner shadow-lg bg-body rounded">
                     {% for poll in predefined_polls %}
-                        <div class="carousel-item active" data-bs-interval="10000">
+                        <div class="carousel-item {% if  forloop.counter == 1 %} active {% endif %}" data-bs-interval="10000">
                         <div class="card w-100 border-0 pt-3 pb-3">
                             <div class="card-body text-center">
                                 <h3 class="card-title">{{poll.name}}</h3>
