@@ -124,6 +124,7 @@ class PollService:
         Raises:
             PollDoesNotExistException: If the poll not exist.
             PollIsOpenException: If the poll is already open.
+            PollCannotBeOpenedException: If the poll open and close time is not valid.
             
         Returns: 
             PollModel: the opened poll.
@@ -136,7 +137,7 @@ class PollService:
         if poll.is_open():
             raise PollIsOpenException(f"Poll with id={id} is already open.")
 
-        if poll.open_datetime and poll.close_datetime and timezone.now() < poll.open_datetime:
+        if poll.open_datetime and poll.close_datetime and timezone.now() < poll.close_datetime:
             poll.open_datetime = timezone.now()
             poll.save()
 

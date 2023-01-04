@@ -316,7 +316,7 @@ class TestPollService:
         poll = PollService.create(self.name, self.question, self.options)
         id = poll.id
 
-        open_date = datetime.datetime(year=2030, month=12, day=31, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+        open_date = datetime.datetime(year=2100, month=12, day=31, hour=12, minute=12, tzinfo=datetime.timezone.utc)
         poll.open_datetime = open_date
 
         assert_that(poll.is_open()).is_false()
