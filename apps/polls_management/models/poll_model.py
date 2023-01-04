@@ -37,6 +37,10 @@ class PollModel(models.Model):
         default=None, blank=True, null=True,
         verbose_name=_("Data Chiusura")
     )
+    
+    predefined: models.BooleanField = models.BooleanField(
+        default=False, verbose_name=_("Predefinito")
+    )
 
     def __str__(self):
         return str({
@@ -46,6 +50,7 @@ class PollModel(models.Model):
             'poll_type': self.poll_type, 
             'open_datetime': self.open_datetime, 
             'close_datetime': self.close_datetime,
+            'predefined': self.predefined,
         })
 
     def options(self) -> List[PollOptionModel]:
