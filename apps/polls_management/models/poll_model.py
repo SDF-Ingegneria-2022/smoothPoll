@@ -68,6 +68,9 @@ class PollModel(models.Model):
     def is_closed(self) -> bool:
         """Chech if Poll is closed"""
         
+        if self.close_datetime is None:
+            return False
+        
         return timezone.now() > self.close_datetime
 
     def get_state_label(self) -> str: 
