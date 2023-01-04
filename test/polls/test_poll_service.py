@@ -288,10 +288,9 @@ class TestPollService:
         poll.save()
 
         assert_that(poll.open_datetime).is_not_none()
+        assert_that(poll.close_datetime).is_not_none()
 
         assert_that(poll.is_open()).is_false()
-
-        assert_that(poll).is_instance_of(PollModel)
 
         poll = PollService.open_poll(id)
 
@@ -324,4 +323,22 @@ class TestPollService:
 
         assert_that(PollService.open_poll) \
             .raises(PollCannotBeOpenedException) \
+            .when_called_with(id=id)
+
+    @pytest.mark.django_db
+    def test_open_poll_w_wrong_open_close_time(self):
+        """Test open poll, open datetime and closetime not None but already passed"""
+        poll = PollService.create(self.name, self.question, self.options)
+        id = poll.id
+
+        open_date = datetime.datetime(year=2020, month=12, day=30, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+        close_date = datetime.datetime(year=2022, month=12, day=31, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+        poll.open_datetime = open_date
+        poll.close_datetime = close_date
+
+        # to update the open_datetime value and is_open method of the model
+        poll.save()
+
+        assert_that(PollService.open_poll) \
+            .raises(PollIsOpenException) \
             .when_called_with(id=id)
