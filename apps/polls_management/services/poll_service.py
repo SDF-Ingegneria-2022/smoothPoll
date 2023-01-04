@@ -4,6 +4,7 @@ from django.core.paginator import Paginator
 from apps.polls_management.classes.majority_poll_result_data import MajorityPollResultData
 from apps.polls_management.classes.poll_result import PollResult
 from apps.polls_management.exceptions.paginator_page_size_exception import PaginatorPageSizeException
+from apps.polls_management.exceptions.poll_cannot_be_opened_exception import PollCannotBeOpenedException
 from apps.polls_management.exceptions.poll_has_been_voted_exception import PollHasBeenVotedException
 from apps.polls_management.exceptions.poll_is_open_exception import PollIsOpenException
 from apps.polls_management.exceptions.poll_not_valid_creation_exception import PollNotValidCreationException
@@ -123,6 +124,7 @@ class PollService:
         Raises:
             PollDoesNotExistException: If the poll not exist.
             PollIsOpenException: If the poll is already open.
+            PollCannotBeOpenedException: If the poll open and close time is not valid.
             
         Returns: 
             PollModel: the opened poll.
@@ -135,8 +137,11 @@ class PollService:
         if poll.is_open():
             raise PollIsOpenException(f"Poll with id={id} is already open.")
 
-        poll.open_datetime = timezone.now()
+        if poll.open_datetime and poll.close_datetime and timezone.now() < poll.close_datetime:
+            poll.open_datetime = timezone.now()
+            poll.save()
 
-        poll.save()
-
-        return poll
+            return poll
+            
+        else:
+            raise PollCannotBeOpenedException(f"Poll with id={id} cannot be opened.")

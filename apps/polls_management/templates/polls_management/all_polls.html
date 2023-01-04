@@ -68,7 +68,9 @@
                                 {% if not poll.is_open and poll.open_datetime %}
                                     <br><span class="fw-normal">(Apertura: {{poll.open_datetime}})</span>
                                 {% endif %}
+                                {% if not poll.is_closed and poll.is_open %}
                                 <br><span class="fw-normal">(Chiusura: {{poll.close_datetime}})</span>
+                                {% endif %}
                             </p>
                         </div>
                     </div>

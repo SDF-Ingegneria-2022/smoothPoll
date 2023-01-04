@@ -91,6 +91,7 @@ class TestPollCreate:
 
         form = make_forms["form1"]
         form.data["open_datetime"] = "31/12/2022 23:59"
+        form.data["close_datetime"] = "31/12/2023 23:59"
 
         poll = PollCreateService.create_or_edit_poll(form, self.options1)
 
@@ -109,6 +110,41 @@ class TestPollCreate:
 
         form = make_forms["form1"]
         form.data["open_datetime"] = "31/13/2022 23:59"
+        form.data["close_datetime"] = "31/12/2023 23:59"
+
+        assert_that(PollCreateService.create_or_edit_poll) \
+            .raises(PollMainDataNotValidException) \
+            .when_called_with(poll_form=form, options=self.options1)
+
+    @pytest.mark.django_db
+    def test_create_without_close_date(self, make_forms): 
+        """Check what happen if I don't insert a close date"""
+
+        form = make_forms["form1"]
+        form.data["open_datetime"] = "31/12/2022 23:59"
+
+        assert_that(PollCreateService.create_or_edit_poll) \
+            .raises(PollMainDataNotValidException) \
+            .when_called_with(poll_form=form, options=self.options1)
+
+    @pytest.mark.django_db
+    def test_create_without_open_date(self, make_forms): 
+        """Check what happen if I don't insert a open date"""
+
+        form = make_forms["form1"]
+        form.data["close_datetime"] = "31/12/2022 23:59"
+
+        assert_that(PollCreateService.create_or_edit_poll) \
+            .raises(PollMainDataNotValidException) \
+            .when_called_with(poll_form=form, options=self.options1)
+
+    @pytest.mark.django_db
+    def test_create_with_precedent_close_dates(self, make_forms): 
+        """Check what happen if I insert a open date after a close date"""
+
+        form = make_forms["form1"]
+        form.data["open_datetime"] = "31/12/2100 23:59"
+        form.data["close_datetime"] = "31/12/2100 22:59"
 
         assert_that(PollCreateService.create_or_edit_poll) \
             .raises(PollMainDataNotValidException) \

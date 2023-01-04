@@ -41,7 +41,7 @@ class PollForm(ModelForm):
                 'required': _("Inserisci la domanda per il tuo sondaggio"), 
             },
             'poll_type': {
-                # 'required': _("Seleziona una tipologia di sondaggio"), 
+                'required': _("Seleziona una tipologia di sondaggio"), 
             },
             'close_datetime': {
                 'required': _("Inserisci una data di chiusura per il sondaggio"), 
@@ -62,7 +62,7 @@ class PollForm(ModelForm):
                     'class':'form-control', 
                     'placeholder':'Scegli la data di chiusura del sondaggio', 
                     'type':'datetime-local',
-                    'required':True
+                    # 'required':True
                 }
             ),
         }
@@ -84,14 +84,22 @@ class PollForm(ModelForm):
             poll_type = self.data["poll_type"],
             ).get_type_verbose_name()
 
-    # def clean(self):
-    #     cleaned_data = super().clean()
-    #     open_date = cleaned_data.get("open_datetime")
-    #     close_date = cleaned_data.get("close_datetime")
+    def clean(self):
+        open_datetime = self.cleaned_data.get("open_datetime", None)
+        close_datetime = self.cleaned_data.get("close_datetime", None)
 
-    #     if open_date > close_date:
-    #         msg = "La data di apertura non è valida rispetto alla data di chiusura del sondaggio"
-    #         self.add_error('close_date', msg=msg)
+        if open_datetime is not None and close_datetime is None:
+            self._errors['close_datetime'] = self.error_class([
+                    'Inserisci anche una data di chisura'])
+        elif open_datetime is None and close_datetime is not None:
+            self._errors['open_datetime'] = self.error_class([
+                    'Inserisci anche una data di apertura'])
+        elif open_datetime is not None and close_datetime is not None:
+            if open_datetime > close_datetime:
+                self._errors['close_datetime'] = self.error_class([
+                    'Inserisci una data di chiusura successiva a quella di apertura'])
+        
+        return self.cleaned_data
 
 # class PollOptionForm(ModelForm):
 #     """(Not used) form to input option.
