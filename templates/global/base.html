@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
+
+    {% load static %}
+
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-MBK1KQ5EGT"></script>
     <script>
@@ -17,6 +20,8 @@
     <title>{% block pagename %}{% endblock pagename %} | Vota Meglio</title>
     <meta name="description" 
         content="{% block metadescription %}{% endblock metadescription %}" >
+    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}?v=2"/>
+
  
     {# Load the tag library #}
     {% load bootstrap5 %}
