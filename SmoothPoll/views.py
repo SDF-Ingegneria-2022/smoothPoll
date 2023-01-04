@@ -10,7 +10,6 @@ def home(request):
     config = configparser.ConfigParser()
     config.read('.bumpversion.cfg')
     version = config.get('bumpversion', 'current_version')
-    print(version)
     return render(request, "global/home.html",
                   {"predefined_polls": predefined_polls, 
                    "version": version})
