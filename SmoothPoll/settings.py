@@ -41,7 +41,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'polls', 
+    'apps.polls_management', 
+    'apps.votes_results', 
+
     'bootstrap5', 
     "django_htmx",
 ]
@@ -57,6 +59,8 @@ MIDDLEWARE = [
 
     "django_htmx.middleware.HtmxMiddleware",
 ]
+
+SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
 
 ROOT_URLCONF = 'SmoothPoll.urls'
 
@@ -74,6 +78,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                
+                # make available env GA tag to templates
+                'SmoothPoll.context_processors.ga_tag', 
             ],
         },
     },

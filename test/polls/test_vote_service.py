@@ -1,13 +1,13 @@
-from polls.classes.poll_result import PollResult, PollResultVoice
-from polls.models.vote_model import VoteModel
+from apps.polls_management.classes.poll_result import PollResult, PollResultVoice
+from apps.polls_management.models.vote_model import VoteModel
 import pytest
 from assertpy import assert_that
-from polls.models.poll_model import PollModel
-from polls.models.poll_option_model import PollOptionModel
-from polls.services.vote_service import VoteService
-from polls.exceptions.poll_option_unvalid_exception import PollOptionUnvalidException
-from polls.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
-from polls.exceptions.vote_does_not_exixt_exception import VoteDoesNotExistException
+from apps.polls_management.models.poll_model import PollModel
+from apps.polls_management.models.poll_option_model import PollOptionModel
+from apps.votes_results.services.single_option_vote_service import SingleOptionVoteService
+from apps.polls_management.exceptions.poll_option_unvalid_exception import PollOptionUnvalidException
+from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
+from apps.polls_management.exceptions.vote_does_not_exixt_exception import VoteDoesNotExistException
 
 @pytest.fixture()
 def test_polls(request):
@@ -37,7 +37,7 @@ class TestPollService:
     
         poll: PollModel = test_polls['voted_poll']
 
-        VoteService.perform_vote(poll_id=poll.id, poll_choice_id=poll.options()[0].id)
+        SingleOptionVoteService.perform_vote(poll_id=poll.id, poll_choice_id=poll.options()[0].id)
 
     @pytest.mark.django_db
     def test_vote_result_works(self, test_polls):
@@ -46,10 +46,10 @@ class TestPollService:
         """
         
         poll: PollModel = test_polls['voted_poll']
-        result = VoteService.calculate_result(poll.id)
+        result = SingleOptionVoteService.calculate_result(poll.id)
         assert_that(result).is_instance_of(PollResult)
 
-        for voted_option in VoteService.calculate_result(poll.id).get_sorted_options(): 
+        for voted_option in SingleOptionVoteService.calculate_result(poll.id).get_sorted_options(): 
             assert_that(voted_option).is_instance_of(PollResultVoice)
 
 
@@ -61,12 +61,12 @@ class TestPollService:
 
         poll: PollModel = test_polls['voted_poll']
 
-        for voted_option in VoteService.calculate_result(poll.id).get_sorted_options(): 
+        for voted_option in SingleOptionVoteService.calculate_result(poll.id).get_sorted_options(): 
             assert_that(voted_option.n_votes).is_equal_to(0)
 
-        VoteService.perform_vote(poll_id=poll.id, poll_choice_id=poll.options()[0].id)
+        SingleOptionVoteService.perform_vote(poll_id=poll.id, poll_choice_id=poll.options()[0].id)
 
-        winner = VoteService.calculate_result(poll.id).get_sorted_options()[0]
+        winner = SingleOptionVoteService.calculate_result(poll.id).get_sorted_options()[0]
 
         assert_that(winner.option.id).is_equal_to(poll.options()[0].id)
         assert_that(winner.n_votes).is_equal_to(1)
@@ -79,17 +79,17 @@ class TestPollService:
 
         poll: PollModel = test_polls['voted_poll']
 
-        for voted_option in VoteService.calculate_result(poll.id).get_sorted_options(): 
+        for voted_option in SingleOptionVoteService.calculate_result(poll.id).get_sorted_options(): 
             assert_that(voted_option.n_votes).is_equal_to(0)
 
-        VoteService.perform_vote(poll_id=poll.id, poll_choice_id=poll.options()[0].id)
-        VoteService.perform_vote(poll_id=poll.id, poll_choice_id=poll.options()[1].id)
-        VoteService.perform_vote(poll_id=poll.id, poll_choice_id=poll.options()[2].id)
-        VoteService.perform_vote(poll_id=poll.id, poll_choice_id=poll.options()[0].id)
-        VoteService.perform_vote(poll_id=poll.id, poll_choice_id=poll.options()[1].id)
-        VoteService.perform_vote(poll_id=poll.id, poll_choice_id=poll.options()[2].id)
+        SingleOptionVoteService.perform_vote(poll_id=poll.id, poll_choice_id=poll.options()[0].id)
+        SingleOptionVoteService.perform_vote(poll_id=poll.id, poll_choice_id=poll.options()[1].id)
+        SingleOptionVoteService.perform_vote(poll_id=poll.id, poll_choice_id=poll.options()[2].id)
+        SingleOptionVoteService.perform_vote(poll_id=poll.id, poll_choice_id=poll.options()[0].id)
+        SingleOptionVoteService.perform_vote(poll_id=poll.id, poll_choice_id=poll.options()[1].id)
+        SingleOptionVoteService.perform_vote(poll_id=poll.id, poll_choice_id=poll.options()[2].id)
 
-        for voted_option in VoteService.calculate_result(poll.id).get_sorted_options(): 
+        for voted_option in SingleOptionVoteService.calculate_result(poll.id).get_sorted_options(): 
             assert_that(voted_option.n_votes).is_equal_to(2)
 
     @pytest.mark.django_db
@@ -101,7 +101,7 @@ class TestPollService:
         voted_poll: PollModel = test_polls['voted_poll']
         control_poll: PollModel = test_polls['control_poll']
 
-        assert_that(VoteService.perform_vote) \
+        assert_that(SingleOptionVoteService.perform_vote) \
             .raises(PollOptionUnvalidException) \
             .when_called_with(poll_id=voted_poll.id,  
             poll_choice_id=control_poll.options()[0].id)
@@ -117,7 +117,7 @@ class TestPollService:
         option_id = voted_poll.options()[0].id
         voted_poll.delete()
 
-        assert_that(VoteService.perform_vote) \
+        assert_that(SingleOptionVoteService.perform_vote) \
             .raises(PollDoesNotExistException) \
             .when_called_with(poll_id=id, poll_choice_id=option_id)
 
@@ -131,7 +131,7 @@ class TestPollService:
         id = voted_poll.id
         voted_poll.delete()
 
-        assert_that(VoteService.calculate_result) \
+        assert_that(SingleOptionVoteService.calculate_result) \
             .raises(PollDoesNotExistException) \
             .when_called_with(poll_id=id)
 
@@ -143,8 +143,8 @@ class TestPollService:
 
         poll: PollModel = test_polls['voted_poll']
 
-        performed_vote = VoteService.perform_vote(poll_id=poll.id, poll_choice_id=poll.options()[0].id)
-        retrieved_vote = VoteService.get_vote_by_id(vote_id=performed_vote.id)
+        performed_vote = SingleOptionVoteService.perform_vote(poll_id=poll.id, poll_choice_id=poll.options()[0].id)
+        retrieved_vote = SingleOptionVoteService.get_vote_by_id(vote_id=performed_vote.id)
 
         assert_that(retrieved_vote).is_instance_of(VoteModel)
         assert_that(retrieved_vote.id).is_equal_to(performed_vote.id)
@@ -158,11 +158,11 @@ class TestPollService:
 
         poll: PollModel = test_polls['voted_poll']
 
-        performed_vote = VoteService.perform_vote(poll_id=poll.id, poll_choice_id=poll.options()[0].id)
+        performed_vote = SingleOptionVoteService.perform_vote(poll_id=poll.id, poll_choice_id=poll.options()[0].id)
         id = performed_vote.id
         performed_vote.delete()
 
-        assert_that(VoteService.get_vote_by_id) \
+        assert_that(SingleOptionVoteService.get_vote_by_id) \
             .raises(VoteDoesNotExistException) \
             .when_called_with(vote_id=id)
         

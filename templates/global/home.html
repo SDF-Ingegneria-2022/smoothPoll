@@ -5,48 +5,72 @@
 {% block content %}
     <div class="container">
         <div class="row mt-4">
-            <div class="col-12 mt-5">
-                <h1>Benvenuto su SmoothPoll!</h1>
+            <div class="col-12 mt-5 text-center">
+                <h1>Benvenuto su Vota Meglio!</h1>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-6">
-                <p class="fs-5">L'obiettivo di SmoothPoll è di facilitare la gestione dei tuoi sondaggi. Potrai gestirli a partire 
+        <div class="row  justify-content-md-center  justify-content-center">
+            <div class="col-xs-12 col-sm-12 col-md-8">
+                <p class="fs-5 fw-lighter text-center">L'obiettivo di Vota Meglio è di facilitare la gestione dei tuoi sondaggi. Potrai gestirli a partire 
                 dalla creazione, fino al calcolo dei risultati!</p>
-                <div class="alert alert-info mt-5" role="alert">
-                    Nota: l'applicazione è ancora in fase di costruzione. Per qualsiasi problema o suggerimento contattare gli svilupparatori.
-                </div>
+                
             </div>
         </div>
-        <div class="row mt-2 justify-content-between">
+        <div class="row mt-2 justify-content-md-center">
             <div class="col-md-6">
-                <div class="d-grid gap-2 d-md-block">
+                <div class="d-grid gap-2 d-md-block text-center">
                     <a name="" id="" role="button"
-                        class="btn btn-primary mt-2 me-2" 
-                        href="{% url 'polls:all_polls' %}?page=1&per_page=10" >
+                        class="btn  btn-outline-primary mt-2 me-2" 
+                        href="{% url 'apps.polls_management:all_polls' %}?page=1&per_page=10" >
                         Vai alla lista di tutti i sondaggi
                     </a>
                     <a name="" id="" role="button"
-                        class="btn btn-secondary mt-2 me-2" 
+                        class="btn btn-outline-secondary mt-2 me-2" 
                         href="https://github.com/SDF-Ingegneria-2022/smoothPoll/issues" 
                         target="_blank">
                         Lasciaci un Feedback
                     </a> 
                 </div>
             </div>
-
-            {# Demo card #}
-            <div class="col-md-4">
-                <div class="card shadow-lg  mb-5 bg-body rounded mt-5">
-                    <h5 class="card-header">Demo</h5>
-                    <div class="card-body">
-                        <h5 class="card-title">Sondaggio maggioritario</h5>
-                        <p class="card-text">Perchè non provi il nuovo tipo di sondaggio che i nostri programmatori stanno sviluppando?</p>
-                        <a  href="{% url 'polls:dummy_majority' %}" class="btn btn-primary">Vai al sondaggio maggioritario</a>
-                    </div>
-                </div>
+        </div>
+        <div class="row">
+            <div class="col-12 mt-5 text-center">
+                <p class=" fs-3 fw-light">Prova a votare con il <b>Metodo Maggioritario</b></p>
             </div>
-        </div>        
+        </div>
+        <div class="row">
+            <div id="carouselExampleDark" class="carousel carousel-dark slide " data-bs-ride="carousel"> 
+                <div class="carousel-inner shadow-lg bg-body rounded">
+                    {% for poll in predefined_polls %}
+                        <div class="carousel-item active" data-bs-interval="10000">
+                        <div class="card w-100 border-0 pt-3 pb-3">
+                            <div class="card-body text-center">
+                                <h3 class="card-title">{{poll.name}}</h3>
+                                <h4 class="card-subtitle mb-2 text-muted">{{poll.question}}</h4>
+                                    <p  class="fw-light mb-1 ">Stato sondaggio: <b>Aperto</b></p>
+                                    <p  class="fw-light mb-1 ">Data chiusura: <b>{{poll.close_datetime}}</b></p>
+                            <a href="{% url 'apps.votes_results:single_option_vote' poll_id=poll.id %}" class="btn btn-primary mt-2">Vota il sondaggio</a>
+                            <a href="{% url 'apps.votes_results:majority_judgment_results' poll_id=poll.id %}" class="btn btn-secondary mt-2">Vai al risultati</a>
+                            </div>
+                        </div>
+                        </div>
+                    {% endfor %}
+                  
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="prev">
+                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="next">
+                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Next</span>
+                </button>
+              </div>
+        </div>
+    </div>
+    <div class="position-relative mt-5">
+        
+        <span class="badge bg-secondary position-absolute  bottom-0 end-0 me-3">v{{version}}</span>
     </div>
     
 {% endblock content %}

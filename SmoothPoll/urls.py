@@ -22,8 +22,15 @@ urlpatterns = [
 
     # home page
     path('', views.home, name="home"),
-    # path('admin/', admin.site.urls),
-    path('sondaggi/', include('polls.urls'), name="polls"),
+    
+    # area to manage your polls (open, close, CRUD operations)
+    path('gestione-sondaggi/', include('apps.polls_management.urls'), name="polls_management"),
+
+    # area to vote and view results
+    path('voti-e-risultati/', include('apps.votes_results.urls'), name="votes_results"),
+
+    # admin auth
+    path('admin/', admin.site.urls),
 ]
 
 handler404 = 'SmoothPoll.views.error_404_view'

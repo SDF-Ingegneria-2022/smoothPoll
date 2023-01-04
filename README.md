@@ -74,7 +74,7 @@ This project is based on Django, so all usual Django rules and commands are vali
     For example, this sequence of commands will make you create a dummy survey:
     -   import service:
         ```
-        from polls.services.poll_service import PollService
+        from apps.polls_management.services.poll_service import PollService
         ```
     -   use service to create dummy survey
         ```
@@ -100,4 +100,13 @@ mkdocs serve
 ```
 
 
+## Admin panel
+
+To use admin panel you have to create a super-user. You can do it through command:
+
+```bash
+python manage.py createsuperuser --username NAME --email EMAIL
+```
+
+System will make you set your password.
 

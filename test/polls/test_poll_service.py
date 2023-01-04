@@ -1,18 +1,21 @@
-from typing import List
+import datetime
+from typing import List, Tuple
 import pytest
 from assertpy import assert_that
 from django.db import models
 from django.core.paginator import Paginator
-from polls.classes.poll_result import PollResult, PollResultVoice
-from polls.exceptions.paginator_page_size_exception import PaginatorPageSizeException
-from polls.exceptions.poll_has_been_voted_exception import PollHasBeenVotedException
-from polls.exceptions.poll_option_unvalid_exception import PollOptionUnvalidException
-from polls.models.poll_model import PollModel
-from polls.models.poll_option_model import PollOptionModel
-from polls.services.poll_service import PollService
-from polls.exceptions.poll_not_valid_creation_exception import PollNotValidCreationException
-from polls.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
-from polls.services.vote_service import VoteService
+from apps.polls_management.classes.poll_form import PollForm
+from apps.polls_management.exceptions.paginator_page_size_exception import PaginatorPageSizeException
+from apps.polls_management.exceptions.poll_cannot_be_opened_exception import PollCannotBeOpenedException
+from apps.polls_management.exceptions.poll_is_open_exception import PollIsOpenException
+from apps.polls_management.models.poll_model import PollModel
+from apps.polls_management.models.poll_option_model import PollOptionModel
+from apps.votes_results.services.majority_judgment_vote_service import MajorityJudjmentVoteService
+from apps.polls_management.services.poll_create_service import PollCreateService
+from apps.polls_management.services.poll_service import PollService
+from apps.polls_management.exceptions.poll_not_valid_creation_exception import PollNotValidCreationException
+from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
+from apps.votes_results.services.single_option_vote_service import SingleOptionVoteService
 
 
 class TestPollService:
@@ -31,8 +34,21 @@ class TestPollService:
             new_poll.save()
             for option_index in range(2):
                 PollOptionModel(value=f"Option {option_index}", poll_fk_id=new_poll.id).save()
+    
+    @pytest.fixture
+    def create_majority_poll(self) -> PollModel:
+        """Creates a majotiry poll"""
+        MAJORITY_JUDJMENT = "majority_judjment"
+        majority_judjment_form: PollForm = PollForm({"name": "Form name", "question": "Form question", "poll_type": MAJORITY_JUDJMENT})
+        majority_judjment_options: List[str] = ["Option 1", "Option 2", "Option 3"]
+        return PollCreateService.create_or_edit_poll(majority_judjment_form, majority_judjment_options)
         
+         
+    
     ## Tests
+    
+    # =================== Legacy creation mode in the following tests ===================
+    
     
     @pytest.mark.django_db
     def test_create(self):
@@ -97,6 +113,7 @@ class TestPollService:
             .raises(PollDoesNotExistException) \
             .when_called_with(id=id)
 
+    
     @pytest.mark.django_db
     def test_get_paginated_polls_check_instance(self, create_20_polls):
         """Test get paginated polls with 20 polls and 5 polls per page and check the instance of the returned object"""
@@ -111,13 +128,29 @@ class TestPollService:
 
         assert_that(PollService.get_paginated_polls).raises(PaginatorPageSizeException).when_called_with(items_per_page)
     
+    # ====== Delete poll ======
     @pytest.mark.django_db
     def test_delete_poll(self):
-        """Test delete poll, basic verification that it works"""
+        """Test delete poll, basic verification that it works (not open poll)"""
         poll = PollService.create(self.name, self.question, self.options)
         id = poll.id
+
+        open_date = datetime.datetime(year=2050, month=12, day=31, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+        close_date = datetime.datetime(year=2100, month=12, day=31, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+        poll.open_datetime = open_date
+        poll.close_datetime = close_date
+
+        # to update the open_datetime value and is_open method of the model
+        poll.save()
+
+        assert_that(poll.open_datetime).is_not_none()
+
+        assert_that(poll.is_open()).is_false()
+
         assert_that(poll).is_instance_of(PollModel)
+
         PollService.delete_poll(poll.id)
+
         assert_that(PollService.delete_poll)\
             .raises(PollDoesNotExistException)\
             .when_called_with(id=id)
@@ -133,13 +166,19 @@ class TestPollService:
             .when_called_with(id=id)
     
     @pytest.mark.django_db
-    def test_delete_already_voted_poll(self):
-        """Test delete poll that has been already voted"""
+    def test_delete_is_open(self):
+        """Test delete poll that is already open"""
         poll = PollService.create(self.name, self.question, self.options)
-        VoteService.perform_vote(poll_id=poll.id, poll_choice_id=poll.options()[0].id)
         id = poll.id
-        assert_that(PollService.delete_poll) \
-            .raises(PollHasBeenVotedException) \
+
+        open_date = datetime.datetime(year=2022, month=12, day=12, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+        poll.open_datetime = open_date
+
+        # to update the open_datetime value and is_open method of the model
+        poll.save()
+
+        assert_that(PollService.delete_poll)\
+            .raises(PollIsOpenException)\
             .when_called_with(id=id)
     
     @pytest.mark.django_db
@@ -149,7 +188,157 @@ class TestPollService:
         assert_that(poll).is_instance_of(PollModel)
         option_id = poll.options()[0].id
         id = poll.id
+
+        open_date = datetime.datetime(year=2050, month=12, day=30, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+        close_date = datetime.datetime(year=2100, month=12, day=31, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+        poll.open_datetime = open_date
+        poll.close_datetime = close_date
+
+        # to update the open_datetime value and is_open method of the model
+        poll.save()
+
         PollService.delete_poll(id)
-        assert_that(VoteService.perform_vote) \
+        assert_that(SingleOptionVoteService.perform_vote) \
             .raises(PollDoesNotExistException) \
             .when_called_with(poll_id=id, poll_choice_id=option_id)
+            
+    # =================== END legacy creation mode ===================
+    @pytest.mark.django_db      
+    def test_delete_majority_poll(self, create_majority_poll):
+        """Test delete poll with majority (not open)"""
+        poll: PollModel = create_majority_poll
+
+        open_date = datetime.datetime(year=2050, month=12, day=30, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+        close_date = datetime.datetime(year=2100, month=12, day=31, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+        poll.open_datetime = open_date
+        poll.close_datetime = close_date
+
+        # to update the open_datetime value and is_open method of the model
+        poll.save()
+        
+        deletion: Tuple = PollService.delete_poll(poll.id)
+        assert_that(deletion[0]).is_greater_than(0)
+    
+    @pytest.mark.django_db
+    def test_delete_is_open_majority_poll(self, create_majority_poll):
+        """Test if an open majority poll is called to be deleted"""
+
+        majority_poll: PollModel = create_majority_poll
+        majority_poll_options:  List[PollOptionModel] = majority_poll.options()
+        majority_vote_choices: List = [{'poll_choice_id': option.id, 'rating': 1 } for option in majority_poll_options]
+        
+        open_date = datetime.datetime(year=2022, month=12, day=12, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+        majority_poll.open_datetime = open_date
+
+        # to update the open_datetime value and is_open method of the model
+        majority_poll.save()
+
+        MajorityJudjmentVoteService.perform_vote(majority_vote_choices, majority_poll.id)
+        
+        assert_that(PollService.delete_poll) \
+            .raises(PollIsOpenException) \
+            .when_called_with(id=majority_poll.id)
+
+    # ====== Open poll ======
+
+    @pytest.mark.django_db
+    def test_open_poll(self):
+        """Test open poll, nonexistent poll"""
+        poll = PollService.create(self.name, self.question, self.options)
+        id = poll.id
+
+        PollService.delete_poll(id)
+
+        assert_that(PollService.open_poll) \
+            .raises(PollDoesNotExistException) \
+            .when_called_with(id=id)
+
+    @pytest.mark.django_db
+    def test_open_poll_already_open(self):
+        """Test open poll, if poll is already open"""
+        poll = PollService.create(self.name, self.question, self.options)
+        id = poll.id
+
+        open_date = datetime.datetime(year=2020, month=12, day=31, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+        poll.open_datetime = open_date
+
+        # to update the open_datetime value and is_open method of the model
+        poll.save()
+
+        assert_that(poll.open_datetime).is_not_none()
+
+        assert_that(poll.is_open()).is_true()
+
+        assert_that(PollService.open_poll) \
+            .raises(PollIsOpenException) \
+            .when_called_with(id=id)
+
+    @pytest.mark.django_db
+    def test_open_poll_w_right_open_close_time(self):
+        """Test open poll, open datetime and closetime not None"""
+        poll = PollService.create(self.name, self.question, self.options)
+        id = poll.id
+
+        open_date = datetime.datetime(year=2050, month=12, day=30, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+        close_date = datetime.datetime(year=2100, month=12, day=31, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+        poll.open_datetime = open_date
+        poll.close_datetime = close_date
+
+        # to update the open_datetime value and is_open method of the model
+        poll.save()
+
+        assert_that(poll.open_datetime).is_not_none()
+        assert_that(poll.close_datetime).is_not_none()
+
+        assert_that(poll.is_open()).is_false()
+
+        poll = PollService.open_poll(id)
+
+        assert_that(poll.is_open()).is_true()
+
+    @pytest.mark.django_db
+    def test_open_poll_without_open_and_close_time(self):
+        """Test open poll, no open and close time"""
+        poll = PollService.create(self.name, self.question, self.options)
+        id = poll.id
+
+        assert_that(poll.open_datetime).is_none()
+
+        assert_that(poll.is_open()).is_false()
+
+        assert_that(PollService.open_poll) \
+            .raises(PollCannotBeOpenedException) \
+            .when_called_with(id=id)
+
+    @pytest.mark.django_db
+    def test_open_poll_without_close_time(self):
+        """Test open poll, no close time"""
+        poll = PollService.create(self.name, self.question, self.options)
+        id = poll.id
+
+        open_date = datetime.datetime(year=2100, month=12, day=31, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+        poll.open_datetime = open_date
+
+        assert_that(poll.is_open()).is_false()
+
+        assert_that(PollService.open_poll) \
+            .raises(PollCannotBeOpenedException) \
+            .when_called_with(id=id)
+
+    @pytest.mark.django_db
+    def test_open_poll_w_wrong_open_close_time(self):
+        """Test open poll, open datetime and closetime not None but already passed"""
+        poll = PollService.create(self.name, self.question, self.options)
+        id = poll.id
+
+        open_date = datetime.datetime(year=2020, month=12, day=30, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+        close_date = datetime.datetime(year=2022, month=12, day=31, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+        poll.open_datetime = open_date
+        poll.close_datetime = close_date
+
+        # to update the open_datetime value and is_open method of the model
+        poll.save()
+
+        assert_that(PollService.open_poll) \
+            .raises(PollIsOpenException) \
+            .when_called_with(id=id)

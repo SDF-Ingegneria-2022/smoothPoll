@@ -1,0 +1,104 @@
+{% extends 'global/skeleton.html' %}
+
+{% block pagename %}Conferma voto Giudizio Maggioritario{% endblock pagename %}
+
+{% block customjs %}
+<script>
+/**
+ * Copy an url on user's clipboard.
+ * 
+ * Inspired to: https://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_copy_clipboard 
+ */
+function copyLink(url) {
+
+    // Copy the text inside user 
+    navigator.clipboard.writeText(url);
+  
+    // Alert the copied text
+    alert("Link copiato!");
+}
+</script>
+{% endblock customjs %}
+
+
+
+{% block content %}
+
+<div class="container text-center mt-5 mb-5">
+    {# Poll summary #}
+    <h2 class="text-success">Grazie di aver votato! Il tuo voto è stato registrato.</h2>
+    <div class="row">
+        <div class="col-md-auto">
+            <p class="fw-bold fs-5 ">Nome del sondaggio:</p>    
+        </div>
+        <div class="col">
+            <p class="mt-1">{{vote.poll.name}}</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-auto">
+            <p class="fw-bold fs-5">Quesito:</p>
+        </div>
+        <div class="col">
+            <p class="mt-1">{{vote.poll.question}}</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-auto">
+            <p class="fw-bold fs-5">Riassunto del voto:</p>
+        </div>
+    </div>
+    {# Table #}
+    <div class="row">
+        <div class="col-md-5">
+            <table class="table table-secondary shadow p-3 mb-5 bg-body rounded">
+                <thead>
+                    <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Opzione</th>
+                    <th scope="col">Voto</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for option in vote.judgments%}
+                        <tr>
+                            <th scope="row">  {{ forloop.counter }}</th>
+                            <td>
+                            {{option.poll_option.value}}</td>
+                            <td> 
+                                {% if option.rating == 1 %}
+                                    Pessimo
+                                {%elif  option.rating == 2%}
+                                    Insufficiente
+                                {%elif  option.rating == 3%}
+                                    Sufficiente  
+                                {%elif  option.rating == 4%}
+                                    Buono 
+                                {%else%}
+                                    Ottimo  
+                                {% endif %}
+                            
+                            
+                            </td>
+                        </tr>  
+                    {%endfor%}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    {# Buttons #}
+    <div class="container mt-5 ps-0" >
+        <div class="d-grid gap-2 d-md-block">
+            <a class="btn btn-primary mt-2" href="{% url 'apps.votes_results:majority_judgment_results' poll_id=vote.poll.id %}" role="button">Vedi risultati</a>
+            <button type="button" class="btn btn-secondary mt-2" 
+                onclick="copyLink('{{request.get_host}}{% url 'apps.votes_results:majority_judgment_results' poll_id=vote.poll.id %}')">
+                Copia link
+            </button>
+            <a class="btn btn-secondary mt-2" href="{% url 'apps.votes_results:majority_judgment_vote'  poll_id=vote.poll.id %}" role="button">Vota di nuovo</a>
+        </div>
+    </div>
+
+</div> 
+
+{% endblock content %}
