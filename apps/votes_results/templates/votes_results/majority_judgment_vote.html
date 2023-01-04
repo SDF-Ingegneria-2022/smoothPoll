@@ -35,7 +35,7 @@
     </div>
 
     <div class="container mt-3">
-        <div class="alert alert-primary d-flex align-items-center" role="alert">
+        <!-- <div class="alert alert-primary d-flex align-items-center" role="alert">
             <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Info:"><use xlink:href="#info-fill"/></svg>
             <div>
                 Per votare un sondaggio con il metodo del giudizio maggioritario dai la tua opinione su ciascuna delle opzioni tramite 
@@ -45,7 +45,7 @@
                 <a href="https://it.frwiki.wiki/wiki/Jugement_majoritaire#D%C3%A9partage_des_%C3%A9galit%C3%A9s" target="_black">qui</a>
                 trovi il metodo matematico con cui verranno calcolati i risultati.
             </div>
-        </div>
+        </div> -->
         <div class="alert alert-secondary alert-dismissible fade show" role="alert">
             Per valutare una opzione <strong>seleziona un valore</strong> della scala di giudizi attraverso l'apposita check-box.
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -86,23 +86,24 @@
                                         </div>
                                     {% endif %}
                                     
-                                <div class="col-12">
-                                
-                                    <div class="form-check  form-check-inline">
-                                    {% with option_id=option.id value=error.options_selected%}
-                                        {% if option_id in  error.options_selected.id and value|get_item:option_id == 1 %}
-                                            <input type="radio" class="form-check-input btn-check btn-block" id="btn-check-2-outlined-{{option.id}}-a" checked autocomplete="off" name="{{option.id}}"  value="1">  
-                                            <label class="btn btn-outline-secondary" for="btn-check-2-outlined-{{option.id}}-a">Pessimo</label><br>
-                                        {%else%}
-                                            <input type="radio" class="form-check-input btn-check btn-block" id="btn-check-2-outlined-{{option.id}}-a" autocomplete="off" name="{{option.id}}"  value="1">
-                                            <label class="btn btn-outline-secondary" for="btn-check-2-outlined-{{option.id}}-a">Pessimo</label><br>
-                                        {% endif %}
-                                     {% endwith %}
+                               
                                     
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="form-check form-check-inline">
+                                        <div class="form-check form-check-inline d-grid mx-auto">
+                                        {% with option_id=option.id value=error.options_selected%}
+                                            {% if option_id in  error.options_selected.id and value|get_item:option_id == 1 %}
+                                                <input type="radio" class="form-check-input btn-check btn-block " id="btn-check-2-outlined-{{option.id}}-a" checked autocomplete="off" name="{{option.id}}"  value="1">  
+                                                <label class="btn btn-outline-secondary" for="btn-check-2-outlined-{{option.id}}-a">Pessimo</label><br>
+                                            {%else%}
+                                                <input type="radio" class="form-check-input btn-check btn-block" id="btn-check-2-outlined-{{option.id}}-a" autocomplete="off" name="{{option.id}}"  value="1">
+                                                <label class="btn btn-outline-secondary w-100" for="btn-check-2-outlined-{{option.id}}-a">Pessimo</label><br>
+                                            {% endif %}
+                                        {% endwith %}
+                                        
+                                        </div>
+                                   
+                                
+                                
+                                    <div class="form-check form-check-inline d-grid mx-auto">
                                     {% with option_id=option.id value=error.options_selected%}
                                         {% if option_id in  error.options_selected.id and value|get_item:option_id == 2 %}
                                             <input type="radio" class="form-check-input btn-check btn-block" id="btn-check-2-outlined-{{option.id}}-b" checked autocomplete="off" name="{{option.id}}"  value="2">  
@@ -114,9 +115,9 @@
                                     {% endwith %}
                                     
                                     </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="form-check form-check-inline">
+                                
+                                
+                                    <div class="form-check form-check-inline d-grid mx-auto">
                                     {% with option_id=option.id value=error.options_selected%}
                                         {% if option_id in  error.options_selected.id and value|get_item:option_id == 3 %}
                                             <input type="radio" class="form-check-input btn-check btn-block" id="btn-check-2-outlined-{{option.id}}-c" checked autocomplete="off" name="{{option.id}}"  value="3">  
@@ -127,9 +128,9 @@
                                         {% endif %}
                                     {% endwith %}
                                     </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="form-check form-check-inline">
+                                
+                                
+                                    <div class="form-check form-check-inline d-grid mx-auto">
                                     {% with option_id=option.id value=error.options_selected%}
                                         {% if option_id in  error.options_selected.id and value|get_item:option_id == 4 %}
                                             <input type="radio" class="form-check-input btn-check btn-block" id="btn-check-2-outlined-{{option.id}}-d" checked autocomplete="off" name="{{option.id}}"  value="4">  
@@ -140,9 +141,9 @@
                                         {% endif %}
                                     {% endwith %}
                                     </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="form-check form-check-inline">
+                                
+                                
+                                    <div class="form-check form-check-inline d-grid mx-auto">
                                     {% with option_id=option.id value=error.options_selected%}
                                         {% if option_id in  error.options_selected.id and value|get_item:option_id == 5 %}
                                             <input type="radio" class="form-check-input btn-check btn-block" id="btn-check-2-outlined-{{option.id}}-e" checked autocomplete="off" name="{{option.id}}"  value="5">  
@@ -153,7 +154,7 @@
                                         {% endif %}
                                     {% endwith %}
                                     </div>
-                                </div>
+                                
                             </div>
                         </div>
                     </div>
@@ -168,22 +169,81 @@
     </div>
     
 </div>
-    <div class="container position-fixed  bottom-0 end-0 translate-middle-y">
 
-        <div class="shadow-lg bg-body rounded">
-            <div class="card ">
-                <div class="card-header fs-5" >
-                Scopri di più sul sondaggio maggioritario!
-                </div>
-                <div class="card-body">
-                <p class="card-text">Se vuoi farti un'idea di <b>come funziona il metodo del giudizio maggioritario</b>, vedi la nostra <i>guida</i>. <br>
-                    Se invece vuoi <b>approfondire</b>, dai un'occhiata al <i>metodo matematico</i> con cui verranno calcolati i risultati.</p>
-                <a href="#" class="btn btn-primary">Guida</a>
-                <a href="#" class="btn btn-primary">Metodo matematico</a>
-                </div>
+    <div class="container position-fixed bottom-0 end-0 mb-5" id="info">
+        <div class="row justify-content-end">
+            <div class="col-lg-8 col-xl-8 col-xxl-8 ">
+                <div class="shadow-lg bg-body rounded">
+                    <div class="card ">
+                        <div class="card-header fs-5" >
+                        Scopri di più sul sondaggio maggioritario!
+                        <button type="button" class="btn-close position-absolute top-0 end-0 mt-2 me-2"  aria-label="Close" id="closeInfoButton"></button>
+                        </div>
+                        
+                        <div class="card-body">
+                        <p class="card-text">Se vuoi farti un'idea di <b>come funziona il metodo del giudizio maggioritario</b>, vedi la nostra <i>guida</i>. <br>
+                            Se invece vuoi <b>approfondire</b>, dai un'occhiata al <i>metodo matematico</i> con cui verranno calcolati i risultati.</p>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#guidaModal">
+                            Guida
+                        </button>
+
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#metodoMatematicoModal">
+                            Metodo matematico
+                        </button>
+                        
+                       
+                        </div>
+                    </div>
             </div>
+            </div>
+        </div>    
     </div>
+
+        
+    <script type="text/javascript">
+
+        $("#closeInfoButton").click(function(){
+            $("#info").hide();
+        });
+
+    </script>
+ 
+
+  <!-- Modal: Guida -->
+  <div class="modal fade" id="guidaModal" tabindex="-1" aria-labelledby="guidaModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">guidaModal</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          ...
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
     </div>
-    
+  </div>
+
+   <!-- Modal: Metodo matematico -->
+   <div class="modal fade" id="metodoMatematicoModal" tabindex="-1" aria-labelledby="metodoMatematicoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">metodoMatematicoModal</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          ...
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 
 {% endblock content %}
