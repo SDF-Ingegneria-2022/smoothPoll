@@ -46,7 +46,7 @@ class MajorityJudgmentVoteView(View):
             return render(request, 'votes_results/poll_details.html', {'poll': poll})
 
         
-        if poll.poll_type != PollModel.PollType.MAJORITY_JUDJMENT and poll.predefined != False:
+        if poll.poll_type != PollModel.PollType.MAJORITY_JUDJMENT and poll.votable_mj != True:
             
             raise Http404()
 

@@ -76,6 +76,8 @@ function copyLink(url) {
             <a class="btn btn-secondary mt-2" href="{% url 'apps.votes_results:single_option_vote' poll_id=vote.poll.id  %}" role="button">Vota di nuovo</a>
         </div>
     </div>
+
+    {% if vote.poll.votable_mj %}
     <div class="card mt-5 shadow bg-body rounded">
         <div class="card-body">
           <h5 class="card-title">Perchè non provi il giudizio maggioritario?</h5>
@@ -88,6 +90,7 @@ function copyLink(url) {
           <a href="{% url 'apps.votes_results:majority_judgment_vote' poll_id=vote.poll.id %}" class="btn btn-primary mt-2">Vota con il giudizio maggioritario</a>
         </div>
       </div>
+    {% endif %}
 </div>
 
 {% endblock content %}
