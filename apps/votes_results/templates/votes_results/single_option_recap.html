@@ -85,7 +85,7 @@ function copyLink(url) {
           <hr>
           <div class="fw-lighter fs-5">Voti con il metodo maggioritario per questo sondaggio</div>
           <div class="fw-bold fs-4">10</div>
-          <a href="#" class="btn btn-primary mt-2">Vota con il giudizio maggioritario</a>
+          <a href="{% url 'apps.votes_results:majority_judgment_vote' poll_id=vote.poll.id %}" class="btn btn-primary mt-2">Vota con il giudizio maggioritario</a>
         </div>
       </div>
 </div>
