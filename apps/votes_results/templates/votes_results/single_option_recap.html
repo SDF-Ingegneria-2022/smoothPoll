@@ -23,38 +23,42 @@ function copyLink(url) {
 {% block content %}
 
 <div class="container">
-
-    <h3 class="text-success">Grazie di aver votato! Il tuo voto è stato registrato.</h3>
-    {% comment %} <p class="text-secondary">(Essendo questo solo un prototipo, il voto non è stato registrato)</p> {% endcomment %}
-
-    <div class="container m-3">
-        <div class="row">
-            <div class="col-md-auto">
-                <p class="fw-bold fs-5 ">Nome del sondaggio:</p>    
-            </div>
-            <div class="col">
-                <p class="mt-1">{{vote.poll.name}}</p>
-            </div>
-    </div>
-        <div class="row">
-            <div class="col-md-auto">
-                <p class="text-secondary">Quesito:</p>
-            </div>
-            <div class="col">
-                <p class="fw-bold">{{vote.poll.question}}</p>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-auto">
-                <p class="text-secondary">Opzione scelta: </p>
-            </div>
-            <div class="col">
-                <p class="fw-bold fs-5 text-primary">{{ vote.poll_option.value }}</p>
-            </div>
+    <div class="row ">
+        <div class="col">
+            <div class="fs-2 text-success">Grazie di aver votato! Il tuo voto è stato registrato. </div>
         </div>
     </div>
+    <hr>
+    <div class="row border-0 rounded bg-light">
+        <div class="col-md-auto pe-0">
+                <div class="fs-5">Nome del sondaggio:</div>    
+        </div>
+        
+        <div class="col">
+            <div class="mt-1 fw-light ">{{vote.poll.name}}</div>
+        </div>
+    </div>
+    
+    <div class="row mt-1 border-0 rounded bg-light">
+        <div class="col-md-auto pe-0">
+            <div class="fs-5">Domanda:</div>
+        </div>
+        <div class="col">
+            <div class="mt-1 fw-light">{{vote.poll.question}}</div>
+        </div>
+    </div>
+        
+    <div class="row mt-1 border-0 rounded bg-light">
+        <div class="col-md-auto pe-0">
+            <div class="fs-5">Opzione scelta: </div>
+        </div>
+        <div class="col">
+                <div class="mt-1 text-success">{{ vote.poll_option.value }}</div>
+        </div>
+    </div>
+</div>
 
-    <div class="container mt-5" >
+    <div class="container mt-2" >
         <div class="d-grid gap-2 d-md-block">
         <p class="secondary">
             {% comment %} Quando il sondaggio sarà chiuso, potrai vedere il risultato 
@@ -72,6 +76,18 @@ function copyLink(url) {
             <a class="btn btn-secondary mt-2" href="{% url 'apps.votes_results:single_option_vote' poll_id=vote.poll.id  %}" role="button">Vota di nuovo</a>
         </div>
     </div>
+    <div class="card mt-5 shadow bg-body rounded">
+        <div class="card-body">
+          <h5 class="card-title">Perchè non provi il giudizio maggioritario?</h5>
+          <p class="card-text">Il giudizio maggioritario è stato introdotto nel 2007 da <b>Michel Balinski e Rida Laraki</b>. 
+            Il suo principio si basa sulla <b>regola della mediana
+            più alta</b>. Provalo pure tu! </p>
+          <hr>
+          <div class="fw-lighter fs-5">Voti con il metodo maggioritario per questo sondaggio</div>
+          <div class="fw-bold fs-4">10</div>
+          <a href="#" class="btn btn-primary mt-2">Vota con il giudizio maggioritario</a>
+        </div>
+      </div>
 </div>
 
 {% endblock content %}
