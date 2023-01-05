@@ -7,7 +7,7 @@
     {# Page header #}
     {% block header %}
     <header>
-        <div class="container-fluid bg-primary text-light p-2 pt-3">
+        {% comment %} <div class="container-fluid bg-primary text-light p-2 pt-3">
             <div class="d-flex justify-content-center">
                 <span class="text-center">
                     <a href="{% url 'home' %}" >
@@ -17,28 +17,45 @@
                                 class="navbar-brand" />
                         </span>
                     </a>
-                    {% comment %} <span class="motto">
-                        <p>Crea e vota sondaggi</p>
-                    </span> {% endcomment %}
                 </span>
             </div> 
-        </div>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="#">VotaMeglio </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
+        </div> {% endcomment %}
+        <nav class="navbar navbar-dark navbar-expand-lg bg-primary">
+            <div class="container-fluid text-success">
+                <a href="{% url 'home' %}" >
+                    <span class="logo">
+                        <img src="{% static 'logo-smooth-poll.svg' %}" 
+                            alt="Vota Meglio" width="70" height="80" title="Vota Meglio Logo" 
+                            class="navbar-brand" />
+                    </span>
+                </a>
+                <button class="navbar-toggler"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#homenavbar"
+                    aria-controls="homenavbar" 
+                    aria-expanded="false" 
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon">
+                    </span>
                 </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
+                <div class="collapse navbar-collapse ps-3"
+                        id="homenavbar">
                     <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a>
+                            <a class="nav-link text-warning" href="{% url 'home' %}">
+                                Home
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'apps.polls_management:all_polls' %}?page=1&per_page=10">Sondaggi</a>
+                            <a class="nav-link text-warning" href="{% url 'apps.polls_management:all_polls' %}?page=1&per_page=10">
+                                Sondaggi
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'apps.polls_management:poll_create' %}">Crea sondaggio</a>
+                            <a class="nav-link text-warning" href="{% url 'apps.polls_management:poll_create' %}">
+                                Crea Sondaggi
+                            </a>
                         </li>
                     </ul>
                 </div>
