@@ -86,8 +86,11 @@ function copyLink(url) {
             più alta</b>. Provalo pure tu! </p>
           <hr>
           <div class="fw-lighter fs-5">Voti con il metodo maggioritario per questo sondaggio</div>
-          <div class="fw-bold fs-4">10</div>
+          <div class="fw-bold fs-4">{{mj_vote_counter.count_majority_judgment_votes}}</div>
           <a href="{% url 'apps.votes_results:majority_judgment_vote' poll_id=vote.poll.id %}" class="btn btn-primary mt-2">Vota con il giudizio maggioritario</a>
+            {% if mj_vote_counter.count_majority_judgment_votes > 0%} 
+                <a href="{% url 'apps.votes_results:majority_judgment_results' poll_id=vote.poll.id %}" class="btn btn-secondary mt-2">Vedi risultati</a>
+            {% endif %}
         </div>
       </div>
     {% endif %}

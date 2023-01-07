@@ -23,24 +23,25 @@ class TestSingleOptionVoteCounter:
         return poll
     
     @pytest.fixture
-    def create_votes_for_single_option_poll(self,create_mj_poll_and_votes) -> None:
+    def create_votes_for_single_option_poll(self, create_mj_poll) -> None:
         """Create votes for a single option poll."""
-        poll: PollModel = create_mj_poll_and_votes
+        poll: PollModel = create_mj_poll
         
         for index in range(0, 20):
             single_option_options:  List[PollOptionModel] = poll.options()
             single_option_vote_choices: List = [{'poll_choice_id': option.id, 'rating': 1 } for option in single_option_options]
-            v = MajorityJudjmentVoteService.perform_vote(single_option_vote_choices, poll_id=str(poll.id))
-            print(v)
+            vote = MajorityJudjmentVoteService.perform_vote(single_option_vote_choices, poll_id=str(poll.id))
+        
+        return poll
             
     
     @pytest.mark.django_db
-    def test_count_with_twenty_vote(self, create_mj_poll, create_votes_for_single_option_poll):
+    def test_count_with_twenty_vote(self, create_votes_for_single_option_poll):
         """Test count with 20 votes."""
-        poll: PollModel = create_mj_poll
+        poll: PollModel = create_votes_for_single_option_poll
         counter: SingleOptionVoteCounter = SingleOptionVoteCounter(poll)
         
-        assert_that(counter.count_single_option_votes()).is_equal_to(20)
+        assert_that(counter.count_majority_judgment_votes()).is_equal_to(20)
         
     @pytest.mark.django_db
     def test_count_with_no_vote(self, create_mj_poll):
@@ -48,6 +49,6 @@ class TestSingleOptionVoteCounter:
         poll: PollModel = create_mj_poll
         counter: SingleOptionVoteCounter = SingleOptionVoteCounter(poll)
         
-        assert_that(counter.count_single_option_votes()).is_equal_to(0)
+        assert_that(counter.count_majority_judgment_votes()).is_equal_to(0)
         
         
