@@ -42,6 +42,9 @@ class PollModel(models.Model):
         default=False, verbose_name=_("Predefinito")
     )
 
+    votable_mj: models.BooleanField = models.BooleanField(
+        default=False, verbose_name=_("Votabile con Giudizio Maggioritario")
+    )
     def __str__(self):
         return str({
             'id': self.id, 

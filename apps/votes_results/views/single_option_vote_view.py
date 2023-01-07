@@ -5,6 +5,7 @@ from apps.polls_management.exceptions.vote_does_not_exixt_exception import VoteD
 from apps.polls_management.models.poll_model import PollModel
 from apps.polls_management.services.poll_service import PollService
 from apps.polls_management.exceptions.poll_option_unvalid_exception import PollOptionUnvalidException
+from apps.votes_results.classes.single_option_vote_counter import SingleOptionVoteCounter
 from apps.votes_results.services.single_option_vote_service import SingleOptionVoteService
 
 from django.http import Http404  
@@ -127,7 +128,13 @@ def single_option_recap_view(request: HttpRequest, poll_id: int):
         return HttpResponseRedirect(reverse('apps.votes_results:single_option_vote', args=(poll_id,)))
     
     # show confirm page
-    return render(request, 'votes_results/single_option_recap.html', {'vote': vote})
+    mj_vote_counter: SingleOptionVoteCounter = None
+    
+    if poll.votable_mj:
+        mj_vote_counter: SingleOptionVoteCounter = SingleOptionVoteCounter(poll)
+        
+    return render(request, 'votes_results/single_option_recap.html', {'vote': vote,
+                                                                      'mj_vote_counter': mj_vote_counter})
 
 
 def single_option_results_view(request: HttpRequest, poll_id: int):

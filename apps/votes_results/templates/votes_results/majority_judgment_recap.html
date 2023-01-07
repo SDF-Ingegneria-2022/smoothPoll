@@ -24,32 +24,37 @@ function copyLink(url) {
 
 {% block content %}
 
-<div class="container text-center mt-5 mb-5">
+<div class="container mt-5 mb-5">
     {# Poll summary #}
-    <h2 class="text-success">Grazie di aver votato! Il tuo voto è stato registrato.</h2>
     <div class="row">
-        <div class="col-md-auto">
-            <p class="fw-bold fs-5 ">Nome del sondaggio:</p>    
-        </div>
         <div class="col">
-            <p class="mt-1">{{vote.poll.name}}</p>
+            <h2 class="fs-2 text-success">Grazie di aver votato! Il tuo voto è stato registrato.</h2>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-auto">
-            <p class="fw-bold fs-5">Quesito:</p>
+    <hr>
+    <div class="row border-0 rounded bg-light">
+        <div class="col-md-auto pe-0">
+            <div class="fs-5">Nome del sondaggio:</div>    
         </div>
         <div class="col">
-            <p class="mt-1">{{vote.poll.question}}</p>
+            <div class="mt-1 fw-light">{{vote.poll.name}}</div>
         </div>
     </div>
-    <div class="row">
+    <div class="row  mt-1 border-0 rounded bg-light">
+        <div class="col-md-auto pe-0">
+            <div class="fs-5">Domanda:</div>
+        </div>
+        <div class="col">
+            <div class="mt-1 fw-light">{{vote.poll.question}}</div>
+        </div>
+    </div>
+    <div class="row mt-1">
         <div class="col-md-auto">
-            <p class="fw-bold fs-5">Riassunto del voto:</p>
+            <div class="fs-5">Riassunto del voto:</div>
         </div>
     </div>
     {# Table #}
-    <div class="row">
+    <div class="row mt-1 ">
         <div class="col-md-5">
             <table class="table table-secondary shadow p-3 mb-5 bg-body rounded">
                 <thead>
