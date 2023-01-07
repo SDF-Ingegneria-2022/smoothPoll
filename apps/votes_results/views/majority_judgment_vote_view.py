@@ -45,7 +45,9 @@ class MajorityJudgmentVoteView(View):
         if not poll.is_open() or poll.is_closed():
             return render(request, 'votes_results/poll_details.html', {'poll': poll})
 
-        if poll.poll_type != PollModel.PollType.MAJORITY_JUDJMENT:
+        
+        if poll.poll_type != PollModel.PollType.MAJORITY_JUDJMENT and poll.votable_mj != True:
+            
             raise Http404()
 
         options_selected = request.session.get('majvote-submit-error')
@@ -151,7 +153,7 @@ def majority_judgment_results_view(request: HttpRequest, poll_id: int):
     if not poll.is_open():
         return HttpResponseRedirect(reverse('apps.votes_results:poll_details', args=(poll_id,)))
 
-    if poll.poll_type != PollModel.PollType.MAJORITY_JUDJMENT:
+    if poll.poll_type != PollModel.PollType.MAJORITY_JUDJMENT and poll.votable_mj != True:
         raise Http404()
     
     try:
