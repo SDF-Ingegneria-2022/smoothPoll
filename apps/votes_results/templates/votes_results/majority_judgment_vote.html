@@ -73,7 +73,17 @@
                                     </p>
                                     <hr class="mt-0" />
                                 </div>
-                                
+                         
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                {% if option.id not in error.options_selected.id %}
+                                        <div class="alert alert-danger " role="alert">
+                                            {{ error.message }}
+                                        </div>
+                                {% endif %}
+                            </div>
+                            
                         </div>
                         {# Options form #}
                         <div class="form-check m-2">
@@ -81,11 +91,7 @@
                                     
                                     
                                     {% load get_item %}
-                                    {% if option.id not in error.options_selected.id %}
-                                        <div class="alert alert-danger" role="alert">
-                                            {{ error.message }}
-                                        </div>
-                                    {% endif %}
+                                    
                                     
                                
                                     
