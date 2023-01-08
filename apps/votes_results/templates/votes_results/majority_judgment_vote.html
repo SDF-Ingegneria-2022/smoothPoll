@@ -32,6 +32,14 @@
                 <p class="mb-0 mt-1 fs-4 fw-light">{{ poll.question }}</p>
             </div>
         </div>
+        <div class="row border-0 rounded bg-light mt-1">
+            <div class="col-md-auto pe-0">
+                <p class="mb-0 fs-3 ">Tipologia:</p>
+            </div>
+            <div class="col">
+                <p class="mb-0 mt-1 fs-4 fw-light">{{ poll.get_type_verbose_name }}</p>
+            </div>
+        </div>
     </div>
 
     <div class="container mt-3">
