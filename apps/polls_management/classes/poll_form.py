@@ -1,7 +1,7 @@
 from typing import Any, Mapping, Optional
 from apps.polls_management.models.poll_model import PollModel, PollOptionModel
 
-from django.forms import ModelForm, DateTimeInput
+from django.forms import ModelForm, DateTimeInput, HiddenInput
 from django.utils.translation import gettext as _
 
 
@@ -64,7 +64,11 @@ class PollForm(ModelForm):
                     'type':'datetime-local',
                     # 'required':True
                 }
+                
+               
             ),
+            'predefined': HiddenInput(),
+            'votable_mj': HiddenInput(),
         }
 
     def get_min_options(self) -> int: 
