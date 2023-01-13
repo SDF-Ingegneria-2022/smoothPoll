@@ -1,25 +1,14 @@
 {% extends 'global/base.html' %}
 
 {% load static %}
+{% load socialaccount %}
+
 
 {% block body %}
 
     {# Page header #}
     {% block header %}
     <header>
-        {% comment %} <div class="container-fluid bg-primary text-light p-2 pt-3">
-            <div class="d-flex justify-content-center">
-                <span class="text-center">
-                    <a href="{% url 'home' %}" >
-                        <span class="logo">
-                            <img src="{% static 'logo-smooth-poll.png' %}" 
-                                alt="Scegli Meglio" title="Scegli Meglio Logo" 
-                                class="navbar-brand" />
-                        </span>
-                    </a>
-                </span>
-            </div> 
-        </div> {% endcomment %}
         <nav class="navbar navbar-dark navbar-expand-lg bg-primary">
             <div class="container-fluid text-success">
                 <a href="{% url 'home' %}" >
@@ -42,6 +31,33 @@
                 <div class="collapse navbar-collapse ps-3"
                         id="homenavbar">
                     <ul class="navbar-nav">
+
+                        {# Mobile user area #}
+                        <div class="d-lg-none">
+                            {% if user.is_authenticated %}
+                            <span class="d-inline-block m-1">
+                                <img src="{{ user.socialaccount_set.all.0.get_avatar_url }}" 
+                                        alt="Icona Google di {{ user.username }}" 
+                                        class="rounded-circle border border-light border-2" 
+                                        style="width: 80px; height: 80px;" />
+                            </span>
+                            <span class="d-inline-block m-1 pt-3">
+                                <p class="text-light mb-0 pb-0">Ciao {{ user.username }}</p>
+                                <a  class="btn btn-light" role="button" 
+                                    href="{% url 'account_logout' %}">
+                                    Logout                 
+                                </a>
+                            </span>
+                            {% else %}
+                            <a class="btn btn-light" role="button" 
+                                href="{% provider_login_url 'google' %}">
+                                Login con Google                    
+                            </a>
+                            {% endif %}
+                            <hr class="bg-light">
+                        </div>
+
+
                         <li class="nav-item">
                             <a class="nav-link text-white" href="{% url 'home' %}">
                                 Home
@@ -59,6 +75,30 @@
                         </li>
                     </ul>
                 </div>
+
+                <span class="d-none text-center d-lg-inline-block">
+                    {% if user.is_authenticated %}
+                    <a class="text-center" href="#" >
+                        <span class="d-inline-block">
+                            <img src="{{ user.socialaccount_set.all.0.get_avatar_url }}" 
+                            alt="Icona Google di {{ user.username }}" 
+                            class="rounded-circle border border-light border-2" 
+                            style="height: 40px; width: 40px;" />
+                            <span class="text-light mb-0">
+                                Ciao {{ user.username }}
+                            </span>
+                        </span>
+
+                        <a class="btn btn-light" role="button" 
+                            href="{% url 'account_logout' %}">Logout </a>
+                    </a>
+                    {% else %}
+                    <a class="btn btn-light" role="button" 
+                        href="{% provider_login_url 'google' %}">
+                        Login con Google                    
+                    </a>
+                    {% endif %}
+                </span>
             </div>
         </nav>
     </header>
