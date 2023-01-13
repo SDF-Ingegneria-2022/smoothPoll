@@ -31,6 +31,10 @@ urlpatterns = [
 
     # admin auth
     path('admin/', admin.site.urls),
+
+    # google auth url 
+    path('accounts/', include('allauth.urls')),
+    # path('/', include('google_login.urls')),
 ]
 
 handler404 = 'SmoothPoll.views.error_404_view'
