@@ -1,3 +1,4 @@
+from django.http import Http404
 from django.shortcuts import render
 from apps.polls_management.models.poll_model import PollModel
 import configparser
@@ -19,3 +20,9 @@ def error_404_view(request, exception):
     Page 404 handler view. It is called when a page is not found.
     """
     return render(request, 'global/404.html')
+
+def error_404_view_redirect(request):
+    """
+    Page 404 handler view redirect. It is called when a page is not found.
+    """
+    raise Http404()

@@ -32,9 +32,23 @@ urlpatterns = [
     # admin auth
     path('admin/', admin.site.urls),
 
+    # login urls disabled
+    path('accounts/signup/', views.error_404_view_redirect),
+    path('accounts/login/', views.error_404_view_redirect),
+    path('accounts/password/change/', views.error_404_view_redirect),
+    path('accounts/password/set/', views.error_404_view_redirect),
+    path('accounts/inactive/', views.error_404_view_redirect),
+    path('accounts/email/', views.error_404_view_redirect),
+    path('accounts/confirm-email/', views.error_404_view_redirect),
+    path('accounts/password/reset/done/', views.error_404_view_redirect),
+    path('accounts/social/', views.error_404_view_redirect),
+    path('accounts/social/signup/', views.error_404_view_redirect),
+    path('accounts/social/connections/', views.error_404_view_redirect),
+
     # google auth url 
     path('accounts/', include('allauth.urls')),
     # path('/', include('google_login.urls')),
+
 ]
 
 handler404 = 'SmoothPoll.views.error_404_view'
