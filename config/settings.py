@@ -9,4 +9,4 @@ ALLOWED_HOSTS_CONFIGURATION = os.getenv('ALLOWED_HOSTS_CONFIGURATION', []).split
 
 GA_TAG = os.getenv('GA_TAG', None) 
 
-SITE_ID = os.getenv('SITE_ID', None)
+SITE_ID = os.getenv('SITE_ID', 0)
