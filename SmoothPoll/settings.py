@@ -2,6 +2,7 @@ import os
 from typing import List, Any
 
 from config.settings import ALLOWED_HOSTS_CONFIGURATION, DEBUG_CONFIGURATION
+from config.settings import SITE_ID as SITE_id
 """
 Django settings for SmoothPoll project.
 
@@ -40,13 +41,49 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+
 
     'apps.polls_management', 
     'apps.votes_results', 
 
     'bootstrap5', 
     "django_htmx",
+
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount', 
+    'allauth.socialaccount.providers.google',
 ]
+
+# -----------------------------------------------------
+# Oauth settings
+
+AUTHENTICATION_BACKENDS = [
+  'django.contrib.auth.backends.ModelBackend',
+  'allauth.account.auth_backends.AuthenticationBackend'
+]
+
+SITE_ID = int(SITE_id)
+
+LOGIN_REDIRECT_URL = '/'
+
+SOCIALACCOUNT_QUERY_EMAIL = True
+ACCOUNT_LOGOUT_ON_GET= True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_EMAIL_REQUIRED = True
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
+    }
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
