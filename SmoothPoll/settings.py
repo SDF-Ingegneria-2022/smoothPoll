@@ -2,6 +2,7 @@ import os
 from typing import List, Any
 
 from config.settings import ALLOWED_HOSTS_CONFIGURATION, DEBUG_CONFIGURATION
+from config.settings import SITE_ID as SITE_id
 """
 Django settings for SmoothPoll project.
 
@@ -63,7 +64,7 @@ AUTHENTICATION_BACKENDS = [
   'allauth.account.auth_backends.AuthenticationBackend'
 ]
 
-SITE_ID = 2
+SITE_ID = int(SITE_id)
 
 LOGIN_REDIRECT_URL = '/'
 
