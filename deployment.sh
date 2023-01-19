@@ -16,6 +16,7 @@ if [ "$OLD_VERSION" != "$NEW_VERSION" ]; then
     pipenv run python manage.py migrate  &> /dev/null
     echo "Deployment done!"
     echo "Restarting gunicorn..."
+    sleep 5
     sudo -S <<< $1 systemctl restart gunicorn  &> /dev/null
     echo -e "\033[1;32mDeployment done!\033[1;32m"
 else
