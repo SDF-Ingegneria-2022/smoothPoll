@@ -18,6 +18,7 @@ assertpy = "*"
 python-dotenv = "*"
 gunicorn = "*"
 django-htmx = "*"
+django-allauth = "*"
 
 [dev-packages]
 
