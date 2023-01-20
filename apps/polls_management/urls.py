@@ -1,6 +1,7 @@
 from django.urls import path
 
 from apps.polls_management import views
+from allauth.account.decorators import login_required
 
 app_name = 'apps.polls_management'
 urlpatterns = [
@@ -17,7 +18,7 @@ urlpatterns = [
     path('<int:poll_id>/apri-sondaggio/', views.open_poll_by_id, name="poll_open"),
 
     # htmx form for create and edit polls
-    path('form/', views.CreatePollHtmxView.as_view(), name="poll_form"), 
+    path('form/', login_required(views.CreatePollHtmxView.as_view()), name="poll_form"), 
     path('form/annulla', views.poll_form_clean_go_back_home, name="poll_form_clean_go_back_home"), 
     path('form/htmx/modifica-dati', views.poll_form_htmx_edit, name="poll_form_htmx_edit"), 
     path('form/htmx/aggiungi-opzione', views.poll_form_htmx_create_option, name="poll_form_htmx_create_option"), 

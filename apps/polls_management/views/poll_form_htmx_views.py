@@ -13,7 +13,7 @@ from django.http import HttpRequest, HttpResponseRedirect, HttpResponse, Http404
 from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
-from allauth.account.decorators import verified_email_required, login_required
+from allauth.account.decorators import login_required
 
 
 SESSION_FORMDATA = 'create-poll-form'
@@ -115,7 +115,7 @@ class CreatePollHtmxView(View):
     Form has a regular part (handled normally through POST) and 
     an htmx part (to handle options).
     """
-    @login_required
+
     def get(self, request: HttpRequest, *args, **kwargs):
         """
         Get request should render a form which allows user to fill:
@@ -140,7 +140,6 @@ class CreatePollHtmxView(View):
             "edit": request.session.get(SESSION_POLL_ID) is not None
         })
 
-    @login_required
     def post(self, request: HttpRequest, *args, **kwargs):
         """
         This post request has purpose of saving all poll 

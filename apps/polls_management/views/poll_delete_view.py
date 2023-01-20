@@ -8,7 +8,7 @@ from apps.polls_management.exceptions.poll_is_open_exception import PollIsOpenEx
 from apps.polls_management.models.poll_model import PollModel
 from apps.polls_management.services.poll_service import PollService
 from apps.polls_management.views.poll_form_htmx_views import SESSION_ERROR, SESSION_FORMDATA, SESSION_OPTIONS, SESSION_POLL_ID, clean_session
-from allauth.account.decorators import verified_email_required, login_required
+from allauth.account.decorators import login_required
 
 @login_required
 def poll_delete(request: HttpRequest, poll_id: int):
