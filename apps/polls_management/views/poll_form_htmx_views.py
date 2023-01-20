@@ -13,6 +13,7 @@ from django.http import HttpRequest, HttpResponseRedirect, HttpResponse, Http404
 from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
+from allauth.account.decorators import verified_email_required, login_required
 
 
 SESSION_FORMDATA = 'create-poll-form'
@@ -45,7 +46,7 @@ def get_poll_form(request: HttpRequest) -> PollForm:
     except Exception:
         raise Http404(f"Poll with id {request.session.get(SESSION_POLL_ID)} not found.")
 
-
+@login_required
 def create_poll_init_view(request: HttpRequest):
     """View to inizialize form for new poll creation"""
 
@@ -64,7 +65,7 @@ def create_poll_init_view(request: HttpRequest):
     # redirect to form to permit edit
     return HttpResponseRedirect(reverse('apps.polls_management:poll_form'))        
 
-
+@login_required
 def edit_poll_init_view(request: HttpRequest, poll_id: int):
     """View to inizialize form for new poll creation"""
 
@@ -114,7 +115,7 @@ class CreatePollHtmxView(View):
     Form has a regular part (handled normally through POST) and 
     an htmx part (to handle options).
     """
-    
+    @login_required
     def get(self, request: HttpRequest, *args, **kwargs):
         """
         Get request should render a form which allows user to fill:
@@ -139,6 +140,7 @@ class CreatePollHtmxView(View):
             "edit": request.session.get(SESSION_POLL_ID) is not None
         })
 
+    @login_required
     def post(self, request: HttpRequest, *args, **kwargs):
         """
         This post request has purpose of saving all poll 
@@ -177,7 +179,7 @@ class CreatePollHtmxView(View):
         clean_session(request)
         return HttpResponseRedirect("%s?page=last&per_page=10" % reverse('apps.polls_management:all_polls'))        
 
-
+@login_required
 def poll_form_clean_go_back_home(request: HttpRequest):
     """Clean session and go back home"""
 
@@ -188,6 +190,7 @@ def poll_form_clean_go_back_home(request: HttpRequest):
 
         
 @require_http_methods(["POST"])
+@login_required
 def poll_form_htmx_edit(request: HttpRequest):
     """
     Edit poll form through data sent by HTMX request. 
@@ -204,6 +207,7 @@ def poll_form_htmx_edit(request: HttpRequest):
 
 
 @require_http_methods(["POST"])
+@login_required
 def poll_form_htmx_create_option(request: HttpRequest):
     """
     Create an option when called from an HTMX request. 
@@ -242,6 +246,7 @@ def poll_form_htmx_create_option(request: HttpRequest):
 
 
 @require_http_methods(["POST"])
+@login_required
 def poll_form_htmx_edit_option(request: HttpRequest, option_rel_id: int):
     """
     Change value of a certain option (while use type into).
@@ -260,6 +265,7 @@ def poll_form_htmx_edit_option(request: HttpRequest, option_rel_id: int):
 
 
 @require_http_methods(["DELETE"])
+@login_required
 def poll_form_htmx_delete_option(request: HttpRequest, option_rel_id: int):
     """
     Delete an option when called from an HTMX request. 

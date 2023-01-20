@@ -34,7 +34,7 @@ urlpatterns = [
 
     # login urls disabled
     path('accounts/signup/', views.error_404_view_redirect),
-    path('accounts/login/', views.error_404_view_redirect),
+    # path('accounts/login/', views.error_404_view_redirect),
     path('accounts/password/change/', views.error_404_view_redirect),
     path('accounts/password/set/', views.error_404_view_redirect),
     path('accounts/inactive/', views.error_404_view_redirect),
