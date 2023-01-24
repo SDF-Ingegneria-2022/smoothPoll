@@ -1,0 +1,31 @@
+{% extends 'global/skeleton.html' %}
+
+{% block pagename %}Permessi{% endblock pagename %}
+
+{% block content %}
+
+<div class="container">
+
+    <div class="container text-center mt-5 mb-5">
+        <h2 class="text-danger fw-bold">Operazione non permessa</h2>
+    </div>
+
+    <div class="container text-center mt-5 mb-5">
+
+        <div class="alert alert-warning" role="alert">
+            Spiacenti: l'operazione da lei richiesta può essere eseguita solamente da un utente autenticato al sito.
+        </div>
+
+        <div class="container text-center md-5 mt-4">
+            <div class="d-grid gap-2 d-md-block">
+                <a name="" id="" role="button"
+                    class="btn btn-primary" 
+                    href="{% url 'home' %}" >
+                    Torna alla home
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

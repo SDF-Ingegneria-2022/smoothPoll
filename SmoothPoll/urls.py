@@ -32,6 +32,8 @@ urlpatterns = [
     # admin auth
     path('admin/', admin.site.urls),
 
+    path('accounts/google/login-page/', views.login_redirect_page),
+
     # login urls disabled
     path('accounts/signup/', views.error_404_view_redirect),
     path('accounts/login/', views.error_404_view_redirect),
