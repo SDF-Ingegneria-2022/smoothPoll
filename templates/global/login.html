@@ -1,4 +1,5 @@
 {% extends 'global/skeleton.html' %}
+{% load socialaccount %}
 
 {% block pagename %}Login richiesto{% endblock pagename %}
 
@@ -6,18 +7,33 @@
 
 <div class="container">
 
-    <div class="container text-center mt-5 mb-5">
-        <h2 class="text-danger fw-bold">Effettua il login al sito</h2>
+    <div class="container text-center">
+        <h2 class="fw-bold">Login</h2>
     </div>
 
-    <div class="container text-center mt-5 mb-5">
+    <div class="container mt-5 mb-5">
 
-        <div class="alert alert-warning" role="alert">
-            Spiacenti: l'operazione da lei richiesta può essere eseguita solamente da un utente autenticato al sito.
+        <div class="alert alert-primary" role="alert">
+            Spiacenti: l'operazione da lei richiesta può essere eseguita solamente da un utente autenticato al sito. <br>
+            Nello specifico, le operazioni di creazione, modifica, cancellazione e riepilogo del sondaggio
+            sono cosentite solo ad utenti loggati al sito.
         </div>
 
-        <div class="container text-center md-5 mt-4">
-            <div class="d-grid gap-2 d-md-block">
+    <br>
+
+    <div class="container text-center">
+        <h4>Accedi tramite la tua email di Google</h4>
+    </div>
+    
+        <div class="container text-center md-5 mt-5">
+            <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                <form action="{% provider_login_url 'google' %}" method="POST">
+
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-border border-dark">
+                        <img width="20px" style="margin-bottom:3px; margin-right:5px" alt="Google sign-in" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png" />
+                        Login con Google</button>
+                </form>
                 <a name="" id="" role="button"
                     class="btn btn-primary" 
                     href="{% url 'home' %}" >
@@ -27,5 +43,8 @@
         </div>
     </div>
 </div>
+
+<br>
+<br>
 
 {% endblock content %}
