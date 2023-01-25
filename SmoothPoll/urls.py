@@ -32,6 +32,7 @@ urlpatterns = [
     # admin auth
     path('admin/', admin.site.urls),
 
+    # redirect page to login
     path('accounts/google/login-page/', views.login_redirect_page),
 
     # login urls disabled
