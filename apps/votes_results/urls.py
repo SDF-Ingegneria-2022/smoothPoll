@@ -1,12 +1,13 @@
 from django.urls import path
 
 from apps.votes_results import views
+from allauth.account.decorators import login_required
 
 app_name = 'apps.votes_results'
 urlpatterns = [
 
     # details page for poll not yet open
-    path('<int:poll_id>/dettagli-sondaggio/', views.SingleOptionVoteView.as_view(), name='poll_details'),
+    path('<int:poll_id>/dettagli-sondaggio/', login_required(views.SingleOptionVoteView.as_view()), name='poll_details'),
 
     # vote-recap-results process for single option
     path('<int:poll_id>/vota/scelta-singola/', views.SingleOptionVoteView.as_view(), name='single_option_vote'),

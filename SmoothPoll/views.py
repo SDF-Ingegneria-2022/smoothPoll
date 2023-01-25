@@ -15,6 +15,12 @@ def home(request):
                   {"predefined_polls": predefined_polls, 
                    "version": version})
 
+def login_redirect_page(request):
+    """Page to redirect to login when the user tries to do
+    authentication-only procedures"""
+
+    return render(request, 'global/login.html')
+
 def error_404_view(request, exception):
     """
     Page 404 handler view. It is called when a page is not found.

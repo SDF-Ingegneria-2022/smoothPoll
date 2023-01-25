@@ -66,6 +66,7 @@ AUTHENTICATION_BACKENDS = [
 
 SITE_ID = int(SITE_id)
 
+LOGIN_URL = '/accounts/google/login-page/'
 LOGIN_REDIRECT_URL = '/'
 
 SOCIALACCOUNT_QUERY_EMAIL = True
