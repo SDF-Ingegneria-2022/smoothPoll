@@ -4,8 +4,9 @@ on: [push, pull_request]
 
 
 jobs:
-
-  services:
+  test_code:
+    runs-on: ubuntu-latest
+    services:
       db:
         image: postgres
         env:
@@ -14,9 +15,7 @@ jobs:
           POSTGRES_PASSWORD: postgres
         ports:
           - 5432:5432
-
-  test_code:
-    runs-on: ubuntu-latest
+      
     env:
       DEBUG_CONFIGURATION: True
       ALLOWED_HOSTS_CONFIGURATION: ""
