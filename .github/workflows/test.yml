@@ -2,12 +2,30 @@ name: Test
 
 on: [push, pull_request]
 
+
 jobs:
+
+  services:
+      db:
+        image: postgres
+        env:
+          POSTGRES_DB: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+
   test_code:
     runs-on: ubuntu-latest
     env:
       DEBUG_CONFIGURATION: True
       ALLOWED_HOSTS_CONFIGURATION: ""
+      POSTGRESQL_HOST: localhost
+      POSTGRESQL_PORT: 5432
+      POSTGRESQL_NAME: sceglimeglio
+      POSTGRESQL_USER: postgres
+      POSTGRESQL_PASSWORD: postgres
+      USE_POSTGRESQL: True
     timeout-minutes: 10
     steps:
       - name: Check out repository code
