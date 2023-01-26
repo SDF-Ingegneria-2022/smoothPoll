@@ -145,3 +145,11 @@ class PollService:
             
         else:
             raise PollCannotBeOpenedException(f"Poll with id={id} cannot be opened.")
+    
+    @staticmethod
+    def get_author(id:str):
+        try:
+            poll: PollModel = PollModel.objects.get(id=id)
+        except ObjectDoesNotExist:
+            raise PollDoesNotExistException(f"Poll with id={id} does not exit.")  
+        
