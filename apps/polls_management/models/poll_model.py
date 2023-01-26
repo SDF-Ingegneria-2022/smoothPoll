@@ -46,7 +46,7 @@ class PollModel(models.Model):
         default=False, verbose_name=_("Votabile con Giudizio Maggioritario")
     )
 
-    author: models.ForeignKey = models.ForeignKey(User, on_delete=models.CASCADE)
+    #author: models.ForeignKey = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return str({
@@ -57,7 +57,7 @@ class PollModel(models.Model):
             'open_datetime': self.open_datetime, 
             'close_datetime': self.close_datetime,
             'predefined': self.predefined,
-            'author': self.author,
+            #'author': self.author,
         })
 
     def options(self) -> List[PollOptionModel]:
