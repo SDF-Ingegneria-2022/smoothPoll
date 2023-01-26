@@ -6,7 +6,7 @@ from django.db import models
 from django.db.models import CharField
 from django.utils.translation import gettext as _
 from django.utils import timezone
-
+from django.contrib.auth.models import User
 
 class PollModel(models.Model): 
 
@@ -45,6 +45,9 @@ class PollModel(models.Model):
     votable_mj: models.BooleanField = models.BooleanField(
         default=False, verbose_name=_("Votabile con Giudizio Maggioritario")
     )
+
+    author: models.ForeignKey = models.ForeignKey(User, on_delete=models.CASCADE)
+
     def __str__(self):
         return str({
             'id': self.id, 
@@ -54,6 +57,7 @@ class PollModel(models.Model):
             'open_datetime': self.open_datetime, 
             'close_datetime': self.close_datetime,
             'predefined': self.predefined,
+            'author': self.author,
         })
 
     def options(self) -> List[PollOptionModel]:
