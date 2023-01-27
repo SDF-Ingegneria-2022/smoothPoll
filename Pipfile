@@ -19,6 +19,7 @@ python-dotenv = "*"
 gunicorn = "*"
 django-htmx = "*"
 django-allauth = "*"
+psycopg2-binary = "*"
 
 [dev-packages]
 
