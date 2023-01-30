@@ -64,7 +64,6 @@ class PollCreateService:
             option.poll_fk = poll
             option.save()
         
-
         return poll
 
 
