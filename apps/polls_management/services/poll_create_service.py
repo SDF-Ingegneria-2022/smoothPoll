@@ -51,6 +51,7 @@ class PollCreateService:
         # create poll object from form
         poll = poll_form.save()
 
+
         # check if there are already options in the poll object
         # and delete them (edit case)
         if poll.options():
@@ -62,6 +63,7 @@ class PollCreateService:
             option = PollOptionModel(value=o_str)
             option.poll_fk = poll
             option.save()
+        
 
         return poll
 
