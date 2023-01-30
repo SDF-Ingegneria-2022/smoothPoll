@@ -5,6 +5,8 @@
 {% block pagename %}Crea e Vota Sondaggi{% endblock pagename %}
 
 {% block content %}
+{% csrf_token %}
+{{ user.socialaccount_set.all.0.extra_data.name }}
     <div class="container">
         <!-- <div class="row">
             <div class="col-12 text-center">

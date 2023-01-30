@@ -14,6 +14,8 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
 from allauth.account.decorators import login_required
+from allauth.socialaccount.models import SocialAccount
+
 
 
 SESSION_FORMDATA = 'create-poll-form'
@@ -88,6 +90,7 @@ def edit_poll_init_view(request: HttpRequest, poll_id: int):
         "poll_type": poll.poll_type, 
         "open_datetime": poll.open_datetime,
         "close_datetime": poll.close_datetime,  
+        "autor": poll.author,
     }, instance=poll)
 
     # form.data["name"] = poll.name
@@ -130,6 +133,9 @@ class CreatePollHtmxView(View):
         # get data from session or init it 
         form = get_poll_form(request)
         options: dict = request.session.get(SESSION_OPTIONS) or {}
+        extradata = SocialAccount.objects.get(user=request.user).extra_data
+        print(extradata['picture'])
+        user = request.user
 
         print(form.instance)
 
