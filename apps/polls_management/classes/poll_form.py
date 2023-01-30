@@ -16,7 +16,7 @@ class PollForm(ModelForm):
 
     class Meta:
         model = PollModel
-        fields=['name','question', 'poll_type', 'open_datetime', 'close_datetime', 'predefined', 'votable_mj']
+        fields=['name','question', 'poll_type', 'open_datetime', 'close_datetime', 'predefined', 'votable_mj', 'author']
         labels={
             "name": _("Nome"), 
             "question": _("Quesito"), 

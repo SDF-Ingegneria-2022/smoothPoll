@@ -133,9 +133,6 @@ class CreatePollHtmxView(View):
         # get data from session or init it 
         form = get_poll_form(request)
         options: dict = request.session.get(SESSION_OPTIONS) or {}
-        extradata = SocialAccount.objects.get(user=request.user).extra_data
-        print(extradata['picture'])
-        user = request.user
 
         print(form.instance)
 
