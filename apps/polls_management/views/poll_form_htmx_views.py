@@ -76,12 +76,12 @@ def create_poll_init_view(request: HttpRequest):
     clean_session(request)
 
     # create new form for poll and init session 
-    form = PollForm(request.session.get(SESSION_FORMDATA) or None)
-    options: dict = request.session.get(SESSION_OPTIONS) or {"1":"", "2":"", }
+    # form = PollForm(request.session.get(SESSION_FORMDATA) or None)
+    # options: dict = request.session.get(SESSION_OPTIONS) or {"1":"", "2":"", }
 
     # save them in session
-    request.session[SESSION_FORMDATA] = form.data
-    request.session[SESSION_OPTIONS] = options
+    # request.session[SESSION_FORMDATA] = form.data
+    # request.session[SESSION_OPTIONS] = options
     
     # redirect to form to permit edit
     return HttpResponseRedirect(reverse('apps.polls_management:poll_form'))        
@@ -156,7 +156,7 @@ class CreatePollHtmxView(View):
 
         # get data from session or init it 
         form = get_poll_form(request)
-        options: dict = request.session.get(SESSION_OPTIONS) or {}
+        options: dict = request.session.get(SESSION_OPTIONS) or {"1":"", "2":"", }
 
         return render(request, "polls_management/create_poll_htmx.html", {
             "poll_form": form, "options": options, 
