@@ -15,36 +15,59 @@ from django.urls import reverse
 from django.views import View
 from allauth.account.decorators import login_required
 
+# -------------------------------------------------
+# Session keys used to store form data 
+# (or create/edit process data)
 
 SESSION_FORMDATA = 'create-poll-form'
 SESSION_POLL_ID = 'poll-instance'
 SESSION_OPTIONS = 'create-poll-options'
 SESSION_ERROR = 'create-poll-error'
-_ALL_SESSION_KEYS = [SESSION_FORMDATA, SESSION_OPTIONS, SESSION_ERROR, SESSION_POLL_ID]
+_ALL_SESSION_KEYS = [
+    SESSION_FORMDATA, 
+    SESSION_OPTIONS, 
+    SESSION_ERROR, 
+    SESSION_POLL_ID, ]
+
+# -------------------------------------------------
+# Session util methods (methods to perform some
+# operations on session during creation)
 
 def clean_session(request: HttpRequest) -> None: 
-    # clean session 
+    """Clean current session from form data"""
+
+    # iterate all keys used to store form data
+    # to delete each of them
     for key in _ALL_SESSION_KEYS:
         if request.session.get(key) is not None:
             del request.session[key]
 
+
 def get_poll_form(request: HttpRequest) -> PollForm:
     """Factory method to get current form 
-    from session"""
+    from session (or from POST request)."""
 
+    # build a form for creation (w most updated data)
     if request.session.get(SESSION_POLL_ID) is None:
         return PollForm(request.POST or request.session.get(SESSION_FORMDATA) or None)
 
+    # build a form for editing an existing instance
     try:
-        # Retrieve poll
         return PollForm(
+            # fill form data w current most updated
             request.POST or request.session.get(SESSION_FORMDATA) or None, 
+
+            # connect form to existing instance
             instance=PollService.get_poll_by_id(
-                request.session.get(SESSION_POLL_ID)
-                )
-            )
-    except Exception:
+                request.session.get(SESSION_POLL_ID))
+        )
+    except PollDoesNotExistException:
         raise Http404(f"Poll with id {request.session.get(SESSION_POLL_ID)} not found.")
+
+
+# -------------------------------------------------
+# Init views: views used to init the creation 
+# or edit processes
 
 @login_required
 def create_poll_init_view(request: HttpRequest):
@@ -54,11 +77,9 @@ def create_poll_init_view(request: HttpRequest):
 
     # create new form for poll and init session 
     form = PollForm(request.session.get(SESSION_FORMDATA) or None)
-    options: dict = request.session.get(SESSION_OPTIONS) or {
-        "1":"", 
-        "2":"", 
-    }
+    options: dict = request.session.get(SESSION_OPTIONS) or {"1":"", "2":"", }
 
+    # save them in session
     request.session[SESSION_FORMDATA] = form.data
     request.session[SESSION_OPTIONS] = options
     
@@ -108,6 +129,12 @@ def edit_poll_init_view(request: HttpRequest, poll_id: int):
     return HttpResponseRedirect(reverse('apps.polls_management:poll_form'))   
 
 
+# -------------------------------------------------
+# Proper form views: views to handle the 
+# create/edit form (both the htmx dynamic part and 
+# the "final confirmation")
+
+
 class CreatePollHtmxView(View):
     """
     Render page w form to create a new poll. 
@@ -130,8 +157,6 @@ class CreatePollHtmxView(View):
         # get data from session or init it 
         form = get_poll_form(request)
         options: dict = request.session.get(SESSION_OPTIONS) or {}
-
-        print(form.instance)
 
         return render(request, "polls_management/create_poll_htmx.html", {
             "poll_form": form, "options": options, 
@@ -201,7 +226,7 @@ def poll_form_htmx_edit(request: HttpRequest):
     # update main form data
     poll_form = get_poll_form(request)
     request.session[SESSION_FORMDATA] = poll_form.data
-    print(request.session[SESSION_FORMDATA])
+
     return HttpResponse()
 
 
@@ -222,10 +247,9 @@ def poll_form_htmx_create_option(request: HttpRequest):
     while i<=10 and str(i) in options:
         i += 1
 
+    # Check I have space for a further option
     if i==11:
-        # todo: raise error
-        print(request.session[SESSION_OPTIONS])
-        # return HttpResponseNotModified()
+        # return a warning message (that will disappear in some seconds)
         return render(request, "polls_management/components/htmx_snack_warning.html", {
             "message": "Attenzione, non è possibile creare più di 10 opzioni."
         })
@@ -233,11 +257,10 @@ def poll_form_htmx_create_option(request: HttpRequest):
     # write in that index the option
     options[str(i)] = ""
 
-    # SAVE CHANGES
+    # SAVE CHANGES in session
     request.session[SESSION_OPTIONS] = options
 
-    print(request.session[SESSION_OPTIONS])
-
+    # return new option input 
     return render(request, 'polls_management/components/htmx_option_input.html', {
         "option": "", 
         'i': i, 
@@ -254,11 +277,10 @@ def poll_form_htmx_edit_option(request: HttpRequest, option_rel_id: int):
     if not request.htmx:
         raise Http404()
 
+    # edit choosen option value and save in session
     options = request.session.get(SESSION_OPTIONS)
     options[str(option_rel_id)] = request.POST[f"option-{option_rel_id}"]
     request.session[SESSION_OPTIONS] = options
-
-    print(request.session[SESSION_OPTIONS])
 
     return HttpResponse()
 
@@ -273,12 +295,9 @@ def poll_form_htmx_delete_option(request: HttpRequest, option_rel_id: int):
     if not request.htmx:
         raise Http404()
 
+    # remove choosen option and save in session
     options = request.session.get(SESSION_OPTIONS)
-
     options.pop(str(option_rel_id), None)
-
     request.session[SESSION_OPTIONS] = options
-
-    print(request.session[SESSION_OPTIONS])
 
     return HttpResponse()
