@@ -17,7 +17,6 @@ from allauth.account.decorators import login_required
 from allauth.socialaccount.models import SocialAccount
 
 
-
 SESSION_FORMDATA = 'create-poll-form'
 SESSION_POLL_ID = 'poll-instance'
 SESSION_OPTIONS = 'create-poll-options'
@@ -133,7 +132,8 @@ class CreatePollHtmxView(View):
         # get data from session or init it 
         form = get_poll_form(request)
         options: dict = request.session.get(SESSION_OPTIONS) or {}
-
+        user = request.user
+        print(user)
         print(form.instance)
 
         return render(request, "polls_management/create_poll_htmx.html", {
