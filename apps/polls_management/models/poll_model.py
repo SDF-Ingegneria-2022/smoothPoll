@@ -52,7 +52,7 @@ class PollModel(models.Model):
 
     author: models.ForeignKey = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
-        default=1
+        default=False
     )
 
     def __str__(self):
@@ -64,7 +64,6 @@ class PollModel(models.Model):
             'open_datetime': self.open_datetime, 
             'close_datetime': self.close_datetime,
             'predefined': self.predefined,
-            'author': self.author,
         })
 
     def options(self) -> List[PollOptionModel]:
