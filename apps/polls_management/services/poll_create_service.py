@@ -11,7 +11,7 @@ class PollCreateService:
     """
 
     @staticmethod
-    def create_or_edit_poll(poll_form: PollForm, options: List[str]) -> PollModel:
+    def create_or_edit_poll(poll_form: PollForm, options: List[str], user) -> PollModel:
         """Create a new poll starting from a PollForm object (or
         apply the edits on the existing object)
          
@@ -49,7 +49,10 @@ class PollCreateService:
             raise TooManyOptionsException(f"A poll accepts at most 10 options, {len(valid_options)} has given")
         
         # create poll object from form
-        poll = poll_form.save()
+        poll = poll_form.save(commit=False)
+        print(user)
+        poll.author = user
+        poll.save()
 
 
         # check if there are already options in the poll object

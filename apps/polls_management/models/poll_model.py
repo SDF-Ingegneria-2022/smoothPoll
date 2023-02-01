@@ -1,4 +1,6 @@
 import datetime
+
+from django.conf import settings
 from apps.polls_management.models.poll_option_model import PollOptionModel
 
 from typing import List
@@ -49,7 +51,7 @@ class PollModel(models.Model):
     )
 
     author: models.ForeignKey = models.ForeignKey(
-        get_user_model(), on_delete=models.CASCADE,
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
         default=1
     )
 

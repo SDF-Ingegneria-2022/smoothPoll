@@ -15,6 +15,7 @@ from django.urls import reverse
 from django.views import View
 from allauth.account.decorators import login_required
 from allauth.socialaccount.models import SocialAccount
+from django.contrib.auth import get_user_model
 
 
 SESSION_FORMDATA = 'create-poll-form'
@@ -132,8 +133,6 @@ class CreatePollHtmxView(View):
         # get data from session or init it 
         form = get_poll_form(request)
         options: dict = request.session.get(SESSION_OPTIONS) or {}
-        user = request.user
-        print(user)
         print(form.instance)
 
         return render(request, "polls_management/create_poll_htmx.html", {
@@ -161,11 +160,13 @@ class CreatePollHtmxView(View):
         # retrieve data from session
         form = get_poll_form(request)
         options = request.session.get(SESSION_OPTIONS) or {}
-
+        user = get_user_model().objects.last()
+        print(str(user))
+        
         # create object or apply changes
         # (if an error occours, re-render the form)
         try:
-            PollCreateService.create_or_edit_poll(form, options.values())
+            PollCreateService.create_or_edit_poll(form, options.values(), user)
         except PollMainDataNotValidException:
             request.session[SESSION_ERROR] = "Attenzione, un sondaggio ha bisogno di un nome, di una domanda e di una data di chiusura validi"
             return HttpResponseRedirect(reverse('apps.polls_management:poll_form'))
