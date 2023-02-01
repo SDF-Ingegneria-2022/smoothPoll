@@ -279,18 +279,6 @@ def poll_form_htmx_delete_option(request: HttpRequest, option_rel_id: int):
     if not request.htmx:
         raise Http404() 
 
-    print(option_rel_id) 
-    try:
-        # Retrieve poll
-        poll: PollModel = PollService.get_poll_by_id(option_rel_id)
-    except PollDoesNotExistException:
-        raise Http404(f"Poll with id {option_rel_id} not found.")
-    
-
-    if (not request.user == poll.author):
-        return render(request, 'global/not-author.html')
-
-
     
     options = request.session.get(SESSION_OPTIONS)
 
