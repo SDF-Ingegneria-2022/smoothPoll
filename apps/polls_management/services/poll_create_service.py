@@ -50,7 +50,6 @@ class PollCreateService:
         
         # create poll object from form
         poll = poll_form.save(commit=False)
-        print(user)
         poll.author = user
         poll.save()
 

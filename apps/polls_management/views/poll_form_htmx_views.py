@@ -160,13 +160,13 @@ class CreatePollHtmxView(View):
         # retrieve data from session
         form = get_poll_form(request)
         options = request.session.get(SESSION_OPTIONS) or {}
-        user = get_user_model().objects.last()
-        print(str(user))
+        current_user = request.user
+        print (current_user.id)
         
         # create object or apply changes
         # (if an error occours, re-render the form)
         try:
-            PollCreateService.create_or_edit_poll(form, options.values(), user)
+            PollCreateService.create_or_edit_poll(form, options.values(), current_user)
         except PollMainDataNotValidException:
             request.session[SESSION_ERROR] = "Attenzione, un sondaggio ha bisogno di un nome, di una domanda e di una data di chiusura validi"
             return HttpResponseRedirect(reverse('apps.polls_management:poll_form'))
