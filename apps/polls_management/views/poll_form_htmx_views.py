@@ -80,7 +80,7 @@ def edit_poll_init_view(request: HttpRequest, poll_id: int):
         raise Http404(f"Poll with id {poll_id} not found.")
     
     if (not request.user == poll.author):
-        return HttpResponseRedirect("%s?page=last&per_page=10" % reverse('apps.polls_management:all_polls'))
+        return render(request, 'global/not-author.html')
 
     # Add control if poll is open
     if poll.is_open() or poll.is_closed():
@@ -164,7 +164,6 @@ class CreatePollHtmxView(View):
         form = get_poll_form(request)
         options = request.session.get(SESSION_OPTIONS) or {}
         current_user = request.user
-        print (current_user.id)
         
         # create object or apply changes
         # (if an error occours, re-render the form)
@@ -278,7 +277,20 @@ def poll_form_htmx_delete_option(request: HttpRequest, option_rel_id: int):
     Output is HTML fragment of new option.
     """
     if not request.htmx:
-        raise Http404()
+        raise Http404() 
+
+    print(option_rel_id) 
+    try:
+        # Retrieve poll
+        poll: PollModel = PollService.get_poll_by_id(option_rel_id)
+    except PollDoesNotExistException:
+        raise Http404(f"Poll with id {option_rel_id} not found.")
+    
+
+    if (not request.user == poll.author):
+        return render(request, 'global/not-author.html')
+
+
     
     options = request.session.get(SESSION_OPTIONS)
 
