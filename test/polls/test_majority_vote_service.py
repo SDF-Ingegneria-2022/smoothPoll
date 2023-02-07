@@ -11,11 +11,9 @@ from apps.polls_management.models.poll_option_model import PollOptionModel
 from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
 from apps.votes_results.services.majority_judgment_vote_service import MajorityJudjmentVoteService
 
-
 @pytest.fixture()
-def test_polls(request):
-
-    dummy_poll = PollModel(name="Dummy", question="Dummy question?")
+def test_polls(request, create_user):
+    dummy_poll = PollModel(name="Dummy", question="Dummy question?", author=create_user)
     dummy_poll.save()
 
     option1 = PollOptionModel(value="Valore 1", poll_fk=dummy_poll)
@@ -43,6 +41,13 @@ def test_polls(request):
     option7.save()
 
     return {'voted_poll': dummy_poll, 'control_poll': control_poll}
+
+@pytest.fixture
+def create_user(django_user_model):
+    username = "user1"
+    password = "bar"
+    user = django_user_model.objects.create_user(username=username, password=password)
+    return user
 
 class TestMajorityVoteService:
 
