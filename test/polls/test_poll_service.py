@@ -230,7 +230,7 @@ class TestPollService():
             .raises(PollDoesNotExistException) \
             .when_called_with(poll_id=id, poll_choice_id=option_id)
             
-    # =================== END legacy creation mode ===================
+
     @pytest.mark.django_db      
     def test_delete_majority_poll(self, create_majority_poll):
         """Test delete poll with majority (not open)"""
@@ -388,3 +388,5 @@ class TestPollService():
         assert_that(PollService.open_poll) \
             .raises(PollIsOpenException) \
             .when_called_with(id=id)
+
+    # =================== END legacy creation mode ===================
