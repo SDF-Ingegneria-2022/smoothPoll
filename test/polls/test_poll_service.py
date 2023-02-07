@@ -3,6 +3,7 @@ from typing import List, Tuple
 import pytest
 from assertpy import assert_that
 from django.db import models
+from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from apps.polls_management.classes.poll_form import PollForm
 from apps.polls_management.exceptions.paginator_page_size_exception import PaginatorPageSizeException
@@ -18,30 +19,38 @@ from apps.polls_management.exceptions.poll_does_not_exist_exception import PollD
 from apps.votes_results.services.single_option_vote_service import SingleOptionVoteService
 
 
-class TestPollService:
+class TestPollService():
     """Test suite that covers all methods in the PollService class"""
 
     name: str = "TestPollName"
     question: str = "What is your favorite poll option?"
     options: List[dict] = ["Question 1", "Question 2"]
-
+    author: User = User(username="user1",password="bar1") 
     ## Fixtures
     @pytest.fixture
-    def create_20_polls(self):
+    def create_20_polls(self,create_user):
         """Creates 20 polls"""
+        
         for poll_index in range(20):
-            new_poll: PollModel = PollModel(name=f"Poll {poll_index}", question=f"Question {poll_index} ?")
+            new_poll: PollModel = PollModel(name=f"Poll {poll_index}", question=f"Question {poll_index} ?",author=self.author)
             new_poll.save()
             for option_index in range(2):
                 PollOptionModel(value=f"Option {option_index}", poll_fk_id=new_poll.id).save()
     
     @pytest.fixture
-    def create_majority_poll(self) -> PollModel:
-        """Creates a majotiry poll"""
+    def create_majority_poll(self,create_user) -> PollModel:
+        """Creates a majority poll"""
         MAJORITY_JUDJMENT = "majority_judjment"
         majority_judjment_form: PollForm = PollForm({"name": "Form name", "question": "Form question", "poll_type": MAJORITY_JUDJMENT})
         majority_judjment_options: List[str] = ["Option 1", "Option 2", "Option 3"]
-        return PollCreateService.create_or_edit_poll(majority_judjment_form, majority_judjment_options)
+        return PollCreateService.create_or_edit_poll(majority_judjment_form, majority_judjment_options,author=self.author)
+
+    @pytest.fixture
+    def create_user(django_user_model):
+        username = "user1"
+        password = "bar"
+        user = django_user_model.objects.create_user(username=username, password=password) 
+        return user
         
          
     
@@ -51,7 +60,7 @@ class TestPollService:
     
     
     @pytest.mark.django_db
-    def test_create(self):
+    def test_create(self,create_user):
         """Test the create method with a valid poll"""
         
         poll_created = PollService.create(self.name, self.question, self.options)
