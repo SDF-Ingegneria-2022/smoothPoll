@@ -13,12 +13,15 @@ from apps.votes_results.services.majority_judgment_vote_service import MajorityJ
 class TestSingleOptionVoteCounter:
     ## Fixtures
     @pytest.fixture
-    def create_mj_poll(self) -> None:
+    def create_mj_poll(self, django_user_model) -> None:
         """Create votes for a majority judgment poll."""
         SINGLE_OPTION = "single_option"
         single_option_form: PollForm = PollForm({"name": "Form name", "question": "Form question", "poll_type": SINGLE_OPTION, "votable_mj": True})
         single_option_options: List[str] = ["Option 1", "Option 2", "Option 3"]
-        poll: PollModel = PollCreateService.create_or_edit_poll(single_option_form, single_option_options)
+        username = "user1"
+        password = "bar"
+        user = django_user_model.objects.create_user(username=username, password=password)
+        poll: PollModel = PollCreateService.create_or_edit_poll(single_option_form, single_option_options,user=user)
         
         return poll
     
@@ -33,7 +36,7 @@ class TestSingleOptionVoteCounter:
             vote = MajorityJudjmentVoteService.perform_vote(single_option_vote_choices, poll_id=str(poll.id))
         
         return poll
-            
+    
     
     @pytest.mark.django_db
     def test_count_with_twenty_vote(self, create_votes_for_single_option_poll):

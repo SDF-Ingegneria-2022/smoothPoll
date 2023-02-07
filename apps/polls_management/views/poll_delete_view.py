@@ -1,3 +1,4 @@
+from django.shortcuts import render
 from django.utils import timezone
 from django.http import Http404, HttpRequest, HttpResponseRedirect
 from django.urls import reverse
@@ -33,7 +34,8 @@ def poll_delete(request: HttpRequest, poll_id: int):
             poll: PollModel = PollService.get_poll_by_id(poll_id)
         except PollDoesNotExistException:
             raise Http404(f"Poll with id {poll_id} not found.")
-
+        if (not request.user == poll.author):
+            return render(request, 'global/not-author.html')
         # If the delete poll service fails an error session variabile is setted to True
         # otherwise a success variable is setted to True and then reloaded the all_polls page in both cases
         try:
@@ -72,6 +74,9 @@ def open_poll_by_id(request: HttpRequest, poll_id: int):
         except PollDoesNotExistException:
             raise Http404(f"Poll with id {poll_id} not found.")
 
+        if (not request.user == poll.author):
+            return render(request, 'global/not-author.html')
+        
         try:
             PollService.open_poll(poll_id)
         except PollIsOpenException:
