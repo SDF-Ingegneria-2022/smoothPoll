@@ -12,7 +12,7 @@ from apps.polls_management.exceptions.poll_does_not_exist_exception import PollD
 from apps.votes_results.services.majority_judgment_vote_service import MajorityJudjmentVoteService
 
 @pytest.fixture()
-def test_polls(request, create_user):
+def test_polls(request):
     dummy_poll = PollModel(name="Dummy", question="Dummy question?", author=create_user)
     dummy_poll.save()
 
@@ -42,17 +42,10 @@ def test_polls(request, create_user):
 
     return {'voted_poll': dummy_poll, 'control_poll': control_poll}
 
-@pytest.fixture
-def create_user(django_user_model):
-    username = "user1"
-    password = "bar"
-    user = django_user_model.objects.create_user(username=username, password=password)
-    return user
-
 class TestMajorityVoteService:
 
     @pytest.mark.django_db
-    def test_majority_vote_perform_works(self, test_polls):
+    def test_majority_vote_perform_works(self):
         """
         Test majority vote perform procedure works
         """
