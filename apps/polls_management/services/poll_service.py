@@ -3,6 +3,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator
 from apps.polls_management.classes.majority_poll_result_data import MajorityPollResultData
 from apps.polls_management.classes.poll_result import PollResult
+from apps.polls_management.exceptions.no_user_polls_exception import NoUserPollsException
 from apps.polls_management.exceptions.paginator_page_size_exception import PaginatorPageSizeException
 from apps.polls_management.exceptions.poll_cannot_be_opened_exception import PollCannotBeOpenedException
 from apps.polls_management.exceptions.poll_has_been_voted_exception import PollHasBeenVotedException
@@ -15,6 +16,7 @@ from apps.votes_results.services.majority_judgment_vote_service import MajorityJ
 from apps.votes_results.services.single_option_vote_service import SingleOptionVoteService
 from apps.polls_management.models.poll_model import PollModel
 from django.utils import timezone
+from django.contrib.auth.models import User
 
 class PollService:
     """Class to handle all poll related operations"""
@@ -146,3 +148,23 @@ class PollService:
         else:
             raise PollCannotBeOpenedException(f"Poll with id={id} cannot be opened.")
     
+    @staticmethod
+    def user_polls(user:User):
+        """Method used to return a list of user polls.
+        
+        Args:
+            user: the user who is the author of the polls.
+        
+        Raises:
+            NoUserPolls: raised if the user has no polls.
+            
+        Returns: 
+            List: list of user polls.
+        """
+
+        user_polls_list = PollModel.objects.filter(author=user)
+
+        if not user_polls_list:
+            raise NoUserPollsException("No user polls.")
+
+        return list(user_polls_list)

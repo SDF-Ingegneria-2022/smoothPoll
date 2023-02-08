@@ -6,6 +6,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from apps.polls_management.classes.poll_form import PollForm
+from apps.polls_management.exceptions.no_user_polls_exception import NoUserPollsException
 from apps.polls_management.exceptions.paginator_page_size_exception import PaginatorPageSizeException
 from apps.polls_management.exceptions.poll_cannot_be_opened_exception import PollCannotBeOpenedException
 from apps.polls_management.exceptions.poll_is_open_exception import PollIsOpenException
@@ -390,3 +391,54 @@ class TestPollService():
             .when_called_with(id=id)
 
     # =================== END legacy creation mode ===================
+
+
+
+    # ================= User polls section =================
+
+    @pytest.mark.django_db
+    def test_return_user_polls_none(self):
+        """Test that checks if the user poll service returns an exception if there a no user polls."""
+
+        self.user.save()
+
+        assert_that(PollService.user_polls) \
+            .raises(NoUserPollsException) \
+            .when_called_with(user=self.user)
+
+    @pytest.mark.django_db
+    def test_return_one_user_polls(self, create_20_polls):
+        """Test that checks if the user poll service returns a list of user polls."""
+        
+        self.user.save()
+
+        user_poll_list = PollService.user_polls(self.user)
+
+        assert_that(user_poll_list).is_not_none()
+        assert_that(user_poll_list).is_length(20)
+
+    @pytest.mark.django_db
+    def test_return_different_users_polls(self, create_20_polls):
+        """Test that checks if the user poll service returns the correct list of polls for different users."""
+        
+        self.user.save()
+
+        user2: User = User(username="user2",password="bar1") 
+        user2.save()
+
+        user2pollsindex = int(30)
+
+        while user2pollsindex > 0:
+            polls2 = PollModel(name=self.name, question=self.question, author=user2)
+            polls2.save()
+            user2pollsindex -= 1
+
+        user_poll_list1 = PollService.user_polls(self.user)
+        user_poll_list2 = PollService.user_polls(user2)
+
+        assert_that(user_poll_list1).is_not_none()
+        assert_that(user_poll_list1).is_length(20)
+
+        assert_that(user_poll_list2).is_not_none()
+        assert_that(user_poll_list2).is_length(30)
+
