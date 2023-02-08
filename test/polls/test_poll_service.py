@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from apps.polls_management.classes.poll_form import PollForm
 from apps.polls_management.exceptions.no_user_polls_exception import NoUserPollsException
+from apps.polls_management.exceptions.no_votable_or_closed_poll_exception import NoVotableOrClosedPollException
 from apps.polls_management.exceptions.paginator_page_size_exception import PaginatorPageSizeException
 from apps.polls_management.exceptions.poll_cannot_be_opened_exception import PollCannotBeOpenedException
 from apps.polls_management.exceptions.poll_is_open_exception import PollIsOpenException
@@ -442,3 +443,119 @@ class TestPollService():
         assert_that(user_poll_list2).is_not_none()
         assert_that(user_poll_list2).is_length(30)
 
+
+    # ================= Active and votable polls section =================
+
+    @pytest.mark.django_db
+    def test_return_no_votable_or_closed_poll(self):
+        """Test that checks if the function returns no votable or closed poll."""
+
+        assert_that(PollService.votable_or_closed_polls) \
+            .raises(NoVotableOrClosedPollException)
+
+    @pytest.mark.django_db
+    def test_return_votable_poll_success(self):
+        """Test that checks if there are votable polls and are successfully returned in a list."""
+
+        self.user.save()
+
+        pollsindex = int(30)
+
+        while pollsindex > 0:
+            polls = PollModel(name=self.name, question=self.question, author=self.user)
+            open_date = datetime.datetime(year=2020, month=12, day=30, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+            close_date = datetime.datetime(year=2100, month=12, day=31, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+            polls.open_datetime = open_date
+            polls.close_datetime = close_date
+            polls.save()
+            pollsindex -= 1
+
+        votable_or_closed_polls_list = PollService.votable_or_closed_polls()
+
+        assert_that(votable_or_closed_polls_list).is_not_none()
+        assert_that(votable_or_closed_polls_list).is_length(30)
+
+    @pytest.mark.django_db
+    def test_return_closed_poll_success(self):
+        """Test that checks if there are closed polls and are successfully returned in a list."""
+
+        self.user.save()
+
+        pollsindex = int(30)
+
+        while pollsindex > 0:
+            polls = PollModel(name=self.name, question=self.question, author=self.user)
+            open_date = datetime.datetime(year=2020, month=12, day=30, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+            close_date = datetime.datetime(year=2021, month=12, day=31, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+            polls.open_datetime = open_date
+            polls.close_datetime = close_date
+            polls.save()
+            pollsindex -= 1
+
+        votable_or_closed_polls_list = PollService.votable_or_closed_polls()
+
+        assert_that(votable_or_closed_polls_list).is_not_none()
+        assert_that(votable_or_closed_polls_list).is_length(30)
+
+    @pytest.mark.django_db
+    def test_return_votable_and_closed_poll_success(self):
+        """Test that checks if there are votable and closed polls and are successfully returned in a list."""
+
+        self.user.save()
+
+        pollsindex = int(30)
+
+        while pollsindex > 0:
+            polls = PollModel(name=self.name, question=self.question, author=self.user)
+            open_date = datetime.datetime(year=2020, month=12, day=30, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+            close_date = datetime.datetime(year=2021, month=12, day=31, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+            polls.open_datetime = open_date
+            polls.close_datetime = close_date
+            polls.save()
+
+            polls2 = PollModel(name=self.name, question=self.question, author=self.user)
+            open_date2 = datetime.datetime(year=2020, month=12, day=30, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+            close_date2 = datetime.datetime(year=2100, month=12, day=31, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+            polls2.open_datetime = open_date2
+            polls2.close_datetime = close_date2
+            polls2.save()
+
+            pollsindex -= 1
+
+        votable_or_closed_polls_list = PollService.votable_or_closed_polls()
+
+        assert_that(votable_or_closed_polls_list).is_not_none()
+        assert_that(votable_or_closed_polls_list).is_length(60)
+
+    @pytest.mark.django_db
+    def test_return_votable_and_closed_poll_with_other_polls_success(self):
+        """Test that checks if there are votable and closed polls among other polls and are successfully returned in a list."""
+
+        self.user.save()
+
+        pollsindex = int(30)
+
+        while pollsindex > 0:
+            polls = PollModel(name=self.name, question=self.question, author=self.user)
+            open_date = datetime.datetime(year=2020, month=12, day=30, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+            close_date = datetime.datetime(year=2021, month=12, day=31, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+            polls.open_datetime = open_date
+            polls.close_datetime = close_date
+            polls.save()
+
+            polls2 = PollModel(name=self.name, question=self.question, author=self.user)
+            open_date2 = datetime.datetime(year=2020, month=12, day=30, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+            close_date2 = datetime.datetime(year=2100, month=12, day=31, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+            polls2.open_datetime = open_date2
+            polls2.close_datetime = close_date2
+            polls2.save()
+
+            polls3 = PollModel(name=self.name, question=self.question, author=self.user)
+            polls3.save()
+
+            pollsindex -= 1
+
+        votable_or_closed_polls_list = PollService.votable_or_closed_polls()
+
+        assert_that(votable_or_closed_polls_list).is_not_none()
+        assert_that(votable_or_closed_polls_list).is_length(60)

@@ -4,6 +4,7 @@ from django.core.paginator import Paginator
 from apps.polls_management.classes.majority_poll_result_data import MajorityPollResultData
 from apps.polls_management.classes.poll_result import PollResult
 from apps.polls_management.exceptions.no_user_polls_exception import NoUserPollsException
+from apps.polls_management.exceptions.no_votable_or_closed_poll_exception import NoVotableOrClosedPollException
 from apps.polls_management.exceptions.paginator_page_size_exception import PaginatorPageSizeException
 from apps.polls_management.exceptions.poll_cannot_be_opened_exception import PollCannotBeOpenedException
 from apps.polls_management.exceptions.poll_has_been_voted_exception import PollHasBeenVotedException
@@ -168,3 +169,24 @@ class PollService:
             raise NoUserPollsException("No user polls.")
 
         return list(user_polls_list)
+
+    @staticmethod
+    def votable_or_closed_polls():
+        """Method used to return a list of votable or closed polls.
+        
+        Raises:
+            NoVotableOrClosedPollException: raised if there are no votable or closed polls.
+            
+        Returns: 
+            List: list of votable/closed polls.
+        """
+
+        votable_or_closed_polls_list_ids = [votable_closed.id for votable_closed in PollModel.objects.all() 
+        if votable_closed.is_open() or votable_closed.is_closed()]
+
+        votable_or_closed_polls_list = PollModel.objects.filter(id__in=votable_or_closed_polls_list_ids)
+        
+        if not votable_or_closed_polls_list:
+            raise NoVotableOrClosedPollException("No votable or closed polls.")
+
+        return list(votable_or_closed_polls_list)
