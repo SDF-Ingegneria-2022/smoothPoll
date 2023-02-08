@@ -10,16 +10,23 @@ from apps.polls_management.exceptions.poll_does_not_exist_exception import PollD
 from apps.polls_management.exceptions.vote_does_not_exixt_exception import VoteDoesNotExistException
 
 @pytest.fixture()
-def test_polls(request):
-
-    dummy_poll = PollModel(name="Dummy", question="Dummy question?")
+def test_polls(request,django_user_model):
+    username = "user1"
+    password = "bar"
+    user = django_user_model.objects.create_user(username=username, password=password) 
+    
+    dummy_poll = PollModel(name="Dummy", question="Dummy question?",author=user)
     dummy_poll.save()
 
     PollOptionModel(value="Valore 1", poll_fk=dummy_poll).save()
     PollOptionModel(value="Valore 2", poll_fk=dummy_poll).save()
     PollOptionModel(value="Valore 3", poll_fk=dummy_poll).save()
-
-    control_poll = PollModel(name="Dummy#02", question="Other dummy question?")
+    
+    username2 = "user2"
+    password2 = "bar"
+    user2 = django_user_model.objects.create_user(username=username2, password=password2) 
+    
+    control_poll = PollModel(name="Dummy#02", question="Other dummy question?",author=user2)
     control_poll.save()
 
     PollOptionModel(value="Valore 1", poll_fk=control_poll).save()

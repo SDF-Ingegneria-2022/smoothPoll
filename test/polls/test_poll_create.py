@@ -44,19 +44,26 @@ class TestPollCreate:
             })
 
         return {"form1": form1, "form2": form2,}
+    
+    @pytest.fixture
+    def create_user(self, django_user_model):
+        username = "user1"
+        password = "bar"
+        user = django_user_model.objects.create_user(username=username, password=password)
+        return user
 
     @pytest.mark.django_db
-    def test_create_poll_runs(self, make_forms):
+    def test_create_poll_runs(self, make_forms, create_user):
         """Simple test to check if creation does not crash (it runs)"""
     
-        PollCreateService.create_or_edit_poll(make_forms["form1"], self.options1)
+        PollCreateService.create_or_edit_poll(make_forms["form1"], self.options1, user=create_user)
         
 
     @pytest.mark.django_db
-    def test_create_poll_ok1(self, make_forms):
+    def test_create_poll_ok1(self, make_forms, create_user):
         """Check if object is created, aside with all options"""
     
-        poll = PollCreateService.create_or_edit_poll(make_forms["form1"], self.options1)
+        poll = PollCreateService.create_or_edit_poll(make_forms["form1"], self.options1, user=create_user)
 
         # check data 
         assert_that(poll).is_instance_of(PollModel)
@@ -79,21 +86,21 @@ class TestPollCreate:
         assert_that(options_to_search.__len__()).is_equal_to(0)
 
     @pytest.mark.django_db
-    def test_create_missing_open_date(self, make_forms): 
+    def test_create_missing_open_date(self, make_forms, create_user): 
         """Check what happen if I don't put open date"""
 
-        poll = PollCreateService.create_or_edit_poll(make_forms["form1"], self.options1)
+        poll = PollCreateService.create_or_edit_poll(make_forms["form1"], self.options1, create_user)
         assert_that(poll.open_datetime).is_none()
 
     @pytest.mark.django_db
-    def test_create_w_open_date(self, make_forms): 
+    def test_create_w_open_date(self, make_forms, create_user): 
         """Check what happen if I insert open date"""
 
         form = make_forms["form1"]
         form.data["open_datetime"] = "31/12/2022 23:59"
         form.data["close_datetime"] = "31/12/2023 23:59"
 
-        poll = PollCreateService.create_or_edit_poll(form, self.options1)
+        poll = PollCreateService.create_or_edit_poll(form, self.options1,create_user)
 
         assert_that(poll.open_datetime).is_instance_of(datetime.datetime)
 
@@ -104,7 +111,7 @@ class TestPollCreate:
         assert_that(poll.open_datetime.minute).is_equal_to(59)
 
     @pytest.mark.django_db
-    def test_create_w_wrong_date(self, make_forms): 
+    def test_create_w_wrong_date(self, make_forms,create_user): 
         """Check what happen if I insert a bad open date
         (I expect an exception)"""
 
@@ -114,10 +121,10 @@ class TestPollCreate:
 
         assert_that(PollCreateService.create_or_edit_poll) \
             .raises(PollMainDataNotValidException) \
-            .when_called_with(poll_form=form, options=self.options1)
+            .when_called_with(poll_form=form, options=self.options1, user=create_user)
 
     @pytest.mark.django_db
-    def test_create_without_close_date(self, make_forms): 
+    def test_create_without_close_date(self, make_forms,create_user): 
         """Check what happen if I don't insert a close date"""
 
         form = make_forms["form1"]
@@ -125,10 +132,10 @@ class TestPollCreate:
 
         assert_that(PollCreateService.create_or_edit_poll) \
             .raises(PollMainDataNotValidException) \
-            .when_called_with(poll_form=form, options=self.options1)
+            .when_called_with(poll_form=form, options=self.options1,user=create_user)
 
     @pytest.mark.django_db
-    def test_create_without_open_date(self, make_forms): 
+    def test_create_without_open_date(self, make_forms,create_user): 
         """Check what happen if I don't insert a open date"""
 
         form = make_forms["form1"]
@@ -136,10 +143,10 @@ class TestPollCreate:
 
         assert_that(PollCreateService.create_or_edit_poll) \
             .raises(PollMainDataNotValidException) \
-            .when_called_with(poll_form=form, options=self.options1)
+            .when_called_with(poll_form=form, options=self.options1,user=create_user)
 
     @pytest.mark.django_db
-    def test_create_with_precedent_close_dates(self, make_forms): 
+    def test_create_with_precedent_close_dates(self, make_forms,create_user): 
         """Check what happen if I insert a open date after a close date"""
 
         form = make_forms["form1"]
@@ -148,10 +155,10 @@ class TestPollCreate:
 
         assert_that(PollCreateService.create_or_edit_poll) \
             .raises(PollMainDataNotValidException) \
-            .when_called_with(poll_form=form, options=self.options1)
+            .when_called_with(poll_form=form, options=self.options1,user=create_user)
 
     @pytest.mark.django_db
-    def test_create_missing_name(self, make_forms):
+    def test_create_missing_name(self, make_forms,create_user):
         """Check what happend if I don't insert name"""
 
         form = make_forms["form1"]
@@ -159,10 +166,10 @@ class TestPollCreate:
 
         assert_that(PollCreateService.create_or_edit_poll) \
             .raises(PollMainDataNotValidException) \
-            .when_called_with(poll_form=form, options=self.options1)
+            .when_called_with(poll_form=form, options=self.options1,user=create_user)
 
     @pytest.mark.django_db
-    def test_create_missing_question(self, make_forms):
+    def test_create_missing_question(self, make_forms,create_user):
         """Check what happend if I don't insert question"""
 
         form = make_forms["form1"]
@@ -170,10 +177,10 @@ class TestPollCreate:
 
         assert_that(PollCreateService.create_or_edit_poll) \
             .raises(PollMainDataNotValidException) \
-            .when_called_with(poll_form=form, options=self.options1)
+            .when_called_with(poll_form=form, options=self.options1,user=create_user)
 
     @pytest.mark.django_db
-    def test_create_missing_closedate(self, make_forms):
+    def test_create_missing_closedate(self, make_forms,create_user):
         """Check what happend if I don't insert close date"""
 
         form = make_forms["form1"]
@@ -181,62 +188,63 @@ class TestPollCreate:
 
         assert_that(PollCreateService.create_or_edit_poll) \
             .raises(PollMainDataNotValidException) \
-            .when_called_with(poll_form=form, options=self.options1)
+            .when_called_with(poll_form=form, options=self.options1,user=create_user)
 
     @pytest.mark.django_db
-    def test_create_few_options_1(self, make_forms):
+    def test_create_few_options_1(self, make_forms,create_user):
         """Check what happend if I don't insert enough options"""
 
         assert_that(PollCreateService.create_or_edit_poll) \
             .raises(TooFewOptionsException) \
-            .when_called_with(poll_form=make_forms["form1"], options=self.options_few1)
+            .when_called_with(poll_form=make_forms["form1"], options=self.options_few1,user=create_user)
 
     @pytest.mark.django_db
-    def test_create_few_options_2(self, make_forms):
+    def test_create_few_options_2(self, make_forms,create_user):
         """Check what happend if I don't insert enough options
         (ensuring empty space is not consiederd a valid option)"""
 
         assert_that(PollCreateService.create_or_edit_poll) \
             .raises(TooFewOptionsException) \
-            .when_called_with(poll_form=make_forms["form1"], options=self.options_few2)
+            .when_called_with(poll_form=make_forms["form1"], options=self.options_few2,user=create_user)
 
     @pytest.mark.django_db
-    def test_create_too_many_options(self, make_forms):
+    def test_create_too_many_options(self, make_forms,create_user):
         """Check what happend if I insert too many options"""
 
         assert_that(PollCreateService.create_or_edit_poll) \
             .raises(TooManyOptionsException) \
-            .when_called_with(poll_form=make_forms["form1"], options=self.options_many)
+            .when_called_with(poll_form=make_forms["form1"], options=self.options_many,user=create_user)
 
     ## ------------------------------------
     ## Test Majoriry Judjment creation
 
     @pytest.mark.django_db
-    def test_create_missing_type(self, make_forms):
+    def test_create_missing_type(self, make_forms,create_user):
         """Check what happend if I don't set type
         (I expect a classic single option poll)"""
 
         poll = PollCreateService.create_or_edit_poll(
             make_forms["form1"], 
-            self.options1)
+            self.options1,user=create_user)
 
         assert_that(poll.poll_type).is_equal_to(PollModel.PollType.SINGLE_OPTION)
 
 
     @pytest.mark.django_db
-    def test_create_majority_judjment(self, make_forms):
+    def test_create_majority_judjment(self, make_forms, create_user):
         """Create a majority judment poll and 
         ensure type is right"""
 
         poll = PollCreateService.create_or_edit_poll(
             make_forms["form2"], 
-            self.options2)
+            self.options2,
+            user=create_user)
 
         # ensure type is MajorityJudment
         assert_that(poll.poll_type).is_equal_to(self.type2)
 
     @pytest.mark.django_db
-    def test_create_majority_judjment_few_options(self, make_forms):
+    def test_create_majority_judjment_few_options(self, make_forms,create_user):
         """A majority judment poll should have at least 3 options. 
         We try passing 2 and we expect an exception"""
 
@@ -245,7 +253,8 @@ class TestPollCreate:
             .when_called_with(
                 poll_form=make_forms["form2"], 
                 # pass just 2 options instead of 3
-                options=self.options1)
+                options=self.options1,
+                user=create_user)
 
     @pytest.mark.django_db
     def test_form_get_min_options(self, make_forms):

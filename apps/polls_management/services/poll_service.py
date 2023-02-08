@@ -21,7 +21,7 @@ class PollService:
     
     #TODO: check if this method is legacy
     @staticmethod
-    def create(name: str, question: str, options: List[str]) -> PollModel: 
+    def create(name: str, question: str, options: List[str], user) -> PollModel: 
         """Creates a new poll.
         Args:
             name: Name of the poll. It has to be at least 1 characters long.
@@ -36,7 +36,7 @@ class PollService:
         if len(name)<1 or len(question)<1 or len(options)<1:
             raise PollNotValidCreationException("Poll not valid for creation")
         
-        new_poll: PollModel = PollModel(name=name, question=question)
+        new_poll: PollModel = PollModel(name=name, question=question, author=user)
         new_poll.save()
         
         for option in options:
@@ -145,3 +145,4 @@ class PollService:
             
         else:
             raise PollCannotBeOpenedException(f"Poll with id={id} cannot be opened.")
+    

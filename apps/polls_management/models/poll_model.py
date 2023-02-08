@@ -1,4 +1,6 @@
 import datetime
+
+from django.conf import settings
 from apps.polls_management.models.poll_option_model import PollOptionModel
 
 from typing import List
@@ -6,6 +8,8 @@ from django.db import models
 from django.db.models import CharField
 from django.utils.translation import gettext as _
 from django.utils import timezone
+from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 
 
 class PollModel(models.Model): 
@@ -45,6 +49,12 @@ class PollModel(models.Model):
     votable_mj: models.BooleanField = models.BooleanField(
         default=False, verbose_name=_("Votabile con Giudizio Maggioritario")
     )
+
+    author: models.ForeignKey = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
+        default=False
+    )
+
     def __str__(self):
         return str({
             'id': self.id, 

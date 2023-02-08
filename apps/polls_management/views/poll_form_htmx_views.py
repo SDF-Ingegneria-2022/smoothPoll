@@ -94,6 +94,9 @@ def edit_poll_init_view(request: HttpRequest, poll_id: int):
         poll: PollModel = PollService.get_poll_by_id(poll_id)
     except PollDoesNotExistException:
         raise Http404(f"Poll with id {poll_id} not found.")
+    
+    if (not request.user == poll.author):
+        return render(request, 'global/not-author.html')
 
     # Check if poll is open and can be edit
     if poll.is_open() or poll.is_closed():
@@ -107,6 +110,7 @@ def edit_poll_init_view(request: HttpRequest, poll_id: int):
         "poll_type": poll.poll_type, 
         "open_datetime": poll.open_datetime,
         "close_datetime": poll.close_datetime,  
+        "autor": poll.author,
     }, instance=poll)
 
     # init poll options with current ones
@@ -153,6 +157,7 @@ class CreatePollHtmxView(View):
 
         # get from and option from session or init it 
         form = get_poll_form(request)
+
         options: dict = request.session.get(SESSION_OPTIONS) or {"1":"", "2":"", }
 
         # render form
@@ -180,12 +185,13 @@ class CreatePollHtmxView(View):
         # retrieve data from session (or POST)
         form = get_poll_form(request)
         options = request.session.get(SESSION_OPTIONS) or {}
-
+        current_user = request.user
+        
         # create object or apply changes
         # (if an error occours, redirect to GET 
         # to re-render the form)
         try:
-            PollCreateService.create_or_edit_poll(form, options.values())
+            PollCreateService.create_or_edit_poll(form, options.values(), current_user)
         except PollMainDataNotValidException:
             request.session[SESSION_ERROR] = "Attenzione, inserisci tutti i dati richiesti prima di procedere"
             return HttpResponseRedirect(reverse('apps.polls_management:poll_form'))
@@ -292,9 +298,10 @@ def poll_form_htmx_delete_option(request: HttpRequest, option_rel_id: int):
     Output is HTML fragment of new option.
     """
     if not request.htmx:
-        raise Http404()
+        raise Http404() 
 
     # remove choosen option and save in session
+
     options = request.session.get(SESSION_OPTIONS)
     options.pop(str(option_rel_id), None)
     request.session[SESSION_OPTIONS] = options

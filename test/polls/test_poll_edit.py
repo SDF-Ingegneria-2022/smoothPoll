@@ -37,23 +37,30 @@ class TestPollEdit:
             })
 
         return {"form1": form1, "form2": form2,}
+    
+    @pytest.fixture
+    def create_user(self, django_user_model):
+        username = "user1"
+        password = "bar"
+        user = django_user_model.objects.create_user(username=username, password=password)
+        return user
 
     @pytest.mark.django_db
-    def test_edit_poll_runs(self, make_forms):
+    def test_edit_poll_runs(self, make_forms,create_user):
         """Simple test to check if edit after creation does not crash (it runs)"""
     
-        PollCreateService.create_or_edit_poll(make_forms["form1"], self.options1)
+        PollCreateService.create_or_edit_poll(make_forms["form1"], self.options1,user=create_user)
 
-        PollCreateService.create_or_edit_poll(make_forms["form1"], self.options2)
+        PollCreateService.create_or_edit_poll(make_forms["form1"], self.options2,user=create_user)
 
-        PollCreateService.create_or_edit_poll(make_forms["form2"], self.options4)
+        PollCreateService.create_or_edit_poll(make_forms["form2"], self.options4,user=create_user)
         
 
     @pytest.mark.django_db
-    def test_edit_poll_ok1(self, make_forms):
+    def test_edit_poll_ok1(self, make_forms,create_user):
         """Check if object is edited, aside with all correct options"""
     
-        poll = PollCreateService.create_or_edit_poll(make_forms["form1"], self.options1)
+        poll = PollCreateService.create_or_edit_poll(make_forms["form1"], self.options1,user=create_user)
 
         # check data 
         assert_that(poll).is_instance_of(PollModel)
@@ -77,7 +84,7 @@ class TestPollEdit:
 
         # now check that edit works as expected
         # in this case we edit the poll adding an option
-        poll2 = PollCreateService.create_or_edit_poll(make_forms["form1"], self.options2)
+        poll2 = PollCreateService.create_or_edit_poll(make_forms["form1"], self.options2,user=create_user)
 
         # check it has been edited correctly
         assert_that(PollModel.objects.get(id=poll2.id)).is_equal_to(poll)
@@ -96,10 +103,10 @@ class TestPollEdit:
         assert_that(options_to_search.__len__()).is_equal_to(0)
 
     @pytest.mark.django_db
-    def test_edit_poll_ok2(self, make_forms):
+    def test_edit_poll_ok2(self, make_forms,create_user):
         """Check if object is edited, aside with all correct options"""
     
-        poll = PollCreateService.create_or_edit_poll(make_forms["form1"], self.options1)
+        poll = PollCreateService.create_or_edit_poll(make_forms["form1"], self.options1,user=create_user)
 
         # check data 
         assert_that(poll).is_instance_of(PollModel)
@@ -123,7 +130,7 @@ class TestPollEdit:
 
         # now check that edit works as expected
         # in this case we edit the poll adding two options
-        poll2 = PollCreateService.create_or_edit_poll(make_forms["form1"], self.options3)
+        poll2 = PollCreateService.create_or_edit_poll(make_forms["form1"], self.options3,user=create_user)
 
         # check it has been edited correctly
         assert_that(PollModel.objects.get(id=poll2.id)).is_equal_to(poll)
@@ -142,10 +149,10 @@ class TestPollEdit:
         assert_that(options_to_search.__len__()).is_equal_to(0)
 
     @pytest.mark.django_db
-    def test_edit_poll_ok3(self, make_forms):
+    def test_edit_poll_ok3(self, make_forms,create_user):
         """Check if object is edited, aside with all correct options"""
     
-        poll = PollCreateService.create_or_edit_poll(make_forms["form1"], self.options3)
+        poll = PollCreateService.create_or_edit_poll(make_forms["form1"], self.options3,user=create_user)
 
         # check data 
         assert_that(poll).is_instance_of(PollModel)
@@ -169,7 +176,7 @@ class TestPollEdit:
 
         # now check that edit works as expected
         # in this case we edit the poll deleting two options
-        poll2 = PollCreateService.create_or_edit_poll(make_forms["form1"], self.options1)
+        poll2 = PollCreateService.create_or_edit_poll(make_forms["form1"], self.options1,user=create_user)
 
         # check it has been edited correctly
         assert_that(PollModel.objects.get(id=poll2.id)).is_equal_to(poll)
@@ -188,10 +195,10 @@ class TestPollEdit:
         assert_that(options_to_search.__len__()).is_equal_to(0)
 
     @pytest.mark.django_db
-    def test_edit_poll_ok4(self, make_forms):
+    def test_edit_poll_ok4(self, make_forms,create_user):
         """Check if object is edited, (majority poll case) aside with all correct options"""
     
-        poll = PollCreateService.create_or_edit_poll(make_forms["form2"], self.options4)
+        poll = PollCreateService.create_or_edit_poll(make_forms["form2"], self.options4,user=create_user)
 
         # check data 
         assert_that(poll).is_instance_of(PollModel)
@@ -216,7 +223,7 @@ class TestPollEdit:
 
         # now check that edit works as expected
         # in this case we edit the poll deleting two options
-        poll2 = PollCreateService.create_or_edit_poll(make_forms["form2"], self.options3)
+        poll2 = PollCreateService.create_or_edit_poll(make_forms["form2"], self.options3,user=create_user)
 
         # check it has been edited correctly
         assert_that(PollModel.objects.get(id=poll2.id)).is_equal_to(poll)
@@ -235,10 +242,10 @@ class TestPollEdit:
         assert_that(options_to_search.__len__()).is_equal_to(0)
 
     @pytest.mark.django_db
-    def test_edit_poll_ok5(self, make_forms):
+    def test_edit_poll_ok5(self, make_forms,create_user):
         """Check if object is edited, (majority poll case) aside with all correct options"""
     
-        poll = PollCreateService.create_or_edit_poll(make_forms["form2"], self.options2)
+        poll = PollCreateService.create_or_edit_poll(make_forms["form2"], self.options2,user=create_user)
 
         # check data 
         assert_that(poll).is_instance_of(PollModel)
@@ -263,7 +270,7 @@ class TestPollEdit:
 
         # now check that edit works as expected
         # in this case we edit the poll deleting two options
-        poll2 = PollCreateService.create_or_edit_poll(make_forms["form2"], self.options4)
+        poll2 = PollCreateService.create_or_edit_poll(make_forms["form2"], self.options4,user=create_user)
 
         # check it has been edited correctly
         assert_that(PollModel.objects.get(id=poll2.id)).is_equal_to(poll)
