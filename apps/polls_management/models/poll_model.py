@@ -52,7 +52,7 @@ class PollModel(models.Model):
 
     author: models.ForeignKey = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
-        default=False
+        default=None, blank=True, null=True,
     )
 
     def __str__(self):
