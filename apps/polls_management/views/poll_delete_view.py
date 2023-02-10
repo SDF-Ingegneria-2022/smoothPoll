@@ -1,3 +1,4 @@
+from django.shortcuts import render
 from django.utils import timezone
 from django.http import Http404, HttpRequest, HttpResponseRedirect
 from django.urls import reverse
@@ -8,8 +9,9 @@ from apps.polls_management.exceptions.poll_is_open_exception import PollIsOpenEx
 from apps.polls_management.models.poll_model import PollModel
 from apps.polls_management.services.poll_service import PollService
 from apps.polls_management.views.poll_form_htmx_views import SESSION_ERROR, SESSION_FORMDATA, SESSION_OPTIONS, SESSION_POLL_ID, clean_session
+from allauth.account.decorators import login_required
 
-
+@login_required
 def poll_delete(request: HttpRequest, poll_id: int):
     """View method that deletes a poll
 
@@ -32,7 +34,8 @@ def poll_delete(request: HttpRequest, poll_id: int):
             poll: PollModel = PollService.get_poll_by_id(poll_id)
         except PollDoesNotExistException:
             raise Http404(f"Poll with id {poll_id} not found.")
-
+        if (not request.user == poll.author):
+            return render(request, 'global/not-author.html')
         # If the delete poll service fails an error session variabile is setted to True
         # otherwise a success variable is setted to True and then reloaded the all_polls page in both cases
         try:
@@ -45,6 +48,7 @@ def poll_delete(request: HttpRequest, poll_id: int):
 
         return HttpResponseRedirect("%s?page=last&per_page=10" % reverse('apps.polls_management:all_polls'))
 
+@login_required
 def open_poll_by_id(request: HttpRequest, poll_id: int):
     """View method that opens a poll
 
@@ -70,6 +74,9 @@ def open_poll_by_id(request: HttpRequest, poll_id: int):
         except PollDoesNotExistException:
             raise Http404(f"Poll with id {poll_id} not found.")
 
+        if (not request.user == poll.author):
+            return render(request, 'global/not-author.html')
+        
         try:
             PollService.open_poll(poll_id)
         except PollIsOpenException:

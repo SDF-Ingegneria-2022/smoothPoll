@@ -3,8 +3,11 @@ from typing import List, Tuple
 import pytest
 from assertpy import assert_that
 from django.db import models
+from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from apps.polls_management.classes.poll_form import PollForm
+from apps.polls_management.exceptions.no_user_polls_exception import NoUserPollsException
+from apps.polls_management.exceptions.no_votable_or_closed_poll_exception import NoVotableOrClosedPollException
 from apps.polls_management.exceptions.paginator_page_size_exception import PaginatorPageSizeException
 from apps.polls_management.exceptions.poll_cannot_be_opened_exception import PollCannotBeOpenedException
 from apps.polls_management.exceptions.poll_is_open_exception import PollIsOpenException
@@ -18,32 +21,36 @@ from apps.polls_management.exceptions.poll_does_not_exist_exception import PollD
 from apps.votes_results.services.single_option_vote_service import SingleOptionVoteService
 
 
-class TestPollService:
+class TestPollService():
     """Test suite that covers all methods in the PollService class"""
 
     name: str = "TestPollName"
     question: str = "What is your favorite poll option?"
     options: List[dict] = ["Question 1", "Question 2"]
-
+    user: User = User(username="user1",password="bar1") 
     ## Fixtures
     @pytest.fixture
     def create_20_polls(self):
         """Creates 20 polls"""
+
+        self.user.save()
+
         for poll_index in range(20):
-            new_poll: PollModel = PollModel(name=f"Poll {poll_index}", question=f"Question {poll_index} ?")
+            new_poll: PollModel = PollModel(name=f"Poll {poll_index}", question=f"Question {poll_index} ?",author=self.user)
             new_poll.save()
             for option_index in range(2):
                 PollOptionModel(value=f"Option {option_index}", poll_fk_id=new_poll.id).save()
     
     @pytest.fixture
     def create_majority_poll(self) -> PollModel:
-        """Creates a majotiry poll"""
+        """Creates a majority poll"""
+
+        self.user.save()
+
         MAJORITY_JUDJMENT = "majority_judjment"
         majority_judjment_form: PollForm = PollForm({"name": "Form name", "question": "Form question", "poll_type": MAJORITY_JUDJMENT})
         majority_judjment_options: List[str] = ["Option 1", "Option 2", "Option 3"]
-        return PollCreateService.create_or_edit_poll(majority_judjment_form, majority_judjment_options)
-        
-         
+        return PollCreateService.create_or_edit_poll(majority_judjment_form, majority_judjment_options,user=self.user)
     
     ## Tests
     
@@ -53,8 +60,10 @@ class TestPollService:
     @pytest.mark.django_db
     def test_create(self):
         """Test the create method with a valid poll"""
-        
-        poll_created = PollService.create(self.name, self.question, self.options)
+
+        self.user.save()
+
+        poll_created = PollService.create(self.name, self.question, self.options, self.user)
 
         assert_that(poll_created).is_instance_of(models.Model)
        
@@ -63,27 +72,35 @@ class TestPollService:
         """Test the create method with a poll with a wrong name"""
         name: str = ""
 
-        assert_that(PollService.create).raises(PollNotValidCreationException).when_called_with(name, self.question, self.options)
+        self.user.save()
+
+        assert_that(PollService.create).raises(PollNotValidCreationException).when_called_with(name, self.question, self.options, self.user)
     
     @pytest.mark.django_db
     def test_create_with_wrong_question(self):
         """Test the create method with a poll with a wrong question"""
         question: str = ""
 
-        assert_that(PollService.create).raises(PollNotValidCreationException).when_called_with(self.name, question, self.options)
+        self.user.save()
+
+        assert_that(PollService.create).raises(PollNotValidCreationException).when_called_with(self.name, question, self.options, self.user)
 
     @pytest.mark.django_db
     def test_create_with_wrong_options(self):
         """Test the create method with a poll with a wrong options"""
         options: List = []
 
-        assert_that(PollService.create).raises(PollNotValidCreationException).when_called_with(self.name, self.question, options)
+        self.user.save()
+
+        assert_that(PollService.create).raises(PollNotValidCreationException).when_called_with(self.name, self.question, options, self.user)
 
     @pytest.mark.django_db
     def test_view_poll(self):
         """Test get poll by id (basic verification it works)"""
 
-        poll = PollService.create(self.name, self.question, self.options)
+        self.user.save()
+
+        poll = PollService.create(self.name, self.question, self.options, self.user)
         retrieved_poll = PollService.get_poll_by_id(poll.id)
 
         assert_that(retrieved_poll).is_instance_of(PollModel)
@@ -94,7 +111,9 @@ class TestPollService:
     def test_view_poll_options(self):
         """Test get poll by id (check options)"""
 
-        poll = PollService.create(self.name, self.question, self.options)
+        self.user.save()
+
+        poll = PollService.create(self.name, self.question, self.options, self.user)
         retrieved_poll = PollService.get_poll_by_id(poll.id)
 
         assert_that(retrieved_poll.options()).is_instance_of(list)
@@ -105,7 +124,9 @@ class TestPollService:
     def test_get_notexists_poll(self):
         """Test get poll that doesn't exists"""
 
-        poll = PollService.create(self.name, self.question, self.options)
+        self.user.save()
+
+        poll = PollService.create(self.name, self.question, self.options, self.user)
         id = poll.id
         poll.delete()
 
@@ -132,7 +153,10 @@ class TestPollService:
     @pytest.mark.django_db
     def test_delete_poll(self):
         """Test delete poll, basic verification that it works (not open poll)"""
-        poll = PollService.create(self.name, self.question, self.options)
+        
+        self.user.save()
+
+        poll = PollService.create(self.name, self.question, self.options, self.user)
         id = poll.id
 
         open_date = datetime.datetime(year=2050, month=12, day=31, hour=12, minute=12, tzinfo=datetime.timezone.utc)
@@ -168,7 +192,10 @@ class TestPollService:
     @pytest.mark.django_db
     def test_delete_is_open(self):
         """Test delete poll that is already open"""
-        poll = PollService.create(self.name, self.question, self.options)
+
+        self.user.save()
+
+        poll = PollService.create(self.name, self.question, self.options, self.user)
         id = poll.id
 
         open_date = datetime.datetime(year=2022, month=12, day=12, hour=12, minute=12, tzinfo=datetime.timezone.utc)
@@ -184,7 +211,10 @@ class TestPollService:
     @pytest.mark.django_db
     def test_delete_check_istance_option(self):
         """Test delete poll and also its option"""
-        poll = PollService.create(self.name, self.question, self.options)
+
+        self.user.save()
+
+        poll = PollService.create(self.name, self.question, self.options, self.user)
         assert_that(poll).is_instance_of(PollModel)
         option_id = poll.options()[0].id
         id = poll.id
@@ -202,7 +232,7 @@ class TestPollService:
             .raises(PollDoesNotExistException) \
             .when_called_with(poll_id=id, poll_choice_id=option_id)
             
-    # =================== END legacy creation mode ===================
+
     @pytest.mark.django_db      
     def test_delete_majority_poll(self, create_majority_poll):
         """Test delete poll with majority (not open)"""
@@ -244,7 +274,10 @@ class TestPollService:
     @pytest.mark.django_db
     def test_open_poll(self):
         """Test open poll, nonexistent poll"""
-        poll = PollService.create(self.name, self.question, self.options)
+
+        self.user.save()
+
+        poll = PollService.create(self.name, self.question, self.options, self.user)
         id = poll.id
 
         PollService.delete_poll(id)
@@ -256,7 +289,10 @@ class TestPollService:
     @pytest.mark.django_db
     def test_open_poll_already_open(self):
         """Test open poll, if poll is already open"""
-        poll = PollService.create(self.name, self.question, self.options)
+
+        self.user.save()
+
+        poll = PollService.create(self.name, self.question, self.options, self.user)
         id = poll.id
 
         open_date = datetime.datetime(year=2020, month=12, day=31, hour=12, minute=12, tzinfo=datetime.timezone.utc)
@@ -276,7 +312,10 @@ class TestPollService:
     @pytest.mark.django_db
     def test_open_poll_w_right_open_close_time(self):
         """Test open poll, open datetime and closetime not None"""
-        poll = PollService.create(self.name, self.question, self.options)
+
+        self.user.save()
+
+        poll = PollService.create(self.name, self.question, self.options, self.user)
         id = poll.id
 
         open_date = datetime.datetime(year=2050, month=12, day=30, hour=12, minute=12, tzinfo=datetime.timezone.utc)
@@ -299,7 +338,10 @@ class TestPollService:
     @pytest.mark.django_db
     def test_open_poll_without_open_and_close_time(self):
         """Test open poll, no open and close time"""
-        poll = PollService.create(self.name, self.question, self.options)
+
+        self.user.save()
+
+        poll = PollService.create(self.name, self.question, self.options, self.user)
         id = poll.id
 
         assert_that(poll.open_datetime).is_none()
@@ -313,7 +355,10 @@ class TestPollService:
     @pytest.mark.django_db
     def test_open_poll_without_close_time(self):
         """Test open poll, no close time"""
-        poll = PollService.create(self.name, self.question, self.options)
+
+        self.user.save()
+
+        poll = PollService.create(self.name, self.question, self.options, self.user)
         id = poll.id
 
         open_date = datetime.datetime(year=2100, month=12, day=31, hour=12, minute=12, tzinfo=datetime.timezone.utc)
@@ -328,7 +373,10 @@ class TestPollService:
     @pytest.mark.django_db
     def test_open_poll_w_wrong_open_close_time(self):
         """Test open poll, open datetime and closetime not None but already passed"""
-        poll = PollService.create(self.name, self.question, self.options)
+
+        self.user.save()
+
+        poll = PollService.create(self.name, self.question, self.options, self.user)
         id = poll.id
 
         open_date = datetime.datetime(year=2020, month=12, day=30, hour=12, minute=12, tzinfo=datetime.timezone.utc)
@@ -342,3 +390,172 @@ class TestPollService:
         assert_that(PollService.open_poll) \
             .raises(PollIsOpenException) \
             .when_called_with(id=id)
+
+    # =================== END legacy creation mode ===================
+
+
+
+    # ================= User polls section =================
+
+    @pytest.mark.django_db
+    def test_return_user_polls_none(self):
+        """Test that checks if the user poll service returns an exception if there a no user polls."""
+
+        self.user.save()
+
+        assert_that(PollService.user_polls) \
+            .raises(NoUserPollsException) \
+            .when_called_with(user=self.user)
+
+    @pytest.mark.django_db
+    def test_return_one_user_polls(self, create_20_polls):
+        """Test that checks if the user poll service returns a list of user polls."""
+        
+        self.user.save()
+
+        user_poll_list = PollService.user_polls(self.user)
+
+        assert_that(user_poll_list).is_not_none()
+        assert_that(user_poll_list).is_length(20)
+
+    @pytest.mark.django_db
+    def test_return_different_users_polls(self, create_20_polls):
+        """Test that checks if the user poll service returns the correct list of polls for different users."""
+        
+        self.user.save()
+
+        user2: User = User(username="user2",password="bar1") 
+        user2.save()
+
+        user2pollsindex = int(30)
+
+        while user2pollsindex > 0:
+            polls2 = PollModel(name=self.name, question=self.question, author=user2)
+            polls2.save()
+            user2pollsindex -= 1
+
+        user_poll_list1 = PollService.user_polls(self.user)
+        user_poll_list2 = PollService.user_polls(user2)
+
+        assert_that(user_poll_list1).is_not_none()
+        assert_that(user_poll_list1).is_length(20)
+
+        assert_that(user_poll_list2).is_not_none()
+        assert_that(user_poll_list2).is_length(30)
+
+
+    # ================= Active and votable polls section =================
+
+    @pytest.mark.django_db
+    def test_return_no_votable_or_closed_poll(self):
+        """Test that checks if the function returns no votable or closed poll."""
+
+        assert_that(PollService.votable_or_closed_polls) \
+            .raises(NoVotableOrClosedPollException)
+
+    @pytest.mark.django_db
+    def test_return_votable_poll_success(self):
+        """Test that checks if there are votable polls and are successfully returned in a list."""
+
+        self.user.save()
+
+        pollsindex = int(30)
+
+        while pollsindex > 0:
+            polls = PollModel(name=self.name, question=self.question, author=self.user)
+            open_date = datetime.datetime(year=2020, month=12, day=30, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+            close_date = datetime.datetime(year=2100, month=12, day=31, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+            polls.open_datetime = open_date
+            polls.close_datetime = close_date
+            polls.save()
+            pollsindex -= 1
+
+        votable_or_closed_polls_list = PollService.votable_or_closed_polls()
+
+        assert_that(votable_or_closed_polls_list).is_not_none()
+        assert_that(votable_or_closed_polls_list).is_length(30)
+
+    @pytest.mark.django_db
+    def test_return_closed_poll_success(self):
+        """Test that checks if there are closed polls and are successfully returned in a list."""
+
+        self.user.save()
+
+        pollsindex = int(30)
+
+        while pollsindex > 0:
+            polls = PollModel(name=self.name, question=self.question, author=self.user)
+            open_date = datetime.datetime(year=2020, month=12, day=30, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+            close_date = datetime.datetime(year=2021, month=12, day=31, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+            polls.open_datetime = open_date
+            polls.close_datetime = close_date
+            polls.save()
+            pollsindex -= 1
+
+        votable_or_closed_polls_list = PollService.votable_or_closed_polls()
+
+        assert_that(votable_or_closed_polls_list).is_not_none()
+        assert_that(votable_or_closed_polls_list).is_length(30)
+
+    @pytest.mark.django_db
+    def test_return_votable_and_closed_poll_success(self):
+        """Test that checks if there are votable and closed polls and are successfully returned in a list."""
+
+        self.user.save()
+
+        pollsindex = int(30)
+
+        while pollsindex > 0:
+            polls = PollModel(name=self.name, question=self.question, author=self.user)
+            open_date = datetime.datetime(year=2020, month=12, day=30, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+            close_date = datetime.datetime(year=2021, month=12, day=31, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+            polls.open_datetime = open_date
+            polls.close_datetime = close_date
+            polls.save()
+
+            polls2 = PollModel(name=self.name, question=self.question, author=self.user)
+            open_date2 = datetime.datetime(year=2020, month=12, day=30, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+            close_date2 = datetime.datetime(year=2100, month=12, day=31, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+            polls2.open_datetime = open_date2
+            polls2.close_datetime = close_date2
+            polls2.save()
+
+            pollsindex -= 1
+
+        votable_or_closed_polls_list = PollService.votable_or_closed_polls()
+
+        assert_that(votable_or_closed_polls_list).is_not_none()
+        assert_that(votable_or_closed_polls_list).is_length(60)
+
+    @pytest.mark.django_db
+    def test_return_votable_and_closed_poll_with_other_polls_success(self):
+        """Test that checks if there are votable and closed polls among other polls and are successfully returned in a list."""
+
+        self.user.save()
+
+        pollsindex = int(30)
+
+        while pollsindex > 0:
+            polls = PollModel(name=self.name, question=self.question, author=self.user)
+            open_date = datetime.datetime(year=2020, month=12, day=30, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+            close_date = datetime.datetime(year=2021, month=12, day=31, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+            polls.open_datetime = open_date
+            polls.close_datetime = close_date
+            polls.save()
+
+            polls2 = PollModel(name=self.name, question=self.question, author=self.user)
+            open_date2 = datetime.datetime(year=2020, month=12, day=30, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+            close_date2 = datetime.datetime(year=2100, month=12, day=31, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+            polls2.open_datetime = open_date2
+            polls2.close_datetime = close_date2
+            polls2.save()
+
+            polls3 = PollModel(name=self.name, question=self.question, author=self.user)
+            polls3.save()
+
+            pollsindex -= 1
+
+        votable_or_closed_polls_list = PollService.votable_or_closed_polls()
+
+        assert_that(votable_or_closed_polls_list).is_not_none()
+        assert_that(votable_or_closed_polls_list).is_length(60)

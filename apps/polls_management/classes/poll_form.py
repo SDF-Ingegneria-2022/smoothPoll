@@ -23,6 +23,7 @@ class PollForm(ModelForm):
             "poll_type": _("Tipologia"), 
             "open_datetime": _("Data Apertura"), 
             "close_datetime": _("Data Chiusura"),
+            "author": _("Nome dell'autore"),
         }
         help_texts={
             "name": _("Un nome sintetico che descrive il sondaggio"), 
@@ -30,6 +31,7 @@ class PollForm(ModelForm):
             "poll_type": _("Il metodo che verrà usato per esprimere il voto e calcolare i risultati"), 
             "open_datetime": _("La data dalla quale sarà possibile votare il sondaggio"), 
             "close_datetime": _("La data dalla quale non sarà più possibile votare il sondaggio"), 
+            "author": _("Il nome dell'autore che ha creato il sondaggio"),
         }
         error_messages = {
             'name': {

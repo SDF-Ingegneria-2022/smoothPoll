@@ -3,6 +3,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator
 from apps.polls_management.classes.majority_poll_result_data import MajorityPollResultData
 from apps.polls_management.classes.poll_result import PollResult
+from apps.polls_management.exceptions.no_user_polls_exception import NoUserPollsException
+from apps.polls_management.exceptions.no_votable_or_closed_poll_exception import NoVotableOrClosedPollException
 from apps.polls_management.exceptions.paginator_page_size_exception import PaginatorPageSizeException
 from apps.polls_management.exceptions.poll_cannot_be_opened_exception import PollCannotBeOpenedException
 from apps.polls_management.exceptions.poll_has_been_voted_exception import PollHasBeenVotedException
@@ -15,13 +17,14 @@ from apps.votes_results.services.majority_judgment_vote_service import MajorityJ
 from apps.votes_results.services.single_option_vote_service import SingleOptionVoteService
 from apps.polls_management.models.poll_model import PollModel
 from django.utils import timezone
+from django.contrib.auth.models import User
 
 class PollService:
     """Class to handle all poll related operations"""
     
     #TODO: check if this method is legacy
     @staticmethod
-    def create(name: str, question: str, options: List[str]) -> PollModel: 
+    def create(name: str, question: str, options: List[str], user) -> PollModel: 
         """Creates a new poll.
         Args:
             name: Name of the poll. It has to be at least 1 characters long.
@@ -36,7 +39,7 @@ class PollService:
         if len(name)<1 or len(question)<1 or len(options)<1:
             raise PollNotValidCreationException("Poll not valid for creation")
         
-        new_poll: PollModel = PollModel(name=name, question=question)
+        new_poll: PollModel = PollModel(name=name, question=question, author=user)
         new_poll.save()
         
         for option in options:
@@ -145,3 +148,45 @@ class PollService:
             
         else:
             raise PollCannotBeOpenedException(f"Poll with id={id} cannot be opened.")
+    
+    @staticmethod
+    def user_polls(user:User):
+        """Method used to return a list of user polls.
+        
+        Args:
+            user: the user who is the author of the polls.
+        
+        Raises:
+            NoUserPolls: raised if the user has no polls.
+            
+        Returns: 
+            List: list of user polls.
+        """
+
+        user_polls_list = PollModel.objects.filter(author=user)
+
+        if not user_polls_list:
+            raise NoUserPollsException("No user polls.")
+
+        return list(user_polls_list)
+
+    @staticmethod
+    def votable_or_closed_polls():
+        """Method used to return a list of votable or closed polls.
+        
+        Raises:
+            NoVotableOrClosedPollException: raised if there are no votable or closed polls.
+            
+        Returns: 
+            List: list of votable/closed polls.
+        """
+
+        votable_or_closed_polls_list_ids = [votable_closed.id for votable_closed in PollModel.objects.all() 
+        if votable_closed.is_open() or votable_closed.is_closed()]
+
+        votable_or_closed_polls_list = PollModel.objects.filter(id__in=votable_or_closed_polls_list_ids)
+        
+        if not votable_or_closed_polls_list:
+            raise NoVotableOrClosedPollException("No votable or closed polls.")
+
+        return list(votable_or_closed_polls_list)

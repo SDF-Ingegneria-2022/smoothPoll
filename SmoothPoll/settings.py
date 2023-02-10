@@ -3,6 +3,8 @@ from typing import List, Any
 
 from config.settings import ALLOWED_HOSTS_CONFIGURATION, DEBUG_CONFIGURATION
 from config.settings import SITE_ID as SITE_id
+from config.settings import USE_POSTGRESQL, POSTGRESQL_HOST, POSTGRESQL_NAME, POSTGRESQL_PASSWORD, POSTGRESQL_PORT, POSTGRESQL_USER
+
 """
 Django settings for SmoothPoll project.
 
@@ -66,6 +68,7 @@ AUTHENTICATION_BACKENDS = [
 
 SITE_ID = int(SITE_id)
 
+LOGIN_URL = '/accounts/google/login-page/'
 LOGIN_REDIRECT_URL = '/'
 
 SOCIALACCOUNT_QUERY_EMAIL = True
@@ -129,12 +132,26 @@ WSGI_APPLICATION = 'SmoothPoll.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+
+if USE_POSTGRESQL:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': POSTGRESQL_NAME,
+            'USER' : POSTGRESQL_USER,
+            'PASSWORD' : POSTGRESQL_PASSWORD,
+            'HOST' : POSTGRESQL_HOST,
+            'PORT' : POSTGRESQL_PORT,
+        }, 
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }, 
+    }
+
 
 
 # Password validation

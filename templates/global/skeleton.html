@@ -55,7 +55,9 @@
             <form action="{% provider_login_url 'google' %}" method="POST">
 
                 {% csrf_token %}
-                <button type="submit" class="btn btn-light">Login con Google</button>
+                <button type="submit" class="btn btn-light">
+                    <img width="20px" style="margin-bottom:3px; margin-right:5px" alt="Google sign-in" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png" />
+                    Login con Google</button>
             </form>
             {% endif %}
             </div>
@@ -83,7 +85,10 @@
                 <div class="container p-3">
                     <p class="text-center m-0">
                         Scegli Meglio @ {% now "Y" %} - Progetto didattico di Ing. del Software <br />
-                        Università degli Studi di Udine, A.A. 2022/23
+                        Università degli Studi di Udine, A.A. 2022/23 
+
+                        {# Privacy link #}
+                        {% include "global/components/iubenda_privacy_link.html" %}
                     </p>
                 </div>
             </div>
