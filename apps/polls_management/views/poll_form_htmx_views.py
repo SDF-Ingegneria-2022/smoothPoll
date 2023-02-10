@@ -283,7 +283,7 @@ def poll_form_htmx_edit_option(request: HttpRequest, option_rel_id: int):
         raise Http404()
 
     # edit choosen option value and save in session
-    options = request.session.get(SESSION_OPTIONS)
+    options = request.session.get(SESSION_OPTIONS) or {}
     options[str(option_rel_id)] = request.POST[f"option-{option_rel_id}"]
     request.session[SESSION_OPTIONS] = options
 
@@ -302,7 +302,7 @@ def poll_form_htmx_delete_option(request: HttpRequest, option_rel_id: int):
 
     # remove choosen option and save in session
 
-    options = request.session.get(SESSION_OPTIONS)
+    options = request.session.get(SESSION_OPTIONS) or {}
     options.pop(str(option_rel_id), None)
     request.session[SESSION_OPTIONS] = options
 
