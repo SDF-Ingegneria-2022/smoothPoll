@@ -1,8 +1,20 @@
-<div class="container pt-2">
+{% load static %}
 
-    <h4>Scegli Meglio</h4>
-    <p>Metodi migliori per scegliere</p>
+<div class="p-2">
 
+    <div class="d-flex justify-content-between">
+        <span>
+            <h4>Scegli Meglio</h4>
+            <p>Metodi migliori per scegliere</p>
+        </span>
+        <span>
+            <a class="d-flex align-items-center mb-2 mb-lg-0 sidebar-toggler"
+                role="button" href="" >
+                <img src="{% static 'icon/close-icon.svg' %}" 
+                    alt="Chiudi menù laterale" width="20" />
+            </a>
+        </span>
+    </div>
 
     <ul class="nav d-block">
         <li class="nav-item">
@@ -23,5 +35,9 @@
         </li>
     </ul>
 </div>
+
+
+
+
 
 
