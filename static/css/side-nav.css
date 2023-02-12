@@ -20,8 +20,6 @@
     min-height: 100vh;
     margin-left: -25vw; 
     width: 25vw;
-
-    background-color: white;
     z-index: 9999;
 
     -webkit-transition: margin .25s ease-out;
