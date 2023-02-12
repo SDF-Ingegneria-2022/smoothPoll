@@ -2,14 +2,16 @@
 
 {% block body %}
 
-<div class="d-flex" id="wrapper">
+<div id="wrapper">
 
     <!-- Sidebar wrapper -->
     <div id="sidebar-wrapper">
-        {# Sidebar (you can override it) #}
-        {% block sidebar %}
-        {% include "global/components/skeleton/sidebar.html" %}
-        {% endblock sidebar %}
+        <div class="sidebar-content">
+            {# Sidebar (you can override it) #}
+            {% block sidebar %}
+            {% include "global/components/skeleton/sidebar.html" %}
+            {% endblock sidebar %}
+        </div>
     </div>
 
     <!-- Page wrapper (all page except sidebar) -->

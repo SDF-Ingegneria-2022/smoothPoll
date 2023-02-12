@@ -8,6 +8,7 @@
 /* main wrapper of the whole page */
 #wrapper {
     overflow-x: hidden;
+    display: flex;
 }
 
 /* 
@@ -16,16 +17,30 @@
     - when open, it occupy 25% of the page (leaving the rest usable)
 */
 #sidebar-wrapper {
-    display: inline-block;
     min-height: 100vh;
-    margin-left: -25vw; 
-    width: 25vw;
+    margin-left: -22em; 
+    width: 22em;
     z-index: 9999;
+
+    position: relative;
 
     -webkit-transition: margin .25s ease-out;
     -moz-transition: margin .25s ease-out;
     -o-transition: margin .25s ease-out;
     transition: margin .25s ease-out;
+}
+
+/* 
+    A container for objects in sidebar 
+    (needed so we have a "stable area" where
+    you can put bootstrap elements)
+*/ 
+#sidebar-wrapper .sidebar-content {
+    
+    position: absolute;
+    width: 100%;
+    top:0; bottom:0;
+    left: 0;
 }
 
 /* 
@@ -35,7 +50,6 @@
 */
 #page-content-wrapper {
     position: relative;
-    display: inline-block;
     min-width: 0;
     width: 100%;
 }
@@ -76,6 +90,10 @@ body.sb-sidenav-toggled #wrapper #sidebar-wrapper {
         width: 80vw;
     }
 
+    #sidebar-wrapper .sidebar-content {
+        width: inherit;
+    }
+
     /* On mobile, main page "shift" on the
     right when sidebar is open*/ 
     body.sb-sidenav-toggled #page-content-wrapper {
@@ -88,4 +106,10 @@ body.sb-sidenav-toggled #wrapper #sidebar-wrapper {
     body.sb-sidenav-toggled #page-content-overlay {
         display: block;
     }
+
+    /* On mobile, I block scrolling 
+    when sidebar is open */
+    body.sb-sidenav-toggled {
+        overflow: hidden; /* Hide scrollbars */
+    }    
 }

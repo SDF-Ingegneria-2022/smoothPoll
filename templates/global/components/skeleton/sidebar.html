@@ -1,3 +1,27 @@
-<div class="container">
-    
+<div class="container pt-2">
+
+    <h4>Scegli Meglio</h4>
+    <p>Metodi migliori per scegliere</p>
+
+
+    <ul class="nav d-block">
+        <li class="nav-item">
+            <a class="nav-link active" aria-current="page"
+                href="{% url 'home' %}">Home</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" 
+            href="{% url 'apps.polls_management:all_polls' %}">Vota e vedi risultati</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" 
+            href="{% url 'apps.polls_management:all_polls' %}">Gestisci scelte</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" 
+            href="{% url 'apps.polls_management:poll_create' %}">Crea nuova scelta</a>
+        </li>
+    </ul>
 </div>
+
+

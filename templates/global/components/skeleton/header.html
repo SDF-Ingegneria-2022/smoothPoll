@@ -8,19 +8,24 @@
             <!-- App logo -->
             <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none">
                 <img src="{% static 'logo-smooth-poll.png' %}" 
-                alt="Vota Meglio" width="300" height="100" title="Vota Meglio Logo" 
-                class="bi me-2" role="img" />
+                    alt="Vota Meglio" width="300" height="100" title="Vota Meglio Logo" 
+                    class="bi me-2" role="img" />
             </a>
 
             <!-- Hamburger button to toggle sidebar -->
-            <button class="btn btn-primary sidebar-toggler">Toggle Menu</button>
+            {% comment %} <button class="btn btn-primary sidebar-toggler">Toggle Menu</button> {% endcomment %}
+            <a class="d-flex align-items-center mb-2 mb-lg-0 sidebar-toggler"
+                role="button" href="" >
+                <img src="{% static 'icon/menu-icon.svg' %}" 
+                    alt="Apri menù laterale" width="35" 
+                    class="bi me-2" role="img" />
+            </a>
 
-
-            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+            {% comment %} <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                 <li><a href="{% url 'home' %}" class="nav-link px-2 link-light">Home</a></li>
                 <li><a href="{% url 'apps.polls_management:all_polls' %}?page=1&per_page=10" class="nav-link px-2 link-light">Sondaggi</a></li>
                 <li><a href="{% url 'apps.polls_management:poll_create' %}" class="nav-link px-2 fw-bold link-light">Crea Sondaggio</a></li>
-            </ul>
+            </ul> {% endcomment %}
 
             {% if user.is_authenticated %}
                 <!-- Account box -->
