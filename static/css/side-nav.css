@@ -1,0 +1,60 @@
+/* 
+    Sidedrawer nav menu code. Insipired by
+    https://github.com/StartBootstrap/startbootstrap-simple-sidebar 
+*/
+
+
+/* main wrapper of the whole page */
+#wrapper {
+    overflow-x: hidden;
+}
+
+/* 
+    Sidebar 
+    - when closed, it's pushed on an hidden position on the left
+    - when open, it occupy 25% of the page (leaving the rest usable)
+*/
+#sidebar-wrapper {
+    min-height: 100vh;
+    margin-left: -25vw; 
+    width: 25vw;
+
+    -webkit-transition: margin .25s ease-out;
+    -moz-transition: margin .25s ease-out;
+    -o-transition: margin .25s ease-out;
+    transition: margin .25s ease-out;
+}
+
+/* 
+    Main page content wrapper.
+    - when sidebar is closed, it occupy the whole page space
+    - when sidebar is open, it reduces its width 
+*/
+#page-content-wrapper {
+    min-width: 0;
+    width: 100%;
+}
+
+/* 
+    Toggle action "moves" hidden sidebar on 
+    visible screen portion, reducing main wrapper size
+*/
+body.sb-sidenav-toggled #wrapper #sidebar-wrapper {
+    margin-left: 0;
+}
+
+
+/* @media (min-width: 768px) {
+    #sidebar-wrapper {
+        margin-left: 0;
+    }
+
+    #page-content-wrapper {
+        min-width: 0;
+        width: 100%;
+    }
+
+    body.sb-sidenav-toggled #wrapper #sidebar-wrapper {
+        margin-left: -25vw;
+    }
+} */

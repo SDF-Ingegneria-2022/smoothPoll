@@ -6,108 +6,114 @@
 
 {% block body %}
 
-    {# Page header #}
-    {% block header %}
-    <header class="p-3 mb-3 border-bottom bg-primary">
-        <div class="container-fluid">
-            <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-                <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none">
-                    <img src="{% static 'logo-smooth-poll.png' %}" 
-                    alt="Vota Meglio" width="300" height="100" title="Vota Meglio Logo" 
-                    class="bi me-2" role="img" />
-                </a>
-    
-            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                <li><a href="{% url 'home' %}" class="nav-link px-2 link-light">Home</a></li>
-                <li><a href="{% url 'apps.polls_management:all_polls' %}?page=1&per_page=10" class="nav-link px-2 link-light">Sondaggi</a></li>
-                <li><a href="{% url 'apps.polls_management:poll_create' %}" class="nav-link px-2 fw-bold link-light">Crea Sondaggio</a></li>
-            </ul>
+<div class="d-flex" id="wrapper">
+    <div id="sidebar-wrapper">
+        {% comment %} <p>Hello wrapper!</p> {% endcomment %}
+    </div>
+    <div id="page-content-wrapper">
+        {# Page header #}
+        {% block header %}
+        <header class="p-3 mb-3 border-bottom bg-primary">
+            <div class="container-fluid">
+                <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+                    <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none">
+                        <img src="{% static 'logo-smooth-poll.png' %}" 
+                        alt="Vota Meglio" width="300" height="100" title="Vota Meglio Logo" 
+                        class="bi me-2" role="img" />
+                    </a>
+                    <button class="btn btn-primary" id="sidebarToggle">Toggle Menu</button>
+        
+                    <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                        <li><a href="{% url 'home' %}" class="nav-link px-2 link-light">Home</a></li>
+                        <li><a href="{% url 'apps.polls_management:all_polls' %}?page=1&per_page=10" class="nav-link px-2 link-light">Sondaggi</a></li>
+                        <li><a href="{% url 'apps.polls_management:poll_create' %}" class="nav-link px-2 fw-bold link-light">Crea Sondaggio</a></li>
+                    </ul>
 
-            {% if user.is_authenticated %}
-            <div class="dropdown text-end">
-                <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                    <img src="{{ user.socialaccount_set.all.0.get_avatar_url }}" 
-                        alt="Icona Google di {{ user.username }}" 
-                        class="rounded-circle border border-light border-2" 
-                        style="height: 40px; width: 40px;" />
-                        <span class="text-light mb-0">
-                            Ciao {{ user.username }}
-                        </span>
-                </a>
-                <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
-                {% comment %} <li><a class="dropdown-item" href="#">New project...</a></li>
-                <li><a class="dropdown-item" href="#">Settings</a></li>
-                <li><a class="dropdown-item" href="#">Profile</a></li>
-                <li><hr class="dropdown-divider"></li> {% endcomment %}
-                <li>
-                    <form action="{% url 'account_logout' %}" method="POST">
+                    {% if user.is_authenticated %}
+                    <div class="dropdown text-end">
+                        <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="{{ user.socialaccount_set.all.0.get_avatar_url }}" 
+                                alt="Icona Google di {{ user.username }}" 
+                                class="rounded-circle border border-light border-2" 
+                                style="height: 40px; width: 40px;" />
+                                <span class="text-light mb-0">
+                                    Ciao {{ user.username }}
+                                </span>
+                        </a>
+                        <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
+                        {% comment %} <li><a class="dropdown-item" href="#">New project...</a></li>
+                        <li><a class="dropdown-item" href="#">Settings</a></li>
+                        <li><a class="dropdown-item" href="#">Profile</a></li>
+                        <li><hr class="dropdown-divider"></li> {% endcomment %}
+                        <li>
+                            <form action="{% url 'account_logout' %}" method="POST">
 
-                    {% csrf_token %}
-                    <button type="submit" class="dropdown-item">Logout</button>
+                            {% csrf_token %}
+                            <button type="submit" class="dropdown-item">Logout</button>
+                            </form>
+                        </ul>
+                    </div>
+                    {% else %}
+                    <form action="{% provider_login_url 'google' %}" method="POST">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-light">
+                            <img width="20px" style="margin-bottom:3px; margin-right:5px" alt="Google sign-in" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png" />
+                            Login con Google</button>
                     </form>
-                </ul>
-            </div>
-            {% else %}
-            {% comment %} <a class="btn btn-light" role="button" 
-                href="{% provider_login_url 'google' %}">
-                Login con Google                    
-            </a> {% endcomment %}
-            <form action="{% provider_login_url 'google' %}" method="POST">
-
-                {% csrf_token %}
-                <button type="submit" class="btn btn-light">
-                    <img width="20px" style="margin-bottom:3px; margin-right:5px" alt="Google sign-in" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png" />
-                    Login con Google</button>
-            </form>
-            {% endif %}
-            </div>
-        </div>
-    </header>
-
-    {% endblock header %}
-
-    {# Page container #}
-    {% block container %}
-
-        <div class="container pt-5 pb-5">
-            {# Page content (proper page content, specific for each page) #}
-            {# Use hineritance (extends) to define it #}
-            {% block content %}{% endblock content %}
-        </div>
-
-    {% endblock container %}
-
-    {# Page footer #}
-    {% block footer %}
-        <footer>
-            {# App name #}
-            <div class="bg-secondary text-light"> 
-                <div class="container p-3">
-                    <p class="text-center m-0">
-                        Scegli Meglio @ {% now "Y" %} - Progetto didattico di Ing. del Software <br />
-                        Università degli Studi di Udine, A.A. 2022/23 
-
-                        {# Privacy link #}
-                        {% include "global/components/iubenda_privacy_link.html" %}
-                    </p>
+                    {% endif %}
                 </div>
             </div>
+        </header>
 
-            {# Repo reference #}
-            <div class="bg-dark text-light">
-                <div class="container p-2">
-                    <p class="text-center m-0">
-                        Repository progetto: 
-                        <a target="_blank" title="Github Repository SmoothPoll"
-                            href="https://github.com/SDF-Ingegneria-2022/smoothPoll" >
-                            https://github.com/SDF-Ingegneria-2022/smoothPoll
-                        </a> 
-                    </p>
-                </div>
+        {% endblock header %}
+
+        {# Page container #}
+        {% block container %}
+
+            <div class="container pt-5 pb-5">
+                {# Page content (proper page content, specific for each page) #}
+                {# Use hineritance (extends) to define it #}
+                {% block content %}{% endblock content %}
             </div>
 
-        </footer>
-    {% endblock footer %}
+        {% endblock container %}
+
+        {# Page footer #}
+        {% block footer %}
+            <footer>
+                {# App name #}
+                <div class="bg-secondary text-light"> 
+                    <div class="container p-3">
+                        <p class="text-center m-0">
+                            Scegli Meglio @ {% now "Y" %} - Progetto didattico di Ing. del Software <br />
+                            Università degli Studi di Udine, A.A. 2022/23 
+
+                            {# Privacy link #}
+                            {% include "global/components/iubenda_privacy_link.html" %}
+                        </p>
+                    </div>
+                </div>
+
+                {# Repo reference #}
+                <div class="bg-dark text-light">
+                    <div class="container p-2">
+                        <p class="text-center m-0">
+                            Repository progetto: 
+                            <a target="_blank" title="Github Repository SmoothPoll"
+                                href="https://github.com/SDF-Ingegneria-2022/smoothPoll" >
+                                https://github.com/SDF-Ingegneria-2022/smoothPoll
+                            </a> 
+                        </p>
+                    </div>
+                </div>
+
+            </footer>
+        {% endblock footer %}
+    </div>
+</div>
+
+
+    
 
 {% endblock body %}
 

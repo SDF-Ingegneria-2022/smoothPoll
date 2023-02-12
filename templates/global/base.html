@@ -58,6 +58,8 @@
         }
     </style>
 
+    <link rel="stylesheet" href="{% static 'css/side-nav.css' %}" />
+
     {% block pagestyle %}{% endblock pagestyle %}
 
     {% load static %}
@@ -68,6 +70,8 @@
     {% block body %}{% endblock body %}
 
     {% bootstrap_javascript %}
+
+    <script src="{% static 'js/side-nav.js' %}" ></script>
 
     {# Custom JS #}
     {% block customjs %}{% endblock customjs %} 
