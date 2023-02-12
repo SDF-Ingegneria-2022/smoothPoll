@@ -1,6 +1,7 @@
 /* 
     Sidedrawer nav menu code. Insipired by
     https://github.com/StartBootstrap/startbootstrap-simple-sidebar 
+    but heavily customized
 */
 
 
@@ -15,9 +16,13 @@
     - when open, it occupy 25% of the page (leaving the rest usable)
 */
 #sidebar-wrapper {
+    display: inline-block;
     min-height: 100vh;
     margin-left: -25vw; 
     width: 25vw;
+
+    background-color: white;
+    z-index: 9999;
 
     -webkit-transition: margin .25s ease-out;
     -moz-transition: margin .25s ease-out;
@@ -31,6 +36,8 @@
     - when sidebar is open, it reduces its width 
 */
 #page-content-wrapper {
+    position: relative;
+    display: inline-block;
     min-width: 0;
     width: 100%;
 }
@@ -44,17 +51,43 @@ body.sb-sidenav-toggled #wrapper #sidebar-wrapper {
 }
 
 
-/* @media (min-width: 768px) {
+/* 
+    Page content overlay displayed on mobile
+    when the sidebar is open
+*/
+#page-content-overlay {
+    position: absolute; /* Sit on top of the page content */
+    display: none; /* Hidden by default */
+    width: 100%; /* Full width (cover the whole page) */
+    height: 100%; /* Full height (cover the whole page) */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5); /* Black background with opacity */
+    z-index: 10000; /* Specify a stack order in case you're using a different order for other elements */
+    cursor: pointer; /* Add a pointer on hover */
+}
+
+
+@media screen and (max-width: 768px) {
+
+    /* On mobile, we want a bigger sidebar */ 
     #sidebar-wrapper {
-        margin-left: 0;
+        margin-left: -80vw; 
+        width: 80vw;
     }
 
-    #page-content-wrapper {
-        min-width: 0;
-        width: 100%;
+    /* On mobile, main page "shift" on the
+    right when sidebar is open*/ 
+    body.sb-sidenav-toggled #page-content-wrapper {
+        margin-left: 80vw; 
+        min-width: 100vw;
     }
 
-    body.sb-sidenav-toggled #wrapper #sidebar-wrapper {
-        margin-left: -25vw;
+    /* On mobile, we display shadow overlay over
+    content when sidebar is open */ 
+    body.sb-sidenav-toggled #page-content-overlay {
+        display: block;
     }
-} */
+}

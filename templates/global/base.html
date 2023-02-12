@@ -1,8 +1,9 @@
+{% load static %}
+{% load bootstrap5 %}
+
 <!DOCTYPE html>
 <html lang="it">
 <head>
-
-    {% load static %}
 
     {% if GA_TAG %}
     <input type="hidden" id="jsTag" name="variable" value="{{ GA_TAG }}">
@@ -18,7 +19,6 @@
         // console.log(document.getElementById("jsTag").value);
     </script>
     {% endif %}
-    
 
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -27,11 +27,7 @@
     <meta name="description" 
         content="{% block metadescription %}{% endblock metadescription %}" >
     <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}?v=2"/>
-
- 
-    {# Load the tag library #}
-    {% load bootstrap5 %}
-
+    
     {# Load CSS and JavaScript #}
     {% bootstrap_css %}
 
@@ -62,7 +58,6 @@
 
     {% block pagestyle %}{% endblock pagestyle %}
 
-    {% load static %}
     <script src="{% static 'js/jquery/jquery-3.6.2.min.js' %}"></script>
 
 </head>

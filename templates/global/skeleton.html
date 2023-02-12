@@ -3,7 +3,6 @@
 {% load static %}
 {% load socialaccount %}
 
-
 {% block body %}
 
 <div class="d-flex" id="wrapper">
@@ -11,6 +10,9 @@
         {% comment %} <p>Hello wrapper!</p> {% endcomment %}
     </div>
     <div id="page-content-wrapper">
+
+        <div id="page-content-overlay" class="sidebar-toggler"></div>
+
         {# Page header #}
         {% block header %}
         <header class="p-3 mb-3 border-bottom bg-primary">
@@ -21,7 +23,9 @@
                         alt="Vota Meglio" width="300" height="100" title="Vota Meglio Logo" 
                         class="bi me-2" role="img" />
                     </a>
-                    <button class="btn btn-primary" id="sidebarToggle">Toggle Menu</button>
+
+
+                    <button class="btn btn-primary sidebar-toggler">Toggle Menu</button>
         
                     <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                         <li><a href="{% url 'home' %}" class="nav-link px-2 link-light">Home</a></li>
@@ -111,9 +115,6 @@
         {% endblock footer %}
     </div>
 </div>
-
-
-    
 
 {% endblock body %}
 
