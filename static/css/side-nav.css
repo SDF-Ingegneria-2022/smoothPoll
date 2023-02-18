@@ -17,12 +17,13 @@
     - when open, it occupy 25% of the page (leaving the rest usable)
 */
 #sidebar-wrapper {
-    min-height: 100vh;
-    margin-left: -22em; 
-    width: 22em;
+    height: 100vh;
+    margin-left: -18em; 
+    width: 18em;
     z-index: 9999;
 
-    position: relative;
+    position: fixed;
+    overflow-y: auto;
 
     -webkit-transition: margin .25s ease-out;
     -moz-transition: margin .25s ease-out;
@@ -52,14 +53,22 @@
     position: relative;
     min-width: 0;
     width: 100%;
+
+    -webkit-transition: margin .25s ease-out;
+    -moz-transition: margin .25s ease-out;
+    -o-transition: margin .25s ease-out;
+    transition: margin .25s ease-out;
 }
 
 /* 
     Toggle action "moves" hidden sidebar on 
     visible screen portion, reducing main wrapper size
 */
-body.sb-sidenav-toggled #wrapper #sidebar-wrapper {
+body.sb-sidenav-toggled #sidebar-wrapper {
     margin-left: 0;
+}
+body.sb-sidenav-toggled #page-content-wrapper {
+    margin-left: 18em;
 }
 
 
