@@ -1,47 +1,47 @@
 {% load static %}
 
 <div class="p-2 h-100 d-flex align-items-end flex-column bg-light">
-        <!-- Site name + close icon -->
-        <div class="w-100 d-flex justify-content-between">
-            <span>
-                <h4>Scegli Meglio</h4>
-                <p>Metodi migliori per scegliere</p>
-            </span>
-            <span>
-                <a class="d-flex align-items-center mb-2 mb-lg-0 sidebar-toggler"
-                    role="button" href="" >
-                    <img src="{% static 'icon/close-icon.svg' %}" 
-                        alt="Chiudi menù laterale" width="20" />
-                </a>
-            </span>
-        </div>
+    <!-- Site name + close icon -->
+    <div class="w-100 d-flex justify-content-between">
+        <span>
+            <h4>Scegli Meglio</h4>
+            <p>Metodi migliori per scegliere</p>
+        </span>
+        <span>
+            <a class="d-flex align-items-center mb-2 mb-lg-0 sidebar-toggler"
+                role="button" href="" >
+                <img src="{% static 'icon/close-icon.svg' %}" 
+                    alt="Chiudi menù laterale" width="20" />
+            </a>
+        </span>
+    </div>
 
-        <!-- Nav Menu -->
-        <nav class="w-100">
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page"
-                        href="{% url 'home' %}">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" 
-                    href="{% url 'apps.polls_management:all_polls' %}">Vota e vedi risultati</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" 
-                    href="{% url 'apps.polls_management:all_polls' %}">Gestisci scelte</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" 
-                    href="{% url 'apps.polls_management:poll_create' %}">Crea nuova scelta</a>
-                </li>
-            </ul>
-        </nav>
+    <!-- Nav Menu -->
+    <nav class="w-100">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page"
+                    href="{% url 'home' %}">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" 
+                href="{% url 'apps.polls_management:all_polls' %}">Vota e vedi risultati</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" 
+                href="{% url 'apps.polls_management:all_polls' %}">Gestisci scelte</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" 
+                href="{% url 'apps.polls_management:poll_create' %}">Crea nuova scelta</a>
+            </li>
+        </ul>
+    </nav>
 
-        <!-- Manage User -->
-        <div class="w-100 mt-auto">
-            Hello 
-        </div>
+    <!-- Manage User -->
+    <div class="w-100 mt-auto">
+        {% include "global/components/user_box.html" %}
+    </div>
 </div>
 
 
