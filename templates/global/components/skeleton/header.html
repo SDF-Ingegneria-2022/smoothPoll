@@ -1,68 +1,66 @@
 {% load static %}
 {% load socialaccount %}
 
-<header class="p-3 mb-3 border-bottom bg-primary">
+<header class="p-1 p-md-2 mb-3 border-bottom bg-primary">
     <div class="container-fluid">
-        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+        <div class="d-flex flex-wrap align-items-center justify-content-start flex-row-reverse flex-md-row">
             
-            <!-- Hamburger button to toggle sidebar -->
-            {% comment %} <button class="btn btn-primary sidebar-toggler">Toggle Menu</button> {% endcomment %}
-            <a class="d-flex align-items-center mb-2 mb-lg-0 sidebar-toggler"
-                role="button" href="" >
-                <img src="{% static 'icon/menu-icon.svg' %}" 
-                    alt="Apri menù laterale" width="35" 
-                    class="bi me-2" role="img" />
-            </a>
+            <!-- Hamburger button to toggle sidebar -->            
+            <span class="">
+                <a class="sidebar-toggler" role="button" href="" >
+                    <img src="{% static 'icon/menu-icon.svg' %}" 
+                        alt="Apri menù laterale" width="35" 
+                        class="bi me-2" role="img" />
+                </a>
+            </span>
             
             <!-- App logo -->
-            <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none">
-                <img src="{% static 'logo-smooth-poll.png' %}" 
-                    alt="Vota Meglio" width="300" height="100" title="Vota Meglio Logo" 
-                    class="bi me-2" role="img" />
-            </a>
+            <span class="me-auto me-md-none">
+                <a href="/" class="text-light text-decoration-none">
+                    <img src="{% static 'logo-scegli-meglio.png' %}" 
+                        alt="Vota Meglio" height="65" title="Vota Meglio Logo" 
+                        class="bi me-2" role="img" />
+                </a>
+            </span>
+            
+            <!-- Desktop user account icon -->
+            <span class="ms-auto d-none d-md-inline-block">
+                {% if user.is_authenticated %}
+                    <div class="dropdown text-end">
 
-            {% comment %} <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                <li><a href="{% url 'home' %}" class="nav-link px-2 link-light">Home</a></li>
-                <li><a href="{% url 'apps.polls_management:all_polls' %}?page=1&per_page=10" class="nav-link px-2 link-light">Sondaggi</a></li>
-                <li><a href="{% url 'apps.polls_management:poll_create' %}" class="nav-link px-2 fw-bold link-light">Crea Sondaggio</a></li>
-            </ul> {% endcomment %}
+                        <!-- User icon -->
+                        <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" 
+                            id="dropdownUser1" data-bs-toggle="dropdown" 
+                            aria-expanded="false">
+                            <img src="{{ user.socialaccount_set.all.0.get_avatar_url }}" 
+                                alt="Icona Google di {{ user.username }}" 
+                                class="rounded-circle border border-light border-2" 
+                                style="height: 40px; width: 40px;" />
+                                <span class="text-light mb-0">
+                                    Ciao {{ user.username }}
+                                </span>
+                        </a>
 
-            {% if user.is_authenticated %}
-                <!-- Account box -->
-                <div class="dropdown text-end">
-
-                    <!-- User icon -->
-                    <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" 
-                        id="dropdownUser1" data-bs-toggle="dropdown" 
-                        aria-expanded="false">
-                        <img src="{{ user.socialaccount_set.all.0.get_avatar_url }}" 
-                            alt="Icona Google di {{ user.username }}" 
-                            class="rounded-circle border border-light border-2" 
-                            style="height: 40px; width: 40px;" />
-                            <span class="text-light mb-0">
-                                Ciao {{ user.username }}
-                            </span>
-                    </a>
-
-                    <!-- Action to logout -->
-                    <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
-                        <li>
-                            <form action="{% url 'account_logout' %}" method="POST">
-                            {% csrf_token %}
-                            <button type="submit" class="dropdown-item">Logout</button>
-                            </form>
-                        </li>
-                    </ul>
-                </div>
-            {% else %}
-                <!-- Google login button -->
-                <form action="{% provider_login_url 'google' %}" method="POST">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-light">
-                        <img width="20px" style="margin-bottom:3px; margin-right:5px" alt="Google sign-in" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png" />
-                        Login con Google</button>
-                </form>
-            {% endif %}
+                        <!-- Action to logout -->
+                        <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
+                            <li>
+                                <form action="{% url 'account_logout' %}" method="POST">
+                                {% csrf_token %}
+                                <button type="submit" class="dropdown-item">Logout</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                {% else %}
+                    <!-- Google login button -->
+                    <form action="{% provider_login_url 'google' %}" method="POST">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-light">
+                            <img width="20px" style="margin-bottom:3px; margin-right:5px" alt="Google sign-in" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png" />
+                            Login con Google</button>
+                    </form>
+                {% endif %}
+            </span>
         </div>
     </div>
 </header>
