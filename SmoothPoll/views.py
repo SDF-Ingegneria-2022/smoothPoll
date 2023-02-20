@@ -8,14 +8,13 @@ def home(request):
     App home page
     """
     predefined_polls = PollModel.objects.filter(predefined=True)
-    
-    config = configparser.ConfigParser()
-    config.read('.bumpversion.cfg')
-    version = config.get('bumpversion', 'current_version')
 
     return render(request, "global/home.html",
-                  {"predefined_polls": predefined_polls, 
-                   "version": version})
+                  {"predefined_polls": predefined_polls, })
+
+def attributions(request):
+    """Attributions for Creative Common material"""
+    return render(request, "global/attributions.html")
 
 def login_redirect_page(request):
     """Page to redirect to login when the user tries to do

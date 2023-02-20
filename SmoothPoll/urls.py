@@ -22,6 +22,9 @@ urlpatterns = [
 
     # home page
     path('', views.home, name="home"),
+
+    # attributions for creative commons licence
+    path('attribuzioni-creative-commons/', views.attributions, name="attributions"),
     
     # area to manage your polls (open, close, CRUD operations)
     path('gestione-sondaggi/', include('apps.polls_management.urls'), name="polls_management"),

@@ -5,21 +5,29 @@
 <div class="p-2 border border-dark rounded bg-white">
     {% if user.is_authenticated %}
 
-        <div class="row">
-            <div class="col-4">
-                <img src="{{ user.socialaccount_set.all.0.get_avatar_url }}" 
+        <div class="d-flex align-items-center text-truncate">
+            <span class="me-2">
+                <!-- <a href="https://iconscout.com/icons/user" target="_blank">User Icon</a> 
+                    by <a href="https://iconscout.com/contributors/gajah-mada-studio">Mada Creative</a> 
+                    on <a href="https://iconscout.com">IconScout</a> -->
+                <img src="{{ user.socialaccount_set.all.0.get_avatar_url|default:"/static/icon/user.svg" }}" 
                     alt="Icona Google di {{ user.username }}" 
                     class="rounded-circle border border-secondary border-2" 
-                    style="height: 80px; width: 80px;" />
-            </div>
-            <div class="col-8 align-middle">
-                <p class="mb-0">Ciao {{ user.username }}</p>
-                <form action="{% url 'account_logout' %}" method="POST">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-link">Logout</button>
-                </form>
-            </div>
+                    style="height: 50px; width: 50px; background-color:white;" />
+            </span>
+                
+            <span>
+                <h5 class="mb-0">{{ user.socialaccount_set.all.0.extra_data.name|default:user.username }}</h5>
+                <p class="mb-0 text-muted " style="font-size:small;">{{ user.socialaccount_set.all.0.extra_data.email }}</p>
+            </span>
+
         </div>
+
+
+        <form action="{% url 'account_logout' %}" method="POST">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-link">Logout</button>
+        </form>
 
     {% else %}
 

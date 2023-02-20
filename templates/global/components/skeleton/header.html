@@ -32,12 +32,15 @@
                         <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" 
                             id="dropdownUser1" data-bs-toggle="dropdown" 
                             aria-expanded="false">
-                            <img src="{{ user.socialaccount_set.all.0.get_avatar_url }}" 
-                                alt="Icona Google di {{ user.username }}" 
+                            <!-- <a href="https://iconscout.com/icons/user" target="_blank">User Icon</a> 
+                                by <a href="https://iconscout.com/contributors/gajah-mada-studio">Mada Creative</a> 
+                                on <a href="https://iconscout.com">IconScout</a> -->
+                            <img src="{{ user.socialaccount_set.all.0.get_avatar_url|default:"/static/icon/user.svg" }}" 
+                                alt="Icona Google di {{ user.socialaccount_set.all.0.extra_data.name|default:user.username }}" 
                                 class="rounded-circle border border-light border-2" 
-                                style="height: 40px; width: 40px;" />
+                                style="height: 40px; width: 40px; background-color: white;" />
                                 <span class="text-light mb-0">
-                                    Ciao {{ user.username }}
+                                    {{ user.socialaccount_set.all.0.extra_data.name|default:user.username }}
                                 </span>
                         </a>
 
