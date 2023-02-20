@@ -150,7 +150,7 @@ class PollService:
             raise PollCannotBeOpenedException(f"Poll with id={id} cannot be opened.")
     
     @staticmethod
-    def user_polls(user:User):
+    def user_polls(user:User) -> List[PollModel]:
         """Method used to return a list of user polls.
         
         Args:
@@ -163,7 +163,8 @@ class PollService:
             List: list of user polls.
         """
 
-        user_polls_list = PollModel.objects.filter(author=user)
+        user_polls_list: List[PollModel] = PollModel.objects.filter(author=user).order_by('-id')
+        # return a list of user polls ordered by the last poll created
 
         if not user_polls_list:
             raise NoUserPollsException("No user polls.")
@@ -171,7 +172,7 @@ class PollService:
         return list(user_polls_list)
 
     @staticmethod
-    def votable_or_closed_polls():
+    def votable_or_closed_polls() -> List[PollModel]:
         """Method used to return a list of votable or closed polls.
         
         Raises:
@@ -181,11 +182,17 @@ class PollService:
             List: list of votable/closed polls.
         """
 
-        votable_or_closed_polls_list_ids = [votable_closed.id for votable_closed in PollModel.objects.all() 
-        if votable_closed.is_open() or votable_closed.is_closed()]
+        votable_or_closed_polls_list_ids: List[int] = [votable_closed.id for votable_closed in PollModel.objects.all() 
+        if votable_closed.is_open()]
 
-        votable_or_closed_polls_list = PollModel.objects.filter(id__in=votable_or_closed_polls_list_ids)
+        only_closed_polls_list_ids: List [int] = [closed.id for closed in PollModel.objects.all() 
+        if closed.is_closed()]
+
+        votable_or_closed_polls_list: List[PollModel] = PollModel.objects.filter(id__in=votable_or_closed_polls_list_ids).order_by('close_datetime')
+        only_closed_polls_list: List[PollModel] = PollModel.objects.filter(id__in=only_closed_polls_list_ids).order_by('close_datetime')
         
+        list(votable_or_closed_polls_list).append(list(only_closed_polls_list))
+
         if not votable_or_closed_polls_list:
             raise NoVotableOrClosedPollException("No votable or closed polls.")
 
