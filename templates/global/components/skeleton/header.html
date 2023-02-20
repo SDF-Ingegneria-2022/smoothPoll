@@ -8,18 +8,22 @@
             <!-- Hamburger button to toggle sidebar -->            
             <span class="">
                 <a class="sidebar-toggler" role="button" href="" >
-                    <img src="{% static 'icon/menu-icon.svg' %}" 
-                        alt="Apri menù laterale" width="35" 
+                    <img src="{% static 'icon/menu.png' %}" 
+                        alt="Apri menù laterale" width="50" 
                         class="bi me-2" role="img" />
                 </a>
             </span>
             
             <!-- App logo -->
-            <span class="me-auto me-md-none">
+            <span class="me-auto me-md-none ms-2">
                 <a href="/" class="text-light text-decoration-none">
-                    <img src="{% static 'logo-scegli-meglio.png' %}" 
+                    {% comment %} <img src="{% static 'logo-scegli-meglio.png' %}" 
                         alt="Vota Meglio" height="65" title="Vota Meglio Logo" 
-                        class="bi me-2" role="img" />
+                        class="bi me-2" role="img" /> {% endcomment %}
+                    <p class="mb-1">
+                        <span class="fs-1 text-white">Scegli </span>
+                        <span class="fs-1" style="color:#FAB005">Meglio</span>
+                    </p>
                 </a>
             </span>
             
