@@ -5,81 +5,82 @@
 {% block pagename %}Crea e Vota Sondaggi{% endblock pagename %}
 
 {% block content %}
-    <div class="container">
-        <!-- <div class="row">
-            <div class="col-12 text-center">
-                <img src="{% static 'logo-smooth-poll.svg' %}" alt="Logo Vota Meglio" class="img-fluid w-auto">
-            </div>
-        </div> -->
-        <div class="row mt-4">
-            <div class="col-12 mt-5 text-center">
-                <h1>Benvenuto su Scegli Meglio!</h1>
-            </div>
-        </div>
-        <div class="row  justify-content-md-center  justify-content-center">
-            <div class="col-xs-12 col-sm-12 col-md-8">
-                <p class="fs-5 fw-lighter text-center">
-                    Scegli Meglio è un'applicazione per creare e votare sondaggi. 
-                    Il nostro obiettivo è fornirti uno strumento efficace per gestire scelte sociali, 
-                    anche attraverso metodologie di voto avanzate, come
-                    il metodo del Giudizio Maggioritario.
-                </p>
-                
-            </div>
-        </div>
-        <div class="row mt-2 justify-content-md-center">
-            <div class="col-md-6">
-                <div class="d-grid gap-2 d-md-block text-center">
-                    <a name="" id="" role="button"
-                        class="btn  btn-outline-primary mt-2 me-2" 
-                        href="{% url 'apps.polls_management:all_polls' %}?page=1&per_page=10" >
-                        Gestisci sondaggi
-                    </a>
-                    <a name="" id="" role="button"
-                        class="btn btn-outline-secondary mt-2 me-2" 
-                        href="https://github.com/SDF-Ingegneria-2022/smoothPoll/issues" 
-                        target="_blank">
-                        Lasciaci un Feedback
-                    </a> 
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-12 mt-5 text-center">
-                <p class=" fs-3 fw-light">
-                    Prova a votare con il <b>Metodo del Giudizio Maggioritario</b>
-                </p>
-            </div>
-        </div>
-        <div class="row">
-            <div id="carouselExampleDark" class="carousel carousel-dark slide " data-bs-ride="carousel"> 
-                <div class="carousel-inner shadow-lg bg-body rounded">
-                    {% for poll in predefined_polls %}
-                        <div class="carousel-item {% if  forloop.counter == 1 %} active {% endif %}" data-bs-interval="10000">
-                        <div class="card w-100 border-0 pt-3 pb-3">
-                            <div class="card-body text-center">
-                                <h3 class="card-title">{{poll.name}}</h3>
-                                <h4 class="card-subtitle mb-2 text-muted">{{poll.question}}</h4>
-                                    <p  class="fw-light mb-1 ">Stato sondaggio: <b>Aperto</b></p>
-                                    <p  class="fw-light mb-1 ">Data chiusura: <b>{{poll.close_datetime}}</b></p>
-                            <a href="{% url 'apps.votes_results:single_option_vote' poll_id=poll.id %}" class="btn btn-primary mt-2">Vota il sondaggio</a>
-                            <a href="{% url 'apps.votes_results:majority_judgment_results' poll_id=poll.id %}" class="btn btn-secondary mt-2">Vai al risultati</a>
-                            </div>
-                        </div>
-                        </div>
-                    {% endfor %}
-                  
-                </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="prev">
-                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                  <span class="visually-hidden">Previous</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="next">
-                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                  <span class="visually-hidden">Next</span>
-                </button>
-              </div>
+<div class="row mt-2">
+    <div class="col-12 text-center">
+        <img src="{% static 'logo-scegli-meglio.png' %}" 
+            alt="Logo Scegli Meglio | Scelte sociali giudizio maggioritario"
+            style="width:90%; max-width: 400px;"/>
+    </div>
+</div> 
+<div class="row mt-2 justify-content-md-center  justify-content-center">
+    <div class="col-xs-12 col-sm-12 col-md-8 text-center">
+        {% comment %} <h1>Scegli Meglio</h1> {% endcomment %}
+        <h1 class="fw-light">Scelte sociali con il metodo del Giudizio Maggioritario</h1>
+    </div>
+</div>
+
+<div class="row mt-2 justify-content-md-center  justify-content-center">
+    <div class="col-xs-12 col-sm-12 col-md-8 text-center fs-5 fw-lighter">
+        <p>
+            Il nostro obiettivo è fornire uno strumento efficace per 
+            <strong>creare e votare scelte sociali</strong>, 
+            anche attraverso metodologie di voto avanzate, come
+            il metodo del <strong>Giudizio Maggioritario</strong>.
+        </p>
+    </div>
+</div>
+<div class="row mt-2 justify-content-md-center">
+    <div class="col-md-6">
+        <div class="d-grid gap-2 d-md-block text-center">
+            <a name="" id="" role="button"
+                class="btn  btn-outline-primary mt-2 me-2" 
+                href="{% url 'apps.polls_management:all_polls' %}?page=1&per_page=10" >
+                Gestisci scelte
+            </a>
+            <a name="" id="" role="button"
+                class="btn btn-outline-secondary mt-2 me-2" 
+                href="https://github.com/SDF-Ingegneria-2022/smoothPoll/issues" 
+                target="_blank">
+                Lasciaci un Feedback
+            </a> 
         </div>
     </div>
+</div>
+<div class="row">
+    <div class="col-12 mt-5 text-center">
+        <p class=" fs-3 fw-light">
+            Prova a votare con il <b>Metodo del Giudizio Maggioritario</b>
+        </p>
+    </div>
+</div>
+<div class="row">
+    <div id="carouselExampleDark" class="carousel carousel-dark slide " data-bs-ride="carousel"> 
+        <div class="carousel-inner shadow-lg bg-body rounded">
+            {% for poll in predefined_polls %}
+                <div class="carousel-item {% if  forloop.counter == 1 %} active {% endif %}" data-bs-interval="10000">
+                <div class="card w-100 border-0 pt-3 pb-3">
+                    <div class="card-body text-center">
+                        <h3 class="card-title">{{poll.name}}</h3>
+                        <h4 class="card-subtitle mb-2 text-muted">{{poll.question}}</h4>
+                            <p  class="fw-light mb-1 ">Stato sondaggio: <b>Aperto</b></p>
+                            <p  class="fw-light mb-1 ">Data chiusura: <b>{{poll.close_datetime}}</b></p>
+                    <a href="{% url 'apps.votes_results:single_option_vote' poll_id=poll.id %}" class="btn btn-primary mt-2">Vota il sondaggio</a>
+                    <a href="{% url 'apps.votes_results:majority_judgment_results' poll_id=poll.id %}" class="btn btn-secondary mt-2">Vai al risultati</a>
+                    </div>
+                </div>
+                </div>
+            {% endfor %}
+            
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+        </div>
+</div>
 {% endblock content %}
 
