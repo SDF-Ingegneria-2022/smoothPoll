@@ -21,11 +21,29 @@ Copy ```.env.example``` file and rename it into ```.env```. Here you will add ev
 
 ### Database migration
 
+To run this application you need a database. It can be a PostgreSQL or an SQLite:
+
+- if you want an SQLite, set $USE_POSTGRESQL=False$ in your ENV file
+- if you want PostgreSQL instead, 
+  - install it somewhere or connect to an existent (through settings in ENV file, see ```.env.example```)
+  - ensure user has permission to CREATEDB
+  - if it is a local one, ensure it is running (<code>sudo service postgresql start</code>)
+- if you just switched between the two, ensure you have runned (in ```python manage.py shell```) commands:
+
+      from django.contrib.contenttypes.models import ContentType
+
+      ContentType.objects.all().delete()
+
+
 Run the following command before start the server, in order to create all the tables in your database:
 
 ```bash
 python manage.py migrate  
 ```
+
+### Site ID and Google initialization
+
+TODO: add a brief procedure
 
 ### Run the server
 To run the server:

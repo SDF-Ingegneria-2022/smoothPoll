@@ -1,0 +1,54 @@
+{% load static %}
+{% load socialaccount %}
+
+
+<div class="p-2 border border-dark rounded bg-white">
+    {% if user.is_authenticated %}
+
+        <div class="d-flex align-items-center text-truncate">
+            <span class="me-2">
+                <!-- <a href="https://iconscout.com/icons/user" target="_blank">User Icon</a> 
+                    by <a href="https://iconscout.com/contributors/gajah-mada-studio">Mada Creative</a> 
+                    on <a href="https://iconscout.com">IconScout</a> -->
+                <img src="{{ user.socialaccount_set.all.0.get_avatar_url|default:"/static/icon/user.svg" }}" 
+                    alt="Icona Google di {{ user.username }}" 
+                    class="rounded-circle border border-secondary border-2" 
+                    style="height: 50px; width: 50px; background-color:white;" />
+            </span>
+                
+            <span>
+                <h5 class="mb-0">{{ user.socialaccount_set.all.0.extra_data.name|default:user.username }}</h5>
+                <p class="mb-0 text-muted " style="font-size:small;">{{ user.socialaccount_set.all.0.extra_data.email }}</p>
+            </span>
+
+        </div>
+
+
+        <div class="mt-1 text-end">
+            <form action="{% url 'account_logout' %}" method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-link text-dark">
+                    <img src="{% static 'icon/logout.png' %}" alt="Icona logout" 
+                    style="height: 16px" /><span class="ms-1">Logout</span>
+                </button>
+            </form>
+        </div>
+        
+
+    {% else %}
+
+        <h4>Registrati o fai login</h4>
+        <p class="text-secondary">
+            Collegati con Google 
+            per accedere a tutte le funzionalità!
+        </p>
+
+        <!-- Google login button -->
+        <form action="{% provider_login_url 'google' %}" method="POST">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-light border border-dark">
+                <img width="20px" style="margin-bottom:3px; margin-right:5px" alt="Google sign-in" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png" />
+                Login con Google</button>
+        </form>
+    {% endif %}
+</div>

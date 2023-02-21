@@ -1,37 +1,17 @@
+{% load static %}
+{% load bootstrap5 %}
+
 <!DOCTYPE html>
 <html lang="it">
 <head>
-
-    {% load static %}
-
-    {% if GA_TAG %}
-    <input type="hidden" id="jsTag" name="variable" value="{{ GA_TAG }}">
-
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id={{ GA_TAG }}"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-
-        gtag('config', document.getElementById("jsTag").value);
-        // console.log(document.getElementById("jsTag").value);
-    </script>
-    {% endif %}
-    
-
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block pagename %}{% endblock pagename %} | Scegli Meglio</title>
     <meta name="description" 
-        content="{% block metadescription %}{% endblock metadescription %}" >
-    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}?v=2"/>
-
- 
-    {# Load the tag library #}
-    {% load bootstrap5 %}
-
+        content="{% block metadescription %}{% endblock metadescription %}" />
+    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}?v=2" />
+    
     {# Load CSS and JavaScript #}
     {% bootstrap_css %}
 
@@ -58,16 +38,33 @@
         }
     </style>
 
+    <link rel="stylesheet" href="{% static 'css/side-nav.css' %}" />
+
     {% block pagestyle %}{% endblock pagestyle %}
 
-    {% load static %}
     <script src="{% static 'js/jquery/jquery-3.6.2.min.js' %}"></script>
 
+    {% if GA_TAG %}
+    <input type="hidden" id="jsTag" name="variable" value="{{ GA_TAG }}">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ GA_TAG }}"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', document.getElementById("jsTag").value);
+        // console.log(document.getElementById("jsTag").value);
+    </script>
+    {% endif %}
 </head>
 <body class="body">
     {% block body %}{% endblock body %}
 
     {% bootstrap_javascript %}
+
+    <script src="{% static 'js/side-nav.js' %}" ></script>
 
     {# Custom JS #}
     {% block customjs %}{% endblock customjs %} 

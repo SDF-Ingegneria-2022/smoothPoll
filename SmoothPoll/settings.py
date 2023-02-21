@@ -121,6 +121,9 @@ TEMPLATES = [
                 
                 # make available env GA tag to templates
                 'SmoothPoll.context_processors.ga_tag', 
+
+                # make available app version to templates
+                'SmoothPoll.context_processors.app_version', 
             ],
         },
     },

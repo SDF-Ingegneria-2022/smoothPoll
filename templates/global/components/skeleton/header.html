@@ -1,0 +1,73 @@
+{% load static %}
+{% load socialaccount %}
+
+<header class="p-1 p-md-2 mb-3 border-bottom bg-primary">
+    <div class="container-fluid">
+        <div class="d-flex flex-wrap align-items-center justify-content-start flex-row-reverse flex-md-row">
+            
+            <!-- Hamburger button to toggle sidebar -->            
+            <span class="">
+                <a class="sidebar-toggler" role="button" href="" >
+                    <img src="{% static 'icon/menu.png' %}" 
+                        alt="Apri menù laterale" width="50" 
+                        class="bi me-2" role="img" />
+                </a>
+            </span>
+            
+            <!-- App logo -->
+            <span class="me-auto me-md-none ms-2">
+                <a href="/" class="text-light text-decoration-none">
+                    {% comment %} <img src="{% static 'logo-scegli-meglio.png' %}" 
+                        alt="Vota Meglio" height="65" title="Vota Meglio Logo" 
+                        class="bi me-2" role="img" /> {% endcomment %}
+                    <p class="mb-1">
+                        <span class="fs-1 text-white">Scegli </span>
+                        <span class="fs-1" style="color:#FAB005">Meglio</span>
+                    </p>
+                </a>
+            </span>
+            
+            <!-- Desktop user account icon -->
+            <span class="ms-auto d-none d-md-inline-block">
+                {% if user.is_authenticated %}
+                    <div class="dropdown text-end">
+
+                        <!-- User icon -->
+                        <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" 
+                            id="dropdownUser1" data-bs-toggle="dropdown" 
+                            aria-expanded="false">
+                            <!-- <a href="https://iconscout.com/icons/user" target="_blank">User Icon</a> 
+                                by <a href="https://iconscout.com/contributors/gajah-mada-studio">Mada Creative</a> 
+                                on <a href="https://iconscout.com">IconScout</a> -->
+                            <img src="{{ user.socialaccount_set.all.0.get_avatar_url|default:"/static/icon/user.svg" }}" 
+                                alt="Icona Google di {{ user.socialaccount_set.all.0.extra_data.name|default:user.username }}" 
+                                class="rounded-circle border border-light border-2" 
+                                style="height: 40px; width: 40px; background-color: white;" />
+                                <span class="text-light mb-0">
+                                    {{ user.socialaccount_set.all.0.extra_data.name|default:user.username }}
+                                </span>
+                        </a>
+
+                        <!-- Action to logout -->
+                        <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
+                            <li>
+                                <form action="{% url 'account_logout' %}" method="POST">
+                                {% csrf_token %}
+                                <button type="submit" class="dropdown-item">Logout</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                {% else %}
+                    <!-- Google login button -->
+                    <form action="{% provider_login_url 'google' %}" method="POST">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-light">
+                            <img width="20px" style="margin-bottom:3px; margin-right:5px" alt="Google sign-in" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png" />
+                            Login con Google</button>
+                    </form>
+                {% endif %}
+            </span>
+        </div>
+    </div>
+</header>
