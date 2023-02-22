@@ -8,52 +8,47 @@
     <h2 class="text-info">Risultati sondaggio</h2>
 </div>
 
+<div class="container mt-5 mb-5">
+    <p class="fw-bold fs-3 mb-0">Testo della domanda: </p>
+    <h3>{{ poll_results.poll.question }}</h3>
+</div>
 
-<div class="container">
 
-    
-    <div class="container mt-5 mb-5">
-        <p class="fw-bold fs-3 mb-0">Testo della domanda: </p>
-        <h3>{{ poll_results.poll.question }}</h3>
-    </div>
-    
-
-    <div class="container mb-3 mt-3">
-        <h4>Risultati</h4>
-        <div class="container m-3">
-            {%for voted_option in poll_results.get_sorted_options %}
-                <div class="row">
-                    <div class="col-xxl-6">
-                        <p class="text-secondary">{{forloop.counter}}.
-                            <span class="{% if forloop.counter == 1 %}text-success fw-bold
-                            {% else %}text-dark{% endif %}">{{voted_option.option.value}}</span></p>
-                    </div>
-                    <div class="col-md-6">
-                        <p class="fw-bold text-primary"> ha ricevuto {{voted_option.n_votes}} voti</p>
-                    </div>
+<div class="container mb-3 mt-3">
+    <h4>Risultati</h4>
+    <div class="container m-3">
+        {%for voted_option in poll_results.get_sorted_options %}
+            <div class="row">
+                <div class="col-xxl-6">
+                    <p class="text-secondary">{{forloop.counter}}.
+                        <span class="{% if forloop.counter == 1 %}text-success fw-bold
+                        {% else %}text-dark{% endif %}">{{voted_option.option.value}}</span></p>
                 </div>
-                <hr />
-            {% endfor %}
-        </div>
-    </div>
-
-
-    <div class="container text-center md-5 mt-4">
-        <div class="d-grid gap-2 d-md-block">
-            <a name="" id="" role="button"
-                class="btn btn-primary" 
-                href="{% url 'home' %}" >
-                Torna alla home
-            </a>
-            <a name="" id="" role="button"
-                class="btn btn-secondary" 
-                href="https://github.com/SDF-Ingegneria-2022/smoothPoll/issues" 
-                target="_blank">
-                Lasciaci un Feedback
-            </a>
-        </div>
+                <div class="col-md-6">
+                    <p class="fw-bold text-primary"> ha ricevuto {{voted_option.n_votes}} voti</p>
+                </div>
+            </div>
+            <hr />
+        {% endfor %}
     </div>
 </div>
+
+
+<div class="container text-center md-5 mt-4">
+    <div class="d-grid gap-2 d-md-block">
+        <a name="" id="" role="button"
+            class="btn btn-primary" 
+            href="{% url 'home' %}" >
+            Torna alla home
+        </a>
+        <a name="" id="" role="button"
+            class="btn btn-secondary" 
+            href="https://github.com/SDF-Ingegneria-2022/smoothPoll/issues" 
+            target="_blank">
+            Lasciaci un Feedback
+        </a>
+    </div>
 </div>
+
 {% endblock content %}
 
