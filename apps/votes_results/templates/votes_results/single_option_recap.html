@@ -23,7 +23,7 @@ function copyLink(url) {
 {% block content %}
 
 <div class="container">
-    <div class="row ">
+    <div class="row">
         <div class="col">
             <div class="fs-2 text-success">Grazie di aver votato! Il tuo voto è stato registrato. </div>
         </div>
@@ -58,42 +58,41 @@ function copyLink(url) {
     </div>
 </div>
 
-    <div class="container mt-2" >
-        <div class="d-grid gap-2 d-md-block">
-        <p class="secondary">
-            {% comment %} Quando il sondaggio sarà chiuso, potrai vedere il risultato 
-            <a href="{% url 'apps.votes_results:single_option_results' %}" title="Esiti sondaggio">su questa pagina</a>.  {% endcomment %}
-            
-        </p>
-            <a class="btn btn-primary mt-2" href="{% url 'apps.votes_results:single_option_results' poll_id=vote.poll.id %}" role="button">Vedi risultati</a>
+<div class="container mt-2" >
+    <div class="d-grid gap-2 d-md-block">
+    <p class="secondary">
+        {% comment %} Quando il sondaggio sarà chiuso, potrai vedere il risultato 
+        <a href="{% url 'apps.votes_results:single_option_results' %}" title="Esiti sondaggio">su questa pagina</a>.  {% endcomment %}
+        
+    </p>
+        <a class="btn btn-primary mt-2" href="{% url 'apps.votes_results:single_option_results' poll_id=vote.poll.id %}" role="button">Vedi risultati</a>
 
 
-            <button type="button" class="btn btn-secondary mt-2" 
-                onclick="copyLink('{{request.get_host}}{% url 'apps.votes_results:single_option_results' poll_id=vote.poll.id %}')">
-                Copia link
-            </button>
+        <button type="button" class="btn btn-secondary mt-2" 
+            onclick="copyLink('{{request.get_host}}{% url 'apps.votes_results:single_option_results' poll_id=vote.poll.id %}')">
+            Copia link
+        </button>
 
-            <a class="btn btn-secondary mt-2" href="{% url 'apps.votes_results:single_option_vote' poll_id=vote.poll.id  %}" role="button">Vota di nuovo</a>
-        </div>
+        <a class="btn btn-secondary mt-2" href="{% url 'apps.votes_results:single_option_vote' poll_id=vote.poll.id  %}" role="button">Vota di nuovo</a>
     </div>
-
-    {% if vote.poll.votable_mj %}
-    <div class="card mt-5 shadow bg-body rounded">
-        <div class="card-body">
-          <h5 class="card-title">Perchè non provi il giudizio maggioritario?</h5>
-          <p class="card-text">Il giudizio maggioritario è stato introdotto nel 2007 da <b>Michel Balinski e Rida Laraki</b>. 
-            Il suo principio si basa sulla <b>regola della mediana
-            più alta</b>. Provalo pure tu! </p>
-          <hr>
-          <div class="fw-lighter fs-5">Voti con il metodo maggioritario per questo sondaggio</div>
-          <div class="fw-bold fs-4">{{mj_vote_counter.count_majority_judgment_votes}}</div>
-          <a href="{% url 'apps.votes_results:majority_judgment_vote' poll_id=vote.poll.id %}" class="btn btn-primary mt-2">Vota con il giudizio maggioritario</a>
-            {% if mj_vote_counter.count_majority_judgment_votes > 0%} 
-                <a href="{% url 'apps.votes_results:majority_judgment_results' poll_id=vote.poll.id %}" class="btn btn-secondary mt-2">Vedi risultati</a>
-            {% endif %}
-        </div>
-      </div>
-    {% endif %}
 </div>
+
+{% if vote.poll.votable_mj %}
+<div class="card mt-5 shadow bg-body rounded">
+    <div class="card-body">
+        <h5 class="card-title">Perchè non provi il giudizio maggioritario?</h5>
+        <p class="card-text">Il giudizio maggioritario è stato introdotto nel 2007 da <b>Michel Balinski e Rida Laraki</b>. 
+        Il suo principio si basa sulla <b>regola della mediana
+        più alta</b>. Provalo pure tu! </p>
+        <hr>
+        <div class="fw-lighter fs-5">Voti con il metodo maggioritario per questo sondaggio</div>
+        <div class="fw-bold fs-4">{{mj_vote_counter.count_majority_judgment_votes}}</div>
+        <a href="{% url 'apps.votes_results:majority_judgment_vote' poll_id=vote.poll.id %}" class="btn btn-primary mt-2">Vota con il giudizio maggioritario</a>
+        {% if mj_vote_counter.count_majority_judgment_votes > 0%} 
+            <a href="{% url 'apps.votes_results:majority_judgment_results' poll_id=vote.poll.id %}" class="btn btn-secondary mt-2">Vedi risultati</a>
+        {% endif %}
+    </div>
+    </div>
+{% endif %}
 
 {% endblock content %}
