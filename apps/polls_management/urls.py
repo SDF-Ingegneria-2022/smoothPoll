@@ -19,9 +19,10 @@ urlpatterns = [
 
     # htmx form for create and edit polls
     path('form/', login_required(views.CreatePollHtmxView.as_view()), name="poll_form"), 
+    path('form/conferma', views.poll_form_confirm, name="poll_form_confirm"),    
     path('form/annulla', views.poll_form_clean_go_back_home, name="poll_form_clean_go_back_home"), 
     path('form/htmx/modifica-dati', views.poll_form_htmx_edit, name="poll_form_htmx_edit"), 
     path('form/htmx/aggiungi-opzione', views.poll_form_htmx_create_option, name="poll_form_htmx_create_option"), 
     path('form/htmx/modifica-opzione/<int:option_rel_id>', views.poll_form_htmx_edit_option, name="poll_form_htmx_edit_option"), 
-    path('form/htmx/elimina-opzione/<int:option_rel_id>', views.poll_form_htmx_delete_option, name="poll_form_htmx_delete_option"), 
+    path('form/htmx/elimina-opzione/<int:option_rel_id>', views.poll_form_htmx_delete_option, name="poll_form_htmx_delete_option"),  
 ]

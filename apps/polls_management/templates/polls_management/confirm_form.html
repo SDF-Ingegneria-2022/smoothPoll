@@ -1,0 +1,33 @@
+{% extends 'global/skeleton.html' %}
+
+{% load bootstrap5 %}
+
+
+{% block pagename %}
+    {% if edit  %}
+        Sondaggio modificato
+    {% else %}
+        Sondaggio creato
+    {% endif %}
+{% endblock pagename %}
+
+{% block content %}
+
+<h1 class="text-success">
+    Sondaggio {% if edit  %} modificato {% else %} creato {% endif %} con successo!
+</h1>
+
+
+<div class="mt-5">
+    <a class="btn btn-primary" role="button"
+        href="{% url 'apps.votes_results:poll_details' poll_id=poll.id %}">
+        Vedi sondaggio</a>
+    <a class="btn btn-secondary" role="button"
+        href="{% url 'apps.polls_management:all_polls' %}?page=last">
+        Torna a gesione sondaggi</a>
+
+</div>
+
+
+
+{% endblock content %}
