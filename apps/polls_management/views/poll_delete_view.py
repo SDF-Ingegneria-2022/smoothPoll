@@ -100,7 +100,7 @@ def open_poll_by_id(request: HttpRequest, poll_id: int):
             request.session[SESSION_POLL_ID] = poll.id
             request.session[SESSION_OPTIONS] = options
 
-            request.session[SESSION_ERROR] = "Per aprire adesso il sondaggio inserisci la data di chiusura del sondaggio."
+            request.session[SESSION_ERROR] = "Per aprire al voto, inserisci una data di chiusura."
 
             # redirect to form to permit edit
             return HttpResponseRedirect(reverse('apps.polls_management:poll_form'))   

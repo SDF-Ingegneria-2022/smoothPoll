@@ -96,7 +96,7 @@ This project is based on Django, so all usual Django rules and commands are vali
         ```
     -   use service to create dummy survey
         ```
-        PollService.create("sondaggio di prova", "che sondaggio facciamo?", [{"key": "risposta-1", "value": "Risposta 1"}, {"key": "risposta-2", "value": "Risposta 2"}])
+        PollService.create("scelta di prova", "che scelta facciamo?", [{"key": "risposta-1", "value": "Risposta 1"}, {"key": "risposta-2", "value": "Risposta 2"}])
         ```
 ## Semantic versioning
 To create a new version use the `bump2version` command. The version system follow the [Semantic Versioning 2.0.0](https://semver.org/#semantic-versioning-200) guidelines.

@@ -34,7 +34,7 @@
 <!-- Poll type -->
 <div class="row mt-2 ms-1 me-1 border-0 rounded bg-light">
     <div class="col-md-auto pe-0">
-        <div class="fs-4">Tipologia:</div>
+        <div class="fs-4">Metodo di voto:</div>
     </div>
     <div class="col">
         <div class="fw-light fs-5 mt-1">{{ poll.get_type_verbose_name }}</div>
@@ -44,17 +44,17 @@
 <!-- Poll status: it can be open, closed or not already open -->
 <div class="row mt-2 ms-1 me-1 border-0 rounded bg-light">
     <div class="col-md-auto pe-0">
-        <div class="fs-4">Stato del sondaggio:</div>
+        <div class="fs-4">Stato della scelta:</div>
     </div>
     <div class="col">
         {% if poll.is_open %}
             {% if not poll.is_closed %}
-                <div class="fw-light fs-5 mt-1 text-success">Aperto</div>
+                <div class="fw-light fs-5 mt-1 text-success">Aperta al voto</div>
             {% else %}
-                <div class="fw-light fs-5 mt-1 text-danger">Chiuso</div>
+                <div class="fw-light fs-5 mt-1 text-danger">Chiusa (votazione terminata)</div>
             {% endif %}
         {% else %}
-            <div class="fw-light fs-5 mt-1 text-info">Non ancora aperto</div>
+            <div class="fw-light fs-5 mt-1 text-info">Non ancora aperta</div>
         {% endif %}
     </div>
 </div>
@@ -64,7 +64,7 @@
     <!-- Open and close datetimes -->
     <div class="row mt-2 ms-1 me-1 border-0 rounded bg-light">
         <div class="col-md-auto pe-0 ">
-            <dic  class="fs-4" >Apertura del sondaggio: 
+            <dic  class="fs-4" >Apertura al voto: 
             </div> 
         <div class="col">
             <div class="fw-light fs-5 mt-1">
@@ -74,7 +74,7 @@
     </div>
     <div class="row mt-2 ms-1 me-1 border-0 rounded bg-light">
         <div class="col-md-auto pe-0">
-            <div  class="fs-4">Chiusura del sondaggio: </div>
+            <div  class="fs-4">Termine votazioni: </div>
         </div>
         <div class="col">
             <div class="fw-light fs-5 mt-1">

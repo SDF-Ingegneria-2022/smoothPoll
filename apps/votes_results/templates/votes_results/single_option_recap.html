@@ -31,7 +31,7 @@ function copyLink(url) {
     <hr>
     <div class="row border-0 rounded bg-light">
         <div class="col-md-auto pe-0">
-                <div class="fs-5">Nome del sondaggio:</div>    
+                <div class="fs-5">Nome scelta:</div>    
         </div>
         
         <div class="col">
@@ -41,7 +41,7 @@ function copyLink(url) {
     
     <div class="row mt-1 border-0 rounded bg-light">
         <div class="col-md-auto pe-0">
-            <div class="fs-5">Domanda:</div>
+            <div class="fs-5">Quesito:</div>
         </div>
         <div class="col">
             <div class="mt-1 fw-light">{{vote.poll.question}}</div>
@@ -50,7 +50,7 @@ function copyLink(url) {
         
     <div class="row mt-1 border-0 rounded bg-light">
         <div class="col-md-auto pe-0">
-            <div class="fs-5">Opzione scelta: </div>
+            <div class="fs-5">Voto espresso: </div>
         </div>
         <div class="col">
                 <div class="mt-1 text-success">{{ vote.poll_option.value }}</div>
@@ -60,11 +60,7 @@ function copyLink(url) {
 
     <div class="container mt-2" >
         <div class="d-grid gap-2 d-md-block">
-        <p class="secondary">
-            {% comment %} Quando il sondaggio sarà chiuso, potrai vedere il risultato 
-            <a href="{% url 'apps.votes_results:single_option_results' %}" title="Esiti sondaggio">su questa pagina</a>.  {% endcomment %}
-            
-        </p>
+
             <a class="btn btn-primary mt-2" href="{% url 'apps.votes_results:single_option_results' poll_id=vote.poll.id %}" role="button">Vedi risultati</a>
 
 
@@ -80,15 +76,17 @@ function copyLink(url) {
     {% if vote.poll.votable_mj %}
     <div class="card mt-5 shadow bg-body rounded">
         <div class="card-body">
-          <h5 class="card-title">Perchè non provi il giudizio maggioritario?</h5>
-          <p class="card-text">Il giudizio maggioritario è stato introdotto nel 2007 da <b>Michel Balinski e Rida Laraki</b>. 
+          <h5 class="card-title">Perchè non provi a votare anche con il metodo del giudizio maggioritario?</h5>
+          <p class="card-text">Il giudizio maggioritario è stato 
+            introdotto nel 2007 da <b>Michel Balinski e Rida Laraki</b>. 
             Il suo principio si basa sulla <b>regola della mediana
             più alta</b>. Provalo pure tu! </p>
           <hr>
-          <div class="fw-lighter fs-5">Voti con il metodo maggioritario per questo sondaggio</div>
+          <div class="fw-lighter fs-5">Voti con il metodo maggioritario per questa scelta</div>
           <div class="fw-bold fs-4">{{mj_vote_counter.count_majority_judgment_votes}}</div>
-          <a href="{% url 'apps.votes_results:majority_judgment_vote' poll_id=vote.poll.id %}" class="btn btn-primary mt-2">Vota con il giudizio maggioritario</a>
-            {% if mj_vote_counter.count_majority_judgment_votes > 0%} 
+          <a href="{% url 'apps.votes_results:majority_judgment_vote' poll_id=vote.poll.id %}" 
+            class="btn btn-primary mt-2">Vota con il giudizio maggioritario</a>
+            {% if mj_vote_counter.count_majority_judgment_votes > 0 %} 
                 <a href="{% url 'apps.votes_results:majority_judgment_results' poll_id=vote.poll.id %}" class="btn btn-secondary mt-2">Vedi risultati</a>
             {% endif %}
         </div>

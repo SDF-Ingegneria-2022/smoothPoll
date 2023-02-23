@@ -5,7 +5,7 @@
 {% block content %}
 <div class="container text-center mt-5 mb-5">
     <h1>{{ poll.name }}</h1>
-    <h2 class="text-info">Risultati sondaggio</h2>
+    <h2 class="text-info">Esito votazioni con metodo del giudizio maggioritario</h2>
 </div>
 
 
@@ -13,7 +13,7 @@
 
     
     <div class="mt-5 mb-5">
-        <p class="mb-0">Testo della domanda: </p>
+        <p class="mb-0">Questio: </p>
         <h3>{{ poll.question }}</h3>
     </div>
 
@@ -22,8 +22,6 @@
     {% if poll_results %}
 
     <div class="mb-3 mt-3">
-
-        
 
         <h4>Risultati</h4>
 
@@ -166,7 +164,7 @@
                 <h5 class="card-header">Il giudizio maggioritario</h5>
                 <div class="card-body">
                     <p class="card-text">
-                        Questo sondaggio è stato votato  
+                        Questa scelta è stata votata 
                         con il <b>metodo del giudizio maggioritario</b>. 
                         Se vuoi sapere di più su come funziona, ti lasciamo qualche 
                         link per approfondire:
@@ -190,7 +188,7 @@
 
     <div class="container text-center mt-5 mb-5">
         <p class="fw-bold text-danger">
-            Questo sondaggio purtroppo non ha ricevuto ancora alcun voto, 
+            Questa scelta purtroppo non ha ricevuto ancora nessun voto, 
             quindi non è possibile calcolare i risultati.
         </p>
         <a class="btn btn-primary mt-2" 

@@ -203,10 +203,10 @@ class CreatePollHtmxView(View):
             request.session[SESSION_ERROR] = "Attenzione, inserisci tutti i dati richiesti prima di procedere"
             return HttpResponseRedirect(reverse('apps.polls_management:poll_form'))
         except TooFewOptionsException:
-            request.session[SESSION_ERROR] = f"Attenzione, un sondaggio di tipo {form.get_type_verbose_name()} ha bisogno almeno {form.get_min_options()} opzioni"
+            request.session[SESSION_ERROR] = f"Attenzione, una scelta di tipo {form.get_type_verbose_name()} ha bisogno almeno {form.get_min_options()} opzioni"
             return HttpResponseRedirect(reverse('apps.polls_management:poll_form'))
         except TooManyOptionsException:
-            request.session[SESSION_ERROR] = "Attenzione, un sondaggio può avere al massimo 10 opzioni"
+            request.session[SESSION_ERROR] = "Attenzione, una scelta può avere al massimo 10 opzioni"
             return HttpResponseRedirect(reverse('apps.polls_management:poll_form'))
 
         # after changes are applied, redirect to confirm page
