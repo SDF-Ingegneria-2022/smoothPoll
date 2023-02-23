@@ -212,11 +212,9 @@ class CreatePollHtmxView(View):
         # after changes are applied, redirect to confirm page
         # (+ add a parameter to track GA)
         if poll.poll_type == PollModel.PollType.MAJORITY_JUDJMENT:
-            utm_campaign = "create-majority-judgment"
+            return HttpResponseRedirect(f"{reverse('apps.polls_management:poll_form_confirm_mj')}")        
         else:
-            utm_campaign = "create-single-option"
-
-        return HttpResponseRedirect(f"{reverse('apps.polls_management:poll_form_confirm')}?utm_campaign={utm_campaign}")        
+            return HttpResponseRedirect(f"{reverse('apps.polls_management:poll_form_confirm_so')}")        
 
 @login_required
 def poll_form_clean_go_back_home(request: HttpRequest):
