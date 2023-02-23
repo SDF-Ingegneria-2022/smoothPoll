@@ -5,6 +5,8 @@ from allauth.account.decorators import login_required
 
 app_name = 'apps.votes_results'
 urlpatterns = [
+    #list of all votable polls
+    path('', views.all_votable_polls, name='votable_polls'),
 
     # details page for poll not yet open
     path('<int:poll_id>/dettagli/', login_required(views.SingleOptionVoteView.as_view()), name='poll_details'),
