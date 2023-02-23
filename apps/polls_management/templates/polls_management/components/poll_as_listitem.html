@@ -1,0 +1,118 @@
+{% comment %}
+
+    POLL as a LIST ITEM 
+
+    html code of a single poll in a list of many poll.author
+    
+    Required variables:
+    - poll <-- the poll object you wanna display
+{% endcomment %}
+
+
+<div class="d-grid">
+    <div class="row p-2 rounded border mb-2">
+        <div class="col-11 col-lg-9">
+            <div class="row">
+                <div class="col-12 col-md-6 col-xl-8">
+                    <p class="fw-bold m-0"> {{poll.name}} </p>
+                    <p class="text-muted m-0" > {{poll.question}} </p>
+                    <p class="fw-bold m-0" >{{ poll.author }}</a>
+                </div>
+                <div class="col-12 col-md-3 col-xl-2">
+                    <p class="fw-bold m-0" style="color:{{poll.get_type_color}}">
+                        {{poll.get_type_verbose_name}}
+                    </p>
+                </div>
+                <div class="col-12 col-md-3 col-xl-2">
+                    <p class="fw-bold m-0" style="color:{{poll.get_state_color}}">
+                        {{poll.get_state_label}}
+                        {% if not poll.is_open and poll.open_datetime %}
+                            <br><span class="fw-normal">(Apertura: {{poll.open_datetime}})</span>
+                        {% endif %}
+                        {% if not poll.is_closed and poll.is_open %}
+                        <br><span class="fw-normal">(Chiusura: {{poll.close_datetime}})</span>
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-1 col-lg-0 d-lg-none">
+            <button class="btn btn-outline-secondary mt-2 float-end" type="button" 
+                data-bs-toggle="collapse" data-bs-target="#actions-poll-{{poll.id}}" 
+                aria-expanded="false" aria-controls="actions-poll-{{poll.id}}">
+
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="24" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
+                    <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                </svg>
+            </button>
+        </div>
+        <div id="actions-poll-{{poll.id}}" 
+            class="col-12 col-lg-3 collapse dont-collapse-md" >
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                {% if poll.is_open %}
+                    {% if not poll.is_closed %}
+                        <a href="{% url 'apps.votes_results:single_option_vote' poll_id=poll.id %}" 
+                            class="btn btn-primary me-md-2 mt-2" 
+                            role="button">Vota</a>
+                    {% endif %}
+                    <a href="{% url 'apps.votes_results:single_option_results' poll_id=poll.id %}" 
+                        class="btn btn-secondary me-md-2 mt-2"  
+                        role="button">Vedi risultati</a>
+                {% else %}
+                    <a href="{% url 'apps.votes_results:poll_details' poll_id=poll.id %}" 
+                        class="btn btn-info me-md-2 mt-2" 
+                        role="button">Riepilogo sondaggio</a>
+                    {% comment %} <a href="{% url 'apps.polls_management:poll_edit' poll_id=poll.id %}" 
+                        class="btn btn-warning me-md-2 mt-2" 
+                        role="button">Modifica</a>
+                    <a data-bs-toggle="modal" data-bs-target="#deletepoll-{{poll.id}}" 
+                        class="btn btn-danger me-md-2 mt-2"  
+                        role="button">Elimina</a> {% endcomment %}
+                {% endif %}
+            </div>
+        </div>
+
+
+        {% comment %} <div class="col-12 col-md-4">
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">                    
+                    <div class="dropdown d-grid gap-2 d-md-flex justify-content-md-end d-md-none">
+                    <button class="btn btn-outline-secondary mt-2 float-end" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="24" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
+                            <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                        </svg>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-lg-start" aria-labelledby="dropdownMenuButton1">
+                        <li><a class="dropdown-item" href="{% url 'apps.polls_management:poll_edit' poll_id=poll.id %}">Modifica sondaggio</a></li>
+                        <li><a class="dropdown-item " data-bs-toggle="modal" data-bs-target="#deletepoll-{{poll.id}}">Elimina sondaggio</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div> {% endcomment %}
+    </div>
+
+    <!-- Popup to confirm deletion of poll w id={{poll.id}} -->
+    <div class="modal fade" id="deletepoll-{{poll.id}}" tabindex="-1" aria-labelledby="deletepollabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h4 class="modal-title">Cancellazione sondaggio</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body bg-warning text-dark">
+                    <h5 class="modal-title">Sei sicuro di volere cancellare questo sondaggio?</h5>
+                </div>
+                <div class="modal-footer">
+                    <div class="alert alert-info text-center" role="alert">
+                        Attenzione: un sondaggio può essere eliminato soltanto se
+                        non è ancora stato aperto
+                    </div>
+                    <form action="{% url 'apps.polls_management:poll_delete' poll_id=poll.id %}" method="POST">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary">Conferma</button>
+                    </form>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Indietro</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
