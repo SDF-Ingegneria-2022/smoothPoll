@@ -14,7 +14,7 @@
         <div  class="fs-4" >Domanda posta:</div>
     </div>
     <div class="col">
-        <div  class="fs-5 fw-light mt-1" >{{ poll.question }}</div>
+        <div class="fs-5 fw-light mt-1" >{{ poll.question }}</div>
     </div>
 </div>
 
@@ -23,11 +23,13 @@
     <div class="col-md-auto pe-0">
         <div  class="fs-4" >Opzioni tra cui scegliere:</div>
         <hr class="m-1">
-        {% for option in poll.options %}
-            <div class="fw-light fs-5">
-                <b>{{forloop.counter}}.</b> {{ option.value }}
-            </div>
-        {% endfor %}
+        <div class="fw-light fs-5">
+            <ul>
+                {% for option in poll.options %}
+                    <li>{{ option.value }}</li>
+                {% endfor %}
+            </ul>
+        </div>
     </div>
 </div>
 

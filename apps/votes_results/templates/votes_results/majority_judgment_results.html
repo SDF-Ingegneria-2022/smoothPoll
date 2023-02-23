@@ -9,29 +9,13 @@
     <h2 class="text-info">Esito votazioni con metodo del giudizio maggioritario</h2>
 </div>
 
-<div class="container border">
-    <!-- Question box -->
-    <div class="row border-0 rounded bg-light m-1">
-        <div class="col-md-auto pe-0">
-            <p class="mb-0 fs-3 ">Domanda:</p>
-        </div>
-        <div class="col">
-            <p class="mb-0 mt-1 fs-4 fw-light">{{ poll.question }}</p>
-        </div>
-    </div>
-    <!-- Type box -->
-    <div class="row border-0 rounded bg-light m-1">
-        <div class="col-md-auto pe-0">
-            <p class="mb-0 fs-3 ">Tipologia:</p>
-        </div>
-        <div class="col">
-            <p class="mb-0 mt-1 fs-4 fw-light">{{ poll.get_type_verbose_name }}</p>
-        </div>
-    </div>
+<!-- Poll data -->
+<div class="container border pt-1 pb-1">
+    {% include 'polls_management/components/poll_info.html' with poll=poll %}
 </div>
 
 {% if poll_results %}
-    <!-- Results box -->
+    <!-- MJ results -->
     <div class="mb-3 mt-5">
         <h3 class="ms-4">Risultati</h3>
         <div class="row mb-4 mt-2">
@@ -63,7 +47,6 @@
             </div>
         </div>
         <div class="m-md-3 m-0 mt-5 mt-md-5">
-            {% comment "Result table heading" %}{% endcomment %}
             <div class="row fw-bold text-dark d-none d-md-table-row">
                 <div class="col-4 d-table-cell">
                     <p>Testo opzione:</p>
@@ -82,18 +65,13 @@
                 </div>
             </div>
 
+            <!-- Sorted options -->
             {%for voted_option in poll_results %}
                 <div class="row">
                     <div class="col-md-4 col-12">
                         <p class="text-secondary">{{forloop.counter}}.
                             <span class="fw-bold {% if forloop.counter == 1 %}text-success
                             {% else %}text-dark{% endif %}">{{voted_option.option.value}}</span>
-                            {% comment %} <a name="" id="" class="btn btn-primary" 
-                                href="#votes-distribution-{{forloop.counter}}" 
-                                data-toggle="collapse"
-                                aria-expanded="false" 
-                                aria-controls="votes-distribution-{{forloop.counter}}"
-                                role="button">Vedi voti</a> {% endcomment %}
                         </p>
                     </div>
                     <div class="col-md-2 col-12">
@@ -103,7 +81,6 @@
                                 {{voted_option.get_qualitative_median}}
                             </span>
                         </p>
-                        
                     </div>
                     <div class="col-md-2 col-12">
                         <p class="pb-0 mb-0">
