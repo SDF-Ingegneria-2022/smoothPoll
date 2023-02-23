@@ -26,27 +26,27 @@ class PollForm(ModelForm):
             "author": _("Nome dell'autore"),
         }
         help_texts={
-            "name": _("Un nome sintetico che descrive il sondaggio"), 
+            "name": _("Un nome sintetico che descrive la scelta"), 
             "question": _("La domanda che vuoi porre al tuo votante"), 
             "poll_type": _("Il metodo che verrà usato per esprimere il voto e calcolare i risultati"), 
-            "open_datetime": _("La data dalla quale sarà possibile votare il sondaggio"), 
-            "close_datetime": _("La data dalla quale non sarà più possibile votare il sondaggio"), 
-            "author": _("Il nome dell'autore che ha creato il sondaggio"),
+            "open_datetime": _("La data dalla quale sarà possibile votare la scelta"), 
+            "close_datetime": _("La data dalla quale non sarà più possibile votare la scelta"), 
+            "author": _("Il nome dell'autore che ha creato la scelta"),
         }
         error_messages = {
             'name': {
                 'max_length': _("Il nome inserito è troppo lungo, cerca di essere più sintetico"),
-                'required': _("Dai un nome al tuo sondaggio"), 
+                'required': _("Dai un nome alla tua scelta"), 
             },
             'question': {
                 'max_length': _("Il quesito inserito è troppo lungo, cerca di essere più sintetico"),
-                'required': _("Inserisci la domanda per il tuo sondaggio"), 
+                'required': _("Inserisci la domanda da chiedere"), 
             },
             'poll_type': {
-                'required': _("Seleziona una tipologia di sondaggio"), 
+                'required': _("Seleziona una tipologia di scelta"), 
             },
             'close_datetime': {
-                'required': _("Inserisci una data di chiusura per il sondaggio"), 
+                'required': _("Inserisci una data di chiusura per la scelta"), 
             }
         }
         widgets = {
@@ -54,7 +54,7 @@ class PollForm(ModelForm):
                 format=('%Y-%m-%d %H:%M'), 
                 attrs={
                     'class':'form-control', 
-                    'placeholder':'Scegli la data di apertura del sondaggio', 
+                    'placeholder':'Scegli la data di apertura della scelta', 
                     'type':'datetime-local'
                 }
             ),
@@ -62,7 +62,7 @@ class PollForm(ModelForm):
                 format=('%Y-%m-%d %H:%M'), 
                 attrs={
                     'class':'form-control', 
-                    'placeholder':'Scegli la data di chiusura del sondaggio', 
+                    'placeholder':'Scegli la data di chiusura della scelta', 
                     'type':'datetime-local',
                     # 'required':True
                 }
