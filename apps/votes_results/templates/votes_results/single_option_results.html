@@ -8,18 +8,29 @@
     <h2 class="text-info">Esito votazioni con opzione singola</h2>
 </div>
 
-
-<div class="container">
-
+<div class="container border">
     
-    <div class="container mt-5 mb-5">
-        <p class="fw-bold fs-3 mb-0">Testo della domanda: </p>
-        <h3>{{ poll_results.poll.question }}</h3>
+    <div class="container mt-3">
+        <div class="row border-0 rounded bg-light">
+            <div class="col-md-auto pe-0">
+                <p class="mb-0 fs-3 ">Domanda:</p>
+            </div>
+            <div class="col">
+                <p class="mb-0 mt-1 fs-4 fw-light">{{ poll_results.poll.question }}</p>
+            </div>
+        </div>
+        <div class="row border-0 rounded bg-light mt-1">
+            <div class="col-md-auto pe-0">
+                <p class="mb-0 fs-3 ">Tipologia:</p>
+            </div>
+            <div class="col">
+                <p class="mb-0 mt-1 fs-4 fw-light">{{ poll_results.poll.get_type_verbose_name }}</p>
+            </div>
+        </div>
     </div>
-    
 
     <div class="container mb-3 mt-3">
-        <h4>Risultati</h4>
+        <h3>Risultati</h3>
         <div class="container m-3">
             {%for voted_option in poll_results.get_sorted_options %}
                 <div class="row">
@@ -37,6 +48,7 @@
         </div>
     </div>
 
+    <br>
 
     <div class="container text-center md-5 mt-4">
         <div class="d-grid gap-2 d-md-block">
@@ -53,7 +65,8 @@
             </a>
         </div>
     </div>
+    <br>
 </div>
-</div>
+
 {% endblock content %}
 

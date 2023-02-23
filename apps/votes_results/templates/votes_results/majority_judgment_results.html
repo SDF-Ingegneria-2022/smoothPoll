@@ -3,30 +3,38 @@
 {% block pagename %}Risultati Giudizio Maggioritario{% endblock pagename %}
 
 {% block content %}
+
 <div class="container text-center mt-5 mb-5">
     <h1>{{ poll.name }}</h1>
     <h2 class="text-info">Esito votazioni con metodo del giudizio maggioritario</h2>
 </div>
 
-
-<div class="container">
-
-    
-    <div class="mt-5 mb-5">
-        <p class="mb-0">Questio: </p>
-        <h3>{{ poll.question }}</h3>
+<div class="container border">
+    <!-- Question box -->
+    <div class="row border-0 rounded bg-light m-1">
+        <div class="col-md-auto pe-0">
+            <p class="mb-0 fs-3 ">Domanda:</p>
+        </div>
+        <div class="col">
+            <p class="mb-0 mt-1 fs-4 fw-light">{{ poll.question }}</p>
+        </div>
     </div>
+    <!-- Type box -->
+    <div class="row border-0 rounded bg-light m-1">
+        <div class="col-md-auto pe-0">
+            <p class="mb-0 fs-3 ">Tipologia:</p>
+        </div>
+        <div class="col">
+            <p class="mb-0 mt-1 fs-4 fw-light">{{ poll.get_type_verbose_name }}</p>
+        </div>
+    </div>
+</div>
 
-    {% comment "View judment button" %}{% endcomment %}
-
-    {% if poll_results %}
-
-    <div class="mb-3 mt-3">
-
-        <h4>Risultati</h4>
-
+{% if poll_results %}
+    <!-- Results box -->
+    <div class="mb-3 mt-5">
+        <h3 class="ms-4">Risultati</h3>
         <div class="row mb-4 mt-2">
-
             <div class="col-12 col-lg-4 order-lg-2">
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="checkbox" 
@@ -34,7 +42,6 @@
                     <label class="form-check-label text-secondary" for="">Visualizza Distribuzione Giudizi</label>
                 </div>
             </div>
-
             <div class="col-12 col-lg-8 order-lg-1">
                 <div class="collapse multi-collapse">
                     <div class="card card-body">
@@ -54,12 +61,8 @@
                     </div>
                 </div>
             </div>
-            
-            
         </div>
-        
         <div class="m-md-3 m-0 mt-5 mt-md-5">
-
             {% comment "Result table heading" %}{% endcomment %}
             <div class="row fw-bold text-dark d-none d-md-table-row">
                 <div class="col-4 d-table-cell">
@@ -151,54 +154,53 @@
                             {% endfor %}
                         </ul>
                     </div>
-                  </div>
+                    </div>
                 <hr class="mt-3" />
             {% endfor %}
         </div>
     </div>
-
-    {% comment "Explaination majority judjment" %}{% endcomment %}
-    <div class="row d-flex justify-content-center mb-5 mt-5">
-        <div class="col-12 col-md-8">
-            <div class="card shadow-lg bg-body rounded">
-                <h5 class="card-header">Il giudizio maggioritario</h5>
-                <div class="card-body">
-                    <p class="card-text">
-                        Questa scelta è stata votata 
-                        con il <b>metodo del giudizio maggioritario</b>. 
-                        Se vuoi sapere di più su come funziona, ti lasciamo qualche 
-                        link per approfondire:
-                    </p>
-                    <ul>
-                        <li>
-                            <a href="https://copernicani.it/eleggere-il-candidato-migliore/" target="_blank">
-                                Idea generale e vantaggi</a> <span class="text-secondary">(semplice)</span>
-                        </li>
-                        <li>
-                            <a href="https://it.frwiki.wiki/wiki/Jugement_majoritaire#D%C3%A9partage_des_%C3%A9galit%C3%A9s" target="_blank">
-                                Metodo matematico di calcolo del risultato</a> <span class="text-secondary">(avanzato)</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    {% else %}
-
+{% else %}
+    <!-- Error message: no votes received -->
     <div class="container text-center mt-5 mb-5">
         <p class="fw-bold text-danger">
-            Questa scelta purtroppo non ha ricevuto ancora nessun voto, 
+            Questa scelta purtroppo non ha ricevuto ancora alcun voto, 
             quindi non è possibile calcolare i risultati.
         </p>
         <a class="btn btn-primary mt-2" 
             href="{% url 'apps.votes_results:single_option_vote' poll_id=poll.id  %}" 
             role="button">Inizia a votare</a>
     </div>
+{% endif %}
 
-    {% endif %}
-    
-    
+<!-- Banner to explain MJ criteria -->
+<div class="row d-flex justify-content-center mb-5 mt-5">
+    <div class="col-12 col-md-8">
+        <div class="card shadow-lg bg-body rounded">
+            <h5 class="card-header">Il giudizio maggioritario</h5>
+            <div class="card-body">
+                <p class="card-text">
+                    Questa scelta è stata votata 
+                    con il <b>metodo del giudizio maggioritario</b>. 
+                    Se vuoi sapere di più su come funziona, ti lasciamo qualche 
+                    link per approfondire:
+                </p>
+                <ul>
+                    <li>
+                        <a href="https://copernicani.it/eleggere-il-candidato-migliore/" target="_blank">
+                            Idea generale e vantaggi</a> <span class="text-secondary">(semplice)</span>
+                    </li>
+                    <li>
+                        <a href="https://it.frwiki.wiki/wiki/Jugement_majoritaire#D%C3%A9partage_des_%C3%A9galit%C3%A9s" target="_blank">
+                            Metodo matematico di calcolo del risultato</a> <span class="text-secondary">(avanzato)</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Actions -->
+<div class="container mt-3">
     <div class="d-grid gap-2 d-md-block text-center mt-5">
         <a name="" id="" role="button"
             class="btn btn-primary" 
@@ -213,6 +215,6 @@
         </a> 
     </div>
 </div>
-</div>
+
 {% endblock content %}
 
