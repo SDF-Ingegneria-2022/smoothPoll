@@ -23,11 +23,15 @@ SESSION_FORMDATA = 'create-poll-form'
 SESSION_POLL_ID = 'poll-instance'
 SESSION_OPTIONS = 'create-poll-options'
 SESSION_ERROR = 'create-poll-error'
+SESSION_IS_EDIT = 'is-edit'
+
+
 _ALL_SESSION_KEYS = [
     SESSION_FORMDATA, 
     SESSION_OPTIONS, 
     SESSION_ERROR, 
-    SESSION_POLL_ID, ]
+    SESSION_POLL_ID, 
+    SESSION_IS_EDIT ]
 
 # -------------------------------------------------
 # Session util methods (methods to perform some
@@ -126,6 +130,8 @@ def edit_poll_init_view(request: HttpRequest, poll_id: int):
     request.session[SESSION_POLL_ID] = poll.id
     request.session[SESSION_OPTIONS] = options
 
+    request.session[SESSION_IS_EDIT] = True
+
     # redirect to form to permit edit
     return HttpResponseRedirect(reverse('apps.polls_management:poll_form'))   
 
@@ -164,7 +170,7 @@ class CreatePollHtmxView(View):
         return render(request, "polls_management/create_poll_htmx.html", {
             "poll_form": form, "options": options, 
             "error": request.session.get(SESSION_ERROR), 
-            "edit": request.session.get(SESSION_POLL_ID) is not None
+            "edit": request.session.get(SESSION_IS_EDIT)
         })
 
     def post(self, request: HttpRequest, *args, **kwargs):
@@ -191,21 +197,24 @@ class CreatePollHtmxView(View):
         # (if an error occours, redirect to GET 
         # to re-render the form)
         try:
-            PollCreateService.create_or_edit_poll(form, options.values(), current_user)
+            poll = PollCreateService.create_or_edit_poll(form, options.values(), current_user)
+            request.session[SESSION_POLL_ID] = poll.id
         except PollMainDataNotValidException:
             request.session[SESSION_ERROR] = "Attenzione, inserisci tutti i dati richiesti prima di procedere"
             return HttpResponseRedirect(reverse('apps.polls_management:poll_form'))
         except TooFewOptionsException:
-            request.session[SESSION_ERROR] = f"Attenzione, un sondaggio di tipo {form.get_type_verbose_name()} ha bisogno almeno {form.get_min_options()} opzioni"
+            request.session[SESSION_ERROR] = f"Attenzione, una scelta di tipo {form.get_type_verbose_name()} ha bisogno almeno {form.get_min_options()} opzioni"
             return HttpResponseRedirect(reverse('apps.polls_management:poll_form'))
         except TooManyOptionsException:
-            request.session[SESSION_ERROR] = "Attenzione, un sondaggio può avere al massimo 10 opzioni"
+            request.session[SESSION_ERROR] = "Attenzione, una scelta può avere al massimo 10 opzioni"
             return HttpResponseRedirect(reverse('apps.polls_management:poll_form'))
 
-        # after changes are applied, clean session 
-        # and go back to "all polls" page
-        clean_session(request)
-        return HttpResponseRedirect("%s?page=last&per_page=10" % reverse('apps.polls_management:all_polls'))        
+        # after changes are applied, redirect to confirm page
+        # (+ add a parameter to track GA)
+        if poll.poll_type == PollModel.PollType.MAJORITY_JUDJMENT:
+            return HttpResponseRedirect(f"{reverse('apps.polls_management:poll_form_confirm_mj')}")        
+        else:
+            return HttpResponseRedirect(f"{reverse('apps.polls_management:poll_form_confirm_so')}")        
 
 @login_required
 def poll_form_clean_go_back_home(request: HttpRequest):
@@ -215,6 +224,26 @@ def poll_form_clean_go_back_home(request: HttpRequest):
     clean_session(request)
 
     return HttpResponseRedirect(reverse('apps.polls_management:all_polls'))        
+
+@login_required
+def poll_form_confirm(request: HttpRequest): 
+    """Confirm page that tells the user modifications have been applied"""
+
+    poll_id = request.session.get(SESSION_POLL_ID, None)
+    if poll_id is None:
+        raise Http404()
+    
+    try:
+        poll: PollModel = PollService.get_poll_by_id(poll_id)
+    except PollDoesNotExistException:
+        raise Http404(f"Poll with id {poll_id} not found.")
+    
+
+    return render(request, 'polls_management/confirm_form.html', {
+        'poll': poll, 
+        'edit': request.session.get(SESSION_IS_EDIT)
+    })
+
 
         
 @require_http_methods(["POST"])

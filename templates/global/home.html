@@ -2,7 +2,7 @@
 
 {% load static %}
 
-{% block pagename %}Crea e Vota Sondaggi{% endblock pagename %}
+{% block pagename %}Crea e vota scelte sociali{% endblock pagename %}
 
 {% block content %}
 <div class="row mt-2">
@@ -62,10 +62,10 @@
                     <div class="card-body text-center">
                         <h3 class="card-title">{{poll.name}}</h3>
                         <h4 class="card-subtitle mb-2 text-muted">{{poll.question}}</h4>
-                            <p  class="fw-light mb-1 ">Stato sondaggio: <b>Aperto</b></p>
+                            <p  class="fw-light mb-1 ">Stato scelta: <b>Aperto</b></p>
                             <p  class="fw-light mb-1 ">Data chiusura: <b>{{poll.close_datetime}}</b></p>
-                    <a href="{% url 'apps.votes_results:single_option_vote' poll_id=poll.id %}" class="btn btn-primary mt-2">Vota il sondaggio</a>
-                    <a href="{% url 'apps.votes_results:majority_judgment_results' poll_id=poll.id %}" class="btn btn-secondary mt-2">Vai al risultati</a>
+                    <a href="{% url 'apps.votes_results:single_option_vote' poll_id=poll.id %}" class="btn btn-primary mt-2">Vota</a>
+                    <a href="{% url 'apps.votes_results:majority_judgment_results' poll_id=poll.id %}" class="btn btn-secondary mt-2">Vai ai risultati</a>
                     </div>
                 </div>
                 </div>

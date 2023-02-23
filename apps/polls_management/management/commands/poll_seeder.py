@@ -34,10 +34,10 @@ class Command(BaseCommand):
         
         for index in range(1, new_polls_number + 1):
             try:
-                new_poll: PollModel = PollModel(name=f"Sondaggio di esempio NR#{index}", question=f"Qual è il tuo piatto preferito?", poll_type='majority_vote')
+                new_poll: PollModel = PollModel(name=f"Scelta di esempio NR#{index}", question=f"Che cosa si mangia sta sera?", poll_type='majority_vote')
                 if options['majority']:
                     new_poll.poll_type=PollModel.PollType.MAJORITY_JUDJMENT
-                    new_poll.name = "Esempio di sondaggio a Giudizio Maggioritario"
+                    new_poll.name = "Esempio di scelta a Giudizio Maggioritario"
                 new_poll.save()
 
             except Exception as exception:
