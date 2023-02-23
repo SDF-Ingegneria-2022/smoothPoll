@@ -45,8 +45,31 @@
                 </ul>
             </div>
         </div>
+        <ul class="nav nav-pills my-2">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#">Vota</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'apps.polls_management:poll_create' %}">Crea e gestisci</a>
+            </li>
+          </ul>
+          <div class="list-group">
+            <div class="row p-2 rounded border mb-4">
+            <div class="col-11 col-lg-9">
+                    <div class="row">
+                        <div class="col-12 col-md-6 col-xl-8">
+                            <p class="fw-bold m-0" >Nome e quesito</a>
+                        </div>
+                        <div class="col-12 col-md-3 col-xl-2">Stato</p>
+                        </div>
+                        <div class="col-12 col-md-3 col-xl-2">
+                            <p class="fw-bold m-0">Chiusura</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
     <div class="list-group">
-        
     {% for poll in page.object_list %}
         
             <div class="d-grid">
