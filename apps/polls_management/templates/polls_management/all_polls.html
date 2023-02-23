@@ -222,99 +222,105 @@
     </div>
 </div>
 
-{% comment %} Popup for success of operation of delete poll {% endcomment %}
+
 
 {% if delete_success %}
-
-<div class="modal fade" id="deletepollsuccess" tabindex="-1" aria-labelledby="deletepollsuccesslabel" aria-hidden="false">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
-                <h4 class="modal-title">Cancellazione sondaggio</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body bg-success text-white">
-                <h5 class="modal-title">Il sondaggio è stato cancellato con successo! </h5>
-            </div>
-            <div class="modal-footer">
-                <button onClick="window.location.reload();" type="button" class="btn btn-primary">Continua</button>
+    <!-- Popup for success of operation of delete poll -->
+    <div class="modal fade" id="deletepollsuccess" tabindex="-1" aria-labelledby="deletepollsuccesslabel" aria-hidden="false">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h4 class="modal-title">Cancellazione sondaggio</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body bg-success text-white">
+                    <h5 class="modal-title">Il sondaggio è stato cancellato con successo! </h5>
+                </div>
+                <div class="modal-footer">
+                    <button onClick="window.location.reload();" type="button" class="btn btn-primary">Continua</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
-
-<script type="text/javascript">
-
-    $(window).on('load', function() {
-        $('#deletepollsuccess').modal('show');
-    });
-
-</script>
-
 {% endif %}
 
-{% comment %} Popup for error of operation of delete poll {% endcomment %}
 
 {% if delete_error %}
-
-<div class="modal fade" id="deletepollerror" tabindex="-1" aria-labelledby="deletepollerrorlabel" aria-hidden="false">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
-                <h4 class="modal-title">Cancellazione sondaggio</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body bg-danger text-white">
-                <h5 class="modal-title"> Non è stato possibile cancellare il sondaggio in quanto il sondaggio
-                    è stato già aperto. </h5>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Continua</button>
+    <!-- Popup for error of operation of delete poll -->
+    <div class="modal fade" id="deletepollerror" tabindex="-1" aria-labelledby="deletepollerrorlabel" aria-hidden="false">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h4 class="modal-title">Cancellazione sondaggio</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body bg-danger text-white">
+                    <h5 class="modal-title"> Non è stato possibile cancellare il sondaggio in quanto il sondaggio
+                        è stato già aperto. </h5>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Continua</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
-
-<script type="text/javascript">
-
-    $(window).on('load', function() {
-        $('#deletepollerror').modal('show');
-    });
-
-</script>
-
 {% endif %}
 
-{% comment %} Popup for edit alert message {% endcomment %}
 
 {% if cannot_edit %}
-
-<div class="modal fade" id="editpollerror" tabindex="-1" aria-labelledby="editpollerrorlabel" aria-hidden="false">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
-                <h4 class="modal-title">Modifica sondaggio</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body bg-danger text-white">
-                <h5 class="modal-title"> Non è stato possibile modificare il sondaggio in quanto il sondaggio
-                    è stato già aperto. </h5>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Continua</button>
+    <!-- Modal to display a "cannot edit" error -->
+    <div class="modal fade" id="editpollerror" tabindex="-1" aria-labelledby="editpollerrorlabel" aria-hidden="false">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h4 class="modal-title">Modifica sondaggio</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body bg-danger text-white">
+                    <h5 class="modal-title"> Non è stato possibile modificare il sondaggio in quanto il sondaggio
+                        è stato già aperto. </h5>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Continua</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
-
-<script type="text/javascript">
-
-    $(window).on('load', function() {
-        $('#editpollerror').modal('show');
-    });
-
-</script>
-
 {% endif %}
 
 {% endblock content %}
+
+{# ------------------------------------------------------- #}
+{# Page scripts #}
+
+{% block customjs %}
+
+{% if delete_success %}
+    <!-- script to display delete poll success modal -->
+    <script type="text/javascript">
+        $(window).on('load', function() {
+            $('#deletepollsuccess').modal('show');
+        });
+    </script>
+{% endif %}
+
+{% if delete_error %}
+    <!-- script to display delete poll error modal -->
+    <script type="text/javascript">
+        $(window).on('load', function() {
+            $('#deletepollerror').modal('show');
+        });
+    </script>
+{% endif %}
+
+{% if cannot_edit %}
+    <!-- script to display delete poll success modal -->
+    <script type="text/javascript">
+        $(window).on('load', function() {
+            $('#editpollerror').modal('show');
+        });
+    </script>
+{% endif %}
+
+{% endblock customjs %}
+
