@@ -18,14 +18,14 @@
 </h1>
 
 
-<div class="mt-5">
-    <a class="btn btn-primary" role="button"
-        href="{% url 'apps.votes_results:poll_details' poll_id=poll.id %}">
-        Vedi sondaggio</a>
-    <a class="btn btn-secondary" role="button"
-        href="{% url 'apps.polls_management:all_polls' %}?page=last">
-        Torna a gesione sondaggi</a>
+<div class="container border mt-3 pt-3 pb-3">
+    <!-- Poll details -->
+    <div class="mb-5">
+        {% include 'polls_management/components/poll_info.html' with poll=poll %}
+    </div>
 
+    <!-- Performable actions on a poll -->
+    {% include 'polls_management/components/poll_actions.html' with poll=poll %}
 </div>
 
 
