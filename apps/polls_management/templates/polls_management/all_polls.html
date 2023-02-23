@@ -45,7 +45,8 @@
                 </ul>
             </div>
         </div>
-        <ul class="nav nav-pills my-2">
+        
+        {% comment %} <ul class="nav nav-pills my-2">
             <li class="nav-item">
               <a class="nav-link active" aria-current="page" href="#">Vota</a>
             </li>
@@ -68,7 +69,8 @@
                     </div>
                 </div>
             </div>
-    </div>
+    </div> {% endcomment %}
+
     <div class="list-group">
     {% for poll in page.object_list %}
         
