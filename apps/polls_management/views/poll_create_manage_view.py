@@ -18,7 +18,9 @@ from apps.votes_results.services.majority_judgment_vote_service import MajorityJ
 from apps.polls_management.services.poll_service import PollService
 from apps.polls_management.exceptions.poll_option_unvalid_exception import PollOptionUnvalidException
 from apps.votes_results.services.single_option_vote_service import SingleOptionVoteService
+from allauth.account.decorators import login_required
 
+@login_required
 def all_user_polls(request: HttpRequest):
     """
     Render page with all polls.
@@ -29,6 +31,7 @@ def all_user_polls(request: HttpRequest):
     except TypeError:
         page_information = '1'
         per_page = 10
+    
     userPolls: List[PollModel] = PollService.user_polls(request.user)
     paginator: Paginator = Paginator(userPolls, per_page)
 

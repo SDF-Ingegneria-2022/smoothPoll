@@ -156,9 +156,6 @@ class PollService:
         Args:
             user: the user who is the author of the polls.
         
-        Raises:
-            NoUserPolls: raised if the user has no polls.
-            
         Returns: 
             List: list of user polls.
         """
@@ -166,18 +163,12 @@ class PollService:
         user_polls_list: List[PollModel] = list(PollModel.objects.filter(author=user).order_by('-id'))
         # return a list of user polls ordered by the last poll created
 
-        if not user_polls_list:
-            raise NoUserPollsException("No user polls.")
-
         return user_polls_list
 
     @staticmethod
     def votable_or_closed_polls() -> List[PollModel]:
         """Method used to return a list of votable or closed polls.
         
-        Raises:
-            NoVotableOrClosedPollException: raised if there are no votable or closed polls.
-            
         Returns: 
             List: list of votable/closed polls.
         """
@@ -193,8 +184,5 @@ class PollService:
         
         for only_closed in only_closed_polls_list:
             votable_polls_list.append(only_closed)
-
-        if not votable_polls_list:
-            raise NoVotableOrClosedPollException("No votable or closed polls.")
 
         return votable_polls_list

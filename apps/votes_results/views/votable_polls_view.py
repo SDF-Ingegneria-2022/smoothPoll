@@ -29,6 +29,7 @@ def all_votable_polls(request: HttpRequest):
     except TypeError:
         page_information = '1'
         per_page = 10
+    
     userPolls: List[PollModel] = PollService.votable_or_closed_polls()
     paginator: Paginator = Paginator(userPolls, per_page)
 
