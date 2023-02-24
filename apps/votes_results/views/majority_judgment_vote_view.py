@@ -170,5 +170,12 @@ def majority_judgment_results_view(request: HttpRequest, poll_id: int):
 
     return render(request, 'votes_results/majority_judgment_results.html', {
         'poll_results': poll_results, 
-        'poll': PollModel.objects.get(id=poll_id)
+        'poll': PollModel.objects.get(id=poll_id),
+        'poll_info_to_view': {
+            'name': False,
+            'question': False,
+            'choices': False,
+            'status': True,
+            'datetimes': True,
+        }
         })

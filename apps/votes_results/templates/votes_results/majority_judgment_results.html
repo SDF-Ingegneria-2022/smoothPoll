@@ -4,20 +4,21 @@
 
 {% block content %}
 
-<div class="container text-center mt-5 mb-5">
-    <h1>{{ poll.name }}</h1>
-    <h2 class="text-info">Esito votazioni con metodo del giudizio maggioritario</h2>
+<div class="container text-center mt-3">
+    <h1 class="fw-normal">Risultati della scelta: {{ poll.name }}</h1>
 </div>
-
-<!-- Poll data -->
-<div class="container border pt-1 pb-1">
-    {% include 'polls_management/components/poll_info.html' with poll=poll %}
+<div class="row text-start text-white bg-secondary">
+    <div class="col-auto pe-0">
+        <p class="fw-light  fs-4 mb-0 pt-1 pb-1 ">Domanda:</p>
+    </div>
+    <div class="col ps-2">
+        <p class=" fw-light fs-4 mb-0 pt-1 pb-1 ">{{poll.question}} </p>
+    </div>
 </div>
-
 {% if poll_results %}
     <!-- MJ results -->
-    <div class="mb-3 mt-5">
-        <h3 class="ms-4">Risultati</h3>
+    <div class="mb-3 mt-3">
+        
         <div class="row mb-4 mt-2">
             <div class="col-12 col-lg-4 order-lg-2">
                 <div class="form-check form-check-inline">
@@ -49,7 +50,7 @@
         <div class="m-md-3 m-0 mt-5 mt-md-5">
             <div class="row fw-bold text-dark d-none d-md-table-row">
                 <div class="col-4 d-table-cell">
-                    <p>Testo opzione:</p>
+                    <p>Opzione:</p>
                 </div>
                 <div class="col-2 d-table-cell">
                     <p>Giudizio mediano:</p>
@@ -150,7 +151,7 @@
 {% endif %}
 
 <!-- Banner to explain MJ criteria -->
-<div class="row d-flex justify-content-center mb-5 mt-5">
+<!-- <div class="row d-flex justify-content-center mb-5 mt-5">
     <div class="col-12 col-md-8">
         <div class="card shadow-lg bg-body rounded">
             <h5 class="card-header">Il giudizio maggioritario</h5>
@@ -174,6 +175,18 @@
             </div>
         </div>
     </div>
+</div> -->
+
+
+
+<!-- Poll data -->
+<div class="container border pb-1">
+    <div class="row mt-0 text-start bg-primary ">
+        <p class="mb-0 fs-4 text-white fw-light ">
+            Dettagli
+        </p>
+    </div>
+    {% include 'polls_management/components/poll_info.html' with poll=poll poll_info_to_view=poll_info_to_view%}
 </div>
 
 <!-- Actions -->

@@ -26,41 +26,41 @@ function copyLink(url) {
 <div class="container">
     <div class="row">
         <div class="col">
-            <div class="fs-2 text-success">Grazie di aver votato! Il tuo voto è stato registrato. </div>
+            <h2 class="fs-2 text-success">Grazie di aver votato! Il tuo voto è stato registrato.</h2>
         </div>
     </div>
     <hr>
     <div class="row border-0 rounded bg-light">
         <div class="col-md-auto pe-0">
-                <div class="fs-5">Nome scelta:</div>    
+                <div class="fs-4 pt-1">Nome scelta:</div>    
         </div>
         
         <div class="col">
-            <div class="mt-1 fw-light ">{{vote.poll.name}}</div>
+            <div class="mt-1 fw-light fs-4">{{vote.poll.name}}</div>
         </div>
     </div>
     
     <div class="row mt-1 border-0 rounded bg-light">
         <div class="col-md-auto pe-0">
-            <div class="fs-5">Quesito:</div>
+            <div class="fs-4 pt-1">Quesito:</div>
         </div>
         <div class="col">
-            <div class="mt-1 fw-light">{{vote.poll.question}}</div>
+            <div class="mt-1 fs-4 fw-light">{{vote.poll.question}}</div>
         </div>
     </div>
         
     <div class="row mt-1 border-0 rounded bg-light">
         <div class="col-md-auto pe-0">
-            <div class="fs-5">Voto espresso: </div>
+            <div class="fs-4 pt-1">Voto espresso: </div>
         </div>
         <div class="col">
-                <div class="mt-1 text-success">{{ vote.poll_option.value }}</div>
+                <div class="mt-1 fs-4 text-success">{{ vote.poll_option.value }}</div>
         </div>
     </div>
 </div>
 
 <!-- Actions after vote -->
-<div class="container mt-2" >
+<div class="container mt-5" >
     <div class="d-grid gap-2 d-md-block">
 
         <a class="btn btn-primary mt-2" 
