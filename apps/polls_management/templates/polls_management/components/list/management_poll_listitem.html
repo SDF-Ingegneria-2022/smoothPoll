@@ -11,15 +11,102 @@
 {% endcomment %}
 
 {% block always_visible %}
-    <p class="text-primary">Sempre visibile</p>
+    <p class="fw-bold m-0"> {{poll.name}} </p>
+    <p class="text-muted m-0" > {{poll.question}} </p>
 {% endblock always_visible %}
 
 {% block hidden_mobile %}
-    <p class="text-warning">Visibile da desktop</p>
+    <div class="row align-items-center text-md-center mt-3 mt-md-0">
+        <div class="col-12 col-md-4">
+            <p class="fw-bold m-0" style="color:{{poll.get_state_color}}">
+                <span class="fw-normal text-secondary d-md-none">
+                    Stato attuale: 
+                </span>{{poll.get_state_label}}
+            </p>
+        </div>
+        <div class="col-12 col-md-4">
+            <p class="fw-bold m-0">
+                <span class="fw-normal text-secondary d-md-none">
+                    Apertura: 
+                </span>{{poll.open_datetime|default:"-"}}
+            </p>
+        </div>
+        <div class="col-12 col-md-4">
+            <p class="fw-bold m-0">
+                <span class="fw-normal text-secondary d-md-none">
+                    Chiusura: 
+                </span>{{poll.close_datetime|default:"-"}}
+            </p>
+        </div>
+    </div>
 {% endblock hidden_mobile %}
 
 {% block always_hidden %}
-    <p class="text-danger">Sempre nascosto</p>
+    <div class="w-md-25 float-md-end float-start mt-3">
+        <a href="{% url 'apps.polls_management:poll_edit' poll_id=poll.id %}" 
+            class="btn btn-warning mt-2 w-100 {% if poll.is_open %}disabled{% endif %}" 
+            role="button">Modifica</a>
+        <a data-bs-toggle="modal" data-bs-target="#deletepoll-{{poll.id}}" 
+            class="btn btn-danger mt-2 w-100 {% if poll.is_open %}disabled{% endif %}"  
+            role="button">Elimina</a>
+        <a data-bs-toggle="modal" data-bs-target="#openpoll-{{poll.id}}" 
+            class="btn btn-primary mt-2 w-100 {% if poll.is_open %}disabled{% endif %}"  
+            role="button">Apri al voto</a>
+    </div>
+
+    <!-- Popup to confirm deletion of poll w id={{poll.id}} -->
+    <div class="modal fade" id="deletepoll-{{poll.id}}" tabindex="-1" 
+        aria-labelledby="deletepollabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h4 class="modal-title">Cancellazione elemento</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body bg-warning text-dark">
+                    <h5 class="modal-title">Sei sicuro di volere cancellare questa scelta?</h5>
+                </div>
+                <div class="modal-footer">
+                    <div class="alert alert-info text-center" role="alert">
+                        Attenzione: una scelta può essere eliminata soltanto se
+                        non è ancora stata aperta
+                    </div>
+                    <form action="{% url 'apps.polls_management:poll_delete' poll_id=poll.id %}" method="POST">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary">Conferma</button>
+                    </form>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Indietro</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <!-- Popup to confirm open of poll w id={{poll.id}} -->
+    <div class="modal fade" id="openpoll-{{poll.id}}" tabindex="-1" 
+        aria-labelledby="openpollabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h4 class="modal-title">Apertura al voto</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body bg-warning text-dark">
+                    <h5 class="modal-title">Sei sicuro di volere aprire al voto questa scelta?</h5>
+                </div>
+                <div class="modal-footer">
+                    <div class="alert alert-info text-center" role="alert">
+                        Attenzione: una scelta dopo che viene aperta al voto 
+                        non può più essere eliminata o modificata
+                    </div>
+                    <form action="{% url 'apps.polls_management:poll_open' poll_id=poll.id %}" method="POST">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary">Apri adesso</button>
+                    </form>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Indietro</button>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock always_hidden %}
 
 

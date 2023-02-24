@@ -42,11 +42,11 @@ def poll_delete(request: HttpRequest, poll_id: int):
             PollService.delete_poll(str(poll_id))
         except PollIsOpenException:
             request.session['delete_error'] = True
-            return HttpResponseRedirect("%s?page=last&per_page=10" % reverse('apps.polls_management:all_polls'))
+            return HttpResponseRedirect("%s?page=last&per_page=10" % reverse('apps.polls_management:all_user_polls'))
 
         request.session['delete_success'] = True
 
-        return HttpResponseRedirect("%s?page=last&per_page=10" % reverse('apps.polls_management:all_polls'))
+        return HttpResponseRedirect("%s?page=last&per_page=10" % reverse('apps.polls_management:all_user_polls'))
 
 @login_required
 def open_poll_by_id(request: HttpRequest, poll_id: int):
@@ -80,7 +80,7 @@ def open_poll_by_id(request: HttpRequest, poll_id: int):
         try:
             PollService.open_poll(poll_id)
         except PollIsOpenException:
-            return HttpResponseRedirect("%s?page=last&per_page=10" % reverse('apps.polls_management:all_polls'))
+            return HttpResponseRedirect("%s?page=last&per_page=10" % reverse('apps.polls_management:all_user_polls'))
         except PollCannotBeOpenedException:
             form = PollForm({
                 "name": poll.name, 
@@ -105,4 +105,4 @@ def open_poll_by_id(request: HttpRequest, poll_id: int):
             # redirect to form to permit edit
             return HttpResponseRedirect(reverse('apps.polls_management:poll_form'))   
 
-    return HttpResponseRedirect("%s?page=last&per_page=10" % reverse('apps.polls_management:all_polls'))
+    return HttpResponseRedirect("%s?page=last&per_page=10" % reverse('apps.polls_management:all_user_polls'))

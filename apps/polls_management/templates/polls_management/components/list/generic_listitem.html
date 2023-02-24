@@ -1,12 +1,12 @@
 {% load static %}
 <div class="rounded border mb-2 p-1">
-    <div class="row align-items-center">
+    <div class="row align-items-center w-100 g-0">
         <!-- Part of the item always visible -->
-        <div class="col-11 col-md-8">
+        <div class="col-11 col-md-4">
             {% block always_visible %}
             {% endblock always_visible %}
         </div>
-        <div class="col-1 d-md-none">
+        <div class="col-1 d-md-none text-end">
             <!-- mobile trigger action -->
             <a
                 data-bs-toggle="collapse" data-bs-target=".mobile-hidden-poll-{{poll.id}}" 
@@ -18,11 +18,11 @@
         <!-- Part of the item hidden on mobile
         (visible only when item is triggered) -->
         <div id="mobile-hidden-poll-{{poll.id}}" 
-            class="collapse d-md-inline-block col-md-3 mobile-hidden-poll-{{poll.id}}">
+            class="collapse d-md-inline-block col-md-7 mobile-hidden-poll-{{poll.id}}">
             {% block hidden_mobile %}
             {% endblock hidden_mobile %}
         </div>
-        <div class="d-none col-md-1 d-md-block">
+        <div class="d-none col-md-1 d-md-block text-end">
             <!-- desktop trigger action -->
             <a 
                 data-bs-toggle="collapse" data-bs-target="#always-hidden-poll-{{poll.id}}" 
