@@ -7,7 +7,7 @@ app_name = 'apps.polls_management'
 urlpatterns = [
 
     # list of all polls
-    path('', views.all_polls, name='all_polls'),
+    path('', views.all_user_polls, name='all_user_polls'),
 
     # create new poll
     path('crea/', views.create_poll_init_view, name="poll_create"),

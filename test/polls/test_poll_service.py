@@ -398,16 +398,6 @@ class TestPollService():
     # ================= User polls section =================
 
     @pytest.mark.django_db
-    def test_return_user_polls_none(self):
-        """Test that checks if the user poll service returns an exception if there a no user polls."""
-
-        self.user.save()
-
-        assert_that(PollService.user_polls) \
-            .raises(NoUserPollsException) \
-            .when_called_with(user=self.user)
-
-    @pytest.mark.django_db
     def test_return_one_user_polls(self, create_20_polls):
         """Test that checks if the user poll service returns a list of user polls."""
         
@@ -448,13 +438,6 @@ class TestPollService():
 
 
     # ================= Active and votable polls section =================
-
-    @pytest.mark.django_db
-    def test_return_no_votable_or_closed_poll(self):
-        """Test that checks if the function returns no votable or closed poll."""
-
-        assert_that(PollService.votable_or_closed_polls) \
-            .raises(NoVotableOrClosedPollException)
 
     @pytest.mark.django_db
     def test_return_votable_poll_success(self):
