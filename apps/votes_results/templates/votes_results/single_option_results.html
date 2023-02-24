@@ -23,7 +23,7 @@
             <div class="col-1 fs-4 pt-1 {%if forloop.counter == 1%}bg-success {%else%}bg-primary {%endif%}text-center text-white ">
                 {{forloop.counter}}
             </div>
-            <div class="col-5 fs-5 fw-light ms-1 pt-1 bg-light">
+            <div class="col-5 fs-5 fw-light ms-1 pt-1 bg-light text-start">
                 {{ voted_option.option.value|truncatechars:20 }}
             </div>
             <div class="col fs-5 fw-light ms-1 pt-1 bg-light">
@@ -41,7 +41,7 @@
             Dettagli
         </p>
     </div>
-    {% include 'polls_management/components/poll_info.html' with poll=poll_results.poll %}
+    {% include 'polls_management/components/poll_info.html' with poll=poll_results.poll poll_info_to_view=poll_info_to_view %}
 </div>
 <div class="container text-center mt-2 mb-5">
     <!-- Buttons -->

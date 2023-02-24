@@ -172,5 +172,13 @@ def single_option_results_view(request: HttpRequest, poll_id: int):
         return HttpResponseServerError("Something got (slighly) terribly wrong. Please contact developers")
 
     return render(request, 'votes_results/single_option_results.html', 
-        {'poll_results': poll_results}
+        {'poll_results': poll_results,
+         'poll_info_to_view': {
+            'name': False,
+            'question': False,
+            'choices': False,
+            'status': True,
+            'datetimes': True,
+        }
+         }
         )
