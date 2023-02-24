@@ -1,37 +1,42 @@
-<div class="rounded border mb-2">
-    
-    <!-- Part of the item always visible -->
-    <div class="d-inline-block">
-        {% block always_visible %}
-        {% endblock always_visible %}
-    </div>
-
-    <!-- mobile trigger action -->
-    <a role="button" class="btn d-inline-block d-md-none" 
-        data-bs-toggle="collapse" data-bs-target=".mobile-hidden-poll-{{poll.id}}" 
-        aria-expanded="false" 
-        aria-controls="mobile-hidden-poll-{{poll.id}} always-hidden-poll-{{poll.id}}">
-        Mobile trigger action
-    </a>
-
-    <!-- Part of the item hidden on mobile
+{% load static %}
+<div class="rounded border mb-2 p-1">
+    <div class="row align-items-center">
+        <!-- Part of the item always visible -->
+        <div class="col-11 col-md-8">
+            {% block always_visible %}
+            {% endblock always_visible %}
+        </div>
+        <div class="col-1 d-md-none">
+            <!-- mobile trigger action -->
+            <a
+                data-bs-toggle="collapse" data-bs-target=".mobile-hidden-poll-{{poll.id}}" 
+                aria-expanded="false" 
+                aria-controls="mobile-hidden-poll-{{poll.id}} always-hidden-poll-{{poll.id}}">
+                <img src="{% static 'icon/3-dots-menu.png' %}" style="width:25px">
+            </a>
+        </div>
+        <!-- Part of the item hidden on mobile
         (visible only when item is triggered) -->
-    <div id="mobile-hidden-poll-{{poll.id}}" 
-        class="collapse d-md-inline-block mobile-hidden-poll-{{poll.id}}">
-        {% block hidden_mobile %}
-        {% endblock hidden_mobile %}
+        <div id="mobile-hidden-poll-{{poll.id}}" 
+            class="collapse d-md-inline-block col-md-3 mobile-hidden-poll-{{poll.id}}">
+            {% block hidden_mobile %}
+            {% endblock hidden_mobile %}
+        </div>
+        <div class="d-none col-md-1 d-md-block">
+            <!-- desktop trigger action -->
+            <a 
+                data-bs-toggle="collapse" data-bs-target="#always-hidden-poll-{{poll.id}}" 
+                aria-expanded="false" aria-controls="always-hidden-poll-{{poll.id}}">
+                <img src="{% static 'icon/3-dots-menu.png' %}" style="width:25px">
+            </a>
+        </div>
+    
     </div>
 
-    <!-- desktop trigger action -->
-    <a role="button" class="btn d-none d-md-inline-block"
-        data-bs-toggle="collapse" data-bs-target="#always-hidden-poll-{{poll.id}}" 
-        aria-expanded="false" aria-controls="always-hidden-poll-{{poll.id}}">
-        Desktop trigger action
-    </a>
-
-    <!-- Part of the item always hidden 
+        <!-- Part of the item always hidden 
     (visible only when item is triggered) -->
-    <div id="always-hidden-poll-{{poll.id}}" class="collapse mobile-hidden-poll-{{poll.id}}" >
+    <div id="always-hidden-poll-{{poll.id}}" 
+        class="collapse mobile-hidden-poll-{{poll.id}}" >
         {% block always_hidden %}
         {% endblock always_hidden %}
     </div>
