@@ -9,6 +9,14 @@
             <h1 class="fw-normal">Risultati della scelta: {{poll_results.poll.name}}</h1>
         </div>
     </div>
+    <div class="row text-start text-white bg-secondary">
+        <div class="col-2 pe-0">
+            <p class="fw-light  fs-4 mb-0 pt-1 pb-1 ">Domanda posta:</p>
+        </div>
+        <div class="col ps-0">
+            <p class=" fw-light fs-4 mb-0 pt-1 pb-1 ">{{poll_results.poll.question}} </p>
+        </div>
+    </div>
     <!-- SO results -->
     {%for voted_option in poll_results.get_sorted_options %}
         <div class="row m-3">
@@ -24,6 +32,18 @@
         </div>
         <hr />
     {% endfor %}
+</div>
+
+<!-- Poll data -->
+<div class="container border  pb-1">
+    <div class="row mt-0 text-start bg-primary ">
+        <p class="mb-0 fs-4 text-white fw-light ">
+            Dettagli
+        </p>
+    </div>
+    {% include 'polls_management/components/poll_info.html' with poll=poll_results.poll %}
+</div>
+<div class="container text-center mt-2 mb-5">
     <!-- Buttons -->
     <div class="row">
         <div class="d-grid gap-2 d-md-block">
@@ -39,18 +59,7 @@
                 Lasciaci un Feedback
             </a>
         </div>
-    </div>
-    
-</div>
-
-<!-- Poll data -->
-<div class="container border  pb-1">
-    <div class="row mt-0 text-start bg-primary ">
-        <p class="mb-0 fs-4 text-white fw-light">
-            Dettagli
-        </p>
-    </div>
-    {% include 'polls_management/components/poll_info.html' with poll=poll_results.poll %}
+    </div>   
 </div>
 
 {% endblock content %}
