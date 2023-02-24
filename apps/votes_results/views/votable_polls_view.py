@@ -55,7 +55,7 @@ def all_votable_polls(request: HttpRequest):
         del request.session['cannot_edit']
     
     return render(  request, 
-                    'polls_management/all_polls.html', 
+                    'votes_results/vote_all_polls.html', 
                     {
                     'per_page': per_page,
                     'page': paginator.page(page),
