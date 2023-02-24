@@ -1,0 +1,47 @@
+<div class="rounded border mb-2">
+    
+    <!-- Part of the item always visible -->
+    <div class="d-inline-block">
+        {% block always_visible %}
+        {% endblock always_visible %}
+    </div>
+
+    <!-- mobile trigger action -->
+    <a role="button" class="btn d-inline-block d-md-none" 
+        data-bs-toggle="collapse" data-bs-target=".mobile-hidden-poll-{{poll.id}}" 
+        aria-expanded="false" 
+        aria-controls="mobile-hidden-poll-{{poll.id}} always-hidden-poll-{{poll.id}}">
+        Mobile trigger action
+    </a>
+
+    <!-- Part of the item hidden on mobile
+        (visible only when item is triggered) -->
+    <div id="mobile-hidden-poll-{{poll.id}}" 
+        class="collapse d-md-inline-block mobile-hidden-poll-{{poll.id}}">
+        {% block hidden_mobile %}
+        {% endblock hidden_mobile %}
+    </div>
+
+    <!-- desktop trigger action -->
+    <a role="button" class="btn d-none d-md-inline-block"
+        data-bs-toggle="collapse" data-bs-target="#always-hidden-poll-{{poll.id}}" 
+        aria-expanded="false" aria-controls="always-hidden-poll-{{poll.id}}">
+        Desktop trigger action
+    </a>
+
+    <!-- Part of the item always hidden 
+    (visible only when item is triggered) -->
+    <div id="always-hidden-poll-{{poll.id}}" class="collapse mobile-hidden-poll-{{poll.id}}" >
+        {% block always_hidden %}
+        {% endblock always_hidden %}
+    </div>
+</div>
+
+
+
+
+
+
+
+
+

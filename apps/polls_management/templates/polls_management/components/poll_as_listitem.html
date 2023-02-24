@@ -1,3 +1,5 @@
+{% extends 'polls_management/components/list/generic_listitem.html' %}
+
 {% comment %}
 
     POLL as a LIST ITEM 
@@ -7,6 +9,18 @@
     Required variables:
     - poll <-- the poll object you wanna display
 {% endcomment %}
+
+{% block always_visible %}
+    <p class="text-primary">Sempre visibile</p>
+{% endblock always_visible %}
+
+{% block hidden_mobile %}
+    <p class="text-warning">Visibile da desktop</p>
+{% endblock hidden_mobile %}
+
+{% block always_hidden %}
+    <p class="text-danger">Sempre nascosto</p>
+{% endblock always_hidden %}
 
 
 <div class="d-grid">
