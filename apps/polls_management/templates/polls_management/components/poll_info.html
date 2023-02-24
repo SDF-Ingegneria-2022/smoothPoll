@@ -1,4 +1,6 @@
+
 <!-- Poll name -->
+{%if poll_info_to_view is None  or poll_info_to_view.name == True%}
 <div class="row mt-2 ms-1 me-1 border-0 rounded bg-light">
     <div class="col-md-auto pe-0">
         <div class="fs-4">Nome scelta:</div>
@@ -7,8 +9,10 @@
         <div class="fs-5 fw-light mt-1">{{ poll.name }}</div>
     </div>
 </div>
+{%endif%}
 
 <!-- Asked question -->
+{%if poll_info_to_view is None  or poll_info_to_view.question == True%}
 <div class="row mt-2 ms-1 me-1 border-0 rounded bg-light">
     <div class="col-md-auto pe-0">
         <div  class="fs-4" >Domanda posta:</div>
@@ -17,8 +21,10 @@
         <div class="fs-5 fw-light mt-1" >{{ poll.question }}</div>
     </div>
 </div>
+{%endif%}
 
 <!-- Possible choices -->
+{%if poll_info_to_view is None  or poll_info_to_view.choices == True%}
 <div class="row mt-2 ms-1 me-1 border-0 rounded bg-light">
     <div class="col-md-auto pe-0">
         <div  class="fs-4" >Opzioni tra cui scegliere:</div>
@@ -32,8 +38,10 @@
         </div>
     </div>
 </div>
+{%endif%}
 
 <!-- Poll type -->
+{%if poll_info_to_view is None  or poll_info_to_view.choices == True%}
 <div class="row mt-2 ms-1 me-1 border-0 rounded bg-light">
     <div class="col-md-auto pe-0">
         <div class="fs-4">Metodo di voto:</div>
@@ -42,8 +50,10 @@
         <div class="fw-light fs-5 mt-1">{{ poll.get_type_verbose_name }}</div>
     </div>
 </div>
+{%endif%}
 
 <!-- Poll status: it can be open, closed or not already open -->
+{%if poll_info_to_view is None  or poll_info_to_view.status == True%}
 <div class="row mt-2 ms-1 me-1 border-0 rounded bg-light">
     <div class="col-md-auto pe-0">
         <div class="fs-4">Stato della scelta:</div>
@@ -60,28 +70,31 @@
         {% endif %}
     </div>
 </div>
+{%endif%}
 
-
-{% if poll.open_datetime %}
-    <!-- Open and close datetimes -->
-    <div class="row mt-2 ms-1 me-1 border-0 rounded bg-light">
-        <div class="col-md-auto pe-0 ">
-            <dic  class="fs-4" >Apertura al voto: 
-            </div> 
-        <div class="col">
-            <div class="fw-light fs-5 mt-1">
-                {{ poll.open_datetime }}
+<!-- Open and close datetimes -->
+{%if poll_info_to_view is None  or poll_info_to_view.datetimes == True%}
+    {% if poll.open_datetime %}
+        
+        <div class="row mt-2 ms-1 me-1 border-0 rounded bg-light">
+            <div class="col-md-auto pe-0 ">
+                <dic  class="fs-4" >Apertura al voto: 
+                </div> 
+            <div class="col">
+                <div class="fw-light fs-5 mt-1">
+                    {{ poll.open_datetime }}
+                </div>
             </div>
         </div>
-    </div>
-    <div class="row mt-2 ms-1 me-1 border-0 rounded bg-light">
-        <div class="col-md-auto pe-0">
-            <div  class="fs-4">Termine votazioni: </div>
-        </div>
-        <div class="col">
-            <div class="fw-light fs-5 mt-1">
-                {{ poll.close_datetime }}
+        <div class="row mt-2 ms-1 me-1 border-0 rounded bg-light">
+            <div class="col-md-auto pe-0">
+                <div  class="fs-4">Termine votazioni: </div>
+            </div>
+            <div class="col">
+                <div class="fw-light fs-5 mt-1">
+                    {{ poll.close_datetime }}
+                </div>
             </div>
         </div>
-    </div>
-{% endif %}
+    {% endif %}
+{%endif%}
