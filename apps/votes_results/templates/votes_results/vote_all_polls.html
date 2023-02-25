@@ -16,77 +16,91 @@
 
 {% endblock pagestyle %}
 
-{% block content %}
+{% block container %}
+<div class="container pt-0 pb-5 pt-md-5">
 
-<!-- Tabs to swith between "vote" and "management" section -->
-<nav class="d-block border-bottom border-secondary mb-4">
-    <div class="row g-0">
-        <div class="col-6 col-lg-2 col-md-4 text-center">
-            <a class="nav-link bg-light border-bottom border-3 border-dark rounded-0 w-100 text-dark fw-bold" href="{% url 'apps.votes_results:votable_polls' %}">Vota</a>
+    <!-- Tabs to swith between "vote" and "management" section -->
+    <nav class="d-block border-bottom border-secondary mb-4">
+        <div class="row g-0">
+            <div class="col-6 col-lg-2 col-md-4 text-center">
+                <a class="nav-link bg-light border-bottom border-3 border-dark rounded-0 w-100 text-dark fw-bold" href="{% url 'apps.votes_results:votable_polls' %}">Vota</a>
+            </div>
+            <div class="col-6 col-lg-2 col-md-4 text-center">
+                <a class="nav-link bg-light w-100" href="{% url 'apps.polls_management:all_user_polls' %}">Crea e gestisci</a>
+            <div>
         </div>
-        <div class="col-6 col-lg-2 col-md-4 text-center">
-            <a class="nav-link bg-light w-100" href="{% url 'apps.polls_management:all_user_polls' %}">Crea e gestisci</a>
-        <div>
-    </div>
-</nav>
+    </nav>
 
-<div class="container text-left">
-    <div class="row">
-        {# Title #}
-        <div class="col-8">
-            <h1> Tutte le scelte</h1>
-        </div>
-        {# New poll botton #}
-        <div class="col-4"> 
-            <a href="{% url 'apps.polls_management:poll_create' %}"class="btn btn-success float-end w-45 mt-1 " role="button">Crea scelta</a>
-        </div>
-    </div>
-</div>
-
-<hr class="mb-0"/>
-
-<div>
-    <!-- Pagination controls (select how many items per page) -->
-    <div class="row justify-content-end">
-        <div class="col-md-auto mb-3">
-            {% include "polls_management/components/pagination/pagination_control.html" with page=page per_page=per_page %}
-        </div> 
-    </div> <!-- END: Pagination controls (select how many items per page) -->
-
-    <!-- List header -->
-    <div class="row border mb-4 fw-bold pt-2 pb-2 d-none d-md-flex text-center">
-        <div class="col-4">
-            <p class="m-0">Nome e quesito</p>
-        </div>
-        <div class="col-7">
+    <div class="container">
+        {% block content %}
+        <div class="container text-left">
             <div class="row">
-                <div class="col-4">
-                    <p class="m-0">Stato</p>
+                {# Title #}
+                <div class="col-8">
+                    <h1> Tutte le scelte</h1>
                 </div>
-                <div class="col-4">
-                    <p class="m-0">Chiusura votazioni</p>
+                {# New poll botton #}
+                <div class="col-12 col-md-4 d-none d-md-block"> 
+                    <div class="d-grid gap-2 d-md-block ">
+                        <a href="{% url 'apps.polls_management:poll_create' %}"class="btn btn-success float-end w-45 mt-1 " role="button">Crea scelta</a>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-1"></div>
-    </div> <!-- END: List header -->
 
-    <!-- Proper list -->
-    <div class="list-group">
-        {% for poll in page.object_list %}
-            <!-- poll w id={{poll.id}} -->
-            {% include "votes_results/components/vote_poll_listitem.html" with poll=poll %}
-        {% empty %}
-            <p class="fs-3 fw-bold mt-5"> Attualmente non ci sono sondaggi! </p>
-        {% endfor %}
-    </div> <!-- END: Proper list -->
-
-    <!-- Pagination nav -->
-    <div class="row justify-content-around">
-        <div class="col-auto">
-            {% include "polls_management/components/pagination/pagination_nav.html" with page=page per_page=per_page %}
+        <!-- New poll botton mobile -->
+        <div class="d-md-none position-fixed bottom-0 start-0 end-0 "> 
+            <a href="{% url 'apps.polls_management:poll_create' %}" 
+                class="btn btn-success w-100 p-3" role="button">Crea scelta</a>
         </div>
-    </div> <!-- END: Pagination nav -->
+
+        <hr class="mb-0 d-none d-md-block"/>
+
+        <div>
+            <!-- Pagination controls (select how many items per page) -->
+            <div class="row justify-content-end">
+                <div class="col-md-auto mb-3">
+                    {% include "polls_management/components/pagination/pagination_control.html" with page=page per_page=per_page %}
+                </div> 
+            </div> <!-- END: Pagination controls (select how many items per page) -->
+
+            <!-- List header -->
+            <div class="row bg-light mb-4 pt-2 pb-2 d-none d-md-flex">
+                <div class="col-4">
+                    <p class="m-0">Nome e domanda</p>
+                </div>
+                <div class="col-7 text-center">
+                    <div class="row">
+                        <div class="col-4">
+                            <p class="m-0">Stato</p>
+                        </div>
+                        <div class="col-4">
+                            <p class="m-0">Chiusura votazioni</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-1"></div>
+            </div> <!-- END: List header -->
+
+            <!-- Proper list -->
+            <div class="list-group">
+                {% for poll in page.object_list %}
+                    <!-- poll w id={{poll.id}} -->
+                    {% include "votes_results/components/vote_poll_listitem.html" with poll=poll %}
+                {% empty %}
+                    <p class="fs-3 fw-bold mt-5"> Attualmente non ci sono sondaggi! </p>
+                {% endfor %}
+            </div> <!-- END: Proper list -->
+
+            <!-- Pagination nav -->
+            <div class="row justify-content-around">
+                <div class="col-auto">
+                    {% include "polls_management/components/pagination/pagination_nav.html" with page=page per_page=per_page %}
+                </div>
+            </div> <!-- END: Pagination nav -->
+        </div>
+        {% endblock content %}
+    </div>
 </div>
 
 
@@ -154,7 +168,9 @@
     </div>
 {% endif %}
 
-{% endblock content %}
+{% endblock container %}
+
+
 
 {# ------------------------------------------------------- #}
 {# Page scripts #}
