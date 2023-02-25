@@ -16,154 +16,170 @@
 
 {% endblock pagestyle %}
 
-{% block content %}
-
-<!-- Tabs to swith between "vote" and "management" section -->
-<nav class="d-block border-bottom border-secondary mb-4">
-    <div class="row g-0">
-        <div class="col-6 col-lg-2 col-md-4 text-center">
-            <a class="nav-link bg-light w-100" href="{% url 'apps.votes_results:votable_polls' %}">Vota</a>
+{# Page container (you can override it) #}
+{% block container %}
+<div class="container pt-0 pb-5 pt-md-5">
+    
+    <!-- Tabs to swith between "vote" and "management" section -->
+    <nav class="d-block border-bottom border-secondary mb-4">
+        <div class="row g-0">
+            <div class="col-6 col-lg-2 col-md-4 text-center">
+                <a class="nav-link bg-light w-100" href="{% url 'apps.votes_results:votable_polls' %}">Vota</a>
+            </div>
+            <div class="col-6 col-lg-2 col-md-4 text-center">
+                <a class="nav-link bg-light border-bottom border-3 border-dark rounded-0 w-100 text-dark fw-bold" href="{% url 'apps.polls_management:all_user_polls' %}">Crea e gestisci</a>
+            <div>
         </div>
-        <div class="col-6 col-lg-2 col-md-4 text-center">
-            <a class="nav-link bg-light border-bottom border-3 border-dark rounded-0 w-100 text-dark fw-bold" href="{% url 'apps.polls_management:all_user_polls' %}">Crea e gestisci</a>
-        <div>
-    </div>
-</nav>
-
-<div class="container text-left">
-    <div class="row">
-        {# Title #}
-        <div class="col-8">
-            <h1> Tutte le scelte</h1>
-        </div>
-        {# New poll botton #}
-        <div class="col-4"> 
-            <a href="{% url 'apps.polls_management:poll_create' %}"class="btn btn-success float-end w-45 mt-1 " role="button">Crea scelta</a>
-        </div>
-    </div>
-</div>
-
-<hr class="mb-0"/>
-
-{% comment %} <nav class="col ms-none">
-    <ul class="nav nav-pills my-2">
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Vota</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#">Crea e gestisci</a>
-        </li>
-    </ul>
-</nav>  {% endcomment %}
-
-<div>
-    <!-- Pagination controls (select how many items per page) -->
-    <div class="row justify-content-end">
-        <div class="col-md-auto mb-3">
-            {% include "polls_management/components/pagination/pagination_control.html" with page=page per_page=per_page %}
-        </div> 
-    </div> <!-- END: Pagination controls (select how many items per page) -->
-
-    <!-- List header -->
-    <div class="row p-2 rounded border mb-4">
-        <div class="col-11 col-lg-9">
-            <div class="row">
-                <div class="col-12 col-md-6 col-xl-8">
-                    <p class="fw-bold m-0" >Nome e quesito</a>
-                </div>
-                <div class="col-12 col-md-3 col-xl-2">Stato</p>
-                </div>
-                <div class="col-12 col-md-3 col-xl-2">
-                    <p class="fw-bold m-0">Chiusura</p>
+    </nav>
+    <div class="container">
+        <!-- Page content -->
+        {% block content %}
+            <div class="container text-left">
+                <div class="row">
+                    {# Title #}
+                    <div class="col-12 col-md-8">
+                        <h1 class="fs-md-3 fs-4">Area personale con le scelte create da te</h1>
+                    </div>
+                    {# New poll botton #}
+                    <div class="col-12 col-md-4 d-none d-md-block"> 
+                        <div class="d-grid gap-2 d-md-block ">
+                            <a href="{% url 'apps.polls_management:poll_create' %}" class="btn btn-success float-md-end mt-1 " role="button">Crea scelta</a>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div> <!-- END: List header -->
 
-    <!-- Proper list -->
-    <div class="list-group">
-        {% for poll in page.object_list %}
-            <!-- poll w id={{poll.id}} -->
-            {% include "polls_management/components/list/management_poll_listitem.html" with poll=poll %}
-        {% empty %}
-            <p class="fs-3 fw-bold mt-5"> Attualmente non ci sono sondaggi! </p>
-        {% endfor %}
-    </div> <!-- END: Proper list -->
+            <!-- New poll botton mobile -->
+            <div class="d-md-none position-fixed bottom-0 start-0 end-0 "> 
+                <a href="{% url 'apps.polls_management:poll_create' %}" 
+                    class="btn btn-success w-100 p-3" role="button">Crea scelta</a>
+            </div>
 
-    <!-- Pagination nav -->
-    <div class="row justify-content-around">
-        <div class="col-auto">
-            {% include "polls_management/components/pagination/pagination_nav.html" with page=page per_page=per_page %}
-        </div>
-    </div> <!-- END: Pagination nav -->
+            <hr class="mb-0 d-none d-md-block"/>
+
+            <div>
+                <!-- Pagination controls (select how many items per page) -->
+                <div class="row justify-content-end">
+                    <div class="col-md-auto mb-3">
+                        {% include "polls_management/components/pagination/pagination_control.html" with page=page per_page=per_page %}
+                    </div> 
+                </div> <!-- END: Pagination controls (select how many items per page) -->
+
+                <!-- List header -->
+                <div class="row border mb-4 fw-bold pt-2 pb-2 d-none d-md-flex text-center">
+                    <div class="col-4">
+                        <p class="m-0">Nome e quesito</p>
+                    </div>
+                    <div class="col-7">
+                        <div class="row">
+                            <div class="col-4">
+                                <p class="m-0">Stato</p>
+                            </div>
+                            <div class="col-4">
+                                <p class="m-0">Apertura votazioni</p>
+                            </div>
+                            <div class="col-4">
+                                <p class="m-0">Chiusura votazioni</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-1"></div>
+                </div> <!-- END: List header -->
+
+                <!-- Proper list -->
+                <div class="list-group">
+                    {% for poll in page.object_list %}
+                        <!-- poll w id={{poll.id}} -->
+                        {% include "polls_management/components/list/management_poll_listitem.html" with poll=poll %}
+                    {% empty %}
+                        <p class="fs-3 fw-bold mt-5"> Attualmente non ci sono sondaggi! </p>
+                    {% endfor %}
+                </div> <!-- END: Proper list -->
+
+                <!-- Pagination nav -->
+                <div class="row justify-content-around">
+                    <div class="col-auto">
+                        {% include "polls_management/components/pagination/pagination_nav.html" with page=page per_page=per_page %}
+                    </div>
+                </div> <!-- END: Pagination nav -->
+            </div>
+        {% endblock content %}
+    </div>
 </div>
-
 
 {% if delete_success %}
-    <!-- Popup for success of operation of delete poll -->
-    <div class="modal fade" id="deletepollsuccess" tabindex="-1" aria-labelledby="deletepollsuccesslabel" aria-hidden="false">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header bg-primary text-white">
-                    <h4 class="modal-title">Cancellazione sondaggio</h4>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body bg-success text-white">
-                    <h5 class="modal-title">Il sondaggio è stato cancellato con successo! </h5>
-                </div>
-                <div class="modal-footer">
-                    <button onClick="window.location.reload();" type="button" class="btn btn-primary">Continua</button>
-                </div>
+<!-- Popup for success of operation of delete poll -->
+<div class="modal fade" id="deletepollsuccess" tabindex="-1" aria-labelledby="deletepollsuccesslabel" aria-hidden="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h4 class="modal-title">Cancellazione sondaggio</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body bg-success text-white">
+                <h5 class="modal-title">Il sondaggio è stato cancellato con successo! </h5>
+            </div>
+            <div class="modal-footer">
+                <button onClick="window.location.reload();" type="button" class="btn btn-primary">Continua</button>
             </div>
         </div>
     </div>
+</div>
 {% endif %}
 
 
 {% if delete_error %}
-    <!-- Popup for error of operation of delete poll -->
-    <div class="modal fade" id="deletepollerror" tabindex="-1" aria-labelledby="deletepollerrorlabel" aria-hidden="false">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header bg-primary text-white">
-                    <h4 class="modal-title">Cancellazione sondaggio</h4>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body bg-danger text-white">
-                    <h5 class="modal-title"> Non è stato possibile cancellare il sondaggio in quanto il sondaggio
-                        è stato già aperto. </h5>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Continua</button>
-                </div>
+<!-- Popup for error of operation of delete poll -->
+<div class="modal fade" id="deletepollerror" tabindex="-1" aria-labelledby="deletepollerrorlabel" aria-hidden="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h4 class="modal-title">Cancellazione sondaggio</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body bg-danger text-white">
+                <h5 class="modal-title"> Non è stato possibile cancellare il sondaggio in quanto il sondaggio
+                    è stato già aperto. </h5>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Continua</button>
             </div>
         </div>
     </div>
+</div>
 {% endif %}
 
 
 {% if cannot_edit %}
-    <!-- Modal to display a "cannot edit" error -->
-    <div class="modal fade" id="editpollerror" tabindex="-1" aria-labelledby="editpollerrorlabel" aria-hidden="false">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header bg-primary text-white">
-                    <h4 class="modal-title">Modifica sondaggio</h4>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body bg-danger text-white">
-                    <h5 class="modal-title"> Non è stato possibile modificare il sondaggio in quanto il sondaggio
-                        è stato già aperto. </h5>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Continua</button>
-                </div>
+<!-- Modal to display a "cannot edit" error -->
+<div class="modal fade" id="editpollerror" tabindex="-1" aria-labelledby="editpollerrorlabel" aria-hidden="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h4 class="modal-title">Modifica sondaggio</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body bg-danger text-white">
+                <h5 class="modal-title"> Non è stato possibile modificare il sondaggio in quanto il sondaggio
+                    è stato già aperto. </h5>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Continua</button>
             </div>
         </div>
     </div>
+</div>
 {% endif %}
+{% endblock container %}
 
-{% endblock content %}
+
+{% block footer %}
+{% include "global/components/skeleton/footer.html" %}
+<div style="height: 60px;" class="bg-dark"></div>
+{% endblock footer %}
+
+
+
 
 {# ------------------------------------------------------- #}
 {# Page scripts #}
