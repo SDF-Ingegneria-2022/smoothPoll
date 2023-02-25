@@ -1,5 +1,11 @@
+
 {% comment %}
 
+    {% extends 'polls_management/components/list/generic_listitem.html' %}
+{% endcomment %}
+
+
+{% comment %}
     POLL as a LIST ITEM 
 
     html code of a single poll in a list of many poll.author
@@ -8,6 +14,20 @@
     - poll <-- the poll object you wanna display
 {% endcomment %}
 
+
+{% comment %}
+    {% block always_visible %}
+        <p class="text-primary">Sempre visibile</p>
+    {% endblock always_visible %}
+
+    {% block hidden_mobile %}
+        <p class="text-warning">Visibile da desktop</p>
+    {% endblock hidden_mobile %}
+
+    {% block always_hidden %}
+        <p class="text-danger">Sempre nascosto</p>
+    {% endblock always_hidden %}
+{% endcomment %}
 
 <div class="d-grid">
     <div class="row p-2 rounded border mb-2">

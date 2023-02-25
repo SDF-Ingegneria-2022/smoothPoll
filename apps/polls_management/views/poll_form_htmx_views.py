@@ -105,7 +105,7 @@ def edit_poll_init_view(request: HttpRequest, poll_id: int):
     # Check if poll is open and can be edit
     if poll.is_open() or poll.is_closed():
         request.session['cannot_edit'] = True
-        return HttpResponseRedirect("%s?page=last&per_page=10" % reverse('apps.polls_management:all_polls'))
+        return HttpResponseRedirect("%s?page=last&per_page=10" % reverse('apps.polls_management:all_user_polls'))
 
     # init form with poll instance that should be modified 
     form = PollForm({
@@ -223,7 +223,7 @@ def poll_form_clean_go_back_home(request: HttpRequest):
     # clean session and get back to homepage
     clean_session(request)
 
-    return HttpResponseRedirect(reverse('apps.polls_management:all_polls'))        
+    return HttpResponseRedirect(reverse('apps.polls_management:all_user_polls'))        
 
 @login_required
 def poll_form_confirm(request: HttpRequest): 

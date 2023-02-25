@@ -84,7 +84,7 @@
     <div class="list-group">
         {% for poll in page.object_list %}
             <!-- poll w id={{poll.id}} -->
-            {% include "polls_management/components/poll_as_listitem.html" with poll=poll %}
+            {% include "votes_results/components/vote_poll_listitem.html" with poll=poll %}
         {% empty %}
             <p class="fs-3 fw-bold mt-5"> Attualmente non ci sono sondaggi! </p>
         {% endfor %}
