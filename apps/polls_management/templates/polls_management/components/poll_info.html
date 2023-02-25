@@ -1,0 +1,100 @@
+
+<!-- Poll name -->
+{%if poll_info_to_view is None  or poll_info_to_view.name == True%}
+<div class="row mt-2 ms-1 me-1 border-0 rounded bg-light">
+    <div class="col-md-auto pe-0">
+        <div class="fs-4">Nome scelta:</div>
+    </div>
+    <div class="col ">
+        <div class="fs-5 fw-light mt-1">{{ poll.name }}</div>
+    </div>
+</div>
+{%endif%}
+
+<!-- Asked question -->
+{%if poll_info_to_view is None  or poll_info_to_view.question == True%}
+<div class="row mt-2 ms-1 me-1 border-0 rounded bg-light">
+    <div class="col-md-auto pe-0">
+        <div  class="fs-4" >Domanda posta:</div>
+    </div>
+    <div class="col">
+        <div class="fs-5 fw-light mt-1" >{{ poll.question }}</div>
+    </div>
+</div>
+{%endif%}
+
+<!-- Possible choices -->
+{%if poll_info_to_view is None  or poll_info_to_view.choices == True%}
+<div class="row mt-2 ms-1 me-1 border-0 rounded bg-light">
+    <div class="col-md-auto pe-0">
+        <div  class="fs-4" >Opzioni tra cui scegliere:</div>
+        <hr class="m-1">
+        <div class="fw-light fs-5">
+            <ul>
+                {% for option in poll.options %}
+                    <li>{{ option.value }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{%endif%}
+
+<!-- Poll type -->
+{%if poll_info_to_view is None  or poll_info_to_view.choices == True%}
+<div class="row mt-2 ms-1 me-1 border-0 rounded bg-light">
+    <div class="col-md-auto pe-0">
+        <div class="fs-4">Metodo di voto:</div>
+    </div>
+    <div class="col">
+        <div class="fw-light fs-5 mt-1">{{ poll.get_type_verbose_name }}</div>
+    </div>
+</div>
+{%endif%}
+
+<!-- Poll status: it can be open, closed or not already open -->
+{%if poll_info_to_view is None  or poll_info_to_view.status == True%}
+<div class="row mt-2 ms-1 me-1 border-0 rounded bg-light">
+    <div class="col-md-auto pe-0">
+        <div class="fs-4">Stato della scelta:</div>
+    </div>
+    <div class="col">
+        {% if poll.is_open %}
+            {% if not poll.is_closed %}
+                <div class="fw-light fs-5 mt-1 text-success">Aperta al voto</div>
+            {% else %}
+                <div class="fw-light fs-5 mt-1 text-danger">Chiusa (votazione terminata)</div>
+            {% endif %}
+        {% else %}
+            <div class="fw-light fs-5 mt-1 text-info">Non ancora aperta</div>
+        {% endif %}
+    </div>
+</div>
+{%endif%}
+
+<!-- Open and close datetimes -->
+{%if poll_info_to_view is None  or poll_info_to_view.datetimes == True%}
+    {% if poll.open_datetime %}
+        
+        <div class="row mt-2 ms-1 me-1 border-0 rounded bg-light">
+            <div class="col-md-auto pe-0 ">
+                <dic  class="fs-4" >Apertura al voto: 
+                </div> 
+            <div class="col">
+                <div class="fw-light fs-5 mt-1">
+                    {{ poll.open_datetime }}
+                </div>
+            </div>
+        </div>
+        <div class="row mt-2 ms-1 me-1 border-0 rounded bg-light">
+            <div class="col-md-auto pe-0">
+                <div  class="fs-4">Termine votazioni: </div>
+            </div>
+            <div class="col">
+                <div class="fw-light fs-5 mt-1">
+                    {{ poll.close_datetime }}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{%endif%}

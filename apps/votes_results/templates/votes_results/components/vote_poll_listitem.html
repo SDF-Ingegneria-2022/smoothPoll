@@ -1,0 +1,92 @@
+{% extends 'polls_management/components/list/generic_listitem.html' %}
+
+
+{% comment %}
+    POLL as a LIST ITEM 
+
+    html code of a single poll in a list of many poll.author
+    
+    Required variables:
+    - poll <-- the poll object you wanna display
+{% endcomment %}
+
+
+{% block always_visible %}
+    <p class="fw-bold m-0 text-truncate"> {{poll.name}} </p>
+    <p class="text-muted m-0 text-truncate" > {{poll.question}} </p>
+{% endblock always_visible %}
+
+{% block hidden_mobile %}
+    <div class="row align-items-center text-md-center mt-3 mt-md-0">
+        <div class="col-12 col-md-4">
+            <p class="m-0">
+                <span class="text-secondary d-md-none">
+                    Stato attuale: 
+                </span>
+                <span class="fw-bold" style="color:{{poll.get_state_color}}">
+                    {{poll.get_state_label}}
+                </span>
+            </p>
+        </div>
+        {% if not poll.is_closed and poll.is_open %}
+        <div class="col-12 col-md-4">
+            <p class="m-0">
+                <span class="text-secondary d-md-none">
+                    Chiusura: 
+                </span>
+                <span class="">
+                    {{poll.close_datetime|timeuntil}} rimanenti
+                </span>
+            </p>
+        </div>
+        {% elif poll.is_closed %}
+        <div class="col-12 col-md-4">
+            <p class="m-0">
+                <span class="text-secondary d-md-none">
+                    Chiusura: 
+                </span>
+                <span class="">
+                    {{poll.close_datetime|timesince}} fa
+                </span>
+            </p>
+        </div>
+        {% endif %}
+        {% if poll.is_open and not poll.is_closed %}
+        <div class="col-12 col-md-4">
+            <div class="d-grid gap-2 d-md-block">
+                <a href="{% url 'apps.votes_results:vote' poll_id=poll.id %}" 
+                    class="btn btn-primary mt-2" 
+                    role="button">Pagina voto</a>
+            </div>
+        </div>
+        {% elif poll.is_closed %}
+        <div class="col-12 col-md-4">
+            <div class="d-grid gap-2 d-md-block">
+                <a href="{% url 'apps.votes_results:results' poll_id=poll.id %}" 
+                    class="btn btn-secondary mt-2" 
+                    role="button">Vedi risultati</a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+        
+{% endblock hidden_mobile %}
+
+{% block always_hidden %}
+
+        {% if poll.is_open and not poll.is_closed %}
+        <div class="row align-items-center text-md-center">
+            <div class="col-11 col-md-4">
+            </div>
+            <div class="d-none col-md-4 d-md-block text-end"></div>
+            <div class="col-md-4">
+                <div class="d-grid gap-2 d-md-block mt-2">
+                    <a href="{% url 'apps.votes_results:results' poll_id=poll.id %}" 
+                        class="btn btn-secondary mt-md-0" 
+                        role="button">Vedi risultati</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+{% endblock always_hidden %}

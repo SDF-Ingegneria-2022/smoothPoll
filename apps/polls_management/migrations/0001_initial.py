@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
             name='PollModel',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=200, verbose_name='Nome Sondaggio')),
+                ('name', models.CharField(max_length=200, verbose_name='Nome Scelta')),
                 ('question', models.CharField(max_length=200, verbose_name='Quesito')),
                 ('poll_type', models.CharField(choices=[('single_option', 'Opzione Singola'), ('majority_judjment', 'Giudizio Maggioritario')], default='single_option', max_length=200)),
                 ('open_datetime', models.DateTimeField(blank=True, default=None, null=True, verbose_name='Data Apertura')),

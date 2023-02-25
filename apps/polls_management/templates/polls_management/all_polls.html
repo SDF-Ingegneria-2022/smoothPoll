@@ -1,5 +1,7 @@
 {% extends 'global/skeleton.html' %}
 
+{% load static %}
+
 {% block pagename %}Gestione sondaggi{% endblock pagename %}
 
 {% block pagestyle %}
@@ -16,193 +18,108 @@
 
 {% endblock pagestyle %}
 
-{% block content %}
-
-<div class="container text-left">
-    <div class="row">
-        {# Title #}
-        <div class="col-8">
-            <h1> Tutti i sondaggi</h1>
-        </div>
-        {# New poll botton #}
-        <div class="col-4"> 
-            <a href="{% url 'apps.polls_management:poll_create' %}"class="btn btn-success float-end w-45 mt-1 " role="button">Crea sondaggio</a>
-        </div>
-    </div>
-    </div>
-    <hr class="mb-0"/>
-    <div class="row justify-content-end">
-        <div class="col-md-auto mb-3">
-            <div class="dropdown mt-3 ms-5" >
-                <a class="btn btn-secondary dropdown-toggle float-end" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                    Elementi per pagina : {{per_page}}
-                </a>
-
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink"> 
-                    <li><a class="dropdown-item {% if per_page == 10 %} active {%endif%}" href="?page={{page.number}}&per_page={{10}}">10</a></li>
-                    <li><a class="dropdown-item {% if per_page == 15 %} active {%endif%}" href="?page={{page.number}}&per_page={{15}}">15</a></li>
-                    <li><a class="dropdown-item {% if per_page == 20 %} active {%endif%}" href="?page={{page.number}}&per_page={{20}}">20</a></li>
-                </ul>
-            </div>
-        </div>
-    <div class="list-group">
-        
-    {% for poll in page.object_list %}
-        
-            <div class="d-grid">
-            <div class="row p-2 rounded border mb-2">
-                <div class="col-11 col-lg-9">
-                    <div class="row">
-                        <div class="col-12 col-md-6 col-xl-8">
-                            <p class="fw-bold m-0"> {{poll.name}} </p>
-                            <p class="text-muted m-0" > {{poll.question}} </p>
-                            <p class="fw-bold m-0" >{{ poll.author }}</a>
-                        </div>
-                        <div class="col-12 col-md-3 col-xl-2">
-                            <p class="fw-bold m-0" style="color:{{poll.get_type_color}}">
-                                {{poll.get_type_verbose_name}}
-                            </p>
-                        </div>
-                        <div class="col-12 col-md-3 col-xl-2">
-                            <p class="fw-bold m-0" style="color:{{poll.get_state_color}}">
-                                {{poll.get_state_label}}
-                                {% if not poll.is_open and poll.open_datetime %}
-                                    <br><span class="fw-normal">(Apertura: {{poll.open_datetime}})</span>
-                                {% endif %}
-                                {% if not poll.is_closed and poll.is_open %}
-                                <br><span class="fw-normal">(Chiusura: {{poll.close_datetime}})</span>
-                                {% endif %}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-1 col-lg-0 d-lg-none">
-                    <button class="btn btn-outline-secondary mt-2 float-end" type="button" 
-                        data-bs-toggle="collapse" data-bs-target="#actions-poll-{{poll.id}}" 
-                        aria-expanded="false" aria-controls="actions-poll-{{poll.id}}">
-
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="24" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
-                            <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
-                        </svg>
-                    </button>
-                </div>
-                <div id="actions-poll-{{poll.id}}" 
-                    class="col-12 col-lg-3 collapse dont-collapse-md" >
-                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                        {% if poll.is_open %}
-                            {% if not poll.is_closed %}
-                                <a href="{% url 'apps.votes_results:single_option_vote' poll_id=poll.id %}" 
-                                    class="btn btn-primary me-md-2 mt-2" 
-                                    role="button">Vota</a>
-                            {% endif %}
-                            <a href="{% url 'apps.votes_results:single_option_results' poll_id=poll.id %}" 
-                                class="btn btn-secondary me-md-2 mt-2"  
-                                role="button">Vedi risultati</a>
-                        {% else %}
-                            <a href="{% url 'apps.votes_results:poll_details' poll_id=poll.id %}" 
-                                class="btn btn-info me-md-2 mt-2" 
-                                role="button">Riepilogo sondaggio</a>
-                            {% comment %} <a href="{% url 'apps.polls_management:poll_edit' poll_id=poll.id %}" 
-                                class="btn btn-warning me-md-2 mt-2" 
-                                role="button">Modifica</a>
-                            <a data-bs-toggle="modal" data-bs-target="#deletepoll-{{poll.id}}" 
-                                class="btn btn-danger me-md-2 mt-2"  
-                                role="button">Elimina</a> {% endcomment %}
-                        {% endif %}
-                    </div>
-                </div>
-
-
-                {% comment %} <div class="col-12 col-md-4">
-                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">                    
-                            <div class="dropdown d-grid gap-2 d-md-flex justify-content-md-end d-md-none">
-                            <button class="btn btn-outline-secondary mt-2 float-end" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="24" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
-                                    <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
-                                </svg>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-lg-start" aria-labelledby="dropdownMenuButton1">
-                                <li><a class="dropdown-item" href="{% url 'apps.polls_management:poll_edit' poll_id=poll.id %}">Modifica sondaggio</a></li>
-                                <li><a class="dropdown-item " data-bs-toggle="modal" data-bs-target="#deletepoll-{{poll.id}}">Elimina sondaggio</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div> {% endcomment %}
-            </div>
-        </div>
-
-        {% comment %} Popup for deleting a poll {% endcomment %}
-
-        <div class="modal fade" id="deletepoll-{{poll.id}}" tabindex="-1" aria-labelledby="deletepollabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header bg-primary text-white">
-                        <h4 class="modal-title">Cancellazione sondaggio</h4>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body bg-warning text-dark">
-                        <h5 class="modal-title">Sei sicuro di volere cancellare questo sondaggio?</h5>
-                    </div>
-                    <div class="modal-footer">
-                        <div class="alert alert-info text-center" role="alert">
-                            Attenzione: un sondaggio può essere eliminato soltanto se
-                            non è ancora stato aperto
-                        </div>
-                        <form action="{% url 'apps.polls_management:poll_delete' poll_id=poll.id %}" method="POST">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-primary">Conferma</button>
-                        </form>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Indietro</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {% empty %}
-        <p class="fs-3 fw-bold mt-5"> Attualmente non ci sono sondaggi! </p>
-
-        
-    {% endfor %}
-    </div>
-
-    {# Page navigation bar #}
-    <div class="row justify-content-around">
-        <div class="col-auto">
-            <nav aria-label="Page navigation example">
-                <ul class="pagination float-end mt-3">
-                    {% if page.has_previous %}
+{# Page container (you can override it) #}
+{% block container %}
+<div class="container pt-0 pb-5 pt-md-5">
     
-                        <li class="page-item ">
-                            <a class="page-link" href="?page={{page.previous_page_number}}&per_page={{per_page}}" tabindex="-1" aria-disabled="true">Precedente</a>
-                        </li>
-                        <li class="page-item"><a class="page-link " href="?page={{page.previous_page_number}}&per_page={{per_page}}">{{page.previous_page_number}}</a></li>
-                    {% else %}
-                        <li class="page-item  disabled">
-                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Precedente</a>
-                        </li>
-                    {% endif %} 
-                        <li class="page-item active"><a class="page-link " href="?page={{page.number}}&per_page={{per_page}}">{{page.number}}</a></li>
-
-                    {% if page.has_next %}
-                        <li class="page-item"><a class="page-link " href="?page={{page.next_page_number}}&per_page={{per_page}}">{{page.next_page_number}}</a></li>
-                        <li class="page-item">
-                            <a class="page-link" href="?page={{page.next_page_number}}&per_page={{per_page}}">Successiva</a>
-                        </li>
-                    {% else %}
-                        <li class="page-item disabled">
-                            <a class="page-link" href="#">Successiva</a>
-                        </li>
-                    {% endif %}
-                </ul>
-            </nav>
+    <!-- Tabs to swith between "vote" and "management" section -->
+    <nav class="d-block mb-4">
+        <div class="row g-0 border-bottom border-lightgray">
+            <div class="col-6 col-lg-2 col-md-4 text-center">
+                <a class="nav-link bg-light w-100" href="{% url 'apps.votes_results:votable_polls' %}">Vota</a>
+            </div>
+            <div class="col-6 col-lg-2 col-md-4 text-center">
+                <a class="nav-link bg-light border-bottom border-3 border-dark rounded-0 w-100 text-dark fw-bold" href="{% url 'apps.polls_management:all_user_polls' %}">Crea e gestisci</a>
+            <div>
         </div>
+    </nav>
+    <div class="container">
+        <!-- Page content -->
+        {% block content %}
+
+            <div class="row">
+                <div class="col-12 col-lg-8">
+                    <h1 class="fs-md-3 fs-4 mt-2">Area personale con le scelte create da te</h1>
+                </div>
+                <div class="col-12 col-lg-4">
+                    <div class="d-flex justify-content-lg-end">
+                        <div class="m-1">
+                            <a href="{% url 'apps.polls_management:poll_create' %}" 
+                                class="btn btn-success" 
+                                role="button">Crea scelta</a>
+                        </div>
+                        <div class="m-1">
+                            <!-- Pagination controls (select how many items per page) -->
+                            {% include "polls_management/components/pagination/pagination_control.html" with page=page per_page=per_page %}
+                            <!-- END: Pagination controls (select how many items per page) -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- New poll botton mobile -->
+            <div class="d-md-none position-fixed bottom-0 start-0 end-0 p-2" style="z-index:1000;"> 
+                <a href="{% url 'apps.polls_management:poll_create' %}" 
+                    class="float-end" role="button">
+                    <div class="bg-success text-center align-item-center rounded-circle">
+                        <img src="{% static 'icon/add-white.png' %}" 
+                            alt="Crea nuova scelta"  
+                            style="width: 40px; height: 40px; margin: 12px;" />
+                    </div>
+                    
+                </a>
+            </div>
+
+            <div class="mt-5">
+                <!-- List header -->
+                <div class="row fw-light text-primary pt-2 pb-2 d-none d-md-flex text-center mt-5">
+                    <div class="col-4">
+                        <p class="m-0 text-start">Nome e domanda</p>
+                    </div>
+                    <div class="col-7">
+                        <div class="row">
+                            <div class="col-4">
+                                <p class="m-0">Stato</p>
+                            </div>
+                            <div class="col-4">
+                                <p class="m-0">Apertura votazioni</p>
+                            </div>
+                            <div class="col-4">
+                                <p class="m-0">Chiusura votazioni</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-1"></div>
+                </div> <!-- END: List header -->
+
+                <!-- Proper list -->
+                <div class="list-group mt-2">
+                    {% for poll in page.object_list %}
+                        <!-- poll w id={{poll.id}} -->
+                        {% include "polls_management/components/list/management_poll_listitem.html" with poll=poll %}
+                    {% empty %}
+                        <p class="fs-3 fw-bold mt-5"> Attualmente non ci sono sondaggi! </p>
+                    {% endfor %}
+                </div>
+                <!-- END: Proper list -->
+            </div>
+
+
+            <!-- Pagination nav -->
+            <div class="row justify-content-around">
+                <div class="col-auto">
+                    {% include "polls_management/components/pagination/pagination_nav.html" with page=page per_page=per_page %}
+                </div>
+            </div> <!-- END: Pagination nav -->
+
+
+        {% endblock content %}
     </div>
 </div>
 
-{% comment %} Popup for success of operation of delete poll {% endcomment %}
-
 {% if delete_success %}
-
+<!-- Popup for success of operation of delete poll -->
 <div class="modal fade" id="deletepollsuccess" tabindex="-1" aria-labelledby="deletepollsuccesslabel" aria-hidden="false">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -219,21 +136,11 @@
         </div>
     </div>
 </div>
-
-<script type="text/javascript">
-
-    $(window).on('load', function() {
-        $('#deletepollsuccess').modal('show');
-    });
-
-</script>
-
 {% endif %}
 
-{% comment %} Popup for error of operation of delete poll {% endcomment %}
 
 {% if delete_error %}
-
+<!-- Popup for error of operation of delete poll -->
 <div class="modal fade" id="deletepollerror" tabindex="-1" aria-labelledby="deletepollerrorlabel" aria-hidden="false">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -251,21 +158,11 @@
         </div>
     </div>
 </div>
-
-<script type="text/javascript">
-
-    $(window).on('load', function() {
-        $('#deletepollerror').modal('show');
-    });
-
-</script>
-
 {% endif %}
 
-{% comment %} Popup for edit alert message {% endcomment %}
 
 {% if cannot_edit %}
-
+<!-- Modal to display a "cannot edit" error -->
 <div class="modal fade" id="editpollerror" tabindex="-1" aria-labelledby="editpollerrorlabel" aria-hidden="false">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -283,15 +180,42 @@
         </div>
     </div>
 </div>
+{% endif %}
+{% endblock container %}
 
-<script type="text/javascript">
 
-    $(window).on('load', function() {
-        $('#editpollerror').modal('show');
-    });
 
-</script>
+{# ------------------------------------------------------- #}
+{# Page scripts #}
 
+{% block customjs %}
+
+{% if delete_success %}
+    <!-- script to display delete poll success modal -->
+    <script type="text/javascript">
+        $(window).on('load', function() {
+            $('#deletepollsuccess').modal('show');
+        });
+    </script>
 {% endif %}
 
-{% endblock content %}
+{% if delete_error %}
+    <!-- script to display delete poll error modal -->
+    <script type="text/javascript">
+        $(window).on('load', function() {
+            $('#deletepollerror').modal('show');
+        });
+    </script>
+{% endif %}
+
+{% if cannot_edit %}
+    <!-- script to display delete poll success modal -->
+    <script type="text/javascript">
+        $(window).on('load', function() {
+            $('#editpollerror').modal('show');
+        });
+    </script>
+{% endif %}
+
+{% endblock customjs %}
+

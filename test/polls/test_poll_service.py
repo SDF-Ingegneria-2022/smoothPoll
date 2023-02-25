@@ -398,16 +398,6 @@ class TestPollService():
     # ================= User polls section =================
 
     @pytest.mark.django_db
-    def test_return_user_polls_none(self):
-        """Test that checks if the user poll service returns an exception if there a no user polls."""
-
-        self.user.save()
-
-        assert_that(PollService.user_polls) \
-            .raises(NoUserPollsException) \
-            .when_called_with(user=self.user)
-
-    @pytest.mark.django_db
     def test_return_one_user_polls(self, create_20_polls):
         """Test that checks if the user poll service returns a list of user polls."""
         
@@ -416,6 +406,7 @@ class TestPollService():
         user_poll_list = PollService.user_polls(self.user)
 
         assert_that(user_poll_list).is_not_none()
+        assert_that(user_poll_list).is_instance_of(List)
         assert_that(user_poll_list).is_length(20)
 
     @pytest.mark.django_db
@@ -438,20 +429,15 @@ class TestPollService():
         user_poll_list2 = PollService.user_polls(user2)
 
         assert_that(user_poll_list1).is_not_none()
+        assert_that(user_poll_list1).is_instance_of(List)
         assert_that(user_poll_list1).is_length(20)
 
         assert_that(user_poll_list2).is_not_none()
+        assert_that(user_poll_list2).is_instance_of(List)
         assert_that(user_poll_list2).is_length(30)
 
 
     # ================= Active and votable polls section =================
-
-    @pytest.mark.django_db
-    def test_return_no_votable_or_closed_poll(self):
-        """Test that checks if the function returns no votable or closed poll."""
-
-        assert_that(PollService.votable_or_closed_polls) \
-            .raises(NoVotableOrClosedPollException)
 
     @pytest.mark.django_db
     def test_return_votable_poll_success(self):
@@ -473,6 +459,7 @@ class TestPollService():
         votable_or_closed_polls_list = PollService.votable_or_closed_polls()
 
         assert_that(votable_or_closed_polls_list).is_not_none()
+        assert_that(votable_or_closed_polls_list).is_instance_of(List)
         assert_that(votable_or_closed_polls_list).is_length(30)
 
     @pytest.mark.django_db
@@ -495,6 +482,7 @@ class TestPollService():
         votable_or_closed_polls_list = PollService.votable_or_closed_polls()
 
         assert_that(votable_or_closed_polls_list).is_not_none()
+        assert_that(votable_or_closed_polls_list).is_instance_of(List)
         assert_that(votable_or_closed_polls_list).is_length(30)
 
     @pytest.mark.django_db
@@ -525,6 +513,7 @@ class TestPollService():
         votable_or_closed_polls_list = PollService.votable_or_closed_polls()
 
         assert_that(votable_or_closed_polls_list).is_not_none()
+        assert_that(votable_or_closed_polls_list).is_instance_of(List)
         assert_that(votable_or_closed_polls_list).is_length(60)
 
     @pytest.mark.django_db
@@ -558,4 +547,168 @@ class TestPollService():
         votable_or_closed_polls_list = PollService.votable_or_closed_polls()
 
         assert_that(votable_or_closed_polls_list).is_not_none()
+        assert_that(votable_or_closed_polls_list).is_instance_of(List)
         assert_that(votable_or_closed_polls_list).is_length(60)
+
+    @pytest.mark.django_db
+    def test_return_votable_and_closed_poll_correct_order_success1(self):
+        """Test that checks if the order of the list is correct."""
+
+        self.user.save()
+
+        poll1 = PollModel(name=self.name, question=self.question, author=self.user)
+        open_date1 = datetime.datetime(year=2020, month=12, day=30, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+        close_date1 = datetime.datetime(year=2100, month=1, day=30, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+        poll1.open_datetime = open_date1
+        poll1.close_datetime = close_date1
+        poll1.save()
+
+        poll2 = PollModel(name=self.name, question=self.question, author=self.user)
+        open_date2 = datetime.datetime(year=2020, month=12, day=30, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+        close_date2 = datetime.datetime(year=2100, month=3, day=30, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+        poll2.open_datetime = open_date2
+        poll2.close_datetime = close_date2
+        poll2.save()
+
+        poll3 = PollModel(name=self.name, question=self.question, author=self.user)
+        open_date3 = datetime.datetime(year=2020, month=12, day=30, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+        close_date3 = datetime.datetime(year=2100, month=6, day=30, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+        poll3.open_datetime = open_date3
+        poll3.close_datetime = close_date3
+        poll3.save()
+
+        poll4 = PollModel(name=self.name, question=self.question, author=self.user)
+        open_date4 = datetime.datetime(year=2020, month=12, day=30, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+        close_date4 = datetime.datetime(year=2100, month=12, day=31, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+        poll4.open_datetime = open_date4
+        poll4.close_datetime = close_date4
+        poll4.save()
+
+        votable_or_closed_polls_list = PollService.votable_or_closed_polls()
+
+        assert_that(votable_or_closed_polls_list).is_not_none()
+        assert_that(votable_or_closed_polls_list).is_instance_of(List)
+        assert_that(votable_or_closed_polls_list).is_length(4)
+
+        assert_that(votable_or_closed_polls_list[0].id).is_equal_to(poll1.id)
+        assert_that(votable_or_closed_polls_list[1].id).is_equal_to(poll2.id)
+        assert_that(votable_or_closed_polls_list[2].id).is_equal_to(poll3.id)
+        assert_that(votable_or_closed_polls_list[3].id).is_equal_to(poll4.id)
+
+    @pytest.mark.django_db
+    def test_return_votable_and_closed_poll_correct_order_success2(self):
+        """Test that checks if the order of the list is correct (reversed order)."""
+
+        self.user.save()
+
+        poll1 = PollModel(name=self.name, question=self.question, author=self.user)
+        open_date1 = datetime.datetime(year=2020, month=12, day=30, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+        close_date1 = datetime.datetime(year=2100, month=12, day=31, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+        poll1.open_datetime = open_date1
+        poll1.close_datetime = close_date1
+        poll1.save()
+
+        poll2 = PollModel(name=self.name, question=self.question, author=self.user)
+        open_date2 = datetime.datetime(year=2020, month=12, day=30, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+        close_date2 = datetime.datetime(year=2100, month=6, day=30, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+        poll2.open_datetime = open_date2
+        poll2.close_datetime = close_date2
+        poll2.save()
+
+        poll3 = PollModel(name=self.name, question=self.question, author=self.user)
+        open_date3 = datetime.datetime(year=2020, month=12, day=30, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+        close_date3 = datetime.datetime(year=2100, month=3, day=30, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+        poll3.open_datetime = open_date3
+        poll3.close_datetime = close_date3
+        poll3.save()
+
+        poll4 = PollModel(name=self.name, question=self.question, author=self.user)
+        open_date4 = datetime.datetime(year=2020, month=12, day=30, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+        close_date4 = datetime.datetime(year=2100, month=1, day=30, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+        poll4.open_datetime = open_date4
+        poll4.close_datetime = close_date4
+        poll4.save()
+
+        votable_or_closed_polls_list = PollService.votable_or_closed_polls()
+
+        assert_that(votable_or_closed_polls_list).is_not_none()
+        assert_that(votable_or_closed_polls_list).is_instance_of(List)
+        assert_that(votable_or_closed_polls_list).is_length(4)
+
+        assert_that(votable_or_closed_polls_list[0].id).is_equal_to(poll4.id)
+        assert_that(votable_or_closed_polls_list[1].id).is_equal_to(poll3.id)
+        assert_that(votable_or_closed_polls_list[2].id).is_equal_to(poll2.id)
+        assert_that(votable_or_closed_polls_list[3].id).is_equal_to(poll1.id)
+
+    @pytest.mark.django_db
+    def test_return_votable_and_closed_poll_correct_order_success3(self):
+        """Test that checks if the order of the list is correct (reversed order and closed polls too)."""
+
+        self.user.save()
+
+        # open polls
+
+        poll1 = PollModel(name=self.name, question=self.question, author=self.user)
+        open_date1 = datetime.datetime(year=2020, month=12, day=30, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+        close_date1 = datetime.datetime(year=2100, month=12, day=31, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+        poll1.open_datetime = open_date1
+        poll1.close_datetime = close_date1
+        poll1.save()
+
+        poll2 = PollModel(name=self.name, question=self.question, author=self.user)
+        open_date2 = datetime.datetime(year=2020, month=12, day=30, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+        close_date2 = datetime.datetime(year=2100, month=6, day=30, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+        poll2.open_datetime = open_date2
+        poll2.close_datetime = close_date2
+        poll2.save()
+
+        poll3 = PollModel(name=self.name, question=self.question, author=self.user)
+        open_date3 = datetime.datetime(year=2020, month=12, day=30, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+        close_date3 = datetime.datetime(year=2100, month=3, day=30, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+        poll3.open_datetime = open_date3
+        poll3.close_datetime = close_date3
+        poll3.save()
+
+        poll4 = PollModel(name=self.name, question=self.question, author=self.user)
+        open_date4 = datetime.datetime(year=2020, month=12, day=30, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+        close_date4 = datetime.datetime(year=2100, month=1, day=30, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+        poll4.open_datetime = open_date4
+        poll4.close_datetime = close_date4
+        poll4.save()
+
+        # closed polls
+
+        poll5 = PollModel(name=self.name, question=self.question, author=self.user)
+        open_date5 = datetime.datetime(year=2020, month=12, day=30, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+        close_date5 = datetime.datetime(year=2021, month=10, day=30, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+        poll5.open_datetime = open_date5
+        poll5.close_datetime = close_date5
+        poll5.save()
+
+        poll6 = PollModel(name=self.name, question=self.question, author=self.user)
+        open_date6 = datetime.datetime(year=2020, month=12, day=30, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+        close_date6 = datetime.datetime(year=2021, month=4, day=30, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+        poll6.open_datetime = open_date6
+        poll6.close_datetime = close_date6
+        poll6.save()
+
+        poll7 = PollModel(name=self.name, question=self.question, author=self.user)
+        open_date7 = datetime.datetime(year=2020, month=12, day=30, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+        close_date7 = datetime.datetime(year=2021, month=1, day=30, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+        poll7.open_datetime = open_date7
+        poll7.close_datetime = close_date7
+        poll7.save()
+
+        votable_or_closed_polls_list = PollService.votable_or_closed_polls()
+
+        assert_that(votable_or_closed_polls_list).is_not_none()
+        assert_that(votable_or_closed_polls_list).is_instance_of(List)
+        assert_that(votable_or_closed_polls_list).is_length(7)
+
+        assert_that(votable_or_closed_polls_list[0].id).is_equal_to(poll4.id)
+        assert_that(votable_or_closed_polls_list[1].id).is_equal_to(poll3.id)
+        assert_that(votable_or_closed_polls_list[2].id).is_equal_to(poll2.id)
+        assert_that(votable_or_closed_polls_list[3].id).is_equal_to(poll1.id)
+        assert_that(votable_or_closed_polls_list[4].id).is_equal_to(poll5.id)
+        assert_that(votable_or_closed_polls_list[5].id).is_equal_to(poll6.id)
+        assert_that(votable_or_closed_polls_list[6].id).is_equal_to(poll7.id)

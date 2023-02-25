@@ -1,0 +1,124 @@
+/* 
+    Sidedrawer nav menu code. Insipired by
+    https://github.com/StartBootstrap/startbootstrap-simple-sidebar 
+    but heavily customized
+*/
+
+
+/* main wrapper of the whole page */
+#wrapper {
+    overflow-x: hidden;
+    display: flex;
+}
+
+/* 
+    Sidebar 
+    - when closed, it's pushed on an hidden position on the left
+    - when open, it occupy 25% of the page (leaving the rest usable)
+*/
+#sidebar-wrapper {
+    height: 100vh;
+    margin-left: -18em; 
+    width: 18em;
+    z-index: 9999;
+
+    position: fixed;
+    overflow-y: auto;
+
+    -webkit-transition: margin .25s ease-out;
+    -moz-transition: margin .25s ease-out;
+    -o-transition: margin .25s ease-out;
+    transition: margin .25s ease-out;
+}
+
+/* 
+    A container for objects in sidebar 
+    (needed so we have a "stable area" where
+    you can put bootstrap elements)
+*/ 
+#sidebar-wrapper .sidebar-content {
+    
+    position: absolute;
+    width: 100%;
+    top:0; bottom:0;
+    left: 0;
+}
+
+/* 
+    Main page content wrapper.
+    - when sidebar is closed, it occupy the whole page space
+    - when sidebar is open, it reduces its width 
+*/
+#page-content-wrapper {
+    position: relative;
+    min-width: 0;
+    width: 100%;
+
+    -webkit-transition: margin .25s ease-out;
+    -moz-transition: margin .25s ease-out;
+    -o-transition: margin .25s ease-out;
+    transition: margin .25s ease-out;
+}
+
+/* 
+    Toggle action "moves" hidden sidebar on 
+    visible screen portion, reducing main wrapper size
+*/
+body.sb-sidenav-toggled #sidebar-wrapper {
+    margin-left: 0;
+}
+body.sb-sidenav-toggled #page-content-wrapper {
+    margin-left: 18em;
+}
+
+
+/* 
+    Page content overlay displayed on mobile
+    when the sidebar is open
+*/
+#page-content-overlay {
+    position: absolute; /* Sit on top of the page content */
+    display: none; /* Hidden by default */
+    width: 100%; /* Full width (cover the whole page) */
+    height: 100%; /* Full height (cover the whole page) */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5); /* Black background with opacity */
+    z-index: 10000; /* Specify a stack order in case you're using a different order for other elements */
+    cursor: pointer; /* Add a pointer on hover */
+}
+
+
+@media screen and (max-width: 768px) {
+
+    /* On mobile, we want a bigger sidebar */ 
+    #sidebar-wrapper {
+        margin-left: -80vw; 
+        width: 80vw;
+    }
+
+    #sidebar-wrapper .sidebar-content {
+        width: inherit;
+    }
+
+    /* On mobile, main page "shift" on the
+    right when sidebar is open*/ 
+    body.sb-sidenav-toggled #page-content-wrapper {
+        margin-left: 80vw; 
+        min-width: 100vw;
+    }
+
+    /* On mobile, we display shadow overlay over
+    content when sidebar is open */ 
+    body.sb-sidenav-toggled #page-content-overlay {
+        display: block;
+    }
+
+    /* On mobile, I block scrolling 
+    when sidebar is open */
+    body.sb-sidenav-toggled {
+        overflow: hidden; /* Hide scrollbars */
+    }    
+}

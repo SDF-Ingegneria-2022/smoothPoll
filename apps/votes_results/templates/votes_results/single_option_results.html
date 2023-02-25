@@ -3,42 +3,49 @@
 {% block pagename %}Risultati Opzione Singola{% endblock pagename %}
 
 {% block content %}
-<div class="container text-center mt-5 mb-5">
-    <h1>{{poll_results.poll.name}}</h1>
-    <h2 class="text-info">Risultati sondaggio</h2>
-</div>
-
-
-<div class="container">
-
-    
-    <div class="container mt-5 mb-5">
-        <p class="fw-bold fs-3 mb-0">Testo della domanda: </p>
-        <h3>{{ poll_results.poll.question }}</h3>
-    </div>
-    
-
-    <div class="container mb-3 mt-3">
-        <h4>Risultati</h4>
-        <div class="container m-3">
-            {%for voted_option in poll_results.get_sorted_options %}
-                <div class="row">
-                    <div class="col-xxl-6">
-                        <p class="text-secondary">{{forloop.counter}}.
-                            <span class="{% if forloop.counter == 1 %}text-success fw-bold
-                            {% else %}text-dark{% endif %}">{{voted_option.option.value}}</span></p>
-                    </div>
-                    <div class="col-md-6">
-                        <p class="fw-bold text-primary"> ha ricevuto {{voted_option.n_votes}} voti</p>
-                    </div>
-                </div>
-                <hr />
-            {% endfor %}
+<div class="container text-center mt-2 mb-5">
+    <div class="row">
+        <div class="col">
+            <h1 class="fw-normal">Risultati della scelta: {{poll_results.poll.name}}</h1>
         </div>
     </div>
+    <div class="row text-start text-white bg-secondary">
+        <div class="col-auto pe-0">
+            <p class="fw-light  fs-4 mb-0 pt-1 pb-1 ">Domanda posta:</p>
+        </div>
+        <div class="col ps-2">
+            <p class=" fw-light fs-4 mb-0 pt-1 pb-1 ">{{poll_results.poll.question}} </p>
+        </div>
+    </div>
+    <!-- SO results -->
+    {%for voted_option in poll_results.get_sorted_options %}
+        <div class="row m-3">
+            <div class="col-1 fs-4 pt-1 {%if forloop.counter == 1%}bg-success {%else%}bg-primary {%endif%}text-center text-white ">
+                {{forloop.counter}}
+            </div>
+            <div class="col-5 fs-5 fw-light ms-1 pt-1 bg-light text-start">
+                {{ voted_option.option.value|truncatechars:20 }}
+            </div>
+            <div class="col fs-5 fw-light ms-1 pt-1 bg-light">
+                {{voted_option.n_votes}} {%if voted_option.n_votes == 1%}voto{%else%}voti{%endif%}
+            </div>
+        </div>
+        <hr />
+    {% endfor %}
+</div>
 
-
-    <div class="container text-center md-5 mt-4">
+<!-- Poll data -->
+<div class="container border  pb-1">
+    <div class="row mt-0 text-start bg-primary ">
+        <p class="mb-0 fs-4 text-white fw-light ">
+            Dettagli
+        </p>
+    </div>
+    {% include 'polls_management/components/poll_info.html' with poll=poll_results.poll poll_info_to_view=poll_info_to_view %}
+</div>
+<div class="container text-center mt-2 mb-5">
+    <!-- Buttons -->
+    <div class="row">
         <div class="d-grid gap-2 d-md-block">
             <a name="" id="" role="button"
                 class="btn btn-primary" 
@@ -52,8 +59,8 @@
                 Lasciaci un Feedback
             </a>
         </div>
-    </div>
+    </div>   
 </div>
-</div>
+
 {% endblock content %}
 

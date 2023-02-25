@@ -22,7 +22,7 @@ class PollModel(models.Model):
         MAJORITY_JUDJMENT = 'majority_judjment', _('Giudizio Maggioritario')
 
     name: CharField = models.CharField(
-        max_length=200, verbose_name=_('Nome Sondaggio'))
+        max_length=200, verbose_name=_('Nome Scelta'))
 
     question: CharField = models.CharField(
         max_length=200, verbose_name=_("Quesito"))

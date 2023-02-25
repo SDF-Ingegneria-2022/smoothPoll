@@ -1,0 +1,33 @@
+{% extends 'global/skeleton.html' %}
+
+{% load bootstrap5 %}
+
+
+{% block pagename %}
+    {% if edit  %}
+        Scelta modificata
+    {% else %}
+        Scelta creata
+    {% endif %}
+{% endblock pagename %}
+
+{% block content %}
+
+<h1 class="text-success">
+    Scelta {% if edit  %} modificata {% else %} creata {% endif %} con successo!
+</h1>
+
+
+<div class="container border mt-3 pt-3 pb-3">
+    <!-- Poll details -->
+    <div class="mb-5">
+        {% include 'polls_management/components/poll_info.html' with poll=poll %}
+    </div>
+
+    <!-- Performable actions on a poll -->
+    {% include 'polls_management/components/poll_actions.html' with poll=poll %}
+</div>
+
+
+
+{% endblock content %}

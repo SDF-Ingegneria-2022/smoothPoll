@@ -7,9 +7,9 @@
 
 {% block pagename %}
     {% if edit  %}
-        Modifica sondaggio
+        Modifica scelta
     {% else %}
-        Crea nuovo sondaggio
+        Crea nuova scelta
     {% endif %}
 {% endblock pagename %}
 
@@ -17,9 +17,9 @@
 <div class="container text-center mt-5 mb-5">
     <h1>
         {% if edit  %}
-            Modifica sondaggio
+            Modifica scelta
         {% else %}
-            Crea nuovo sondaggio
+            Crea nuova scelta
         {% endif %}
     </h1>
     <h2 class="text-info">Inserisci tutti i dati e premi "Salva"</h2>
@@ -34,7 +34,7 @@
         </div>
         {% endif %}
 
-        <h5>Nome del sondaggio e domanda</h5>
+        {% comment %} <h5>Nome della scelta, quesito e altri Dettagli</h5> {% endcomment %}
 
         <div class="form-group mb-5" 
             hx-trigger="keyup delay:500ms, change"

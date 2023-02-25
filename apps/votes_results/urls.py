@@ -5,9 +5,15 @@ from allauth.account.decorators import login_required
 
 app_name = 'apps.votes_results'
 urlpatterns = [
+    #list of all votable polls
+    path('', views.all_votable_polls, name='votable_polls'),
 
     # details page for poll not yet open
-    path('<int:poll_id>/dettagli-sondaggio/', login_required(views.SingleOptionVoteView.as_view()), name='poll_details'),
+    path('<int:poll_id>/dettagli/', login_required(views.SingleOptionVoteView.as_view()), name='poll_details'),
+
+    # generic vote and results (it will be redirect to main method)
+    path('<int:poll_id>/vota/', views.generic_vote_view, name='vote'), 
+    path('<int:poll_id>/risultati/', views.generic_results_view, name='results'), 
 
     # vote-recap-results process for single option
     path('<int:poll_id>/vota/scelta-singola/', views.SingleOptionVoteView.as_view(), name='single_option_vote'),

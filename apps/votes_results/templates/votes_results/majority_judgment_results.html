@@ -3,32 +3,23 @@
 {% block pagename %}Risultati Giudizio Maggioritario{% endblock pagename %}
 
 {% block content %}
-<div class="container text-center mt-5 mb-5">
-    <h1>{{ poll.name }}</h1>
-    <h2 class="text-info">Risultati sondaggio</h2>
+
+<div class="container text-center mt-3">
+    <h1 class="fw-normal">Risultati della scelta: {{ poll.name }}</h1>
 </div>
-
-
-<div class="container">
-
-    
-    <div class="mt-5 mb-5">
-        <p class="mb-0">Testo della domanda: </p>
-        <h3>{{ poll.question }}</h3>
+<div class="row text-start text-white bg-secondary">
+    <div class="col-auto pe-0">
+        <p class="fw-light  fs-4 mb-0 pt-1 pb-1 ">Domanda:</p>
     </div>
-
-    {% comment "View judment button" %}{% endcomment %}
-
-    {% if poll_results %}
-
+    <div class="col ps-2">
+        <p class=" fw-light fs-4 mb-0 pt-1 pb-1 ">{{poll.question}} </p>
+    </div>
+</div>
+{% if poll_results %}
+    <!-- MJ results -->
     <div class="mb-3 mt-3">
-
         
-
-        <h4>Risultati</h4>
-
         <div class="row mb-4 mt-2">
-
             <div class="col-12 col-lg-4 order-lg-2">
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="checkbox" 
@@ -36,7 +27,6 @@
                     <label class="form-check-label text-secondary" for="">Visualizza Distribuzione Giudizi</label>
                 </div>
             </div>
-
             <div class="col-12 col-lg-8 order-lg-1">
                 <div class="collapse multi-collapse">
                     <div class="card card-body">
@@ -56,16 +46,11 @@
                     </div>
                 </div>
             </div>
-            
-            
         </div>
-        
         <div class="m-md-3 m-0 mt-5 mt-md-5">
-
-            {% comment "Result table heading" %}{% endcomment %}
             <div class="row fw-bold text-dark d-none d-md-table-row">
                 <div class="col-4 d-table-cell">
-                    <p>Testo opzione:</p>
+                    <p>Opzione:</p>
                 </div>
                 <div class="col-2 d-table-cell">
                     <p>Giudizio mediano:</p>
@@ -81,18 +66,13 @@
                 </div>
             </div>
 
+            <!-- Sorted options -->
             {%for voted_option in poll_results %}
                 <div class="row">
                     <div class="col-md-4 col-12">
                         <p class="text-secondary">{{forloop.counter}}.
                             <span class="fw-bold {% if forloop.counter == 1 %}text-success
                             {% else %}text-dark{% endif %}">{{voted_option.option.value}}</span>
-                            {% comment %} <a name="" id="" class="btn btn-primary" 
-                                href="#votes-distribution-{{forloop.counter}}" 
-                                data-toggle="collapse"
-                                aria-expanded="false" 
-                                aria-controls="votes-distribution-{{forloop.counter}}"
-                                role="button">Vedi voti</a> {% endcomment %}
                         </p>
                     </div>
                     <div class="col-md-2 col-12">
@@ -102,7 +82,6 @@
                                 {{voted_option.get_qualitative_median}}
                             </span>
                         </p>
-                        
                     </div>
                     <div class="col-md-2 col-12">
                         <p class="pb-0 mb-0">
@@ -153,54 +132,65 @@
                             {% endfor %}
                         </ul>
                     </div>
-                  </div>
+                    </div>
                 <hr class="mt-3" />
             {% endfor %}
         </div>
     </div>
-
-    {% comment "Explaination majority judjment" %}{% endcomment %}
-    <div class="row d-flex justify-content-center mb-5 mt-5">
-        <div class="col-12 col-md-8">
-            <div class="card shadow-lg bg-body rounded">
-                <h5 class="card-header">Il giudizio maggioritario</h5>
-                <div class="card-body">
-                    <p class="card-text">
-                        Questo sondaggio è stato votato  
-                        con il <b>metodo del giudizio maggioritario</b>. 
-                        Se vuoi sapere di più su come funziona, ti lasciamo qualche 
-                        link per approfondire:
-                    </p>
-                    <ul>
-                        <li>
-                            <a href="https://copernicani.it/eleggere-il-candidato-migliore/" target="_blank">
-                                Idea generale e vantaggi</a> <span class="text-secondary">(semplice)</span>
-                        </li>
-                        <li>
-                            <a href="https://it.frwiki.wiki/wiki/Jugement_majoritaire#D%C3%A9partage_des_%C3%A9galit%C3%A9s" target="_blank">
-                                Metodo matematico di calcolo del risultato</a> <span class="text-secondary">(avanzato)</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    {% else %}
-
+{% else %}
+    <!-- Error message: no votes received -->
     <div class="container text-center mt-5 mb-5">
         <p class="fw-bold text-danger">
-            Questo sondaggio purtroppo non ha ricevuto ancora alcun voto, 
+            Questa scelta purtroppo non ha ricevuto ancora alcun voto, 
             quindi non è possibile calcolare i risultati.
         </p>
         <a class="btn btn-primary mt-2" 
             href="{% url 'apps.votes_results:single_option_vote' poll_id=poll.id  %}" 
             role="button">Inizia a votare</a>
     </div>
+{% endif %}
 
-    {% endif %}
-    
-    
+<!-- Banner to explain MJ criteria -->
+<!-- <div class="row d-flex justify-content-center mb-5 mt-5">
+    <div class="col-12 col-md-8">
+        <div class="card shadow-lg bg-body rounded">
+            <h5 class="card-header">Il giudizio maggioritario</h5>
+            <div class="card-body">
+                <p class="card-text">
+                    Questa scelta è stata votata 
+                    con il <b>metodo del giudizio maggioritario</b>. 
+                    Se vuoi sapere di più su come funziona, ti lasciamo qualche 
+                    link per approfondire:
+                </p>
+                <ul>
+                    <li>
+                        <a href="https://copernicani.it/eleggere-il-candidato-migliore/" target="_blank">
+                            Idea generale e vantaggi</a> <span class="text-secondary">(semplice)</span>
+                    </li>
+                    <li>
+                        <a href="https://it.frwiki.wiki/wiki/Jugement_majoritaire#D%C3%A9partage_des_%C3%A9galit%C3%A9s" target="_blank">
+                            Metodo matematico di calcolo del risultato</a> <span class="text-secondary">(avanzato)</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div> -->
+
+
+
+<!-- Poll data -->
+<div class="container border pb-1">
+    <div class="row mt-0 text-start bg-primary ">
+        <p class="mb-0 fs-4 text-white fw-light ">
+            Dettagli
+        </p>
+    </div>
+    {% include 'polls_management/components/poll_info.html' with poll=poll poll_info_to_view=poll_info_to_view%}
+</div>
+
+<!-- Actions -->
+<div class="container mt-3">
     <div class="d-grid gap-2 d-md-block text-center mt-5">
         <a name="" id="" role="button"
             class="btn btn-primary" 
@@ -215,6 +205,6 @@
         </a> 
     </div>
 </div>
-</div>
+
 {% endblock content %}
 
