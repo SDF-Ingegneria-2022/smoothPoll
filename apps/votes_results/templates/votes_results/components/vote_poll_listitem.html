@@ -1,3 +1,4 @@
+{% extends 'polls_management/components/list/generic_listitem.html' %}
 
 {% comment %}
 
@@ -29,6 +30,75 @@
     {% endblock always_hidden %}
 {% endcomment %}
 
+
+{% block always_visible %}
+    <p class="fw-bold m-0 text-truncate"> {{poll.name}} </p>
+    <p class="text-muted m-0 text-truncate" > {{poll.question}} </p>
+{% endblock always_visible %}
+
+{% block hidden_mobile %}
+    <div class="row align-items-center text-md-center mt-3 mt-md-0">
+        <div class="col-12 col-md-4">
+            <p class="m-0">
+                <span class="text-secondary d-md-none">
+                    Stato attuale: 
+                </span>
+                <span class="fw-bold" style="color:{{poll.get_state_color}}">
+                    {{poll.get_state_label}}
+                </span>
+            </p>
+        </div>
+        {% if not poll.is_closed and poll.is_open %}
+        <div class="col-12 col-md-4">
+            <p class="m-0">
+                <span class="text-secondary d-md-none">
+                    Chiusura: 
+                </span>
+                <span class="">
+                    {{poll.close_datetime|timeuntil}} rimanenti
+                </span>
+            </p>
+        </div>
+        {% elif poll.is_closed %}
+        <div class="col-12 col-md-4">
+            <p class="m-0">
+                <span class="text-secondary d-md-none">
+                    Chiusura: 
+                </span>
+                <span class="">
+                    {{poll.close_datetime|timesince}} fa
+                </span>
+            </p>
+        </div>
+        {% endif %}
+        {% if poll.is_open and not poll.is_closed %}
+        <div class="col-12 col-md-4">
+            <div class="d-grid gap-2 d-md-block">
+                <a href="{% url 'apps.votes_results:vote' poll_id=poll.id %}" 
+                    class="btn btn-primary mt-2 float-end" 
+                    role="button">Pagina voto</a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+        
+{% endblock hidden_mobile %}
+
+{% block always_hidden %}
+
+        {% if poll.is_open %}
+                <div class="d-grid gap-2 d-md-block">
+                    <a href="{% url 'apps.votes_results:results' poll_id=poll.id %}" 
+                        class="btn btn-secondary mt-2 float-end" 
+                        role="button">Vedi risultati</a>
+                </div>
+        {% endif %}
+
+{% endblock always_hidden %}
+
+
+
+{% comment %} 
 <div class="d-grid">
     <div class="row p-2 rounded border mb-2">
         <div class="col-11 col-lg-9">
@@ -50,7 +120,7 @@
                             <br><span class="fw-normal">(Apertura: {{poll.open_datetime}})</span>
                         {% endif %}
                         {% if not poll.is_closed and poll.is_open %}
-                        <br><span class="fw-normal">(Chiusura: {{poll.close_datetime}})</span>
+                        <br><span class="fw-normal">(Chiusura: {{poll.close_datetime|timeuntil}})</span>
                         {% endif %}
                     </p>
                 </div>
@@ -82,33 +152,12 @@
                     <a href="{% url 'apps.votes_results:poll_details' poll_id=poll.id %}" 
                         class="btn btn-info me-md-2 mt-2" 
                         role="button">Riepilogo sondaggio</a>
-                    {% comment %} <a href="{% url 'apps.polls_management:poll_edit' poll_id=poll.id %}" 
-                        class="btn btn-warning me-md-2 mt-2" 
-                        role="button">Modifica</a>
-                    <a data-bs-toggle="modal" data-bs-target="#deletepoll-{{poll.id}}" 
-                        class="btn btn-danger me-md-2 mt-2"  
-                        role="button">Elimina</a> {% endcomment %}
                 {% endif %}
             </div>
         </div>
-
-
-        {% comment %} <div class="col-12 col-md-4">
-            <div class="d-grid gap-2 d-md-flex justify-content-md-end">                    
-                    <div class="dropdown d-grid gap-2 d-md-flex justify-content-md-end d-md-none">
-                    <button class="btn btn-outline-secondary mt-2 float-end" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="24" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
-                            <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
-                        </svg>
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-lg-start" aria-labelledby="dropdownMenuButton1">
-                        <li><a class="dropdown-item" href="{% url 'apps.polls_management:poll_edit' poll_id=poll.id %}">Modifica sondaggio</a></li>
-                        <li><a class="dropdown-item " data-bs-toggle="modal" data-bs-target="#deletepoll-{{poll.id}}">Elimina sondaggio</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div> {% endcomment %}
     </div>
+
+
 
     <!-- Popup to confirm deletion of poll w id={{poll.id}} -->
     <div class="modal fade" id="deletepoll-{{poll.id}}" tabindex="-1" aria-labelledby="deletepollabel" aria-hidden="true">
@@ -135,4 +184,4 @@
             </div>
         </div>
     </div>
-</div>
+</div> {% endcomment %}
