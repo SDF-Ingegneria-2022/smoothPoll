@@ -41,12 +41,18 @@
                         <h1 class="fs-md-3 fs-4">Area personale con le scelte create da te</h1>
                     </div>
                     {# New poll botton #}
-                    <div class="col-12 col-md-4"> 
-                        <div class="d-grid gap-2 d-md-block">
+                    <div class="col-12 col-md-4 d-none d-md-block"> 
+                        <div class="d-grid gap-2 d-md-block ">
                             <a href="{% url 'apps.polls_management:poll_create' %}" class="btn btn-success float-md-end mt-1 " role="button">Crea scelta</a>
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <!-- New poll botton mobile -->
+            <div class="d-md-none position-fixed bottom-0 start-0 end-0 "> 
+                <a href="{% url 'apps.polls_management:poll_create' %}" 
+                    class="btn btn-success w-100 p-3" role="button">Crea scelta</a>
             </div>
 
             <hr class="mb-0 d-none d-md-block"/>
@@ -165,6 +171,14 @@
 </div>
 {% endif %}
 {% endblock container %}
+
+
+{% block footer %}
+{% include "global/components/skeleton/footer.html" %}
+<div style="height: 60px;" class="bg-dark"></div>
+{% endblock footer %}
+
+
 
 
 {# ------------------------------------------------------- #}
