@@ -33,12 +33,12 @@
 <div class="container text-left">
     <div class="row">
         {# Title #}
-        <div class="col-8">
-            <h1> Tutte le scelte</h1>
+        <div class="col-12 col-md-8">
+            <h1 class="fs-md-3 fs-4">Area personale con le scelte create da te</h1>
         </div>
         {# New poll botton #}
-        <div class="col-4"> 
-            <a href="{% url 'apps.polls_management:poll_create' %}"class="btn btn-success float-end w-45 mt-1 " role="button">Crea scelta</a>
+        <div class="col-12 col-md-4"> 
+            <a href="{% url 'apps.polls_management:poll_create' %}" class="btn btn-success float-md-end mt-1 " role="button">Crea scelta</a>
         </div>
     </div>
 </div>
@@ -54,7 +54,7 @@
     </div> <!-- END: Pagination controls (select how many items per page) -->
 
     <!-- List header -->
-    <div class="row border mb-4 fw-bold text-center pt-2 pb-2">
+    <div class="row border mb-4 fw-bold pt-2 pb-2 d-none d-md-flex text-center">
         <div class="col-4">
             <p class="m-0">Nome e quesito</p>
         </div>
