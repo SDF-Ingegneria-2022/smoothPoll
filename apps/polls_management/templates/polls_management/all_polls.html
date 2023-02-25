@@ -45,17 +45,6 @@
 
 <hr class="mb-0"/>
 
-{% comment %} <nav class="col ms-none">
-    <ul class="nav nav-pills my-2">
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Vota</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#">Crea e gestisci</a>
-        </li>
-    </ul>
-</nav>  {% endcomment %}
-
 <div>
     <!-- Pagination controls (select how many items per page) -->
     <div class="row justify-content-end">
@@ -65,19 +54,24 @@
     </div> <!-- END: Pagination controls (select how many items per page) -->
 
     <!-- List header -->
-    <div class="row p-2 rounded border mb-4">
-        <div class="col-11 col-lg-9">
+    <div class="row border mb-4 fw-bold text-center pt-2 pb-2">
+        <div class="col-4">
+            <p class="m-0">Nome e quesito</p>
+        </div>
+        <div class="col-7">
             <div class="row">
-                <div class="col-12 col-md-6 col-xl-8">
-                    <p class="fw-bold m-0" >Nome e quesito</a>
+                <div class="col-4">
+                    <p class="m-0">Stato</p>
                 </div>
-                <div class="col-12 col-md-3 col-xl-2">Stato</p>
+                <div class="col-4">
+                    <p class="m-0">Apertura votazioni</p>
                 </div>
-                <div class="col-12 col-md-3 col-xl-2">
-                    <p class="fw-bold m-0">Chiusura</p>
+                <div class="col-4">
+                    <p class="m-0">Chiusura votazioni</p>
                 </div>
             </div>
         </div>
+        <div class="col-1"></div>
     </div> <!-- END: List header -->
 
     <!-- Proper list -->
