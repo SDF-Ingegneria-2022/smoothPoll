@@ -1,5 +1,7 @@
 {% extends 'global/skeleton.html' %}
 
+{% load static %}
+
 {% block pagename %}Gestione sondaggi{% endblock pagename %}
 
 {% block pagestyle %}
@@ -50,9 +52,16 @@
             </div>
 
             <!-- New poll botton mobile -->
-            <div class="d-md-none position-fixed bottom-0 start-0 end-0 "> 
+            <div class="d-md-none position-fixed bottom-0 start-0 end-0 p-2 style="z-index:1000;""> 
                 <a href="{% url 'apps.polls_management:poll_create' %}" 
-                    class="btn btn-success w-100 p-3" role="button">Crea scelta</a>
+                    class="float-end" role="button">
+                    <div class="bg-success text-center align-item-center rounded-circle">
+                        <img src="{% static 'icon/plus-white.png' %}" 
+                            alt="Crea nuova scelta"  
+                            style="width: 40px; height: 40px; margin: 12px;" />
+                    </div>
+                    
+                </a>
             </div>
 
             <hr class="mb-0 d-none d-md-block"/>
