@@ -7,11 +7,10 @@
 
 {% endcomment %}
 
-<div class="dropdown mt-3 ms-5" >
+<div class="dropdown" >
     <a class="btn btn-secondary dropdown-toggle float-end" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-        Elementi per pagina : {{per_page}}
+        Per pagina : {{per_page}}
     </a>
-
     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink"> 
         <li><a class="dropdown-item {% if per_page == 10 %} active {%endif%}" href="?page={{page.number}}&per_page={{10}}">10</a></li>
         <li><a class="dropdown-item {% if per_page == 15 %} active {%endif%}" href="?page={{page.number}}&per_page={{15}}">15</a></li>
