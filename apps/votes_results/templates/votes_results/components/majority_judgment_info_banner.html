@@ -1,0 +1,116 @@
+{% load static %}
+<div class="container position-fixed bottom-0 end-0 mb-5" id="info">
+    <div class="row justify-content-end">
+        <div class="col-lg-8 col-xl-8 col-xxl-8 ">
+            <div class="shadow-lg bg-body rounded">
+                <div class="card ">
+                    <div class="card-header fs-5" >
+                    Scopri di più sul metodo del giudizio maggioritario!
+                    <button type="button" class="btn-close position-absolute top-0 end-0 mt-2 me-2"  aria-label="Close" id="closeInfoButton"></button>
+                    </div>
+                    
+                    <div class="card-body">
+                    <p class="card-text">Se vuoi farti un'idea di <b>come funziona il metodo del giudizio maggioritario</b>, vedi la nostra <i>guida</i>. <br>
+                        <!-- Se invece vuoi <b>approfondire</b>, dai un'occhiata al <i>metodo matematico</i> con cui verranno calcolati i risultati. -->
+                    </p>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#guidaModal">
+                        Guida
+                    </button>
+
+                    <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#metodoMatematicoModal">
+                        Metodo matematico
+                    </button> -->
+                    
+                   
+                    </div>
+                </div>
+        </div>
+        </div>
+    </div>    
+</div>
+
+    
+<script type="text/javascript">
+
+    $("#closeInfoButton").click(function(){
+        $("#info").hide();
+    });
+
+</script>
+
+
+<!-- Modal: Guida -->
+<div class="modal fade" id="guidaModal" tabindex="-1" aria-labelledby="guidaModalLabel" aria-hidden="true">
+<div class="modal-dialog modal-xl">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title fs-4 fw-bold" id="exampleModalLabel">Guida</h5>
+      
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <p class="fw-light "> Il sistema Giudizio Maggioritario, definito da MIT press “una nuova teoria e un nuovo metodo di voto,
+            giudizio e classificazione, che si è dimostrato superiore a tutti gli altri metodi conosciuti“ è al contempo 
+            facile da usare, facile da comprendere, e possiede una serie di proprietà molto interessanti che lo mettono in una categoria a se.
+        </p>
+        
+        <div class="fw-bold fs-5">Funzionamento</div>
+        <p class="fw-light">
+            Il funzionamento è il seguente: una volta decisi quali sono i candidati, ogni candidato viene giudicato dagli elettori 
+            assegnandogli un possibile giudizio. I giudizi sono aggettivi in ordine strettamente monotonico come apprezzamento. 
+            Esempio: insufficiente, passabile, discreto, buono, eccellente.
+            Ovviamente il voto è segreto.
+        </p>
+        
+        <img src="{% static 'banner-info-table-vote.png' %}" class="img-fluid shadow p-3 mb-5 bg-body rounded" alt="...">
+        
+        <p class="fw-light">
+            Quando poi è il momento di decidere il vincitore si valutano per ciascun candidato tutti i voti di tutti gli elettori e si estrae la mediana tra i voti.
+            La cosa più probabile è però che due o più candidati abbiano la stessa mediana. Bisogna quindi eseguire uno spareggio tra questi due candidati. Questo viene fatto nel seguente modo:
+            Supponiamo vi siano due candidati Andrea e Barbara che hanno entrambi ricevuto come mediana il giudizio Sufficiente. Per risolvere tra questi due candidati come primo passo si escludono 
+            tutti gli altri candidati che sono risultati con mediana inferiore. Quindi si levano uno dopo l’altro a due a due i voti in cui le persone hanno votato Buono per Barbara e per Antonio. 
+            Questo rende le mediane instabili. E quando una delle due a seguito dell’instabilità si muove in alto (quindi vince) o in basso (quindi perde).
+        </p>
+        
+        <img src="{% static 'banner-info-table-percent.png' %}" class="img-fluid shadow p-3 mb-5 bg-body rounded" alt="...">
+        
+        <p class="fw-light">    
+            Va notato che il numero dei giudizi può cambiare. Si possono infatti fare esperimenti con 5, 6, 7 giudizi differenti. L’importante è che siano tutti espressi in parole, siano dal significato
+            chiaro e le persone all’interno della comunità comprendano in maniera univoca il significato della parola e l’ordine tra le parole.
+        </p>
+        <div>Fonte: <a href="https://copernicani.it/eleggere-il-candidato-migliore/" class="link-secondary">Copercani - eleggere il candidato migliore</a> </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Modal: Metodo matematico -->
+<div class="modal fade" id="metodoMatematicoModal" tabindex="-1" aria-labelledby="metodoMatematicoModalLabel" aria-hidden="true">
+<div class="modal-dialog modal-xl">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel">Metodo matematico</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <div class="alert alert-primary d-flex align-items-center" role="alert">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 16 16" role="img" aria-label="Warning:">
+              <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+            </svg>
+            <div>
+                Ops! La guida al momento è in costruzione! Nel mentre puoi la seguente pagina per più dettagli sul <b>metodo matematico</b> del giudizio maggioritario:
+                <a href="https://it.frwiki.wiki/wiki/Jugement_majoritaire#D%C3%A9partage_des_%C3%A9galit%C3%A9s">metodo matematico</a>.
+            </div>
+          </div>
+    </div>
+
+    
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+    </div>
+  </div>
+</div>
+</div>
