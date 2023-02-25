@@ -36,7 +36,27 @@
     <div class="container">
         <!-- Page content -->
         {% block content %}
-            <h1 class="fs-md-3 fs-4 mt-2">Area personale con le scelte create da te</h1>
+
+            <div class="row">
+                <div class="col-12 col-lg-8">
+                    <h1 class="fs-md-3 fs-4 mt-2">Area personale con le scelte create da te</h1>
+                </div>
+                <div class="col-12 col-lg-4">
+                    <div class="d-flex justify-content-lg-end">
+                        <div class="m-1">
+                            <a href="{% url 'apps.polls_management:poll_create' %}" 
+                                class="btn btn-success" 
+                                role="button">Crea scelta</a>
+                        </div>
+                        <div class="m-1">
+                            <!-- Pagination controls (select how many items per page) -->
+                            {% include "polls_management/components/pagination/pagination_control.html" with page=page per_page=per_page %}
+                            <!-- END: Pagination controls (select how many items per page) -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
 
             <!-- New poll botton mobile -->
             <div class="d-md-none position-fixed bottom-0 start-0 end-0 p-2" style="z-index:1000;"> 
@@ -52,19 +72,6 @@
             </div>
 
             <div class="mt-5">
-
-                <div class="d-sm-flex d-block justify-content-end align-middle">
-                    <!-- Pagination controls (select how many items per page) -->
-                    <div class="d-grid gap-2 d-sm-block m-1">
-                        {% include "polls_management/components/pagination/pagination_control.html" with page=page per_page=per_page %}
-                    </div><!-- END: Pagination controls (select how many items per page) -->
-                    <div class="d-none gap-2 d-sm-block m-1">
-                        <a href="{% url 'apps.polls_management:poll_create' %}" 
-                            class="btn btn-success" 
-                            role="button">Crea scelta</a>
-                    </div>
-                </div>
-
                 <!-- List header -->
                 <div class="row fw-light text-primary pt-2 pb-2 d-none d-md-flex text-center mt-5">
                     <div class="col-4">
@@ -96,14 +103,17 @@
                     {% endfor %}
                 </div>
                 <!-- END: Proper list -->
-
-                <!-- Pagination nav -->
-                <div class="row justify-content-around">
-                    <div class="col-auto">
-                        {% include "polls_management/components/pagination/pagination_nav.html" with page=page per_page=per_page %}
-                    </div>
-                </div> <!-- END: Pagination nav -->
             </div>
+
+
+            <!-- Pagination nav -->
+            <div class="row justify-content-around">
+                <div class="col-auto">
+                    {% include "polls_management/components/pagination/pagination_nav.html" with page=page per_page=per_page %}
+                </div>
+            </div> <!-- END: Pagination nav -->
+
+
         {% endblock content %}
     </div>
 </div>
