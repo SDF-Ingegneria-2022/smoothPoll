@@ -115,6 +115,7 @@ def edit_poll_init_view(request: HttpRequest, poll_id: int):
         "open_datetime": poll.open_datetime,
         "close_datetime": poll.close_datetime,  
         "autor": poll.author,
+        "votable_mj": poll.votable_mj, 
     }, instance=poll)
 
     # init poll options with current ones
