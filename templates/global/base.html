@@ -17,6 +17,11 @@
 
     {# basic style #}
     <style>
+        /* fix to 100vh != 100% of viewport */
+        html, body {
+            height: -webkit-fill-available;
+        }
+
         span.logo img {
             max-width: 380px;
             width: 100%;
