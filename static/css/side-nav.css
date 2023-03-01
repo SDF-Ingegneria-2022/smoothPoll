@@ -18,6 +18,7 @@
 */
 #sidebar-wrapper {
     height: 100vh;
+    height: -webkit-fill-available;
     margin-left: -18em; 
     width: 18em;
     z-index: 9999;
