@@ -14,6 +14,10 @@ class PollForm(ModelForm):
         if self.data.get('poll_type') is None:
             self.data['poll_type'] = PollModel.PollType.SINGLE_OPTION
 
+        # Make votable_mj true by default
+        self.fields['votable_mj'].initial = True
+
+
     class Meta:
         model = PollModel
         fields=['name','question', 'poll_type', 'open_datetime', 'close_datetime', 'predefined', 'votable_mj']
@@ -23,7 +27,8 @@ class PollForm(ModelForm):
             "poll_type": _("Tipologia"), 
             "open_datetime": _("Data Apertura"), 
             "close_datetime": _("Data Chiusura"),
-            "author": _("Nome dell'autore"),
+            "author": _("Nome dell'autore"), 
+            "votable_mj": _("Rendi votabile ANCHE con il metodo del Giudizio Maggioritario")
         }
         help_texts={
             "name": _("Un nome sintetico che descrive la scelta"), 
@@ -32,6 +37,7 @@ class PollForm(ModelForm):
             "open_datetime": _("La data dalla quale sarà possibile votare la scelta"), 
             "close_datetime": _("La data dalla quale non sarà più possibile votare la scelta"), 
             "author": _("Il nome dell'autore che ha creato la scelta"),
+            "votable_mj": _("(abilita questa opzione se vuoi che un sondaggio a OPZIONE SINGOLA sia votabile ANCHE con il metodo del Giudizio Maggioritario)")
         }
         error_messages = {
             'name': {
@@ -66,11 +72,8 @@ class PollForm(ModelForm):
                     'type':'datetime-local',
                     # 'required':True
                 }
-                
-               
             ),
             'predefined': HiddenInput(),
-            'votable_mj': HiddenInput(),
         }
 
     def get_min_options(self) -> int: 
