@@ -177,5 +177,6 @@ def majority_judgment_results_view(request: HttpRequest, poll_id: int):
             'choices': False,
             'status': True,
             'datetimes': True,
+            'type': True,
         }
         })
