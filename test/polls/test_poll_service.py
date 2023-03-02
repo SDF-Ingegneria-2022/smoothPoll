@@ -5,7 +5,7 @@ from assertpy import assert_that
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
-from apps.polls_management.classes.poll_form import PollForm
+from apps.polls_management.classes.poll_form_utils.poll_form import PollForm
 from apps.polls_management.exceptions.no_user_polls_exception import NoUserPollsException
 from apps.polls_management.exceptions.no_votable_or_closed_poll_exception import NoVotableOrClosedPollException
 from apps.polls_management.exceptions.paginator_page_size_exception import PaginatorPageSizeException
