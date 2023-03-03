@@ -1,4 +1,3 @@
-import math
 from typing import List
 from django.core.exceptions import ObjectDoesNotExist
 from apps.polls_management.classes.majority_poll_result_data import MajorityPollResultData
