@@ -1,10 +1,10 @@
-from apps.polls_management.classes.vote_builder import VoteBuilder
+from apps.votes_results.classes.vote_builder import VoteBuilder
 from apps.polls_management.models.poll_model import PollModel
 from apps.polls_management.models.vote_model import VoteModel
 from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
 from apps.votes_results.exceptions.vote_does_not_exixt_exception import VoteDoesNotExistException
 from django.core.exceptions import ObjectDoesNotExist
-from apps.polls_management.classes.poll_result import PollResult
+from apps.votes_results.classes.poll_result import PollResult
 
 class SingleOptionVoteService: 
     """

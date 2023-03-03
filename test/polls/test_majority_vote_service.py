@@ -1,7 +1,7 @@
 from typing import List
 import pytest
 from assertpy import assert_that
-from apps.polls_management.classes.majority_poll_result_data import MajorityPollResultData
+from apps.votes_results.classes.majority_poll_result_data import MajorityPollResultData
 from apps.votes_results.exceptions.majority_number_of_ratings_not_valid import MajorityNumberOfRatingsNotValid
 from apps.votes_results.exceptions.poll_option_rating_unvalid_exception import PollOptionRatingUnvalidException
 from apps.polls_management.models.majority_judgment_model import MajorityJudgmentModel

@@ -1,5 +1,5 @@
-from apps.polls_management.classes.poll_result import PollResult
-from apps.polls_management.classes.poll_result import PollResult
+from apps.votes_results.classes.poll_result import PollResult
+from apps.votes_results.classes.poll_result import PollResult
 from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
 from apps.votes_results.exceptions.vote_does_not_exixt_exception import VoteDoesNotExistException
 from apps.polls_management.models.poll_model import PollModel

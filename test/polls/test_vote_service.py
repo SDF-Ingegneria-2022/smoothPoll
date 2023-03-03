@@ -1,4 +1,4 @@
-from apps.polls_management.classes.poll_result import PollResult, PollResultVoice
+from apps.votes_results.classes.poll_result import PollResult, PollResultVoice
 from apps.polls_management.models.vote_model import VoteModel
 import pytest
 from assertpy import assert_that

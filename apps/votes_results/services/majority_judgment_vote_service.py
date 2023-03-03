@@ -1,6 +1,6 @@
 from typing import List
 from django.core.exceptions import ObjectDoesNotExist
-from apps.polls_management.classes.majority_poll_result_data import MajorityPollResultData
+from apps.votes_results.classes.majority_poll_result_data import MajorityPollResultData
 from apps.votes_results.exceptions.majority_number_of_ratings_not_valid import MajorityNumberOfRatingsNotValid
 from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
 from apps.votes_results.exceptions.poll_option_rating_unvalid_exception import PollOptionRatingUnvalidException

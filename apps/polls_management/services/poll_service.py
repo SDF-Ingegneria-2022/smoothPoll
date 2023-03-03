@@ -35,7 +35,6 @@ class PollService:
         new_poll.save()
         
         for option in options:
-            # new_option: PollOptionModel = PollOptionModel(key=option["key"],value=option["value"], poll_fk_id=new_poll.id)
             new_option: PollOptionModel = PollOptionModel(value=option, poll_fk_id=new_poll.id)
             new_option.save()
         
@@ -71,9 +70,6 @@ class PollService:
         """
         if page_size < 1:
             raise PaginatorPageSizeException(f"Page size: {page_size} is not valid: It must be at least 1")
-
-        # polls: List[PollModel] = PollModel.objects.get_queryset() \
-        #     .filter(poll_type='single_option').order_by('id')
 
         polls: List[PollModel] = PollModel.objects.all().order_by('id')
         
@@ -152,9 +148,8 @@ class PollService:
             List: list of user polls.
         """
 
-        user_polls_list: List[PollModel] = list(PollModel.objects.filter(author=user).order_by('-id'))
         # return a list of user polls ordered by the last poll created
-
+        user_polls_list: List[PollModel] = list(PollModel.objects.filter(author=user).order_by('-id'))
         return user_polls_list
 
     @staticmethod
