@@ -83,7 +83,7 @@ class CreatePollHtmxView(View):
             # prepare message error to explain there are too few options
             request.session[SESSION_ERROR] = f"Attenzione, una scelta di tipo {form.get_type_verbose_name()} "
             
-            if form.data.get("votable_mj", False): 
+            if form.data.get("votable_mj", False) and form.data.get("poll_type")!=PollModel.PollType.MAJORITY_JUDJMENT: 
                 # handle polls votable also w MJ
                 request.session[SESSION_ERROR] += "(votabile anche con il metodo del Giudizio Maggioritario) "
             
