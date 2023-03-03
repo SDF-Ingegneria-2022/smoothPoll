@@ -23,7 +23,7 @@ from allauth.account.decorators import login_required
 @login_required
 def all_user_polls(request: HttpRequest):
     """
-    Render page with all polls.
+    Render page with all polls created by a the current logged user.
     """
     try:
         page_information: str = request.GET.get('page')

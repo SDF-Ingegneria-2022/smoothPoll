@@ -2,7 +2,7 @@ from typing import List
 from apps.polls_management.exceptions.poll_not_valid_creation_exception import *
 from apps.polls_management.models.poll_model import PollModel
 from apps.polls_management.models.poll_option_model import PollOptionModel
-from apps.polls_management.classes.poll_form import PollForm
+from apps.polls_management.classes.poll_form_utils.poll_form import PollForm
 
 
 class PollCreateService:
@@ -41,8 +41,9 @@ class PollCreateService:
 
         # ensuring is passed at least a certain number of options
         if len(valid_options) < poll_form.get_min_options():
-            raise TooFewOptionsException(f"{poll_form.data.get('poll_type')} poll needs at least " +
-            f"{poll_form.get_min_options()} options, {len(valid_options)} has given")
+            raise TooFewOptionsException(f"{poll_form.data.get('poll_type')} poll " +
+                f"(votable_mj={poll_form.data.get('votable_mj')}) needs at least " +
+                f"{poll_form.get_min_options()} options, {len(valid_options)} has given")
 
         # all polls can have at most 10 options
         if len(valid_options) > 10:

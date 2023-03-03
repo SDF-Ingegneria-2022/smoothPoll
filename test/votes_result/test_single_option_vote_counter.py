@@ -1,7 +1,7 @@
 import pytest
 from typing import List
 from assertpy import assert_that
-from apps.polls_management.classes.poll_form import PollForm
+from apps.polls_management.classes.poll_form_utils.poll_form import PollForm
 from apps.polls_management.models.poll_option_model import PollOptionModel
 from apps.polls_management.services.poll_create_service import PollCreateService
 from apps.polls_management.models.poll_model import PollModel

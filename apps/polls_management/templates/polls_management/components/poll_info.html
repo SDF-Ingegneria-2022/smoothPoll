@@ -41,13 +41,18 @@
 {%endif%}
 
 <!-- Poll type -->
-{%if poll_info_to_view is None  or poll_info_to_view.choices == True%}
+{%if poll_info_to_view is None  or poll_info_to_view.type == True%}
 <div class="row mt-2 ms-1 me-1 border-0 rounded bg-light">
     <div class="col-md-auto pe-0">
         <div class="fs-4">Metodo di voto:</div>
     </div>
     <div class="col">
-        <div class="fw-light fs-5 mt-1">{{ poll.get_type_verbose_name }}</div>
+        <div class="fw-light fs-5 mt-1">
+            {{ poll.get_type_verbose_name }}
+            {% if poll.poll_type == "single_option" and poll.votable_mj %}
+                <span>(votabile anche con Giudizio Maggioritario)</span>
+            {% endif %}
+        </div>
     </div>
 </div>
 {%endif%}

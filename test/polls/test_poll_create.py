@@ -1,4 +1,4 @@
-from apps.polls_management.classes.poll_form import PollForm
+from apps.polls_management.classes.poll_form_utils.poll_form import PollForm
 from apps.polls_management.exceptions.poll_is_open_exception import PollIsOpenException
 from apps.polls_management.models.poll_model import PollModel
 from apps.polls_management.models.poll_option_model import PollOptionModel
@@ -36,11 +36,16 @@ class TestPollCreate:
     def make_forms(self):
         """Create needed forms"""
 
-        form1 = PollForm({"name": self.name1, "question": self.question1})
+        form1 = PollForm({
+            "name": self.name1, 
+            "question": self.question1, 
+            "votable_mj": False 
+        })
         form2 = PollForm({
             "name": self.name2, 
             "question": self.question2, 
-            "poll_type": self.type2
+            "poll_type": self.type2, 
+            "votable_mj": False 
             })
 
         return {"form1": form1, "form2": form2,}
@@ -252,6 +257,25 @@ class TestPollCreate:
             .raises(TooFewOptionsException) \
             .when_called_with(
                 poll_form=make_forms["form2"], 
+                # pass just 2 options instead of 3
+                options=self.options1,
+                user=create_user)
+        
+    @pytest.mark.django_db
+    def test_create_majority_judjment_few_options_2(self, make_forms,create_user):
+        """A poll votable ALSO witn majority judment 
+        should have at least 3 options. We try passing 2 and 
+        we expect an exception"""
+
+        # prepare a poll votable also w MJ but with 
+        # only two options
+        form = make_forms["form1"]
+        form.data["votable_mj"] = True
+
+        assert_that(PollCreateService.create_or_edit_poll) \
+            .raises(TooFewOptionsException) \
+            .when_called_with(
+                poll_form=make_forms["form1"], 
                 # pass just 2 options instead of 3
                 options=self.options1,
                 user=create_user)
