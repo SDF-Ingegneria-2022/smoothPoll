@@ -1,12 +1,10 @@
-from apps.polls_management.classes.poll_form_utils.poll_form import PollForm
-from apps.polls_management.classes.poll_form_utils.poll_form_session import SESSION_ERROR, SESSION_FORMDATA, SESSION_IS_EDIT, SESSION_OPTIONS, SESSION_POLL_ID, clean_session, get_poll_form
+from apps.polls_management.classes.poll_form_utils.poll_form_session import SESSION_ERROR, SESSION_IS_EDIT, SESSION_OPTIONS, SESSION_POLL_ID, clean_session, get_poll_form
 from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
 from apps.polls_management.models.poll_model import PollModel
 from apps.polls_management.services.poll_create_service import PollCreateService
 from apps.polls_management.exceptions.poll_not_valid_creation_exception import *
 from apps.polls_management.services.poll_service import PollService
-from django.views.decorators.http import require_http_methods
-from django.http import HttpRequest, HttpResponseRedirect, HttpResponse, Http404
+from django.http import HttpRequest, HttpResponseRedirect, Http404
 from django.shortcuts import render
 from django.urls import reverse
 from django.views import View

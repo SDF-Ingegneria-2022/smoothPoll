@@ -6,8 +6,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from apps.polls_management.classes.poll_form_utils.poll_form import PollForm
-from apps.polls_management.exceptions.no_user_polls_exception import NoUserPollsException
-from apps.polls_management.exceptions.no_votable_or_closed_poll_exception import NoVotableOrClosedPollException
 from apps.polls_management.exceptions.paginator_page_size_exception import PaginatorPageSizeException
 from apps.polls_management.exceptions.poll_cannot_be_opened_exception import PollCannotBeOpenedException
 from apps.polls_management.exceptions.poll_is_open_exception import PollIsOpenException

@@ -1,20 +1,12 @@
 from typing import List
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator
-from apps.polls_management.classes.majority_poll_result_data import MajorityPollResultData
-from apps.polls_management.classes.poll_result import PollResult
-from apps.polls_management.exceptions.no_user_polls_exception import NoUserPollsException
-from apps.polls_management.exceptions.no_votable_or_closed_poll_exception import NoVotableOrClosedPollException
 from apps.polls_management.exceptions.paginator_page_size_exception import PaginatorPageSizeException
 from apps.polls_management.exceptions.poll_cannot_be_opened_exception import PollCannotBeOpenedException
-from apps.polls_management.exceptions.poll_has_been_voted_exception import PollHasBeenVotedException
 from apps.polls_management.exceptions.poll_is_open_exception import PollIsOpenException
 from apps.polls_management.exceptions.poll_not_valid_creation_exception import PollNotValidCreationException
 from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
-from apps.polls_management.exceptions.poll_not_yet_voted_exception import PollNotYetVodedException
 from apps.polls_management.models.poll_option_model import PollOptionModel
-from apps.votes_results.services.majority_judgment_vote_service import MajorityJudjmentVoteService
-from apps.votes_results.services.single_option_vote_service import SingleOptionVoteService
 from apps.polls_management.models.poll_model import PollModel
 from django.utils import timezone
 from django.contrib.auth.models import User
@@ -43,7 +35,6 @@ class PollService:
         new_poll.save()
         
         for option in options:
-            # new_option: PollOptionModel = PollOptionModel(key=option["key"],value=option["value"], poll_fk_id=new_poll.id)
             new_option: PollOptionModel = PollOptionModel(value=option, poll_fk_id=new_poll.id)
             new_option.save()
         
@@ -79,9 +70,6 @@ class PollService:
         """
         if page_size < 1:
             raise PaginatorPageSizeException(f"Page size: {page_size} is not valid: It must be at least 1")
-
-        # polls: List[PollModel] = PollModel.objects.get_queryset() \
-        #     .filter(poll_type='single_option').order_by('id')
 
         polls: List[PollModel] = PollModel.objects.all().order_by('id')
         
@@ -160,9 +148,8 @@ class PollService:
             List: list of user polls.
         """
 
-        user_polls_list: List[PollModel] = list(PollModel.objects.filter(author=user).order_by('-id'))
         # return a list of user polls ordered by the last poll created
-
+        user_polls_list: List[PollModel] = list(PollModel.objects.filter(author=user).order_by('-id'))
         return user_polls_list
 
     @staticmethod
