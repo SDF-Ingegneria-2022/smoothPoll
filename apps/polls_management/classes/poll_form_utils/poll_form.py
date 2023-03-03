@@ -79,8 +79,10 @@ class PollForm(ModelForm):
     def get_min_options(self) -> int: 
         """Get poll min options (according to poll_type)"""
 
-        if self.data.get("poll_type") == PollModel.PollType.MAJORITY_JUDJMENT:
+        if self.data.get("poll_type") == PollModel.PollType.MAJORITY_JUDJMENT or \
+            self.data.get("votable_mj"):
             return 3
+        
         return 2
 
     def get_type_verbose_name(self) -> str:

@@ -80,7 +80,17 @@ class CreatePollHtmxView(View):
             request.session[SESSION_ERROR] = "Attenzione, inserisci tutti i dati richiesti prima di procedere"
             return HttpResponseRedirect(reverse('apps.polls_management:poll_form'))
         except TooFewOptionsException:
-            request.session[SESSION_ERROR] = f"Attenzione, una scelta di tipo {form.get_type_verbose_name()} ha bisogno almeno {form.get_min_options()} opzioni"
+            # prepare message error to explain there are too few options
+            request.session[SESSION_ERROR] = f"Attenzione, una scelta di tipo {form.get_type_verbose_name()} "
+            
+            if form.data.get("votable_mj", False) and form.data.get("poll_type")!=PollModel.PollType.MAJORITY_JUDJMENT: 
+                # handle polls votable also w MJ
+                request.session[SESSION_ERROR] += "(votabile anche con il metodo del Giudizio Maggioritario) "
+            
+            request.session[SESSION_ERROR] += f"richiede almeno {form.get_min_options()} opzioni. "
+            request.session[SESSION_ERROR] += f"Se non vuoi fornire {form.get_min_options()} opzioni, " + \
+                "rendi la scelta ad Opzione Singola e disattiva l'opzione di voto ANCHE con Giudizio Maggioritario."
+            
             return HttpResponseRedirect(reverse('apps.polls_management:poll_form'))
         except TooManyOptionsException:
             request.session[SESSION_ERROR] = "Attenzione, una scelta può avere al massimo 10 opzioni"
