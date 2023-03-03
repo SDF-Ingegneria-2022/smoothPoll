@@ -1,8 +1,6 @@
 from django.shortcuts import render
 from django.http import Http404, HttpRequest, HttpResponseRedirect
 from django.urls import reverse
-from apps.polls_management.classes.poll_form_utils.poll_form import PollForm
-from apps.polls_management.exceptions.poll_cannot_be_opened_exception import PollCannotBeOpenedException
 from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
 from apps.polls_management.exceptions.poll_is_open_exception import PollIsOpenException
 from apps.polls_management.models.poll_model import PollModel

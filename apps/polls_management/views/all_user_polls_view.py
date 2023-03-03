@@ -1,23 +1,9 @@
 from typing import List
-from django.http import Http404  
-from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest, HttpResponseServerError, HttpResponseRedirect
+from django.http import HttpRequest
 from django.shortcuts import render
-from django.urls import reverse
 from django.core.paginator import Paginator
-from apps.polls_management.classes.majority_poll_result_data import MajorityPollResultData
-from apps.polls_management.classes.poll_result import PollResult, PollResultVoice
-from apps.polls_management.classes.poll_result import PollResult
-from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
-from apps.polls_management.exceptions.poll_is_open_exception import PollIsOpenException
-from apps.polls_management.exceptions.poll_option_rating_unvalid_exception import PollOptionRatingUnvalidException
-from apps.polls_management.exceptions.vote_does_not_exixt_exception import VoteDoesNotExistException
-from apps.polls_management.models.majority_vote_model import MajorityVoteModel
 from apps.polls_management.models.poll_model import PollModel
-from apps.polls_management.models.poll_option_model import PollOptionModel
-from apps.votes_results.services.majority_judgment_vote_service import MajorityJudjmentVoteService
 from apps.polls_management.services.poll_service import PollService
-from apps.polls_management.exceptions.poll_option_unvalid_exception import PollOptionUnvalidException
-from apps.votes_results.services.single_option_vote_service import SingleOptionVoteService
 from allauth.account.decorators import login_required
 
 @login_required
