@@ -5,9 +5,9 @@ from assertpy import assert_that
 from apps.polls_management.models.poll_model import PollModel
 from apps.polls_management.models.poll_option_model import PollOptionModel
 from apps.votes_results.services.single_option_vote_service import SingleOptionVoteService
-from apps.polls_management.exceptions.poll_option_unvalid_exception import PollOptionUnvalidException
+from apps.votes_results.exceptions.poll_option_unvalid_exception import PollOptionUnvalidException
 from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
-from apps.polls_management.exceptions.vote_does_not_exixt_exception import VoteDoesNotExistException
+from apps.votes_results.exceptions.vote_does_not_exixt_exception import VoteDoesNotExistException
 
 @pytest.fixture()
 def test_polls(request,django_user_model):

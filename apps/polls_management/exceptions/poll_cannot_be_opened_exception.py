@@ -1,9 +1,6 @@
-from django.core.exceptions import ObjectDoesNotExist
-
-
-class PollCannotBeOpenedException(ObjectDoesNotExist):
+class PollCannotBeOpenedException(Exception):
     """
-    A certain Poll cannot be opened
+    A certain Poll cannot be opened for voting.
     """
 
     def __init__(self, *args: object) -> None:

@@ -1,10 +1,10 @@
 from apps.polls_management.classes.poll_result import PollResult
 from apps.polls_management.classes.poll_result import PollResult
 from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
-from apps.polls_management.exceptions.vote_does_not_exixt_exception import VoteDoesNotExistException
+from apps.votes_results.exceptions.vote_does_not_exixt_exception import VoteDoesNotExistException
 from apps.polls_management.models.poll_model import PollModel
 from apps.polls_management.services.poll_service import PollService
-from apps.polls_management.exceptions.poll_option_unvalid_exception import PollOptionUnvalidException
+from apps.votes_results.exceptions.poll_option_unvalid_exception import PollOptionUnvalidException
 from apps.votes_results.classes.single_option_vote_counter import SingleOptionVoteCounter
 from apps.votes_results.services.single_option_vote_service import SingleOptionVoteService
 
