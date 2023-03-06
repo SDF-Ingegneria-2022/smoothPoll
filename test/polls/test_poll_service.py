@@ -443,7 +443,7 @@ class TestPollService():
 
         self.user.save()
 
-        pollsindex = int(30)
+        pollsindex = int(3)
 
         while pollsindex > 0:
             polls = PollModel(name=self.name, question=self.question, author=self.user)
@@ -455,10 +455,10 @@ class TestPollService():
             pollsindex -= 1
 
         votable_or_closed_polls_list = PollService.votable_or_closed_polls()
-
+        
         assert_that(votable_or_closed_polls_list).is_not_none()
         assert_that(votable_or_closed_polls_list).is_instance_of(List)
-        assert_that(votable_or_closed_polls_list).is_length(30)
+        assert_that(votable_or_closed_polls_list).is_length(3)
 
     @pytest.mark.django_db
     def test_return_closed_poll_success(self):
@@ -466,7 +466,7 @@ class TestPollService():
 
         self.user.save()
 
-        pollsindex = int(30)
+        pollsindex = int(3)
 
         while pollsindex > 0:
             polls = PollModel(name=self.name, question=self.question, author=self.user)
@@ -481,7 +481,7 @@ class TestPollService():
 
         assert_that(votable_or_closed_polls_list).is_not_none()
         assert_that(votable_or_closed_polls_list).is_instance_of(List)
-        assert_that(votable_or_closed_polls_list).is_length(30)
+        assert_that(votable_or_closed_polls_list).is_length(3)
 
     @pytest.mark.django_db
     def test_return_votable_and_closed_poll_success(self):

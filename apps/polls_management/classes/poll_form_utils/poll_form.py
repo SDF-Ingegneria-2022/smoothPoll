@@ -20,7 +20,7 @@ class PollForm(ModelForm):
 
     class Meta:
         model = PollModel
-        fields=['name','question', 'poll_type', 'open_datetime', 'close_datetime', 'predefined', 'votable_mj']
+        fields=['name','question', 'poll_type', 'open_datetime', 'close_datetime', 'predefined', 'votable_mj', 'private']
         labels={
             "name": _("Nome"), 
             "question": _("Quesito"), 
@@ -28,7 +28,8 @@ class PollForm(ModelForm):
             "open_datetime": _("Data Apertura"), 
             "close_datetime": _("Data Chiusura"),
             "author": _("Nome dell'autore"), 
-            "votable_mj": _("Rendi votabile ANCHE con il metodo del Giudizio Maggioritario")
+            "votable_mj": _("Rendi votabile ANCHE con il metodo del Giudizio Maggioritario"),
+            "private": _("Scelta privata")
         }
         help_texts={
             "name": _("Un nome sintetico che descrive la scelta"), 
@@ -37,7 +38,7 @@ class PollForm(ModelForm):
             "open_datetime": _("La data dalla quale sarà possibile votare la scelta"), 
             "close_datetime": _("La data dalla quale non sarà più possibile votare la scelta"), 
             "author": _("Il nome dell'autore che ha creato la scelta"),
-            "votable_mj": _("(abilita questa opzione se vuoi che un sondaggio a OPZIONE SINGOLA sia votabile ANCHE con il metodo del Giudizio Maggioritario)")
+            "votable_mj": _("(abilita questa opzione se vuoi che un sondaggio a OPZIONE SINGOLA sia votabile ANCHE con il metodo del Giudizio Maggioritario)"),
         }
         error_messages = {
             'name': {
@@ -111,13 +112,3 @@ class PollForm(ModelForm):
                     'Inserisci una data di chiusura successiva a quella di apertura'])
         
         return self.cleaned_data
-
-# class PollOptionForm(ModelForm):
-#     """(Not used) form to input option.
-#     TODO: study how to use it properly """
-#     class Meta:
-#         model = PollOptionModel
-#         fields=['value']
-#         labels={
-#             "value": "Testo opzione"
-#         }

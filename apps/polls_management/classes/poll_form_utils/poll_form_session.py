@@ -41,6 +41,7 @@ def get_poll_form(request: HttpRequest) -> PollForm:
 
     # build a form for creation (w most updated data)
     if request.session.get(SESSION_POLL_ID) is None:
+        
         return PollForm(request.POST or request.session.get(SESSION_FORMDATA) or None)
 
     # build a form for editing an existing instance
