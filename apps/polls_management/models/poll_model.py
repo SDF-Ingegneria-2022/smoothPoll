@@ -54,6 +54,10 @@ class PollModel(models.Model):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
         default=None, blank=True, null=True,
     )
+    
+    private: models.BooleanField = models.BooleanField(
+        default=False, verbose_name=_("Scelta privata")
+    )
 
     def __str__(self):
         return str({
@@ -64,6 +68,7 @@ class PollModel(models.Model):
             'open_datetime': self.open_datetime, 
             'close_datetime': self.close_datetime,
             'predefined': self.predefined,
+            'private':  self.private,
         })
 
     def options(self) -> List[PollOptionModel]:
