@@ -28,7 +28,6 @@ class PollCreateService:
         Returns:
             The initialized and saved PollModel object
         """
-
         # validate form
         if not poll_form.is_valid():
             raise PollMainDataNotValidException(f"Some data of passed poll_form is not valid. See errors:\n{poll_form.errors}")

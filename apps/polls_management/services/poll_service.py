@@ -10,7 +10,7 @@ from apps.polls_management.models.poll_option_model import PollOptionModel
 from apps.polls_management.models.poll_model import PollModel
 from django.utils import timezone
 from django.contrib.auth.models import User
-
+from django.db.models import Q
 class PollService:
     """Class to handle all poll related operations"""
     
@@ -154,22 +154,16 @@ class PollService:
 
     @staticmethod
     def votable_or_closed_polls() -> List[PollModel]:
-        """Method used to return a list of votable or closed polls.
+        """Returns a list of votable or closed polls. The polls retuned are public by default.
         
         Returns: 
             List: list of votable/closed polls.
         """
 
-        votable_polls_list_ids: List[int] = [votable_closed.id for votable_closed in PollModel.objects.all() 
-        if votable_closed.is_open() and not votable_closed.is_closed()]
-
-        only_closed_polls_list_ids: List [int] = [closed.id for closed in PollModel.objects.all() 
-        if closed.is_closed()]
-
-        votable_polls_list: List[PollModel] = list(PollModel.objects.filter(id__in=votable_polls_list_ids).order_by('close_datetime'))
-        only_closed_polls_list: List[PollModel] = list(PollModel.objects.filter(id__in=only_closed_polls_list_ids).order_by('-close_datetime'))
+        all_public_polls_list = PollModel.objects.filter(private=False)
+        votable_polls_list = all_public_polls_list.filter(Q(close_datetime__gte=timezone.now()) & Q(open_datetime__lte=timezone.now())).order_by('close_datetime')
+        closed_polls_list = all_public_polls_list.filter(close_datetime__lte=timezone.now()).order_by('-close_datetime')
         
-        for only_closed in only_closed_polls_list:
-            votable_polls_list.append(only_closed)
-
-        return votable_polls_list
+        #return votable_polls_list
+        
+        return list(votable_polls_list) + list(closed_polls_list)
