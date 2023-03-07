@@ -71,7 +71,7 @@ class PollModel(models.Model):
     
     short_id: models.CharField = models.CharField(
         max_length=6, verbose_name=_("ID Corto"), 
-        default=None, blank=True, null=True
+        default=None, blank=True, null=True, unique=True
     )
 
     def __str__(self):
