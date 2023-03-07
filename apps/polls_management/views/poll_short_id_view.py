@@ -15,6 +15,6 @@ class PollShortIdView(View):
             raise Http404()
         
         return render(request, 
-                      "polls_management/poll_details_page.html",
+                      POLL_DETAILS_PAGE_TEMPLATE_PATH,
                       {'poll': poll}
                       )
