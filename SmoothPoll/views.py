@@ -1,7 +1,10 @@
 from django.http import Http404
 from django.shortcuts import render
+from django.urls import reverse
 from apps.polls_management.models.poll_model import PollModel
 import configparser
+
+from apps.polls_management.views.poll_short_id_view import PollShortIdView
 
 def home(request):
     """
@@ -33,3 +36,10 @@ def error_404_view_redirect(request):
     Page 404 handler view redirect. It is called when a page is not found.
     """
     raise Http404()
+
+def poll_details_page(request, poll_short_id):
+    """
+    Page to show the details of a poll.
+    """
+    return PollShortIdView.as_view()(request, poll_short_id)
+    
