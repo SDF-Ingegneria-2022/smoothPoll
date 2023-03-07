@@ -5,7 +5,7 @@ from apps.polls_management.models.poll_model import PollModel, NAME, \
                                                     PRIVATE, SHORT_ID
 from django.forms import ModelForm, DateTimeInput, HiddenInput
 from django.utils.translation import gettext as _
-
+from apps.polls_management.classes.poll_form_utils.short_id_util import ShortIdUtil
 
 class PollForm(ModelForm):
     """Tool to create a new Poll"""
@@ -18,7 +18,7 @@ class PollForm(ModelForm):
 
         # Make votable_mj true by default
         self.fields[VOTABLE_MJ].initial = True
-        self.fields[SHORT_ID].initial = "abcdef"
+        self.fields[SHORT_ID].initial = ShortIdUtil.generate()
 
 
     class Meta:

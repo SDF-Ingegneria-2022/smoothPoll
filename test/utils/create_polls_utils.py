@@ -12,7 +12,6 @@ def create_single_option_polls(
                 name: str = "Form name", 
                 question: str = "Form question?",
                 votable_mj: bool = True,
-                short_id: str = ''.join(random.choice(string.ascii_lowercase) for i in range(6))
                 ) -> List[PollModel]:
     """Create single option polls. Due to the ownrship of the poll, the 'django_user_model' must be injected before.
 
@@ -22,7 +21,6 @@ def create_single_option_polls(
         name (str, optional): Poll name. Defaults to "Form name".
         question (str, optional): Poll question. Defaults to "Form question?".
         votable_mj (bool, optional): If true the single option poll can be voted also with the mj criteria. Defaults to True.
-        short_id (str, optional): Id that identifies the poll.It must be unique.  Defaults a random string of 6 lowercase letters.
 
     Returns:
         PollModel: Poll created.
@@ -37,7 +35,7 @@ def create_single_option_polls(
                                                 "question": question + f" {str(index)}", 
                                                 "poll_type": "single_option", 
                                                 "votable_mj": votable_mj, 
-                                                "short_id": short_id
+                                                "short_id": ''.join(random.choice(string.ascii_lowercase) for i in range(6))
                                                 })
         
         single_option_options: List[str] = ["Option 1", "Option 2", "Option 3"]
