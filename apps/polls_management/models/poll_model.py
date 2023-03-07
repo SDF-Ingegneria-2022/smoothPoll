@@ -11,7 +11,17 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 
-
+# Poll model fields
+NAME = 'name'
+QUESTION = 'question'
+POLL_TYPE = 'poll_type'
+OPEN_DATETIME = 'open_datetime'
+CLOSE_DATETIME = 'close_datetime'
+PREDEFINITED = 'predefined'
+VOTABLE_MJ = 'votable_mj'
+AUTHOR = 'author'
+PRIVATE = 'private'
+SHORT_ID = 'short_id'
 class PollModel(models.Model): 
 
     class PollType(models.TextChoices):
