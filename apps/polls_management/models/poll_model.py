@@ -58,6 +58,11 @@ class PollModel(models.Model):
     private: models.BooleanField = models.BooleanField(
         default=False, verbose_name=_("Scelta privata")
     )
+    
+    short_id: models.CharField = models.CharField(
+        max_length=6, verbose_name=_("ID Corto"), 
+        default=None, blank=True, null=True
+    )
 
     def __str__(self):
         return str({
@@ -69,6 +74,7 @@ class PollModel(models.Model):
             'close_datetime': self.close_datetime,
             'predefined': self.predefined,
             'private':  self.private,
+            'short_id': self.short_id
         })
 
     def options(self) -> List[PollOptionModel]:
