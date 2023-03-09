@@ -22,7 +22,14 @@
         </div>
     </div>
 
-    {% include 'polls_management/components/poll_info.html' with poll=poll %}
+    <div class="mb-3">
+        {% include 'polls_management/components/poll_info.html' with poll=poll %}
+    </div>
+
+    <!-- Poll copy link -->
+    <div class="mb-5 ms-1">
+        {% include 'polls_management/components/poll_copy_link.html' with poll=poll %}
+    </div>
 
     <div class="row mt-2 ms-1 mb-1 me-1 border-0 rounded bg-warning ">
         <div class="col-md-auto pe-0">
@@ -47,7 +54,7 @@
                 <!-- Go back to all polls link -->
                 <a name="" id="" role="button"
                     class="btn btn-primary m-2" 
-                    href="{% url 'apps.polls_management:all_user_polls' %}?page=1&per_page=10" >
+                    href="{% url 'apps.votes_results:votable_polls' %}?page=1&per_page=10" >
                     Ritorna alla lista di tutte le scelte
                 </a> 
             </div>
