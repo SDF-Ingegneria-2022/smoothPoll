@@ -73,7 +73,7 @@ class PollForm(ModelForm):
             },
             CLOSE_DATETIME: {
                 'required': _("Inserisci una data di chiusura per la scelta"), 
-            }
+            }, 
         }
         widgets = {
             OPEN_DATETIME: DateTimeInput(
@@ -116,6 +116,8 @@ class PollForm(ModelForm):
             ).get_type_verbose_name()
 
     def clean(self):
+
+        # checks on open and close datetime
         open_datetime = self.cleaned_data.get(OPEN_DATETIME, None)
         close_datetime = self.cleaned_data.get(CLOSE_DATETIME, None)
 
@@ -129,5 +131,15 @@ class PollForm(ModelForm):
             if open_datetime > close_datetime:
                 self._errors[CLOSE_DATETIME] = self.error_class([
                     'Inserisci una data di chiusura successiva a quella di apertura'])
+                
+        # checks on short id (used in URL)
+        short_id = ShortIdUtil(self.cleaned_data.get(SHORT_ID, ""), poll=self.instance)
+
+        if not short_id.validate_length():
+            self._errors[SHORT_ID] = self.error_class(['Il codice deve avere tra i 6 e i 60 caratteri'])
+        elif not short_id.validate_characters():
+            self._errors[SHORT_ID] = self.error_class(['Il codice deve essere formato solo da lettere e numeri'])
+        elif not short_id.validate_uniqness():
+            self._errors[SHORT_ID] = self.error_class(['Codice già in uso, prova un altro'])
         
         return self.cleaned_data
