@@ -13,6 +13,21 @@
             </h1>
         </div>
     </div>
+    <div class="row mt-2 mb-2 border-0 rounded bg-warning ">
+        <div class="col-md-auto pe-0">
+            <div class="fs-4">La scelta apre tra:</div>
+        </div>
+        <div class="col">
+            <div class="fw-light fs-5 mt-1 ">
+               
+                {% if poll.open_datetime == None%}
+                    Nessuna data di apertura impostata.
+                {% else %} 
+                    {{poll.open_datetime|timeuntil }}
+                {%endif%}
+             </div>      
+        </div>
+    </div>
     <div class="row bg-primary">
         <div class="col ">
             <div class="fs-3 fw-light text-light">
@@ -31,21 +46,7 @@
         {% include 'polls_management/components/poll_copy_link.html' with poll=poll %}
     </div>
 
-    <div class="row mt-2 ms-1 mb-1 me-1 border-0 rounded bg-warning ">
-        <div class="col-md-auto pe-0">
-            <div class="fs-4">La scelta apre tra:</div>
-        </div>
-        <div class="col">
-            <div class="fw-light fs-5 mt-1 ">
-               
-                {% if poll.open_datetime == None%}
-                    Nessuna data di apertura impostata.
-                {% else %} 
-                    {{poll.open_datetime|timeuntil }}
-                {%endif%}
-             </div>      
-        </div>
-    </div>
+    
 
     <div class="row mt-4 mb-5">
         <div class="col">
