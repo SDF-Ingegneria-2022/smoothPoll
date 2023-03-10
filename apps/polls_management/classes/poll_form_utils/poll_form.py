@@ -18,8 +18,11 @@ class PollForm(ModelForm):
 
         # Make votable_mj true by default
         self.fields[VOTABLE_MJ].initial = True
-        self.fields[SHORT_ID].initial = ShortIdUtil.generate()
 
+        # if not already there, generate a short ID
+        self.fields[SHORT_ID].initial = ShortIdUtil.generate()
+        if self.data.get(SHORT_ID) is None:
+            self.data[SHORT_ID] = ShortIdUtil.generate()
 
     class Meta:
         model = PollModel
