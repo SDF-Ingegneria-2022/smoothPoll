@@ -9,7 +9,7 @@ urlpatterns = [
     path('', views.all_votable_polls, name='votable_polls'),
 
     # details page for poll not yet open
-    path('<int:poll_id>/dettagli/', login_required(views.SingleOptionVoteView.as_view()), name='poll_details'),
+    #path('<int:poll_id>/dettagli/', login_required(views.SingleOptionVoteView.as_view()), name='poll_details'),
 
     # generic vote and results (it will be redirect to main method)
     path('<int:poll_id>/vota/', views.generic_vote_view, name='vote'), 

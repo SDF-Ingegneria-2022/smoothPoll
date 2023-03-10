@@ -16,7 +16,10 @@ urlpatterns = [
     path('<int:poll_id>/cancella/', views.poll_delete, name='poll_delete'),
     path('<int:poll_id>/modifica/', views.edit_poll_init_view, name="poll_edit"),
     path('<int:poll_id>/apri-scelta/', views.open_poll_by_id, name="poll_open"),
-
+    
+    # details page for poll not yet open
+    path('<int:poll_id>/dettagli/', login_required(views.poll_details), name='poll_details'),
+    
     # htmx form to create and edit polls
     path('form/', login_required(views.CreatePollHtmxView.as_view()), name="poll_form"),
     path('form/annulla', views.poll_form_clean_go_back_home, name="poll_form_clean_go_back_home"), 
