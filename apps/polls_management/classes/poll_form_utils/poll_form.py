@@ -18,8 +18,11 @@ class PollForm(ModelForm):
 
         # Make votable_mj true by default
         self.fields[VOTABLE_MJ].initial = True
-        self.fields[SHORT_ID].initial = ShortIdUtil.generate()
 
+        # if not already there, generate a short ID
+        self.fields[SHORT_ID].initial = ShortIdUtil.generate()
+        if self.data.get(SHORT_ID) is None:
+            self.data[SHORT_ID] = ShortIdUtil.generate()
 
     class Meta:
         model = PollModel
@@ -42,8 +45,9 @@ class PollForm(ModelForm):
                     OPEN_DATETIME: _("Data Apertura"), 
                     CLOSE_DATETIME: _("Data Chiusura"),
                     AUTHOR: _("Nome dell'autore"), 
-                    VOTABLE_MJ: _("Rendi votabile ANCHE con il metodo del Giudizio Maggioritario"),
-                    PRIVATE: _("Scelta privata"),
+                    VOTABLE_MJ: _("Rendi votabile anche con il metodo del Giudizio Maggioritario"),
+                    PRIVATE: _("Scelta accessibile solo tramite link"), 
+                    SHORT_ID: _("Codice identificativo"), 
                 }
         
         help_texts = {
@@ -53,7 +57,9 @@ class PollForm(ModelForm):
                         OPEN_DATETIME: _("La data dalla quale sarà possibile votare la scelta"), 
                         CLOSE_DATETIME: _("La data dalla quale non sarà più possibile votare la scelta"), 
                         AUTHOR: _("Il nome dell'autore che ha creato la scelta"),
-                        VOTABLE_MJ: _("(abilita questa opzione se vuoi che un sondaggio a OPZIONE SINGOLA sia votabile ANCHE con il metodo del Giudizio Maggioritario)"),
+                        VOTABLE_MJ: _("(abilita questa opzione se vuoi che un sondaggio a Opzione Singola sia votabile anche con il metodo del Giudizio Maggioritario)"),
+                        PRIVATE: _("(se abiliti questa opzione la scelta non sarà visibile nella sezione con tutte le scelte)"),
+                        SHORT_ID: _("Codice identificativo univoco per il link"), 
                     }
         
         error_messages = {
@@ -70,7 +76,7 @@ class PollForm(ModelForm):
             },
             CLOSE_DATETIME: {
                 'required': _("Inserisci una data di chiusura per la scelta"), 
-            }
+            }, 
         }
         widgets = {
             OPEN_DATETIME: DateTimeInput(
@@ -113,6 +119,8 @@ class PollForm(ModelForm):
             ).get_type_verbose_name()
 
     def clean(self):
+
+        # checks on open and close datetime
         open_datetime = self.cleaned_data.get(OPEN_DATETIME, None)
         close_datetime = self.cleaned_data.get(CLOSE_DATETIME, None)
 
@@ -126,5 +134,15 @@ class PollForm(ModelForm):
             if open_datetime > close_datetime:
                 self._errors[CLOSE_DATETIME] = self.error_class([
                     'Inserisci una data di chiusura successiva a quella di apertura'])
+                
+        # checks on short id (used in URL)
+        short_id = ShortIdUtil(self.cleaned_data.get(SHORT_ID, ""), poll=self.instance)
+
+        if not short_id.validate_length():
+            self._errors[SHORT_ID] = self.error_class(['Il codice deve avere tra i 6 e i 60 caratteri'])
+        elif not short_id.validate_characters():
+            self._errors[SHORT_ID] = self.error_class(['Il codice deve essere formato solo da lettere e numeri'])
+        elif not short_id.validate_uniqness():
+            self._errors[SHORT_ID] = self.error_class(['Codice già in uso, prova un altro'])
         
         return self.cleaned_data

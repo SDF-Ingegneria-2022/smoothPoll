@@ -70,7 +70,7 @@ class PollModel(models.Model):
     )
     
     short_id: models.CharField = models.CharField(
-        max_length=6, verbose_name=_("ID Corto"), 
+        max_length=60, verbose_name=_("ID Corto"), 
         default=None, blank=True, null=True, unique=True
     )
 

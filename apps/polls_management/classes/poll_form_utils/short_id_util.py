@@ -1,10 +1,11 @@
-
+from django.db.models import Q
 from typing import List
-from apps.polls_management.models.poll_model import PollModel
+from apps.polls_management.models.poll_model import SHORT_ID, PollModel
 import random
 import string
 
 class ShortIdUtil:
+
     @staticmethod
     def generate() -> str:
         """Generate a short id for a poll that is unique in the db
@@ -39,3 +40,26 @@ class ShortIdUtil:
             return True
         else:
             return False
+        
+    def __init__(self, code: str, poll: PollModel=None) -> None:
+        self.code: str = code or ""
+        self.poll: PollModel = poll
+        
+    def validate_length(self) -> bool:
+        return len(self.code) >= 6 and len(self.code) <= 60
+    
+    def validate_characters(self) -> bool:
+        return self.code.isalnum()
+    
+    def validate_uniqness(self) -> bool:
+
+        query = PollModel.objects.filter(short_id=self.code)
+
+        # if I am working on an already existent poll is acceptable
+        # this code is already used for this poll
+        if not self.poll is None:
+            query = query.filter(~Q(id__in=[self.poll.id]))
+
+        return query.count() == 0
+        
+    
