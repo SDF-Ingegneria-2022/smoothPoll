@@ -1,6 +1,6 @@
 from apps.polls_management.classes.poll_form_utils.poll_form import PollForm
 from apps.polls_management.exceptions.poll_is_open_exception import PollIsOpenException
-from apps.polls_management.models.poll_model import PollModel
+from apps.polls_management.models.poll_model import SHORT_ID, PollModel
 from apps.polls_management.models.poll_option_model import PollOptionModel
 from apps.polls_management.services.poll_create_service import PollCreateService
 from apps.polls_management.exceptions.poll_not_valid_creation_exception import *
@@ -31,6 +31,9 @@ class TestPollCreate:
     """numbers from 1 to 11 as str 
     (too many for current options constrains)"""
 
+    too_short_id = "12345"
+    not_valid_id = "123456/?a="
+
     ## Fixtures
     @pytest.fixture
     def make_forms(self):
@@ -39,13 +42,13 @@ class TestPollCreate:
         form1 = PollForm({
             "name": self.name1, 
             "question": self.question1, 
-            "votable_mj": False 
+            "votable_mj": False, 
         })
         form2 = PollForm({
             "name": self.name2, 
             "question": self.question2, 
             "poll_type": self.type2, 
-            "votable_mj": False 
+            "votable_mj": False,
             })
 
         return {"form1": form1, "form2": form2,}
@@ -295,6 +298,84 @@ class TestPollCreate:
 
         assert_that(make_forms["form1"].get_type_verbose_name()).is_equal_to("Opzione Singola")
         assert_that(make_forms["form2"].get_type_verbose_name()).is_equal_to("Giudizio Maggioritario")
+
+    @pytest.mark.django_db
+    def test_create_custom_short_id(self, make_forms, create_user): 
+        """Ensure url code (short_id) can be costumized"""
+
+        custom_short_id = "abcdef123456"
+        
+        form1 = make_forms["form1"]
+        form1.data[SHORT_ID] = custom_short_id
+
+        poll = PollCreateService.create_or_edit_poll(
+            poll_form=form1, options=self.options1, user=create_user)
+
+        assert_that(poll).is_instance_of(PollModel)
+        assert_that(poll.short_id).is_equal_to(custom_short_id)
+
+    @pytest.mark.django_db
+    def test_create_too_short_short_id(self, make_forms, create_user): 
+        """Ensure url code (short_id) is long enough"""
+
+        form2 = make_forms["form2"]
+        form2.data[SHORT_ID] = self.too_short_id
+
+        assert_that(PollCreateService.create_or_edit_poll) \
+            .raises(PollMainDataNotValidException) \
+            .when_called_with(poll_form=form2, 
+                              options=self.options2, 
+                              user=create_user)
+        
+    @pytest.mark.django_db
+    def test_create_missing_short_id(self, make_forms, create_user): 
+        """Ensure url code (short_id) is given"""
+
+        form2 = make_forms["form2"]
+        form2.data[SHORT_ID] = None
+
+        assert_that(PollCreateService.create_or_edit_poll) \
+            .raises(PollMainDataNotValidException) \
+            .when_called_with(poll_form=form2, 
+                              options=self.options2, 
+                              user=create_user)
+        
+    @pytest.mark.django_db
+    def test_create_unvalid_short_id(self, make_forms, create_user): 
+        """Ensure url code (short_id) is given"""
+
+        form2 = make_forms["form2"]
+        form2.data[SHORT_ID] = self.test_create_unvalid_short_id
+
+        assert_that(PollCreateService.create_or_edit_poll) \
+            .raises(PollMainDataNotValidException) \
+            .when_called_with(poll_form=form2, 
+                              options=self.options2, 
+                              user=create_user)
+
+    @pytest.mark.django_db
+    def test_create_duplicate_short_id(self, make_forms, create_user): 
+        """Ensure system does not permit creation of
+        polls w duplicate url code (short_id)"""
+
+        form1 = make_forms["form1"]
+        form2 = make_forms["form2"]
+
+        form1.data[SHORT_ID] = form2.data[SHORT_ID] = "123456"
+
+        # first creation will be performed correctly
+        assert_that(PollCreateService.create_or_edit_poll(
+            poll_form=form1, options=self.options1, user=create_user)) \
+            .is_instance_of(PollModel)
+        
+        # second creation will raise error
+        assert_that(PollCreateService.create_or_edit_poll) \
+            .raises(PollMainDataNotValidException) \
+            .when_called_with(poll_form=form2, 
+                              options=self.options2, 
+                              user=create_user)
+        
+
 
     
 

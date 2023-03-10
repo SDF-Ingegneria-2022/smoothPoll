@@ -1,24 +1,16 @@
 from typing import List
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator
-from apps.polls_management.classes.majority_poll_result_data import MajorityPollResultData
-from apps.polls_management.classes.poll_result import PollResult
-from apps.polls_management.exceptions.no_user_polls_exception import NoUserPollsException
-from apps.polls_management.exceptions.no_votable_or_closed_poll_exception import NoVotableOrClosedPollException
 from apps.polls_management.exceptions.paginator_page_size_exception import PaginatorPageSizeException
 from apps.polls_management.exceptions.poll_cannot_be_opened_exception import PollCannotBeOpenedException
-from apps.polls_management.exceptions.poll_has_been_voted_exception import PollHasBeenVotedException
 from apps.polls_management.exceptions.poll_is_open_exception import PollIsOpenException
 from apps.polls_management.exceptions.poll_not_valid_creation_exception import PollNotValidCreationException
 from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
-from apps.polls_management.exceptions.poll_not_yet_voted_exception import PollNotYetVodedException
 from apps.polls_management.models.poll_option_model import PollOptionModel
-from apps.votes_results.services.majority_judgment_vote_service import MajorityJudjmentVoteService
-from apps.votes_results.services.single_option_vote_service import SingleOptionVoteService
 from apps.polls_management.models.poll_model import PollModel
 from django.utils import timezone
 from django.contrib.auth.models import User
-
+from django.db.models import Q
 class PollService:
     """Class to handle all poll related operations"""
     
@@ -43,7 +35,6 @@ class PollService:
         new_poll.save()
         
         for option in options:
-            # new_option: PollOptionModel = PollOptionModel(key=option["key"],value=option["value"], poll_fk_id=new_poll.id)
             new_option: PollOptionModel = PollOptionModel(value=option, poll_fk_id=new_poll.id)
             new_option.save()
         
@@ -79,9 +70,6 @@ class PollService:
         """
         if page_size < 1:
             raise PaginatorPageSizeException(f"Page size: {page_size} is not valid: It must be at least 1")
-
-        # polls: List[PollModel] = PollModel.objects.get_queryset() \
-        #     .filter(poll_type='single_option').order_by('id')
 
         polls: List[PollModel] = PollModel.objects.all().order_by('id')
         
@@ -160,29 +148,22 @@ class PollService:
             List: list of user polls.
         """
 
-        user_polls_list: List[PollModel] = list(PollModel.objects.filter(author=user).order_by('-id'))
         # return a list of user polls ordered by the last poll created
-
+        user_polls_list: List[PollModel] = list(PollModel.objects.filter(author=user).order_by('-id'))
         return user_polls_list
 
     @staticmethod
     def votable_or_closed_polls() -> List[PollModel]:
-        """Method used to return a list of votable or closed polls.
+        """Returns a list of votable or closed polls. The polls retuned are public by default.
         
         Returns: 
             List: list of votable/closed polls.
         """
 
-        votable_polls_list_ids: List[int] = [votable_closed.id for votable_closed in PollModel.objects.all() 
-        if votable_closed.is_open() and not votable_closed.is_closed()]
-
-        only_closed_polls_list_ids: List [int] = [closed.id for closed in PollModel.objects.all() 
-        if closed.is_closed()]
-
-        votable_polls_list: List[PollModel] = list(PollModel.objects.filter(id__in=votable_polls_list_ids).order_by('close_datetime'))
-        only_closed_polls_list: List[PollModel] = list(PollModel.objects.filter(id__in=only_closed_polls_list_ids).order_by('-close_datetime'))
+        all_public_polls_list = PollModel.objects.filter(private=False)
+        votable_polls_list = all_public_polls_list.filter(Q(close_datetime__gte=timezone.now()) & Q(open_datetime__lte=timezone.now())).order_by('close_datetime')
+        closed_polls_list = all_public_polls_list.filter(close_datetime__lte=timezone.now()).order_by('-close_datetime')
         
-        for only_closed in only_closed_polls_list:
-            votable_polls_list.append(only_closed)
-
-        return votable_polls_list
+        #return votable_polls_list
+        
+        return list(votable_polls_list) + list(closed_polls_list)

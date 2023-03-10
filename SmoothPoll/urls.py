@@ -22,7 +22,8 @@ urlpatterns = [
 
     # home page
     path('', views.home, name="home"),
-
+    # detail poll page
+    path('<str:poll_short_id>', views.poll_details_page, name="poll_details_page"),
     # attributions for creative commons licence
     path('attribuzioni-creative-commons/', views.attributions, name="attributions"),
     

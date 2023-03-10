@@ -11,7 +11,17 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 
-
+# Poll model fields
+NAME = 'name'
+QUESTION = 'question'
+POLL_TYPE = 'poll_type'
+OPEN_DATETIME = 'open_datetime'
+CLOSE_DATETIME = 'close_datetime'
+PREDEFINITED = 'predefined'
+VOTABLE_MJ = 'votable_mj'
+AUTHOR = 'author'
+PRIVATE = 'private'
+SHORT_ID = 'short_id'
 class PollModel(models.Model): 
 
     class PollType(models.TextChoices):
@@ -54,6 +64,15 @@ class PollModel(models.Model):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
         default=None, blank=True, null=True,
     )
+    
+    private: models.BooleanField = models.BooleanField(
+        default=False, verbose_name=_("Scelta privata")
+    )
+    
+    short_id: models.CharField = models.CharField(
+        max_length=60, verbose_name=_("ID Corto"), 
+        default=None, blank=True, null=True, unique=True
+    )
 
     def __str__(self):
         return str({
@@ -64,6 +83,8 @@ class PollModel(models.Model):
             'open_datetime': self.open_datetime, 
             'close_datetime': self.close_datetime,
             'predefined': self.predefined,
+            'private':  self.private,
+            'short_id': self.short_id
         })
 
     def options(self) -> List[PollOptionModel]:

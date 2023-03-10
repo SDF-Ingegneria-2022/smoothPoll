@@ -1,8 +1,8 @@
-from apps.polls_management.classes.majority_poll_result_data import MajorityPollResultData
+from apps.votes_results.classes.majority_poll_result_data import MajorityPollResultData
 from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
-from apps.polls_management.exceptions.poll_not_yet_voted_exception import PollNotYetVodedException
-from apps.polls_management.exceptions.poll_option_rating_unvalid_exception import PollOptionRatingUnvalidException
-from apps.polls_management.exceptions.vote_does_not_exixt_exception import VoteDoesNotExistException
+from apps.votes_results.exceptions.poll_not_yet_voted_exception import PollNotYetVodedException
+from apps.votes_results.exceptions.poll_option_rating_unvalid_exception import PollOptionRatingUnvalidException
+from apps.votes_results.exceptions.vote_does_not_exixt_exception import VoteDoesNotExistException
 from apps.polls_management.models.majority_vote_model import MajorityVoteModel
 from apps.polls_management.models.poll_model import PollModel
 from apps.votes_results.services.majority_judgment_vote_service import MajorityJudjmentVoteService
@@ -74,7 +74,7 @@ class MajorityJudgmentVoteView(View):
         
         # redirect to details page if poll is not yet open
         if not poll.is_open() or poll.is_closed():
-            return HttpResponseRedirect(reverse('apps.votes_results:poll_details', args=(poll_id,)))
+            return HttpResponseRedirect(reverse('apps.polls_management:poll_details', args=(poll_id,)))
         
         ratings: List[dict] = []
         session_object: dict = {
@@ -121,7 +121,7 @@ def majority_judgment_recap_view(request: HttpRequest, poll_id: int):
         
     # redirect to details page if poll is not yet open
     if not poll.is_open() or poll.is_closed():
-        return HttpResponseRedirect(reverse('apps.votes_results:poll_details', args=(poll_id,)))
+        return HttpResponseRedirect(reverse('apps.polls_management:poll_details', args=(poll_id,)))
 
     # Retrieve session saved vote ID
     vote_id = request.session.get("majvote-submit-id")
@@ -151,7 +151,7 @@ def majority_judgment_results_view(request: HttpRequest, poll_id: int):
 
     # redirect to details page if poll is not yet open
     if not poll.is_open():
-        return HttpResponseRedirect(reverse('apps.votes_results:poll_details', args=(poll_id,)))
+        return HttpResponseRedirect(reverse('apps.polls_management:poll_details', args=(poll_id,)))
 
     if poll.poll_type != PollModel.PollType.MAJORITY_JUDJMENT and poll.votable_mj != True:
         raise Http404()

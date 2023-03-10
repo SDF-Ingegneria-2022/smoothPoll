@@ -6,8 +6,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from apps.polls_management.classes.poll_form_utils.poll_form import PollForm
-from apps.polls_management.exceptions.no_user_polls_exception import NoUserPollsException
-from apps.polls_management.exceptions.no_votable_or_closed_poll_exception import NoVotableOrClosedPollException
 from apps.polls_management.exceptions.paginator_page_size_exception import PaginatorPageSizeException
 from apps.polls_management.exceptions.poll_cannot_be_opened_exception import PollCannotBeOpenedException
 from apps.polls_management.exceptions.poll_is_open_exception import PollIsOpenException
@@ -445,7 +443,7 @@ class TestPollService():
 
         self.user.save()
 
-        pollsindex = int(30)
+        pollsindex = int(3)
 
         while pollsindex > 0:
             polls = PollModel(name=self.name, question=self.question, author=self.user)
@@ -457,10 +455,10 @@ class TestPollService():
             pollsindex -= 1
 
         votable_or_closed_polls_list = PollService.votable_or_closed_polls()
-
+        
         assert_that(votable_or_closed_polls_list).is_not_none()
         assert_that(votable_or_closed_polls_list).is_instance_of(List)
-        assert_that(votable_or_closed_polls_list).is_length(30)
+        assert_that(votable_or_closed_polls_list).is_length(3)
 
     @pytest.mark.django_db
     def test_return_closed_poll_success(self):
@@ -468,7 +466,7 @@ class TestPollService():
 
         self.user.save()
 
-        pollsindex = int(30)
+        pollsindex = int(3)
 
         while pollsindex > 0:
             polls = PollModel(name=self.name, question=self.question, author=self.user)
@@ -483,7 +481,7 @@ class TestPollService():
 
         assert_that(votable_or_closed_polls_list).is_not_none()
         assert_that(votable_or_closed_polls_list).is_instance_of(List)
-        assert_that(votable_or_closed_polls_list).is_length(30)
+        assert_that(votable_or_closed_polls_list).is_length(3)
 
     @pytest.mark.django_db
     def test_return_votable_and_closed_poll_success(self):

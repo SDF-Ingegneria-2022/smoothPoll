@@ -1,7 +1,4 @@
-from django.core.exceptions import ObjectDoesNotExist
-
-
-class PollIsOpenException(ObjectDoesNotExist):
+class PollIsOpenException(Exception):
     """
     A certain Poll is not open
     """
