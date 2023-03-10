@@ -76,6 +76,11 @@
         <a href="{% url 'apps.votes_results:poll_details' poll_id=poll.id %}" 
             class="btn btn-light mt-2 w-100" 
             role="button">Vedi dettagli</a>
+        
+        <a  class="btn btn-info mt-2 w-100" 
+            role="button"
+            onclick="copyLink('{{request.get_host}}{% url 'poll_details_page' poll_short_id=poll.short_id %}')">
+            Copia link</a>
     </div>
 
     <!-- Popup to confirm deletion of poll w id={{poll.id}} -->
