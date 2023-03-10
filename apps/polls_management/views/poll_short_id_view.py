@@ -20,10 +20,9 @@ class PollShortIdView(View):
         except ObjectDoesNotExist:
             raise Http404()
         
-        if poll.is_open() and poll.poll_type == PollModel.PollType.SINGLE_OPTION:
-            return SingleOptionVoteView.as_view()(request, poll.id)
-        elif poll.is_open() and poll.poll_type == PollModel.PollType.MAJORITY_JUDJMENT:
-            return MajorityJudgmentVoteView.as_view()(request, poll.id)
+        if poll.is_open() and not poll.is_closed():
+            return HttpResponseRedirect(reverse('apps.votes_results:vote', args=(poll.id,)))
+
         
         return render(request, 
                       POLL_DETAILS_PAGE_TEMPLATE_PATH,
