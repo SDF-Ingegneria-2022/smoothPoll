@@ -2,7 +2,7 @@
 
 {% load static %}
 
-{% block pagename %}Crea e vota scelte sociali{% endblock pagename %}
+{% block pagename %}Scelte sociali{% endblock pagename %}
 
 {% block content %}
 <div class="row mt-2">
@@ -23,9 +23,9 @@
     <div class="col-xs-12 col-sm-12 col-md-8 text-center fs-5 fw-lighter">
         <p>
             Il nostro obiettivo è fornire uno strumento efficace per 
-            <strong>creare e votare scelte sociali</strong>, 
-            anche attraverso metodologie di voto avanzate, come
-            il metodo del <strong>Giudizio Maggioritario</strong>.
+            <strong>creare ed esprimere scelte sociali</strong>, 
+            anche attraverso metodologie di scelta avanzate, come
+            il <strong>Giudizio Maggioritario</strong>.
         </p>
     </div>
 </div>
@@ -49,7 +49,7 @@
 <div class="row">
     <div class="col-12 mt-5 text-center">
         <p class=" fs-3 fw-light">
-            Prova a votare con il <b>Metodo del Giudizio Maggioritario</b>
+            Prova il <b>Metodo del Giudizio Maggioritario</b>
         </p>
     </div>
 </div>
@@ -64,7 +64,7 @@
                         <h4 class="card-subtitle mb-2 text-muted">{{poll.question}}</h4>
                             <p  class="fw-light mb-1 ">Stato scelta: <b>Aperto</b></p>
                             <p  class="fw-light mb-1 ">Data chiusura: <b>{{poll.close_datetime}}</b></p>
-                    <a href="{% url 'apps.votes_results:single_option_vote' poll_id=poll.id %}" class="btn btn-primary mt-2">Vota</a>
+                    <a href="{% url 'apps.votes_results:vote' poll_id=poll.id %}" class="btn btn-primary mt-2">Vota</a>
                     <a href="{% url 'apps.votes_results:majority_judgment_results' poll_id=poll.id %}" class="btn btn-secondary mt-2">Vai ai risultati</a>
                     </div>
                 </div>

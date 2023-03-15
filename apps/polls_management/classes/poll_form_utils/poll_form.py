@@ -45,19 +45,19 @@ class PollForm(ModelForm):
                     OPEN_DATETIME: _("Data Apertura"), 
                     CLOSE_DATETIME: _("Data Chiusura"),
                     AUTHOR: _("Nome dell'autore"), 
-                    VOTABLE_MJ: _("Rendi votabile anche con il metodo del Giudizio Maggioritario"),
+                    VOTABLE_MJ: _("Rendi giudicabile anche con il Giudizio Maggioritario"),
                     PRIVATE: _("Scelta accessibile solo tramite link"), 
                     SHORT_ID: _("Codice identificativo"), 
                 }
         
         help_texts = {
                         NAME: _("Un nome sintetico che descrive la scelta"), 
-                        QUESTION: _("La domanda che vuoi porre al tuo votante"), 
-                        POLL_TYPE: _("Il metodo che verrà usato per esprimere il voto e calcolare i risultati"), 
-                        OPEN_DATETIME: _("La data dalla quale sarà possibile votare la scelta"), 
-                        CLOSE_DATETIME: _("La data dalla quale non sarà più possibile votare la scelta"), 
+                        QUESTION: _("Quesito che verrà posto a chi compie la scelta"), 
+                        POLL_TYPE: _("Il metodo che verrà usato per esprimere la scelta e calcolare i risultati"), 
+                        OPEN_DATETIME: _("La data dalla quale sarà possibile esprimere la scelta"), 
+                        CLOSE_DATETIME: _("La data dalla quale non sarà più possibile esprimere la scelta"), 
                         AUTHOR: _("Il nome dell'autore che ha creato la scelta"),
-                        VOTABLE_MJ: _("(abilita questa opzione se vuoi che una scelta a Opzione Singola sia votabile anche con il metodo del Giudizio Maggioritario)"),
+                        VOTABLE_MJ: _("(abilita questa opzione se vuoi che una scelta a Opzione Singola sia giudicabile anche con il Giudizio Maggioritario)"),
                         PRIVATE: _("(se abiliti questa opzione la scelta non sarà visibile nella sezione con tutte le scelte)"),
                         SHORT_ID: _("Codice identificativo univoco per il link"), 
                     }

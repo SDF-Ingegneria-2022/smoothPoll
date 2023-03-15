@@ -63,7 +63,7 @@ class SingleOptionVoteView(View):
 
         # Check is passed any data.
         if 'vote' not in request.POST:
-            request.session['vote-submit-error'] = "Errore! Per confermare il voto " \
+            request.session['vote-submit-error'] = "Errore! Per confermare la scelta " \
                 + "devi esprimere una preferenza."
             return HttpResponseRedirect(reverse('apps.votes_results:single_option_vote', args=(poll_id,)))
 
@@ -71,8 +71,8 @@ class SingleOptionVoteView(View):
         try:
             vote = SingleOptionVoteService.perform_vote(poll_id, request.POST["vote"])
         except PollOptionUnvalidException:
-            request.session['vote-submit-error'] = "Errore! Il voto deve essere " \
-                + "inviato tramite l'apposito form. Se continui a vedere questo " \
+            request.session['vote-submit-error'] = "Errore! La scelte deve essere " \
+                + "espressa tramite l'apposito form. Se continui a vedere questo " \
                 + "messaggio contatta gli sviluppatori."
             return HttpResponseRedirect(reverse('apps.votes_results:single_option_vote', args=(poll_id,)))
         except PollDoesNotExistException:
@@ -115,16 +115,16 @@ def single_option_recap_view(request: HttpRequest, poll_id: int):
     # Retrieve session saved vote ID
     vote_id = request.session.get("vote-submit-id")
     if vote_id is None:
-        request.session['vote-submit-error'] = "Errore! Non hai ancora caricato " \
-            + "nessun voto. Usa questo form per esprimere la tua preferenza."
+        request.session['vote-submit-error'] = "Errore! Non hai ancora espresso " \
+            + "nessuna scelta. Usa questo form per esprimere la tua preferenza."
         return HttpResponseRedirect(reverse('apps.votes_results:single_option_vote', args=(poll_id,)))
 
     # retrieve vote 
     try:
         vote = SingleOptionVoteService.get_vote_by_id(vote_id)
     except VoteDoesNotExistException:
-        request.session['vote-submit-error'] = "Errore! Non hai ancora caricato " \
-            + "nessun voto. Usa questo form per esprimere la tua preferenza."
+        request.session['vote-submit-error'] = "Errore! Non hai ancora espresso " \
+            + "nessuna scelta. Usa questo form per esprimere la tua preferenza."
         return HttpResponseRedirect(reverse('apps.votes_results:single_option_vote', args=(poll_id,)))
     
     # show confirm page

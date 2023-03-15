@@ -126,16 +126,16 @@ def majority_judgment_recap_view(request: HttpRequest, poll_id: int):
     # Retrieve session saved vote ID
     vote_id = request.session.get("majvote-submit-id")
     if vote_id is None:
-        request.session['majvote-submit-error'] = "Errore! Non hai ancora caricato " \
-            + "nessun voto. Usa questo form per esprimere la tua preferenza."
+        request.session['majvote-submit-error'] = "Errore! Non hai ancora espresso " \
+            + "nessun giudizio. Usa questo form per esprimere la tua preferenza."
         return HttpResponseRedirect(reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))
 
     # retrieve vote 
     try:
         vote = MajorityJudjmentVoteService.get_vote_by_id(vote_id)
     except VoteDoesNotExistException:
-        request.session['majvote-submit-error'] = "Errore! Non hai ancora caricato " \
-            + "nessun voto. Usa questo form per esprimere la tua preferenza."
+        request.session['majvote-submit-error'] = "Errore! Non hai ancora espresso " \
+            + "nessun giudizio. Usa questo form per esprimere la tua preferenza."
         return HttpResponseRedirect(reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))
 
     return render(request, 'votes_results/majority_judgment_recap.html', {'vote': vote})
