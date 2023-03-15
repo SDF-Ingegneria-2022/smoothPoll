@@ -253,21 +253,21 @@ class TestPollCreate:
 
     @pytest.mark.django_db
     def test_create_majority_judjment_few_options(self, make_forms,create_user):
-        """A majority judment poll should have at least 3 options. 
-        We try passing 2 and we expect an exception"""
+        """A majority judment poll should have at least 2 options. 
+        We try passing 1 and we expect an exception"""
 
         assert_that(PollCreateService.create_or_edit_poll) \
             .raises(TooFewOptionsException) \
             .when_called_with(
                 poll_form=make_forms["form2"], 
-                # pass just 2 options instead of 3
-                options=self.options1,
+                # pass just 1 options instead of 2
+                options=self.options_few1,
                 user=create_user)
         
     @pytest.mark.django_db
     def test_create_majority_judjment_few_options_2(self, make_forms,create_user):
         """A poll votable ALSO witn majority judment 
-        should have at least 3 options. We try passing 2 and 
+        should have at least 2 options. We try passing 1 and 
         we expect an exception"""
 
         # prepare a poll votable also w MJ but with 
@@ -279,8 +279,8 @@ class TestPollCreate:
             .raises(TooFewOptionsException) \
             .when_called_with(
                 poll_form=make_forms["form1"], 
-                # pass just 2 options instead of 3
-                options=self.options1,
+                # pass just 1 options instead of 2
+                options=self.options_few1,
                 user=create_user)
 
     @pytest.mark.django_db
@@ -289,7 +289,8 @@ class TestPollCreate:
         of min options foreach poll type"""
 
         assert_that(make_forms["form1"].get_min_options()).is_equal_to(2)
-        assert_that(make_forms["form2"].get_min_options()).is_equal_to(3)
+        #change in min options in mj since 14/03/2023
+        assert_that(make_forms["form2"].get_min_options()).is_equal_to(2)
 
     @pytest.mark.django_db
     def test_form_get_type_verbose_name(self, make_forms):

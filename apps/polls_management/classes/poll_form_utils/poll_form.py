@@ -104,7 +104,7 @@ class PollForm(ModelForm):
 
         if self.data.get(POLL_TYPE) == PollModel.PollType.MAJORITY_JUDJMENT or \
             self.data.get(VOTABLE_MJ):
-            return 3
+            return 2
         
         return 2
 
