@@ -6,7 +6,7 @@
 
 {% block pagestyle %}
 
-<script src="{% static 'js/clipboard.min.js' %}" ></script>
+
 <style>
     @media (min-width: 992px) {
         .collapse.dont-collapse-md {
@@ -218,22 +218,8 @@
         });
     </script>
 {% endif %}
-<script>
-    new ClipboardJS('.btn');
-</script>
 
-<!-- <script>
-
-    function copyLink(url) {
-    
-    // Copy the text inside user 
-    copy('Text ldkfhgòlksdfhgòlkrajd');
-  
-    // Alert the copied text
-    alert("Link copiato!");
-}
-
-</script> -->
+{% include 'polls_management/components/copy_link/copy_link_script.html' %}
 
 {% endblock customjs %}
 
