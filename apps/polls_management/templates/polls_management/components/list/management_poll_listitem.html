@@ -61,7 +61,7 @@
                 role="button">Elimina</a>
             <a data-bs-toggle="modal" data-bs-target="#openpoll-{{poll.id}}" 
                 class="btn btn-primary mt-2 w-100 {% if poll.is_open %}disabled{% endif %}"  
-                role="button">Apri al voto</a>
+                role="button">Apri ora</a>
         {% endif %}
         {% if poll.is_open and not poll.is_closed %}
             <a href="{% url 'apps.votes_results:vote' poll_id=poll.id %}" 
@@ -77,10 +77,10 @@
             class="btn btn-light mt-2 w-100" 
             role="button">Vedi dettagli</a>
         
-        <a  class="btn btn-info mt-2 w-100" 
-            role="button"
-            onclick="copyLink('{{request.get_host}}{% url 'poll_details_page' poll_short_id=poll.short_id %}')">
-            Copia link</a>
+        <button class="btn btn-info mt-2 w-100" 
+                data-clipboard-text="{{request.get_host}}{% url 'poll_details_page' poll_short_id=poll.short_id %}"> 
+        Copia link 
+        </button>
     </div>
 
     <!-- Popup to confirm deletion of poll w id={{poll.id}} -->
@@ -115,15 +115,15 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header bg-primary text-white">
-                    <h4 class="modal-title">Apertura al voto</h4>
+                    <h4 class="modal-title">Apertura</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body bg-warning text-dark">
-                    <h5 class="modal-title">Sei sicuro di volere aprire al voto questa scelta?</h5>
+                    <h5 class="modal-title">Sei sicuro di volere aprire adesso questa scelta?</h5>
                 </div>
                 <div class="modal-footer">
                     <div class="alert alert-info text-center" role="alert">
-                        Attenzione: una scelta dopo che viene aperta al voto 
+                        Attenzione: una scelta dopo che viene aperta
                         non può più essere eliminata o modificata
                     </div>
                     <form action="{% url 'apps.polls_management:poll_open' poll_id=poll.id %}" method="POST">

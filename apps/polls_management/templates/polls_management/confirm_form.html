@@ -26,7 +26,7 @@
 
     <!-- Poll copy link -->
     <div class="mb-5 ms-1">
-        {% include 'polls_management/components/poll_copy_link.html' with poll=poll %}
+        {% include 'polls_management/components/copy_link/poll_copy_link.html' with poll=poll %}
     </div>
 
     <!-- Performable actions on a poll -->
@@ -36,3 +36,7 @@
 
 
 {% endblock content %}
+
+{% block customjs %}
+{% include 'polls_management/components/copy_link/copy_link_script.html' %}
+{% endblock customjs %}

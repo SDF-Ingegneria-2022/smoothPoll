@@ -34,7 +34,7 @@
                 <form action="{% url 'apps.polls_management:poll_open' poll_id=poll.id %}" method="POST">
                     {% csrf_token %}
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                        <button type="submit" class="btn btn-success m-2">Apri ora al voto</button>
+                        <button type="submit" class="btn btn-success m-2">Apri ora</button>
                     </div>
                 </form>
             {% endif%}

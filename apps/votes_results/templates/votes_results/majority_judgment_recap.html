@@ -1,26 +1,6 @@
 {% extends 'global/skeleton.html' %}
 
-{% block pagename %}Conferma voto Giudizio Maggioritario{% endblock pagename %}
-
-{% block customjs %}
-<script>
-/**
- * Copy an url on user's clipboard.
- * 
- * Inspired to: https://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_copy_clipboard 
- */
-function copyLink(url) {
-
-    // Copy the text inside user 
-    navigator.clipboard.writeText(url);
-  
-    // Alert the copied text
-    alert("Link copiato!");
-}
-</script>
-{% endblock customjs %}
-
-
+{% block pagename %}Conferma Giudizio Maggioritario{% endblock pagename %}
 
 {% block content %}
 
@@ -28,7 +8,7 @@ function copyLink(url) {
     {# Poll summary #}
     <div class="row">
         <div class="col">
-            <h2 class="fs-2 text-success">Grazie di aver votato! Il tuo voto è stato registrato.</h2>
+            <h2 class="fs-2 text-success">Grazie di aver espresso il tuo giudizio!</h2>
         </div>
     </div>
     <hr>
@@ -42,7 +22,7 @@ function copyLink(url) {
     </div>
     <div class="row  mt-1 border-0 rounded bg-light">
         <div class="col-md-auto pe-0">
-            <div class="fs-4 pt-1">Questio:</div>
+            <div class="fs-4 pt-1">Quesito:</div>
         </div>
         <div class="col">
             <div class="mt-1 fs-4  fw-light">{{vote.poll.question}}</div>
@@ -61,7 +41,7 @@ function copyLink(url) {
                     <tr>
                     <th scope="col">#</th>
                     <th scope="col">Opzione</th>
-                    <th scope="col">Voto</th>
+                    <th scope="col">Giudizio</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -96,11 +76,6 @@ function copyLink(url) {
     <div class="container mt-1 ps-0" >
         <div class="d-grid gap-2 d-md-block">
             <a class="btn btn-primary mt-2" href="{% url 'apps.votes_results:majority_judgment_results' poll_id=vote.poll.id %}" role="button">Vedi risultati</a>
-            <button type="button" class="btn btn-secondary mt-2" 
-                onclick="copyLink('{{request.get_host}}{% url 'apps.votes_results:majority_judgment_results' poll_id=vote.poll.id %}')">
-                Copia link
-            </button>
-            <a class="btn btn-secondary mt-2" href="{% url 'apps.votes_results:majority_judgment_vote'  poll_id=vote.poll.id %}" role="button">Vota di nuovo</a>
         </div>
     </div>
 

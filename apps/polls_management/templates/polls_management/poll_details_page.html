@@ -2,14 +2,14 @@
 
 {% load static %}
 
-{% block pagename %}Dettagli sondaggio{% endblock pagename %}
+{% block pagename %}Dettagli scelta{% endblock pagename %}
 
 {% block container %}
 <div class="container">
     <div class="row mt-3 mb-3">
         <div class="col">
             <h1 class="text-center text-danger fw-light ">
-                La scelta non è ancora aperta al voto! 
+                La scelta non è ancora aperta! 
             </h1>
         </div>
     </div>
@@ -43,7 +43,7 @@
 
     <!-- Poll copy link -->
     <div class="mb-5 ms-1">
-        {% include 'polls_management/components/poll_copy_link.html' with poll=poll %}
+        {% include 'polls_management/components/copy_link/poll_copy_link.html' with poll=poll %}
     </div>
 
     
@@ -65,3 +65,7 @@
 </div>
 
 {% endblock container %}
+
+{% block customjs %}
+{% include 'polls_management/components/copy_link/copy_link_script.html' %}
+{% endblock customjs %}
