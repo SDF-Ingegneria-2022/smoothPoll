@@ -44,13 +44,13 @@
 {%if poll_info_to_view is None  or poll_info_to_view.type == True%}
 <div class="row mt-2 ms-1 me-1 border-0 rounded bg-light">
     <div class="col-md-auto pe-0">
-        <div class="fs-4">Metodo di voto:</div>
+        <div class="fs-4">Tipologia di scelta:</div>
     </div>
     <div class="col">
         <div class="fw-light fs-5 mt-1">
             {{ poll.get_type_verbose_name }}
             {% if poll.poll_type == "single_option" and poll.votable_mj %}
-                <span>(votabile anche con Giudizio Maggioritario)</span>
+                <span>(giudicabile anche con Giudizio Maggioritario)</span>
             {% endif %}
         </div>
     </div>
@@ -66,9 +66,9 @@
     <div class="col">
         {% if poll.is_open %}
             {% if not poll.is_closed %}
-                <div class="fw-light fs-5 mt-1 text-success">Aperta al voto</div>
+                <div class="fw-light fs-5 mt-1 text-success">Aperta</div>
             {% else %}
-                <div class="fw-light fs-5 mt-1 text-danger">Chiusa (votazione terminata)</div>
+                <div class="fw-light fs-5 mt-1 text-danger">Chiusa</div>
             {% endif %}
         {% else %}
             <div class="fw-light fs-5 mt-1 text-info">Non ancora aperta</div>
@@ -83,7 +83,7 @@
         
         <div class="row mt-2 ms-1 me-1 border-0 rounded bg-light">
             <div class="col-md-auto pe-0 ">
-                <dic  class="fs-4" >Apertura al voto: 
+                <dic  class="fs-4" >Data di apertura: 
                 </div> 
             <div class="col">
                 <div class="fw-light fs-5 mt-1">
@@ -93,7 +93,7 @@
         </div>
         <div class="row mt-2 ms-1 me-1 border-0 rounded bg-light">
             <div class="col-md-auto pe-0">
-                <div  class="fs-4">Termine votazioni: </div>
+                <div  class="fs-4">Data di chiusura: </div>
             </div>
             <div class="col">
                 <div class="fw-light fs-5 mt-1">

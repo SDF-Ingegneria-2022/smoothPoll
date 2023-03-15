@@ -50,7 +50,7 @@ def open_poll_by_id(request: HttpRequest, poll_id: int):
 
         init_session_for_edit(request, poll, 
                               override_data={ OPEN_DATETIME: timezone.now(), }, 
-                              error_message="Per aprire al voto, inserisci una data di chiusura."
+                              error_message="Per aprire adesso la scelta, inserisci una data di chiusura."
                               )
 
 
