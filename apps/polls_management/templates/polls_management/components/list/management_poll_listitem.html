@@ -77,10 +77,10 @@
             class="btn btn-light mt-2 w-100" 
             role="button">Vedi dettagli</a>
         
-        <a  class="btn btn-info mt-2 w-100" 
-            role="button"
-            onclick="copyLink('{{request.get_host}}{% url 'poll_details_page' poll_short_id=poll.short_id %}')">
-            Copia link</a>
+        <button class="btn btn-info mt-2 w-100" 
+                data-clipboard-text="{{request.get_host}}{% url 'poll_details_page' poll_short_id=poll.short_id %}"> 
+        Copia link 
+        </button>
     </div>
 
     <!-- Popup to confirm deletion of poll w id={{poll.id}} -->

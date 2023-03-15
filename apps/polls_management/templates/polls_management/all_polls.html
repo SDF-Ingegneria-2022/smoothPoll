@@ -6,6 +6,7 @@
 
 {% block pagestyle %}
 
+
 <style>
     @media (min-width: 992px) {
         .collapse.dont-collapse-md {
@@ -15,6 +16,7 @@
         }
       }
 </style>
+
 
 {% endblock pagestyle %}
 
@@ -217,20 +219,7 @@
     </script>
 {% endif %}
 
-<script>
-    /**
-     * Copy an url on user's clipboard.
-     * 
-     * Inspired to: https://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_copy_clipboard 
-     */
-    function copyLink(url) {
-    
-        // Copy the text inside user 
-        navigator.clipboard.writeText(url);
-      
-        // Alert the copied text
-        alert("Link copiato!");
-    }
-</script>
+{% include 'polls_management/components/copy_link/copy_link_script.html' %}
+
 {% endblock customjs %}
 
