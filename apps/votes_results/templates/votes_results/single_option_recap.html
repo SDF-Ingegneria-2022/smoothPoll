@@ -41,16 +41,6 @@
     </div>
 </div>
 
-<!-- Actions after vote -->
-<div class="container mt-5" >
-    <div class="d-grid gap-2 d-md-block">
-
-        <a class="btn btn-primary mt-2" 
-            href="{% url 'apps.votes_results:single_option_results' poll_id=vote.poll.id %}" 
-            role="button">Vedi risultati</a>
-    </div>
-</div>
-
 {% if vote.poll.votable_mj %}
 <!-- Banner to ask user to vote also with MJ -->
 <div class="card mt-5 shadow bg-body rounded">
@@ -61,15 +51,25 @@
         Il suo principio si basa sulla <b>regola della mediana
         più alta</b>. Provalo pure tu! </p>
         <hr>
-        <div class="fw-lighter fs-5">Voti con il metodo maggioritario per questa scelta</div>
+        <div class="fw-lighter fs-5">Giudizi espressi con il metodo maggioritario per questa scelta</div>
         <div class="fw-bold fs-4">{{mj_vote_counter.count_majority_judgment_votes}}</div>
         <a href="{% url 'apps.votes_results:majority_judgment_vote' poll_id=vote.poll.id %}" 
-        class="btn btn-primary mt-2">Vota con il giudizio maggioritario</a>
+        class="btn btn-primary mt-2">Esprimi un giudizio</a>
         {% if mj_vote_counter.count_majority_judgment_votes > 0 %} 
             <a href="{% url 'apps.votes_results:majority_judgment_results' poll_id=vote.poll.id %}" class="btn btn-secondary mt-2">Vedi risultati</a>
         {% endif %}
     </div>
 </div>
 {% endif %}
+
+<!-- Actions after vote -->
+<div class="container mt-5" >
+    <div class="d-grid gap-2 d-md-block">
+
+        <a class="btn btn-primary mt-2" 
+            href="{% url 'apps.votes_results:single_option_results' poll_id=vote.poll.id %}" 
+            role="button">Vedi risultati</a>
+    </div>
+</div>
 
 {% endblock content %}
