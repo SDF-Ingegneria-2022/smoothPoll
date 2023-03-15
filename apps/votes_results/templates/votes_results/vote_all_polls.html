@@ -1,6 +1,6 @@
 {% extends 'global/skeleton.html' %}
 
-{% block pagename %}Gestione sondaggi{% endblock pagename %}
+{% block pagename %}Scelte disponibili{% endblock pagename %}
 
 {% block pagestyle %}
 
@@ -80,7 +80,7 @@
                     <!-- poll w id={{poll.id}} -->
                     {% include "votes_results/components/vote_poll_listitem.html" with poll=poll %}
                 {% empty %}
-                    <p class="fs-3 fw-bold mt-5"> Attualmente non ci sono sondaggi! </p>
+                    <p class="fs-3 fw-bold mt-5"> Attualmente non ci sono scelte disponibili! </p>
                 {% endfor %}
             </div> <!-- END: Proper list -->
 

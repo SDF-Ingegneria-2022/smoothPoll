@@ -57,7 +57,7 @@ class PollForm(ModelForm):
                         OPEN_DATETIME: _("La data dalla quale sarà possibile votare la scelta"), 
                         CLOSE_DATETIME: _("La data dalla quale non sarà più possibile votare la scelta"), 
                         AUTHOR: _("Il nome dell'autore che ha creato la scelta"),
-                        VOTABLE_MJ: _("(abilita questa opzione se vuoi che un sondaggio a Opzione Singola sia votabile anche con il metodo del Giudizio Maggioritario)"),
+                        VOTABLE_MJ: _("(abilita questa opzione se vuoi che una scelta a Opzione Singola sia votabile anche con il metodo del Giudizio Maggioritario)"),
                         PRIVATE: _("(se abiliti questa opzione la scelta non sarà visibile nella sezione con tutte le scelte)"),
                         SHORT_ID: _("Codice identificativo univoco per il link"), 
                     }

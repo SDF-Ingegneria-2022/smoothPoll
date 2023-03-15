@@ -2,7 +2,7 @@
 
 {% load static %}
 
-{% block pagename %}Gestione sondaggi{% endblock pagename %}
+{% block pagename %}Gestione scelte{% endblock pagename %}
 
 {% block pagestyle %}
 
@@ -99,7 +99,7 @@
                         <!-- poll w id={{poll.id}} -->
                         {% include "polls_management/components/list/management_poll_listitem.html" with poll=poll %}
                     {% empty %}
-                        <p class="fs-3 fw-bold mt-5"> Attualmente non ci sono sondaggi! </p>
+                        <p class="fs-3 fw-bold mt-5"> Attualmente non ci sono scelte! </p>
                     {% endfor %}
                 </div>
                 <!-- END: Proper list -->
@@ -124,11 +124,11 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-primary text-white">
-                <h4 class="modal-title">Cancellazione sondaggio</h4>
+                <h4 class="modal-title">Cancellazione scelta</h4>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body bg-success text-white">
-                <h5 class="modal-title">Il sondaggio è stato cancellato con successo! </h5>
+                <h5 class="modal-title">La scelta è stata cancellata con successo! </h5>
             </div>
             <div class="modal-footer">
                 <button onClick="window.location.reload();" type="button" class="btn btn-primary">Continua</button>
@@ -145,12 +145,12 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-primary text-white">
-                <h4 class="modal-title">Cancellazione sondaggio</h4>
+                <h4 class="modal-title">Cancellazione scelta</h4>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body bg-danger text-white">
-                <h5 class="modal-title"> Non è stato possibile cancellare il sondaggio in quanto il sondaggio
-                    è stato già aperto. </h5>
+                <h5 class="modal-title"> Non è stato possibile cancellare la scelta in quanto
+                    è stata già aperta. </h5>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Continua</button>
@@ -167,12 +167,12 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-primary text-white">
-                <h4 class="modal-title">Modifica sondaggio</h4>
+                <h4 class="modal-title">Modifica scelta</h4>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body bg-danger text-white">
-                <h5 class="modal-title"> Non è stato possibile modificare il sondaggio in quanto il sondaggio
-                    è stato già aperto. </h5>
+                <h5 class="modal-title"> Non è stato possibile modificare la scelta in quanto
+                    è stata già aperta. </h5>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Continua</button>

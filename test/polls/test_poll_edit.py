@@ -13,13 +13,13 @@ from assertpy import assert_that
 class TestPollEdit:
     """Test suite that covers all methods in the PollService class"""
 
-    name1: str = "Sondaggio cibo pt. 2"
+    name1: str = "Scelta cibo pt. 2"
     question1: str = "Ti piace la pizza?"
     options1: List[str] = ["Si", "No",]
     options2: List[str] = ["Si", "No", "Forse",]
     options3: List[str] = ["Si", "No", "Forse", "Potrebbe",]
 
-    name2: str = "Sondaggio cibo pt. 2"
+    name2: str = "Scelta cibo pt. 2"
     question2: str = "Qual è il tuo cibo preferito?"
     options4: List[str] = ["Pizza", "Pasta", "Carne", "Pesce", "Altro", ]
     type2: str = PollModel.PollType.MAJORITY_JUDJMENT
