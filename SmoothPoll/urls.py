@@ -28,7 +28,7 @@ urlpatterns = [
     path('attribuzioni-creative-commons/', views.attributions, name="attributions"),
     
     # area to manage your polls (open, close, CRUD operations)
-    path('gestione-sondaggi/', include('apps.polls_management.urls'), name="polls_management"),
+    path('gestione-scelte/', include('apps.polls_management.urls'), name="polls_management"),
 
     # area to vote and view results
     path('voti-e-risultati/', include('apps.votes_results.urls'), name="votes_results"),

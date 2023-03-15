@@ -83,11 +83,9 @@ class CreatePollHtmxView(View):
             
             if form.data.get("votable_mj", False) and form.data.get("poll_type")!=PollModel.PollType.MAJORITY_JUDJMENT: 
                 # handle polls votable also w MJ
-                request.session[SESSION_ERROR] += "(votabile anche con il metodo del Giudizio Maggioritario) "
+                request.session[SESSION_ERROR] += "(giudicabile anche con il Giudizio Maggioritario) "
             
             request.session[SESSION_ERROR] += f"richiede almeno {form.get_min_options()} opzioni. "
-            request.session[SESSION_ERROR] += f"Se non vuoi fornire {form.get_min_options()} opzioni, " + \
-                "rendi la scelta ad Opzione Singola e disattiva l'opzione di voto ANCHE con Giudizio Maggioritario."
             
             return HttpResponseRedirect(reverse('apps.polls_management:poll_form'))
         except TooManyOptionsException:

@@ -141,42 +141,14 @@
     <!-- Error message: no votes received -->
     <div class="container text-center mt-5 mb-5">
         <p class="fw-bold text-danger">
-            Questa scelta purtroppo non ha ricevuto ancora alcun voto, 
+            Questa scelta purtroppo non ha ricevuto ancora alcun giudizio, 
             quindi non è possibile calcolare i risultati.
         </p>
         <a class="btn btn-primary mt-2" 
             href="{% url 'apps.votes_results:single_option_vote' poll_id=poll.id  %}" 
-            role="button">Inizia a votare</a>
+            role="button">Esprimi il tuo giudizio</a>
     </div>
 {% endif %}
-
-<!-- Banner to explain MJ criteria -->
-<!-- <div class="row d-flex justify-content-center mb-5 mt-5">
-    <div class="col-12 col-md-8">
-        <div class="card shadow-lg bg-body rounded">
-            <h5 class="card-header">Il giudizio maggioritario</h5>
-            <div class="card-body">
-                <p class="card-text">
-                    Questa scelta è stata votata 
-                    con il <b>metodo del giudizio maggioritario</b>. 
-                    Se vuoi sapere di più su come funziona, ti lasciamo qualche 
-                    link per approfondire:
-                </p>
-                <ul>
-                    <li>
-                        <a href="https://copernicani.it/eleggere-il-candidato-migliore/" target="_blank">
-                            Idea generale e vantaggi</a> <span class="text-secondary">(semplice)</span>
-                    </li>
-                    <li>
-                        <a href="https://it.frwiki.wiki/wiki/Jugement_majoritaire#D%C3%A9partage_des_%C3%A9galit%C3%A9s" target="_blank">
-                            Metodo matematico di calcolo del risultato</a> <span class="text-secondary">(avanzato)</span>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</div> -->
-
 
 
 <!-- Poll data -->

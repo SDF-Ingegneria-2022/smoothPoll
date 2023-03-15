@@ -1,6 +1,6 @@
 {% extends 'global/skeleton.html' %}
 
-{% block pagename %}Conferma voto Giudizio Maggioritario{% endblock pagename %}
+{% block pagename %}Conferma Giudizio Maggioritario{% endblock pagename %}
 
 {% block customjs %}
 <script>
@@ -28,7 +28,7 @@ function copyLink(url) {
     {# Poll summary #}
     <div class="row">
         <div class="col">
-            <h2 class="fs-2 text-success">Grazie di aver votato! Il tuo voto è stato registrato.</h2>
+            <h2 class="fs-2 text-success">Grazie di aver espresso il tuo giudizio!</h2>
         </div>
     </div>
     <hr>
@@ -42,7 +42,7 @@ function copyLink(url) {
     </div>
     <div class="row  mt-1 border-0 rounded bg-light">
         <div class="col-md-auto pe-0">
-            <div class="fs-4 pt-1">Questio:</div>
+            <div class="fs-4 pt-1">Quesito:</div>
         </div>
         <div class="col">
             <div class="mt-1 fs-4  fw-light">{{vote.poll.question}}</div>
@@ -61,7 +61,7 @@ function copyLink(url) {
                     <tr>
                     <th scope="col">#</th>
                     <th scope="col">Opzione</th>
-                    <th scope="col">Voto</th>
+                    <th scope="col">Giudizio</th>
                     </tr>
                 </thead>
                 <tbody>
