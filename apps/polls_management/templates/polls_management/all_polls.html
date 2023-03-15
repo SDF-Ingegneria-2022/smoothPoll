@@ -6,6 +6,7 @@
 
 {% block pagestyle %}
 
+<script src="{% static 'js/clipboard.min.js' %}" ></script>
 <style>
     @media (min-width: 992px) {
         .collapse.dont-collapse-md {
@@ -15,6 +16,7 @@
         }
       }
 </style>
+
 
 {% endblock pagestyle %}
 
@@ -216,21 +218,22 @@
         });
     </script>
 {% endif %}
-
 <script>
-    /**
-     * Copy an url on user's clipboard.
-     * 
-     * Inspired to: https://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_copy_clipboard 
-     */
+    new ClipboardJS('.btn');
+</script>
+
+<!-- <script>
+
     function copyLink(url) {
     
-        // Copy the text inside user 
-        navigator.clipboard.writeText(url);
-      
-        // Alert the copied text
-        alert("Link copiato!");
-    }
-</script>
+    // Copy the text inside user 
+    copy('Text ldkfhgòlksdfhgòlkrajd');
+  
+    // Alert the copied text
+    alert("Link copiato!");
+}
+
+</script> -->
+
 {% endblock customjs %}
 
