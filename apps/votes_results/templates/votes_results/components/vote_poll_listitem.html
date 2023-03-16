@@ -54,9 +54,7 @@
         {% if poll.is_open and not poll.is_closed %}
         <div class="col-12 col-md-4">
             <div class="d-grid gap-2 d-md-block">
-                <a href="{% url 'apps.votes_results:vote' poll_id=poll.id %}" 
-                    class="btn btn-primary mt-2" 
-                    role="button">Pagina voto</a>
+                {% include "votes_results/components/vote_button.html" with poll=poll btn_classes="mt-2" %}
             </div>
         </div>
         {% elif poll.is_closed %}
