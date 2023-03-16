@@ -86,7 +86,7 @@
                 </div>
             </div>
 
-            {% if poll.votable_mj %}
+            {% if poll.votable_mj and poll.poll_type == "single_option"%}
                 <div class="row align-items-center text-md-center">
                     <div class="col-11 col-md-4">
                     </div>
