@@ -31,7 +31,8 @@ urlpatterns = [
     path('gestione-scelte/', include('apps.polls_management.urls'), name="polls_management"),
 
     # area to vote and view results
-    path('voti-e-risultati/', include('apps.votes_results.urls'), name="votes_results"),
+    # path('voti-e-risultati/', include('apps.votes_results.urls'), name="votes_results"),
+    path('scelte-e-risultati/', include('apps.votes_results.urls'), name="votes_results"),
 
     # admin auth
     path('admin/', admin.site.urls),

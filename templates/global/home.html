@@ -64,7 +64,7 @@
                         <h4 class="card-subtitle mb-2 text-muted">{{poll.question}}</h4>
                             <p  class="fw-light mb-1 ">Stato scelta: <b>Aperto</b></p>
                             <p  class="fw-light mb-1 ">Data chiusura: <b>{{poll.close_datetime}}</b></p>
-                    <a href="{% url 'apps.votes_results:vote' poll_id=poll.id %}" class="btn btn-primary mt-2">Vota</a>
+                    {% include "votes_results/components/vote_button.html" with poll=poll btn_classes="mt-2" %}
                     <a href="{% url 'apps.votes_results:majority_judgment_results' poll_id=poll.id %}" class="btn btn-secondary mt-2">Vai ai risultati</a>
                     </div>
                 </div>

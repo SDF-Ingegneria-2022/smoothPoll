@@ -49,34 +49,36 @@
       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
     </div>
     <div class="modal-body">
-        <p class="fw-light "> Il sistema Giudizio Maggioritario, definito da MIT press “una nuova teoria e un nuovo metodo di voto,
+        <p class="fw-light "> Il sistema Giudizio Maggioritario, definito da MIT press “una nuova teoria e un nuovo metodo di scelta,
             giudizio e classificazione, che si è dimostrato superiore a tutti gli altri metodi conosciuti“ è al contempo 
-            facile da usare, facile da comprendere, e possiede una serie di proprietà molto interessanti che lo mettono in una categoria a se.
+            facile da usare, facile da comprendere, e possiede una serie di proprietà molto interessanti che lo pongono in una categoria a sè.
         </p>
         
         <div class="fw-bold fs-5">Funzionamento</div>
         <p class="fw-light">
-            Il funzionamento è il seguente: una volta decisi quali sono i candidati, ogni candidato viene giudicato dagli elettori 
+            Il funzionamento è il seguente: una volta decisi quali sono i candidati (<em>le scelte possibili</em>), ogni candidato viene giudicato dagli elettori 
             assegnandogli un possibile giudizio. I giudizi sono aggettivi in ordine strettamente monotonico come apprezzamento. 
             Esempio: insufficiente, passabile, discreto, buono, eccellente.
-            Ovviamente il voto è segreto.
+            Ovviamente i singoli giudizi espressi rimangono segreti (non si risale alla persona specifica che li ha emessi).
         </p>
         
         <img src="{% static 'banner-info-table-vote.png' %}" class="img-fluid shadow p-3 mb-5 bg-body rounded" alt="...">
         
         <p class="fw-light">
-            Quando poi è il momento di decidere il vincitore si valutano per ciascun candidato tutti i voti di tutti gli elettori e si estrae la mediana tra i voti.
+            Quando poi è il momento di decidere il vincitore si valutano per ciascun candidato tutti i giudizi di tutti gli elettori e si estrae la mediana.
             La cosa più probabile è però che due o più candidati abbiano la stessa mediana. Bisogna quindi eseguire uno spareggio tra questi due candidati. Questo viene fatto nel seguente modo:
-            Supponiamo vi siano due candidati Andrea e Barbara che hanno entrambi ricevuto come mediana il giudizio Sufficiente. Per risolvere tra questi due candidati come primo passo si escludono 
-            tutti gli altri candidati che sono risultati con mediana inferiore. Quindi si levano uno dopo l’altro a due a due i voti in cui le persone hanno votato Buono per Barbara e per Antonio. 
-            Questo rende le mediane instabili. E quando una delle due a seguito dell’instabilità si muove in alto (quindi vince) o in basso (quindi perde).
+            supponiamo vi siano due candidati Andrea e Barbara che hanno entrambi ricevuto come mediana il giudizio Sufficiente. Per risolvere tra questi due candidati come primo passo si escludono 
+            tutti gli altri candidati che sono risultati con mediana inferiore. Quindi si levano uno dopo l’altro a due a due i giudizi in cui le persone hanno votato Buono per Barbara e per Antonio. 
+            Questo rende le mediane instabili. Pertanto una delle due a seguito dell’instabilità si muove in alto (quindi vince) o in basso (quindi perde).
         </p>
         
         <img src="{% static 'banner-info-table-percent.png' %}" class="img-fluid shadow p-3 mb-5 bg-body rounded" alt="...">
         
         <p class="fw-light">    
-            Va notato che il numero dei giudizi può cambiare. Si possono infatti fare esperimenti con 5, 6, 7 giudizi differenti. L’importante è che siano tutti espressi in parole, siano dal significato
-            chiaro e le persone all’interno della comunità comprendano in maniera univoca il significato della parola e l’ordine tra le parole.
+            Va notato che la scala dei giudizi può cambiare. Si possono infatti fare esperimenti con una scala a 5, 6, 7 livelli differenti. 
+            L’importante è che siano tutti espressi in parole e che 
+            le persone all’interno della comunità comprendano 
+            in maniera univoca il significato dei livelli e il loro ordine.
         </p>
         <div>Fonte: <a href="https://copernicani.it/eleggere-il-candidato-migliore/" class="link-secondary">Copercani - eleggere il candidato migliore</a> </div>
     </div>
@@ -109,7 +111,7 @@
 
     
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
     </div>
   </div>
 </div>
