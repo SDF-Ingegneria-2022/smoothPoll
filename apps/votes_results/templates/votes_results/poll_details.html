@@ -22,9 +22,7 @@
     {% comment %} Vote and view results actions {% endcomment %}
     {% if poll.is_open and not poll.is_closed %}
         <div class="d-grid gap-2 d-md-flex justify-content-md-end m-2">
-            <a href="{% url 'apps.votes_results:single_option_vote' poll_id=poll.id %}" 
-                class="btn btn-primary me-md-2 mt-2" 
-                role="button">Vota</a>
+            {% include "votes_results/components/vote_button.html" with poll=poll btn_classes="me-md-2 mt-2" %}
         </div>
     {% elif poll.is_closed %}
         <div class="d-grid gap-2 d-md-flex justify-content-md-end m-2">

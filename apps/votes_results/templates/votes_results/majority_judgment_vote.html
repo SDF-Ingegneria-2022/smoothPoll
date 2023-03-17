@@ -1,6 +1,6 @@
 {% extends 'global/skeleton.html' %}
 
-{% block pagename %}Voto Giudizio Maggioritario{% endblock pagename %}
+{% block pagename %}Giudizio Maggioritario{% endblock pagename %}
 {% block content %}
 {# SVG #}
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
@@ -176,8 +176,8 @@
 </div>
 
    
-        <!-- Card: Informazioni -->
-        {% include 'votes_results/components/majority_judgment_info_banner.html'%}
+        <!-- Card: MJ guide -->
+        {% include 'votes_results/components/majority_judgment_info_banner.html' with guide_already_viwed=guide_already_viwed%}
     
 
 {% endblock content %}

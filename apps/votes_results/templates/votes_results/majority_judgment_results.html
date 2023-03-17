@@ -145,7 +145,7 @@
             quindi non è possibile calcolare i risultati.
         </p>
         <a class="btn btn-primary mt-2" 
-            href="{% url 'apps.votes_results:single_option_vote' poll_id=poll.id  %}" 
+            href="{% url 'apps.votes_results:majority_judgment_vote' poll_id=poll.id  %}" 
             role="button">Esprimi il tuo giudizio</a>
     </div>
 {% endif %}
@@ -164,10 +164,10 @@
 <!-- Actions -->
 <div class="container mt-3">
     <div class="d-grid gap-2 d-md-block text-center mt-5">
-        <a name="" id="" role="button"
+        <a
             class="btn btn-primary" 
-            href="{% url 'home' %}" >
-            Torna alla home
+            href="{% url 'apps.votes_results:votable_polls' %}?page=1&per_page=10" >
+            Ritorna alla lista di tutte le scelte
         </a>
         <a name="" id="" role="button"
             class="btn btn-secondary" 

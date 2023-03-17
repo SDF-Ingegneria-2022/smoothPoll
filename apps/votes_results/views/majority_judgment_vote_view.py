@@ -15,6 +15,10 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
 
+SESSION_MJ_GUIDE_ALREADY_VIWED = 'mj-guide-already-viewed'
+SESSION_MJ_VOTE_SUBMIT_ERROR = 'majvote-submit-error'
+SESSION_MJ_SUBMIT_ID = 'majvote-submit-id'
+
 class MajorityJudgmentVoteView(View):
     """View to handle Majority Judgment vote process"""
     
@@ -50,17 +54,23 @@ class MajorityJudgmentVoteView(View):
             
             raise Http404()
 
-        options_selected = request.session.get('majvote-submit-error')
+        options_selected = request.session.get(SESSION_MJ_VOTE_SUBMIT_ERROR)
         if options_selected is not None:
-            del request.session['majvote-submit-error']
+            del request.session[SESSION_MJ_VOTE_SUBMIT_ERROR]
         
+        guide_already_viwed: bool = request.session.get(SESSION_MJ_GUIDE_ALREADY_VIWED)
+
+        if request.session.get(SESSION_MJ_GUIDE_ALREADY_VIWED) is None:
+            request.session[SESSION_MJ_GUIDE_ALREADY_VIWED] = True
+        
+            
         return render(request, 'votes_results/majority_judgment_vote.html', {
             'poll': poll, 
             'error': {
                 'message': "Attenzione! Non è stata selezionata nessuna opzione.",
                 'options_selected': options_selected,
             }, 
-            'prova': {'1': {'2':2 } }
+            'guide_already_viwed': guide_already_viwed,
             })    
 
     def post(self, request: HttpRequest, poll_id: int, *args, **kwargs):
@@ -94,19 +104,19 @@ class MajorityJudgmentVoteView(View):
             vote: MajorityVoteModel = MajorityJudjmentVoteService.perform_vote(ratings, poll_id=str(poll_id))
         except PollOptionRatingUnvalidException:
         
-            request.session['majvote-submit-error'] = session_object
+            request.session[SESSION_MJ_VOTE_SUBMIT_ERROR] = session_object
             return HttpResponseRedirect(reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))
         except Exception as e:
             raise Http404
 
         # Clean eventual error session.
-        if request.session.get('majvote-submit-error') is not None:
-            del request.session['majvote-submit-error']
+        if request.session.get(SESSION_MJ_VOTE_SUBMIT_ERROR) is not None:
+            del request.session[SESSION_MJ_VOTE_SUBMIT_ERROR]
 
-        # save user vote in session
-        request.session['majvote-submit-id'] = vote.id
+        # Save user vote in session
+        request.session[SESSION_MJ_SUBMIT_ID] = vote.id
 
-        # RE-direct to get request.
+        # Redirect to get request.
         return HttpResponseRedirect(reverse('apps.votes_results:majority_judgment_recap', args=(poll_id, )))
 
 
@@ -119,22 +129,22 @@ def majority_judgment_recap_view(request: HttpRequest, poll_id: int):
     except PollDoesNotExistException:
         raise Http404()
         
-    # redirect to details page if poll is not yet open
+    # Redirect to details page if poll is not yet open
     if not poll.is_open() or poll.is_closed():
         return HttpResponseRedirect(reverse('apps.polls_management:poll_details', args=(poll_id,)))
 
     # Retrieve session saved vote ID
-    vote_id = request.session.get("majvote-submit-id")
+    vote_id = request.session.get(SESSION_MJ_SUBMIT_ID)
     if vote_id is None:
-        request.session['majvote-submit-error'] = "Errore! Non hai ancora espresso " \
+        request.session[SESSION_MJ_VOTE_SUBMIT_ERROR] = "Errore! Non hai ancora espresso " \
             + "nessun giudizio. Usa questo form per esprimere la tua preferenza."
         return HttpResponseRedirect(reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))
 
-    # retrieve vote 
+    # Retrieve vote 
     try:
         vote = MajorityJudjmentVoteService.get_vote_by_id(vote_id)
     except VoteDoesNotExistException:
-        request.session['majvote-submit-error'] = "Errore! Non hai ancora espresso " \
+        request.session[SESSION_MJ_VOTE_SUBMIT_ERROR] = "Errore! Non hai ancora espresso " \
             + "nessun giudizio. Usa questo form per esprimere la tua preferenza."
         return HttpResponseRedirect(reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))
 
@@ -143,13 +153,13 @@ def majority_judgment_recap_view(request: HttpRequest, poll_id: int):
 def majority_judgment_results_view(request: HttpRequest, poll_id: int):
     """Render page with majority poll results"""
 
-    # poll should be Majority type
+    # Poll should be Majority type
     try:
         poll = PollService.get_poll_by_id(poll_id)
     except PollDoesNotExistException:
         raise Http404()
 
-    # redirect to details page if poll is not yet open
+    # Redirect to details page if poll is not yet open
     if not poll.is_open():
         return HttpResponseRedirect(reverse('apps.polls_management:poll_details', args=(poll_id,)))
 
@@ -159,14 +169,9 @@ def majority_judgment_results_view(request: HttpRequest, poll_id: int):
     try:
         poll_results: List[MajorityPollResultData] = MajorityJudjmentVoteService.calculate_result(poll_id=str(poll_id))
     except PollDoesNotExistException:
-        raise Http404
+        raise Http404()
     except PollNotYetVodedException:
         poll_results = None
-
-
-    # except Exception:
-    #     # Internal error: you should inizialize DB first (error 500)
-    #     return HttpResponseServerError("Dummy survey is not initialized. Please see README.md and create it.")
 
     return render(request, 'votes_results/majority_judgment_results.html', {
         'poll_results': poll_results, 

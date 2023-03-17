@@ -1,0 +1,9 @@
+<a href="{% url 'apps.votes_results:vote' poll_id=poll.id %}" 
+    class="btn btn-primary {{btn_classes}}" 
+    role="button">
+    {% if poll.poll_type == "majority_judjment" %}
+        Giudica
+    {% else %}
+        Scegli
+    {% endif %}
+</a>
