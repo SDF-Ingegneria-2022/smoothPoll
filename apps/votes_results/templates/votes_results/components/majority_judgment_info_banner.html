@@ -1,7 +1,18 @@
 {% load static %}
-<div class="container position-fixed bottom-0 end-0 mb-5" id="info">
+
+<div class="container position-fixed bottom-0 end-0 mb-3" >
+   {% if guide_already_viwed %}
+    <!-- Button trigger modal -->
+    <div class="row justify-content-end me-3">
+      <div class="col-3 col-md-2 float-end">
+        <button type="button" class="btn btn-info shadow p-3 mb-4 ps-4 pe-4 text-white fw-bold" data-bs-toggle="modal" data-bs-target="#guidaModal">
+          Guida
+        </button>
+      </div>
+    </div>
+    {% else %}
     <div class="row justify-content-end">
-        <div class="col-lg-8 col-xl-8 col-xxl-8 ">
+        <div class="col-lg-8 col-xl-8 col-xxl-8" id="info">
             <div class="shadow-lg bg-body rounded">
                 <div class="card ">
                     <div class="card-header fs-5" >
@@ -14,7 +25,7 @@
                         <!-- Se invece vuoi <b>approfondire</b>, dai un'occhiata al <i>metodo matematico</i> con cui verranno calcolati i risultati. -->
                     </p>
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#guidaModal">
-                        Guida
+                        Guida 
                     </button>
 
                     <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#metodoMatematicoModal">
@@ -24,9 +35,10 @@
                    
                     </div>
                 </div>
+          </div>
         </div>
-        </div>
-    </div>    
+    </div>
+    {% endif %}
 </div>
 
     
