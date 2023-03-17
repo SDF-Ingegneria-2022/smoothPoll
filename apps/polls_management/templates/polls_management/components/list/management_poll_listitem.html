@@ -70,7 +70,7 @@
             <a href="{% url 'apps.votes_results:results' poll_id=poll.id %}" 
                 class="btn btn-secondary mt-2 w-100" 
                 role="button">Vedi risultati</a>
-            {% if poll.votable_mj%}
+            {% if poll.votable_mj and poll.poll_type == "single_option" %}
                 <a href="{% url 'apps.votes_results:majority_judgment_results' poll_id=poll.id %}" 
                     class="btn btn-secondary mt-2 w-100" 
                     role="button">Vedi risultati Giudizio Maggioritario</a>
