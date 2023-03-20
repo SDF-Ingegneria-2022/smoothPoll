@@ -15,6 +15,8 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
 
+from apps.votes_results.views.single_option_vote_view import SESSION_SINGLE_OPTION_VOTE_ID
+
 SESSION_MJ_GUIDE_ALREADY_VIWED = 'mj-guide-already-viewed'
 SESSION_MJ_VOTE_SUBMIT_ERROR = 'majvote-submit-error'
 SESSION_MJ_SUBMIT_ID = 'majvote-submit-id'
@@ -92,6 +94,7 @@ class MajorityJudgmentVoteView(View):
         }
         #poll: PollModel = PollModel.objects.filter(poll_id=poll_id)
         for key, value in request.POST.items():
+           
             if not key == 'csrfmiddlewaretoken':
                 rating: dict = {}
                 rating["poll_choice_id"] = int(key)
@@ -99,7 +102,13 @@ class MajorityJudgmentVoteView(View):
                 ratings.append(rating)
                 session_object['id'].append(int(key))
                 session_object[int(key)] =  int(value)
-
+        
+        # TODO: insert consistency check on ratings
+        if poll.poll_type == PollModel.PollType.SINGLE_OPTION and request.session.get(SESSION_SINGLE_OPTION_VOTE_ID):
+            print("Consistency check on ratings")
+        elif poll.poll_type == PollModel.PollType.SINGLE_OPTION and not request.session.get(SESSION_SINGLE_OPTION_VOTE_ID):
+            # TODO: evaluate if is better to redirect to signle option vote page
+            raise Http404()
         try:
             vote: MajorityVoteModel = MajorityJudjmentVoteService.perform_vote(ratings, poll_id=str(poll_id))
         except PollOptionRatingUnvalidException:
