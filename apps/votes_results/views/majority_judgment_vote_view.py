@@ -67,8 +67,13 @@ class MajorityJudgmentVoteView(View):
         if request.session.get(SESSION_MJ_GUIDE_ALREADY_VIWED) is None:
             request.session[SESSION_MJ_GUIDE_ALREADY_VIWED] = True
         
-        # TODO: clear session for only one consistency check
-        del request.session[SESSION_CONSISTENCY_CHECK]
+        # Sesstion settings about consistency check and user notification 
+        consistency_check = request.session.get(SESSION_CONSISTENCY_CHECK)
+        if consistency_check is not None:
+            consistency_check.update({'user_notified': True})
+            request.session[SESSION_CONSISTENCY_CHECK] = { 'check': True,
+                                                           'user_notified': True
+                                                        }
            
         return render(request, 'votes_results/majority_judgment_vote.html', {
             'poll': poll, 
@@ -108,18 +113,34 @@ class MajorityJudgmentVoteView(View):
                 session_object['id'].append(int(key))
                 session_object[int(key)] =  int(value)
         
+        
+        # Sigle option vote consistency check
         if (poll.poll_type == PollModel.PollType.SINGLE_OPTION and \
             request.session.get(SESSION_SINGLE_OPTION_VOTE_ID) and \
-            request.session.get(SESSION_CONSISTENCY_CHECK) is None):
+            (request.session.get(SESSION_CONSISTENCY_CHECK) is None or 
+             not request.session.get(SESSION_CONSISTENCY_CHECK)['user_notified']) and \
             
-            if CheckConsistencyMjVote.check(request.session.get(SESSION_SINGLE_OPTION_VOTE_ID), ratings):
-                request.session[SESSION_CONSISTENCY_CHECK] = True
-                return HttpResponseRedirect(reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))
+            not CheckConsistencyMjVote.check(request.session.get(SESSION_SINGLE_OPTION_VOTE_ID), ratings)):
+                
+            request.session[SESSION_CONSISTENCY_CHECK] = { 'check': True,
+                                                            'user_notified': False,
+                                                        }
+            
+            return HttpResponseRedirect(reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))
         
-        elif poll.poll_type == PollModel.PollType.SINGLE_OPTION and not request.session.get(SESSION_SINGLE_OPTION_VOTE_ID):
+        elif poll.poll_type == PollModel.PollType.SINGLE_OPTION and request.session.get(SESSION_SINGLE_OPTION_VOTE_ID) is None:
             raise Http404()
+        
+        
         try:
             vote: MajorityVoteModel = MajorityJudjmentVoteService.perform_vote(ratings, poll_id=str(poll_id))
+            
+            # Clear session if the mj vote is performed
+            if request.session.get(SESSION_SINGLE_OPTION_VOTE_ID) is not None:
+                del request.session[SESSION_SINGLE_OPTION_VOTE_ID]
+            if request.session.get(SESSION_CONSISTENCY_CHECK) is not None:
+                del request.session[SESSION_CONSISTENCY_CHECK]
+            
         except PollOptionRatingUnvalidException:
         
             request.session[SESSION_MJ_VOTE_SUBMIT_ERROR] = session_object

@@ -18,6 +18,25 @@
 <div class="container text-center">
     <h1>{{ poll.name }}</h1>
 </div>
+{{consistency_check.check}}
+{{consistency_check.user_notified}}
+<div class="modal" id="voteconsistencyerror" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Modal title</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Modal body text goes here.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
 <div class="container border">
 
@@ -82,6 +101,7 @@
                             </div>
                             
                         </div>
+                        
                         {# Options form #}
                         <div class="form-check m-2">
                             <div class="row row-cols-lg-auto">
@@ -90,7 +110,7 @@
                                     {% load get_item %}
                                     
                                     
-                               
+                                    
                                     
                                         <div class="form-check form-check-inline d-grid mx-auto">
                                         {% with option_id=option.id value=error.options_selected%}
@@ -180,4 +200,12 @@
         {% include 'votes_results/components/majority_judgment_info_banner.html' with guide_already_viwed=guide_already_viwed%}
     
 
+{% if consistency_check.user_notified == False %}
+        <!-- script to display delete poll success modal -->
+        <script type="text/javascript">
+            $(window).on('load', function() {
+                $('#voteconsistencyerror').modal('show');
+            });
+        </script>
+{% endif %}
 {% endblock content %}
