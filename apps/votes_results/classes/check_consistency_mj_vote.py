@@ -10,7 +10,7 @@ class CheckConsistencyMjVote:
         items_with_max_rating: List[dict] = [item for item in mj_votes if item['rating'] == max_rating[0]['rating']]
         # Check if the key is in the list of max ratings
         if not any(item['poll_choice_id'] == single_option_vote_key for item in items_with_max_rating):
-            return False
+            return True
         
-        return True
+        return False
      

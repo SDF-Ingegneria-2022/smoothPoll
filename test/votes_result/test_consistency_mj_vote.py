@@ -9,21 +9,21 @@ class TestCheckConsitencyMjVote:
         mj_votes: List[dict] = self._create_mj_votes([3, 1, 1])
         sut: bool = CheckConsistencyMjVote.check(single_option_vote_key, mj_votes)
         
-        assert_that(sut).is_true()
+        assert_that(sut).is_false()
         
     def test_check_not_valid_concistency(self):
         single_option_vote_key: str = "1"
         mj_votes: List[dict] = self._create_mj_votes([1, 3, 4])
         sut: bool = CheckConsistencyMjVote.check(single_option_vote_key, mj_votes)
         
-        assert_that(sut).is_false()
+        assert_that(sut).is_true()
     
     def test_check_valid_concistency_with_same_rating(self):
         single_option_vote_key: str = "1"
         mj_votes: List[dict] = self._create_mj_votes([3, 3, 3])
         sut: bool = CheckConsistencyMjVote.check(single_option_vote_key, mj_votes)
         
-        assert_that(sut).is_true()
+        assert_that(sut).is_false()
         
         
         

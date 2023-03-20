@@ -1,3 +1,4 @@
+from apps.votes_results.classes.check_consistency_mj_vote import CheckConsistencyMjVote
 from apps.votes_results.classes.majority_poll_result_data import MajorityPollResultData
 from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
 from apps.votes_results.exceptions.poll_not_yet_voted_exception import PollNotYetVodedException
@@ -20,6 +21,7 @@ from apps.votes_results.views.single_option_vote_view import SESSION_SINGLE_OPTI
 SESSION_MJ_GUIDE_ALREADY_VIWED = 'mj-guide-already-viewed'
 SESSION_MJ_VOTE_SUBMIT_ERROR = 'majvote-submit-error'
 SESSION_MJ_SUBMIT_ID = 'majvote-submit-id'
+SESSION_CONSISTENCY_CHECK = 'consistency-check'
 
 class MajorityJudgmentVoteView(View):
     """View to handle Majority Judgment vote process"""
@@ -65,7 +67,9 @@ class MajorityJudgmentVoteView(View):
         if request.session.get(SESSION_MJ_GUIDE_ALREADY_VIWED) is None:
             request.session[SESSION_MJ_GUIDE_ALREADY_VIWED] = True
         
-            
+        # TODO: clear session for only one consistency check
+        del request.session[SESSION_CONSISTENCY_CHECK]
+           
         return render(request, 'votes_results/majority_judgment_vote.html', {
             'poll': poll, 
             'error': {
@@ -73,6 +77,7 @@ class MajorityJudgmentVoteView(View):
                 'options_selected': options_selected,
             }, 
             'guide_already_viwed': guide_already_viwed,
+            'consistency_check': request.session.get(SESSION_CONSISTENCY_CHECK),
             })    
 
     def post(self, request: HttpRequest, poll_id: int, *args, **kwargs):
@@ -103,11 +108,15 @@ class MajorityJudgmentVoteView(View):
                 session_object['id'].append(int(key))
                 session_object[int(key)] =  int(value)
         
-        # TODO: insert consistency check on ratings
-        if poll.poll_type == PollModel.PollType.SINGLE_OPTION and request.session.get(SESSION_SINGLE_OPTION_VOTE_ID):
-            print("Consistency check on ratings")
+        if (poll.poll_type == PollModel.PollType.SINGLE_OPTION and \
+            request.session.get(SESSION_SINGLE_OPTION_VOTE_ID) and \
+            request.session.get(SESSION_CONSISTENCY_CHECK) is None):
+            
+            if CheckConsistencyMjVote.check(request.session.get(SESSION_SINGLE_OPTION_VOTE_ID), ratings):
+                request.session[SESSION_CONSISTENCY_CHECK] = True
+                return HttpResponseRedirect(reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))
+        
         elif poll.poll_type == PollModel.PollType.SINGLE_OPTION and not request.session.get(SESSION_SINGLE_OPTION_VOTE_ID):
-            # TODO: evaluate if is better to redirect to signle option vote page
             raise Http404()
         try:
             vote: MajorityVoteModel = MajorityJudjmentVoteService.perform_vote(ratings, poll_id=str(poll_id))
