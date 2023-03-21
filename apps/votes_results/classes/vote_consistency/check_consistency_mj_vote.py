@@ -1,6 +1,4 @@
 from typing import List
-from apps.polls_management.models.poll_model import PollModel
-
 
 class CheckConsistencyMjVote:
     

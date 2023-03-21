@@ -1,6 +1,6 @@
 from typing import List
 from assertpy import assert_that
-from apps.votes_results.classes.check_consistency_mj_vote import CheckConsistencyMjVote
+from apps.votes_results.classes.vote_consistency.check_consistency_mj_vote import CheckConsistencyMjVote
 
 
 class TestCheckConsitencyMjVote:
