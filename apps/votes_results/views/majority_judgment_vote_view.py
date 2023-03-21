@@ -39,7 +39,7 @@ class MajorityJudgmentVoteView(View):
 
     def get(self, request: HttpRequest, poll_id: int, *args, **kwargs):
         """Render the form wich permits user to vote"""
-
+       
         if poll_id is None:
             # if poll_id is none I try retrieving a dummy poll
             poll = MajorityJudgmentVoteView.__get_dummy_poll()
@@ -54,8 +54,7 @@ class MajorityJudgmentVoteView(View):
             return render(request, 'votes_results/poll_details.html', {'poll': poll})
 
         
-        if (
-            (poll.poll_type != PollModel.PollType.MAJORITY_JUDJMENT and poll.votable_mj != True) or
+        if ((poll.poll_type != PollModel.PollType.MAJORITY_JUDJMENT and poll.votable_mj != True) or
             (poll.poll_type == PollModel.PollType.SINGLE_OPTION and request.session.get(SESSION_SINGLE_OPTION_VOTE_ID) is None)):
             raise Http404()
 
@@ -67,12 +66,7 @@ class MajorityJudgmentVoteView(View):
 
         if request.session.get(SESSION_MJ_GUIDE_ALREADY_VIWED) is None:
             request.session[SESSION_MJ_GUIDE_ALREADY_VIWED] = True
-        
-        # Session settings about consistency check and user notification
-        check_consistency_session: CheckConsistencySession = CheckConsistencySession(request)
-        if check_consistency_session.consistency_check_is_avalable_in_session(SESSION_CONSISTENCY_CHECK):
-            check_consistency_session.update_session_user_notification(SESSION_CONSISTENCY_CHECK)
-           
+         
         return render(request, 'votes_results/majority_judgment_vote.html', {
             'poll': poll, 
             'error': {
@@ -100,7 +94,7 @@ class MajorityJudgmentVoteView(View):
         session_object: dict = {
             'id': []
         }
-        #poll: PollModel = PollModel.objects.filter(poll_id=poll_id)
+        
         for key, value in request.POST.items():
            
             if not key == 'csrfmiddlewaretoken':
@@ -111,11 +105,11 @@ class MajorityJudgmentVoteView(View):
                 session_object['id'].append(int(key))
                 session_object[int(key)] =  int(value)
         
-        
-        
-        # Sigle option vote consistency check
+
+        # Single option vote consistency check
         check_consistency_session: CheckConsistencySession = CheckConsistencySession(request)
-        if check_consistency_session.check_consistency(poll, ratings, SESSION_SINGLE_OPTION_VOTE_ID, SESSION_CONSISTENCY_CHECK):
+        if  (not request.session.get(SESSION_CONSISTENCY_CHECK) and # Check used if user has already seen the consistency check
+            check_consistency_session.check_consistency(poll, ratings, SESSION_SINGLE_OPTION_VOTE_ID, SESSION_CONSISTENCY_CHECK)):
             
             return HttpResponseRedirect(reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))    
         

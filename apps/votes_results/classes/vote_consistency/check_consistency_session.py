@@ -22,18 +22,26 @@ class CheckConsistencySession:
         Returns:
             bool: True if the vote is not consisnte, False otherwise.
         """
+        
         if (
             poll.poll_type == PollModel.PollType.SINGLE_OPTION and \
             self._request.session.get(session_single_option_vote_id) and \
     
-            (self._request.session.get(session_consistency_check) is None or 
-            not self._request.session.get(session_consistency_check)['user_notified']) and \
-            
+            self._request.session.get(session_consistency_check) is None and
             not CheckConsistencyMjVote.check(self._request.session.get(session_single_option_vote_id), mj_ratings)):
-            
+                
+                # Options selected by the user in order to perform the unconsistent vote if the user wants to perform
+                options_selected: dict = {
+                                            'id': []
+                                        }
+                for key, value in self._request.POST.items():
+                    if not key == 'csrfmiddlewaretoken':
+                        options_selected['id'].append(int(key))
+                        options_selected[int(key)] =  int(value)
+                
                 self._request.session[session_consistency_check] = {
-                                                                        'check': True,
-                                                                        'user_notified': False,
+                                                                    'check': True,
+                                                                    'options_selected': options_selected
                                                                     }
                 
                 return True
@@ -48,14 +56,6 @@ class CheckConsistencySession:
             bool: True if the consistency check is available in session, False otherwise.
         """
         return self._request.session.get(session_consistency_check) is not None
-    
-    def update_session_user_notification(self, session_consistency_check: str) -> None:
-        """Updates the session consistency check with user notified.
-        Args:
-            session_consistency_check (str): The session consistency check parameter.
-        """
-        if self._request.session.get(session_consistency_check) is not None:
-            self._request.session[session_consistency_check]['user_notified'] = True
     
     def clear_session(self, consistency_session_params: List[str]) -> None:
         """Clears the consistency session parameters. In safe mode.
