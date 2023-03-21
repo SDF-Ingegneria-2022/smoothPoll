@@ -48,15 +48,6 @@ class CheckConsistencySession:
         else:
             return False
     
-    def consistency_check_is_avalable_in_session(self, session_consistency_check: str) -> bool:
-        """Checks if the consistency check is available in session.
-        Args:
-            session_consistency_check (str): The session consistency check parameter.
-        Returns:
-            bool: True if the consistency check is available in session, False otherwise.
-        """
-        return self._request.session.get(session_consistency_check) is not None
-    
     def clear_session(self, consistency_session_params: List[str]) -> None:
         """Clears the consistency session parameters. In safe mode.
         Args:
