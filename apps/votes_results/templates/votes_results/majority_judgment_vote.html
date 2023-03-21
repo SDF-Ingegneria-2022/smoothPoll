@@ -19,6 +19,24 @@
     <h1>{{ poll.name }}</h1>
 </div>
 
+<div class="modal mt-5" id="voteconsistencyerror" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header  bg-warning">
+          <h5 class="modal-title">Attenzione!</h5>
+        </div>
+        <div class="modal-body">
+          <p class="fw-light">Tra il scelta a preferenza singola e il giudizio maggioritatio c'è incongruenza.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" id="confirm-submit">Voglio procedere lo stesso!</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cambio le scelte</button>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
 <div class="container border">
 
     {# Poll question #}
@@ -51,7 +69,7 @@
         </div>
     </div>
     <div class="container ">
-        <form action="{% url 'apps.votes_results:majority_judgment_vote' poll_id=poll.id %}" method="POST">
+        <form id="mj-form" action="{% url 'apps.votes_results:majority_judgment_vote' poll_id=poll.id %}" method="POST">
 
             {% csrf_token %}
             {# Form Options #}
@@ -82,6 +100,7 @@
                             </div>
                             
                         </div>
+                        
                         {# Options form #}
                         <div class="form-check m-2">
                             <div class="row row-cols-lg-auto">
@@ -89,12 +108,9 @@
                                     
                                     {% load get_item %}
                                     
-                                    
-                               
-                                    
                                         <div class="form-check form-check-inline d-grid mx-auto">
-                                        {% with option_id=option.id value=error.options_selected%}
-                                            {% if option_id in  error.options_selected.id and value|get_item:option_id == 1 %}
+                                        {% with option_id=option.id value=error.options_selected value_from_consistency_check=consistency_check.options_selected%}
+                                            {% if option_id in  error.options_selected.id or option_id in consistency_check.options_selected.id and value|get_item:option_id == 1 or value_from_consistency_check|get_item:option_id == 1 %}
                                                 <input type="radio" class="form-check-input btn-check btn-block " id="btn-check-2-outlined-{{option.id}}-a" checked autocomplete="off" name="{{option.id}}"  value="1">  
                                                 <label class="btn btn-outline-secondary" for="btn-check-2-outlined-{{option.id}}-a">Pessimo</label><br>
                                             {%else%}
@@ -108,8 +124,8 @@
                                 
                                 
                                     <div class="form-check form-check-inline d-grid mx-auto">
-                                    {% with option_id=option.id value=error.options_selected%}
-                                        {% if option_id in  error.options_selected.id and value|get_item:option_id == 2 %}
+                                    {% with option_id=option.id value=error.options_selected value_from_consistency_check=consistency_check.options_selected%}
+                                        {% if option_id in  error.options_selected.id or option_id in consistency_check.options_selected.id and value|get_item:option_id == 2 or value_from_consistency_check|get_item:option_id == 2%}
                                             <input type="radio" class="form-check-input btn-check btn-block" id="btn-check-2-outlined-{{option.id}}-b" checked autocomplete="off" name="{{option.id}}"  value="2">  
                                             <label class="btn btn-outline-secondary" for="btn-check-2-outlined-{{option.id}}-b">Insufficiente</label><br>
                                         {%else%}
@@ -122,8 +138,8 @@
                                 
                                 
                                     <div class="form-check form-check-inline d-grid mx-auto">
-                                    {% with option_id=option.id value=error.options_selected%}
-                                        {% if option_id in  error.options_selected.id and value|get_item:option_id == 3 %}
+                                    {% with option_id=option.id value=error.options_selected value_from_consistency_check=consistency_check.options_selected%}
+                                        {% if option_id in  error.options_selected.id or option_id in consistency_check.options_selected.id and value|get_item:option_id == 3 or value_from_consistency_check|get_item:option_id == 3%}
                                             <input type="radio" class="form-check-input btn-check btn-block" id="btn-check-2-outlined-{{option.id}}-c" checked autocomplete="off" name="{{option.id}}"  value="3">  
                                             <label class="btn btn-outline-secondary" for="btn-check-2-outlined-{{option.id}}-c">Sufficiente</label><br>
                                         {%else%}
@@ -135,8 +151,8 @@
                                 
                                 
                                     <div class="form-check form-check-inline d-grid mx-auto">
-                                    {% with option_id=option.id value=error.options_selected%}
-                                        {% if option_id in  error.options_selected.id and value|get_item:option_id == 4 %}
+                                    {% with option_id=option.id value=error.options_selected value_from_consistency_check=consistency_check.options_selected%}
+                                        {% if option_id in  error.options_selected.id or option_id in consistency_check.options_selected.id and value|get_item:option_id == 4 or value_from_consistency_check|get_item:option_id == 4 %}
                                             <input type="radio" class="form-check-input btn-check btn-block" id="btn-check-2-outlined-{{option.id}}-d" checked autocomplete="off" name="{{option.id}}"  value="4">  
                                             <label class="btn btn-outline-secondary" for="btn-check-2-outlined-{{option.id}}-d">Buono</label><br>
                                         {%else%}
@@ -148,8 +164,8 @@
                                 
                                 
                                     <div class="form-check form-check-inline d-grid mx-auto">
-                                    {% with option_id=option.id value=error.options_selected%}
-                                        {% if option_id in  error.options_selected.id and value|get_item:option_id == 5 %}
+                                    {% with option_id=option.id value=error.options_selected value_from_consistency_check=consistency_check.options_selected%}
+                                        {% if option_id in  error.options_selected.id or option_id in consistency_check.options_selected.id and value|get_item:option_id == 5  or value_from_consistency_check|get_item:option_id == 5%}
                                             <input type="radio" class="form-check-input btn-check btn-block" id="btn-check-2-outlined-{{option.id}}-e" checked autocomplete="off" name="{{option.id}}"  value="5">  
                                             <label class="btn btn-outline-secondary" for="btn-check-2-outlined-{{option.id}}-e">Ottimo</label><br>
                                         {%else%}
@@ -180,4 +196,17 @@
         {% include 'votes_results/components/majority_judgment_info_banner.html' with guide_already_viwed=guide_already_viwed%}
     
 
+{% if consistency_check.check %}
+        <!-- script to display delete poll success modal -->
+        <script type="text/javascript">
+            $(window).on('load', function() {
+                $('#voteconsistencyerror').modal('show');
+            });
+        </script>
+{% endif %}
+<script>
+    $('#confirm-submit').click(function(){
+    $('#mj-form').submit()
+});
+</script>
 {% endblock content %}
