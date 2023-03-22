@@ -66,12 +66,21 @@
             </div>
         </div>
         {% endif %}
+        
     </div>
         
 {% endblock hidden_mobile %}
 
 {% block always_hidden %}
 
+
+<!-- Button trigger modal 
+        <button type="button" class="btn btn-info mt-2 w-100" 
+            data-bs-toggle="modal" data-bs-target="#shareModal-{{poll.id}}">
+            Condividi 
+        </button>
+        {% include "polls_management/components/share_social/share_social_modal.html" with poll=poll %}
+-->
         {% if poll.is_open and not poll.is_closed %}
             <div class="row align-items-center text-md-center">
                 <div class="col-11 col-md-4">
@@ -84,6 +93,22 @@
                             role="button">Vedi risultati</a>
                     </div>
                 </div>
+                
+            </div>
+            <div class="row align-items-center text-md-center">
+                <div class="col-11 col-md-4">
+                </div>
+                <div class="d-none col-md-4 d-md-block text-end"></div>
+                <div class="col-md-4">
+                    <div class="d-grid gap-2 d-md-block mt-2">
+                        <button type="button" class="btn btn-info mt-2 w-100" 
+                            data-bs-toggle="modal" data-bs-target="#shareModal-{{poll.id}}">
+                            Condividi 
+                        </button>
+                        {% include "polls_management/components/share_social/share_social_modal.html" with poll=poll %}
+                    </div>
+                </div>
+                
             </div>
 
             {% if poll.votable_mj and poll.poll_type == "single_option"%}
