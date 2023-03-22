@@ -3,7 +3,7 @@ import pytest
 from assertpy import assert_that
 from apps.polls_management.classes.poll_form_utils.short_id_util import ShortIdUtil
 from apps.polls_management.models.poll_model import PollModel
-from test.utils.create_polls_utils import create_single_option_polls
+from test.service_level.utils.create_polls_utils import create_single_option_polls
 
 class TestShortIdGenerator:
     
