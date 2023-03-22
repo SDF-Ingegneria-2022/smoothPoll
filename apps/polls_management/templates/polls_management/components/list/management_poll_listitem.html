@@ -86,6 +86,11 @@
             data-bs-toggle="modal" data-bs-target="#shareModal">
             Condividi 
         </button>
+        <button class="btn btn-info mt-2 w-100" 
+                data-clipboard-text="{{request.get_host}}{% url 'poll_details_page' poll_short_id=poll.short_id %}"> 
+        Copia link 
+        </button>
+ 
         </div>
         <!-- Modal -->
         <div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -131,25 +136,28 @@
                 </div>
             </div>
             </a>
-        <p class="mt-2">Link della scelta</p>
-        <div class="row bg-light">
-            <div class="col mt-2">
-                {{request.get_host}}/{{poll.short_id}}
+            <p class="mt-2">Link della scelta</p>
+            <div class="row bg-light">
+                <div class="col mt-2">
+                    <class="form-control" id="copy-input" value="{{request.get_host}}{% url 'poll_details_page' poll_short_id=poll.short_id %}"/>
+                    {{request.get_host}}/{{poll.short_id}}
+                </div>
+                <div class="col">
+                    <button class="btn mt-2 float-end" 
+                        data-clipboard-text="{{request.get_host}}{% url 'poll_details_page' poll_short_id=poll.short_id %}"> 
+                        <!--<img src="{% static 'icon/copy.png' %}">-->
+                    </button>
+                </div>
             </div>
-            <div class="col">
-                <button class="btn mt-2 float-end" 
-                    data-clipboard-text="{{request.get_host}}{% url 'poll_details_page' poll_short_id=poll.short_id %}"> 
-                    <img src="{% static 'icon/copy.png' %}">
-                </button>
-            </div>
-        </div>
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
         </div>
       </div>
+    
     </div>
-  </div>
+    </div>
+       
 
     <!-- Popup to confirm deletion of poll w id={{poll.id}} -->
     <div class="modal fade" id="deletepoll-{{poll.id}}" tabindex="-1" 
