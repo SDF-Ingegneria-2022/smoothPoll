@@ -47,6 +47,11 @@
     <!-- Buttons -->
     <div class="row">
         <div class="d-grid gap-2 d-md-block">
+            <button type="button" class="btn btn-info" 
+                data-bs-toggle="modal" data-bs-target="#shareModal-{{poll_results.poll.id}}">
+                Condividi 
+            </button>
+            {% include "polls_management/components/share_social/share_social_modal.html" with poll=poll_results.poll %}
             <a
                 class="btn btn-primary" 
                 href="{% url 'apps.votes_results:votable_polls' %}?page=1&per_page=10" >

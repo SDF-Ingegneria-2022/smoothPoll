@@ -77,6 +77,11 @@
         <a class="btn btn-primary mt-2" 
             href="{% url 'apps.votes_results:single_option_results' poll_id=vote.poll.id %}" 
             role="button">Vedi risultati</a>
+        <button type="button" class="btn btn-info mt-2" 
+            data-bs-toggle="modal" data-bs-target="#shareModal-{{vote.poll.id}}">
+            Condividi 
+        </button>
+        {% include "polls_management/components/share_social/share_social_modal.html" with poll=vote.poll %}
     </div>
 </div>
 
