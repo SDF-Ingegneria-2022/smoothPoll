@@ -4,16 +4,14 @@ from django.urls import reverse
 import pytest
 from assertpy import assert_that
 
+from test.view_level.page_visibility.utils.test_with_client import TestWithClient
 
-class TestLoadHomePage:
+
+class TestLoadHomePage(TestWithClient):
     """Test to ensure home page loads correctly"""
 
-    @pytest.fixture
-    def client(self):
-        return Client()
-
     @pytest.mark.django_db
-    def test_load_home_page(self, client):
+    def test_load_home_page(self, client: Client):
         """Test to ensure home page loads without HTTP error"""
 
         response: HttpResponse = client.get(reverse('home'))

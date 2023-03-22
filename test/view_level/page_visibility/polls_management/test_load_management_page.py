@@ -4,25 +4,14 @@ from django.urls import reverse
 import pytest
 from assertpy import assert_that
 
+from test.view_level.page_visibility.utils.test_with_client import TestWithClient
 
-class TestLoadManagementPage:
+
+class TestLoadManagementPage(TestWithClient):
     """Tests to ensure management page section load correctly. """
-
-    @pytest.fixture
-    def client(self):
-        """Not auth client"""
-        return Client()
-    
-    @pytest.fixture
-    def auth_client(self, client, django_user_model):
-        """Client with authentication"""
-
-        user = django_user_model.objects.create_user(username='test', password='test')
-        client.force_login(user)
-        return client
     
     @pytest.mark.django_db
-    def test_management_requires_auth(self, client):
+    def test_management_requires_auth(self, client: Client):
         """Test to ensure management page redirect to login 
         (because it requires authentication)"""
 
@@ -30,7 +19,7 @@ class TestLoadManagementPage:
         assert assert_that(response.status_code).is_equal_to(302)
 
     @pytest.mark.django_db
-    def test_management_loads_as_auth(self, auth_client):
+    def test_management_loads_as_auth(self, auth_client: Client):
         """Test to ensure management page loads without HTTP error"""
 
         response: HttpResponse = auth_client.get(reverse('apps.polls_management:all_user_polls'))

@@ -4,18 +4,14 @@ from django.urls import reverse
 import pytest
 from assertpy import assert_that
 
+from test.view_level.page_visibility.utils.test_with_client import TestWithClient
 
-class TestLoadVotesPage:
-    """Tests to ensure votes pages section load correctly. 
-    They include: votes results list of all polls, 
-    TODO: add more"""
 
-    @pytest.fixture
-    def client(self):
-        return Client()
+class TestLoadVotesPage(TestWithClient):
+    """Tests to ensure votes page section load correctly. """
     
     @pytest.mark.django_db
-    def test_load_votes_results_page(self, client):
+    def test_load_votes_results_page(self, client: Client):
         """Test to ensure votes results page loads without HTTP error"""
 
         response: HttpResponse = client.get(reverse('apps.votes_results:votable_polls'))
