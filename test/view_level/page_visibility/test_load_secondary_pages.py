@@ -16,18 +16,18 @@ class TestLoadSecondaryPages(TestWithClient):
         """Test to ensure attribution page loads without HTTP error"""
 
         response: HttpResponse = client.get(reverse('attributions'))
-        assert assert_that(response.status_code).is_equal_to(200)
+        assert_that(response.status_code).is_equal_to(200)
 
     @pytest.mark.django_db
     def test_load_admin_page(self, client: Client):
         """Test to ensure admin page loads without HTTP error"""
 
         response: HttpResponse = client.get('admin/')
-        assert assert_that(response.status_code).is_equal_to(200)
+        assert_that(response.status_code).is_equal_to(200)
 
     @pytest.mark.django_db
     def test_load_google_login_page(self, client: Client):
         """Test to ensure google login page loads without HTTP error"""
 
         response: HttpResponse = client.get('accounts/google/login-page/')
-        assert assert_that(response.status_code).is_equal_to(200)
+        assert_that(response.status_code).is_equal_to(200)

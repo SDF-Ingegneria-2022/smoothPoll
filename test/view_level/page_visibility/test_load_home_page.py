@@ -15,4 +15,4 @@ class TestLoadHomePage(TestWithClient):
         """Test to ensure home page loads without HTTP error"""
 
         response: HttpResponse = client.get(reverse('home'))
-        assert assert_that(response.status_code).is_equal_to(200)
+        assert_that(response.status_code).is_equal_to(200)

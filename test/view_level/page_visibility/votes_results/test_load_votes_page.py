@@ -15,4 +15,4 @@ class TestLoadVotesPage(TestWithClient):
         """Test to ensure votes results page loads without HTTP error"""
 
         response: HttpResponse = client.get(reverse('apps.votes_results:votable_polls'))
-        assert assert_that(response.status_code).is_equal_to(200)
+        assert_that(response.status_code).is_equal_to(200)
