@@ -4,7 +4,7 @@ from django.urls import reverse
 import pytest
 from assertpy import assert_that
 
-from test.view_level.page_visibility.utils.test_with_client import TestWithClient
+from test.view_level.utils.test_with_client import TestWithClient
 
 
 class TestLoadSecondaryPages(TestWithClient):
