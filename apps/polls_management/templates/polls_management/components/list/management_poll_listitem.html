@@ -1,5 +1,5 @@
 {% extends 'polls_management/components/list/generic_listitem.html' %}
-
+{% load static %}
 {% comment %}
 
     POLL as a LIST ITEM 
@@ -80,11 +80,16 @@
             class="btn btn-light mt-2 w-100" 
             role="button">Vedi dettagli</a>
         
-        <button class="btn btn-info mt-2 w-100" 
-                data-clipboard-text="{{request.get_host}}{% url 'poll_details_page' poll_short_id=poll.short_id %}"> 
-        Copia link 
+        
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-info mt-2 w-100" 
+            data-bs-toggle="modal" data-bs-target="#shareModal-{{poll.id}}">
+            Condividi 
         </button>
-    </div>
+ 
+        </div>
+        {% include "polls_management/components/share_social/share_social_modal.html" with poll=poll %}
+       
 
     <!-- Popup to confirm deletion of poll w id={{poll.id}} -->
     <div class="modal fade" id="deletepoll-{{poll.id}}" tabindex="-1" 

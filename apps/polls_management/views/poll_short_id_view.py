@@ -22,6 +22,8 @@ class PollShortIdView(View):
         
         if poll.is_open() and not poll.is_closed():
             return HttpResponseRedirect(reverse('apps.votes_results:vote', args=(poll.id,)))
+        elif poll.is_closed():
+            return HttpResponseRedirect(reverse('apps.votes_results:results', args=(poll.id,)))
 
         
         return render(request, 

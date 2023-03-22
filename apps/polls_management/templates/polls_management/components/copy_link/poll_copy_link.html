@@ -1,4 +1,4 @@
-
+{% load static %}
 <!-- Copy link -->
 <div class="input-group" style="max-width: 400px;">
     <input  id="bar"
@@ -10,6 +10,6 @@
             class="btn btn-secondary" 
             data-clipboard-action="copy" 
             data-clipboard-target="#bar">
-        Copia link
+            <img src="{% static 'icon/copy.png' %}">
     </button>
 </div>

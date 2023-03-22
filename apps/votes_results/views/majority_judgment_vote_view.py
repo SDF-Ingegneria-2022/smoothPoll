@@ -1,5 +1,6 @@
 from apps.votes_results.classes.majority_poll_result_data import MajorityPollResultData
 from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
+from apps.votes_results.classes.vote_consistency.check_consistency_session import CheckConsistencySession
 from apps.votes_results.exceptions.poll_not_yet_voted_exception import PollNotYetVodedException
 from apps.votes_results.exceptions.poll_option_rating_unvalid_exception import PollOptionRatingUnvalidException
 from apps.votes_results.exceptions.vote_does_not_exixt_exception import VoteDoesNotExistException
@@ -15,9 +16,12 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
 
+from apps.votes_results.views.single_option_vote_view import SESSION_SINGLE_OPTION_VOTE_ID
+
 SESSION_MJ_GUIDE_ALREADY_VIWED = 'mj-guide-already-viewed'
 SESSION_MJ_VOTE_SUBMIT_ERROR = 'majvote-submit-error'
 SESSION_MJ_SUBMIT_ID = 'majvote-submit-id'
+SESSION_CONSISTENCY_CHECK = 'consistency-check'
 
 class MajorityJudgmentVoteView(View):
     """View to handle Majority Judgment vote process"""
@@ -35,7 +39,7 @@ class MajorityJudgmentVoteView(View):
 
     def get(self, request: HttpRequest, poll_id: int, *args, **kwargs):
         """Render the form wich permits user to vote"""
-
+       
         if poll_id is None:
             # if poll_id is none I try retrieving a dummy poll
             poll = MajorityJudgmentVoteView.__get_dummy_poll()
@@ -50,8 +54,8 @@ class MajorityJudgmentVoteView(View):
             return render(request, 'votes_results/poll_details.html', {'poll': poll})
 
         
-        if poll.poll_type != PollModel.PollType.MAJORITY_JUDJMENT and poll.votable_mj != True:
-            
+        if ((poll.poll_type != PollModel.PollType.MAJORITY_JUDJMENT and poll.votable_mj != True) or
+            (poll.poll_type == PollModel.PollType.SINGLE_OPTION and request.session.get(SESSION_SINGLE_OPTION_VOTE_ID) is None)):
             raise Http404()
 
         options_selected = request.session.get(SESSION_MJ_VOTE_SUBMIT_ERROR)
@@ -62,8 +66,7 @@ class MajorityJudgmentVoteView(View):
 
         if request.session.get(SESSION_MJ_GUIDE_ALREADY_VIWED) is None:
             request.session[SESSION_MJ_GUIDE_ALREADY_VIWED] = True
-        
-            
+         
         return render(request, 'votes_results/majority_judgment_vote.html', {
             'poll': poll, 
             'error': {
@@ -71,6 +74,7 @@ class MajorityJudgmentVoteView(View):
                 'options_selected': options_selected,
             }, 
             'guide_already_viwed': guide_already_viwed,
+            'consistency_check': request.session.get(SESSION_CONSISTENCY_CHECK),
             })    
 
     def post(self, request: HttpRequest, poll_id: int, *args, **kwargs):
@@ -90,8 +94,9 @@ class MajorityJudgmentVoteView(View):
         session_object: dict = {
             'id': []
         }
-        #poll: PollModel = PollModel.objects.filter(poll_id=poll_id)
+        
         for key, value in request.POST.items():
+           
             if not key == 'csrfmiddlewaretoken':
                 rating: dict = {}
                 rating["poll_choice_id"] = int(key)
@@ -99,9 +104,21 @@ class MajorityJudgmentVoteView(View):
                 ratings.append(rating)
                 session_object['id'].append(int(key))
                 session_object[int(key)] =  int(value)
+        
 
+        # Single option vote consistency check
+        check_consistency_session: CheckConsistencySession = CheckConsistencySession(request)
+        if  (not request.session.get(SESSION_CONSISTENCY_CHECK) and # Check used if user has already seen the consistency check
+            check_consistency_session.check_consistency(poll, ratings, SESSION_SINGLE_OPTION_VOTE_ID, SESSION_CONSISTENCY_CHECK)):
+            
+            return HttpResponseRedirect(reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))    
+        
         try:
             vote: MajorityVoteModel = MajorityJudjmentVoteService.perform_vote(ratings, poll_id=str(poll_id))
+            
+            # Clear session if the mj vote is performed
+            check_consistency_session.clear_session([SESSION_SINGLE_OPTION_VOTE_ID, SESSION_CONSISTENCY_CHECK])
+            
         except PollOptionRatingUnvalidException:
         
             request.session[SESSION_MJ_VOTE_SUBMIT_ERROR] = session_object
