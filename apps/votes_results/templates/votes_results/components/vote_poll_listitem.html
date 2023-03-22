@@ -54,14 +54,14 @@
         {% if poll.is_open and not poll.is_closed %}
         <div class="col-12 col-md-4">
             <div class="d-grid gap-2 d-md-block">
-                {% include "votes_results/components/vote_button.html" with poll=poll btn_classes="mt-2 w-100" %}
+                {% include "votes_results/components/vote_button.html" with poll=poll btn_classes="mt-2" %}
             </div>
         </div>
         {% elif poll.is_closed %}
         <div class="col-12 col-md-4">
             <div class="d-grid gap-2 d-md-block">
                 <a href="{% url 'apps.votes_results:results' poll_id=poll.id %}" 
-                    class="btn btn-secondary mt-2 w-100" 
+                    class="btn btn-secondary mt-2" 
                     role="button">Vedi risultati</a>
             </div>
         </div>
@@ -73,6 +73,14 @@
 
 {% block always_hidden %}
 
+
+<!-- Button trigger modal 
+        <button type="button" class="btn btn-info mt-2 w-100" 
+            data-bs-toggle="modal" data-bs-target="#shareModal-{{poll.id}}">
+            Condividi 
+        </button>
+        {% include "polls_management/components/share_social/share_social_modal.html" with poll=poll %}
+-->
         {% if poll.is_open and not poll.is_closed %}
             <div class="row align-items-center text-md-center">
                 <div class="col-11 col-md-4">
@@ -81,28 +89,12 @@
                 <div class="col-md-4">
                     <div class="d-grid gap-2 d-md-block mt-2">
                         <a href="{% url 'apps.votes_results:results' poll_id=poll.id %}" 
-                            class="btn btn-secondary mt-2 w-100" 
+                            class="btn btn-secondary mt-md-0" 
                             role="button">Vedi risultati</a>
                     </div>
                 </div>
                 
             </div>
-
-            {% if poll.votable_mj and poll.poll_type == "single_option"%}
-                <div class="row align-items-center text-md-center">
-                    <div class="col-11 col-md-4">
-                    </div>
-                    <div class="d-none col-md-4 d-md-block text-end"></div>
-                    <div class="col-md-4">
-                        <div class="d-grid gap-2 d-md-block mt-2">
-                            <a href="{% url 'apps.votes_results:majority_judgment_results' poll_id=poll.id %}" 
-                                class="btn btn-secondary mt-2 w-100" 
-                                role="button">Vedi risultati Giudizio Maggioritario</a>
-                        </div>
-                    </div>
-                </div>
-            {% endif %}
-
             <div class="row align-items-center text-md-center">
                 <div class="col-11 col-md-4">
                 </div>
@@ -119,6 +111,20 @@
                 
             </div>
 
+            {% if poll.votable_mj and poll.poll_type == "single_option"%}
+                <div class="row align-items-center text-md-center">
+                    <div class="col-11 col-md-4">
+                    </div>
+                    <div class="d-none col-md-4 d-md-block text-end"></div>
+                    <div class="col-md-4">
+                        <div class="d-grid gap-2 d-md-block mt-2">
+                            <a href="{% url 'apps.votes_results:majority_judgment_results' poll_id=poll.id %}" 
+                                class="btn btn-secondary mt-md-0" 
+                                role="button">Vedi risultati Giudizio Maggioritario</a>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
         {% endif %}
 
 {% endblock always_hidden %}
