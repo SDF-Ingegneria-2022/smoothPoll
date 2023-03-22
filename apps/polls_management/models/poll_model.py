@@ -1,15 +1,12 @@
-import datetime
-
+import random
 from django.conf import settings
 from apps.polls_management.models.poll_option_model import PollOptionModel
-
 from typing import List
 from django.db import models
 from django.db.models import CharField
 from django.utils.translation import gettext as _
 from django.utils import timezone
-from django.contrib.auth.models import User
-from django.contrib.auth import get_user_model
+
 
 # Poll model fields
 NAME = 'name'
@@ -22,6 +19,7 @@ VOTABLE_MJ = 'votable_mj'
 AUTHOR = 'author'
 PRIVATE = 'private'
 SHORT_ID = 'short_id'
+RANDOMIZE_OPTIONS = 'randomize_options'
 class PollModel(models.Model): 
 
     class PollType(models.TextChoices):
@@ -73,22 +71,31 @@ class PollModel(models.Model):
         max_length=60, verbose_name=_("ID Corto"), 
         default=None, blank=True, null=True, unique=True
     )
+    
+    randomize_options: models.BooleanField = models.BooleanField(
+        default=False, verbose_name=_("Randomizza Opzioni")
+    )
 
     def __str__(self):
         return str({
             'id': self.id, 
-            'name': self.name,
-            'question': self.question,
-            'poll_type': self.poll_type, 
-            'open_datetime': self.open_datetime, 
-            'close_datetime': self.close_datetime,
-            'predefined': self.predefined,
-            'private':  self.private,
-            'short_id': self.short_id
+            NAME: self.name,
+            QUESTION: self.question,
+            POLL_TYPE: self.poll_type, 
+            OPEN_DATETIME: self.open_datetime, 
+            CLOSE_DATETIME: self.close_datetime,
+            PREDEFINITED: self.predefined,
+            PRIVATE:  self.private,
+            SHORT_ID: self.short_id,
+            RANDOMIZE_OPTIONS: self.randomize_options,
         })
 
     def options(self) -> List[PollOptionModel]:
-        return list(PollOptionModel.objects.filter(poll_fk=self.id))
+        options = list(PollOptionModel.objects.filter(poll_fk=self.id))
+        if self.randomize_options:
+            random.shuffle(options)
+       
+        return options
 
 
     def is_open(self) -> bool:
