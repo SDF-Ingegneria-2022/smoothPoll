@@ -1,7 +1,7 @@
 {% load static %}
 <!-- Copy link -->
 <div class="input-group" style="max-width: 400px;">
-    <input  id="bar"
+    <input  id="bar-{{poll.id}}"
             type="text" 
             readonly 
             class="form-control"
@@ -9,7 +9,7 @@
     <button 
             class="btn btn-secondary" 
             data-clipboard-action="copy" 
-            data-clipboard-target="#bar">
+            data-clipboard-target="#bar-{{poll.id}}">
             <img src="{% static 'icon/copy.png' %}">
     </button>
 </div>
