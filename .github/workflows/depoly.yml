@@ -1,7 +1,6 @@
 name: Depoly in Production
 on:
-  pull_request:
-    types: [ closed ]
+  push:
     branches:
       - master
 jobs:
