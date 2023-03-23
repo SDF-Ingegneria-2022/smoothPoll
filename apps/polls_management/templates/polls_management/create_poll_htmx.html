@@ -52,7 +52,7 @@
                 {% for i,option in options.items %}         
                     {% include "polls_management/components/htmx_option_input.html" with option=option i=i %}
                 {% endfor %}
-            </div>y
+            </div>
             <a id="add-option-button" class="btn btn-primary" role="button"
                 hx-post="{% url 'apps.polls_management:poll_form_htmx_create_option' %}"
                 hx-target="#options-inputs"
