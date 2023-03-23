@@ -17,9 +17,7 @@ if [ "$OLD_VERSION" != "$NEW_VERSION" ]; then
     echo "Deployment done!"
     echo "Restarting gunicorn..."
     sleep 5
-    sudo -S <<< $1 systemctl daemon-reload &> /dev/null
-    sudo -S <<< $1 systemctl restart gunicorn &> /dev/null
-    sudo -S <<< $1 nginx -t && sudo -S <<< $1 systemctl restart nginx &> /dev/null
+    sudo systemctl restart gunicorn &> /dev/null
     echo -e "\033[1;32mDeployment done!\033[1;32m"
 else
     echo -e "\033[0;31mNo new version available, nothing to do.\033[0;31m"
