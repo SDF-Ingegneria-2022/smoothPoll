@@ -97,3 +97,10 @@
 
 {% endblock container %}
 
+{% block customjs %}
+
+{% include 'polls_management/components/copy_link/copy_link_script.html' with poll=poll %}
+
+{% endblock customjs %}
+
+
