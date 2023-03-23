@@ -23,9 +23,15 @@ class PollResultVoice:
     """
     The voted option
     """
+    position:int
+    """
+    Position in results
+    """
+
 
     def __init__(self, poll_option: PollOptionModel) -> None:
         self.n_votes = PollResultVoice.__count_n_votes(poll_option)
+        self.position = 0
         self.option = poll_option
 
     @staticmethod
@@ -70,5 +76,22 @@ class PollResult:
         def n_votes(voice: PollResultVoice):
             return voice.n_votes
         self.__memoized_result.sort(reverse=True, key=n_votes)
+
+
+        index =0 
+        pos = 1 #temporary position
+        n_pos = 1 #number of option on the same position
+        for option in self.__memoized_result:
+            if(index==0):
+                option.position=pos
+            elif(self.__memoized_result[index-1].n_votes==option.n_votes):
+                option.position=pos
+                n_pos+=1
+            else:
+                pos += n_pos
+                option.position = pos
+                n_pos=1
+            index += 1
+            
 
         return self.__memoized_result
