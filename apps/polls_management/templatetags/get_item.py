@@ -5,5 +5,4 @@ def get_item(dictionary, key):
     try:
         return dictionary[key]
     except (AttributeError, KeyError) as e:
-        print(e)
         return None

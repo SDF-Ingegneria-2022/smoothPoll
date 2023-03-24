@@ -70,10 +70,7 @@ class PollResult:
         # calculate result
         self.__memoized_result = []
         for option in PollOptionModel.objects.filter(poll_fk=self.poll.id).all():
-            print(option)
             self.__memoized_result.append(PollResultVoice(option))
-
-        print(self.__memoized_result)
 
         # sort by (decreasing) n votes
         def n_votes(voice: PollResultVoice):
