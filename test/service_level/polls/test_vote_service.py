@@ -56,7 +56,7 @@ class TestPollService:
         result = SingleOptionVoteService.calculate_result(poll.id)
         assert_that(result).is_instance_of(PollResult)
 
-        for voted_option in SingleOptionVoteService.calculate_result(poll.id).get_sorted_options(): 
+        for voted_option in SingleOptionVoteService.calculate_result(poll.id).get_sorted_options()['results']: 
             assert_that(voted_option).is_instance_of(PollResultVoice)
 
 
@@ -68,12 +68,12 @@ class TestPollService:
 
         poll: PollModel = test_polls['voted_poll']
 
-        for voted_option in SingleOptionVoteService.calculate_result(poll.id).get_sorted_options(): 
+        for voted_option in SingleOptionVoteService.calculate_result(poll.id).get_sorted_options()['results']: 
             assert_that(voted_option.n_votes).is_equal_to(0)
 
         SingleOptionVoteService.perform_vote(poll_id=poll.id, poll_choice_id=poll.options()[0].id)
 
-        winner = SingleOptionVoteService.calculate_result(poll.id).get_sorted_options()[0]
+        winner = SingleOptionVoteService.calculate_result(poll.id).get_sorted_options()['results'][0]
 
         assert_that(winner.option.id).is_equal_to(poll.options()[0].id)
         assert_that(winner.n_votes).is_equal_to(1)
@@ -86,7 +86,7 @@ class TestPollService:
 
         poll: PollModel = test_polls['voted_poll']
 
-        for voted_option in SingleOptionVoteService.calculate_result(poll.id).get_sorted_options(): 
+        for voted_option in SingleOptionVoteService.calculate_result(poll.id).get_sorted_options()['results']: 
             assert_that(voted_option.n_votes).is_equal_to(0)
 
         SingleOptionVoteService.perform_vote(poll_id=poll.id, poll_choice_id=poll.options()[0].id)
@@ -96,7 +96,7 @@ class TestPollService:
         SingleOptionVoteService.perform_vote(poll_id=poll.id, poll_choice_id=poll.options()[1].id)
         SingleOptionVoteService.perform_vote(poll_id=poll.id, poll_choice_id=poll.options()[2].id)
 
-        for voted_option in SingleOptionVoteService.calculate_result(poll.id).get_sorted_options(): 
+        for voted_option in SingleOptionVoteService.calculate_result(poll.id).get_sorted_options()['results']: 
             assert_that(voted_option.n_votes).is_equal_to(2)
 
     @pytest.mark.django_db
