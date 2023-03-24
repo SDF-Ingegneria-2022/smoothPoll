@@ -45,18 +45,21 @@ def get_poll_form(request: HttpRequest) -> PollForm:
     from session (or from POST request)."""
 
     # temp, TODO: fix in a seriuous way
-    formdata = request.session.get(SESSION_FORMDATA)
-    
-    if formdata is not None:
-        if isinstance(formdata, QueryDict):
-            formdata = formdata.dict()
-        # various book flags may be undefined 
-        # --> perform the check and adjust
-        for key in [VOTABLE_MJ, PRIVATE, RANDOMIZE_OPTIONS]:
-            if formdata.get(key) == "undefined" :
-                formdata[key] = False
-        # save again in session
-        request.session[SESSION_FORMDATA] = PollForm(formdata).data
+    try:
+        formdata = request.session.get(SESSION_FORMDATA)
+        
+        if formdata is not None:
+            if isinstance(formdata, QueryDict):
+                formdata = formdata.dict()
+            # various book flags may be undefined 
+            # --> perform the check and adjust
+            for key in [VOTABLE_MJ, PRIVATE, RANDOMIZE_OPTIONS]:
+                if formdata.get(key) == "undefined" :
+                    formdata[key] = False
+            # save again in session
+            request.session[SESSION_FORMDATA] = PollForm(formdata).data
+    except:
+        print(":)")
     
 
     # build a form for creation (w most updated data)
