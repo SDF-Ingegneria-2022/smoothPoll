@@ -65,7 +65,13 @@ class CreatePollHtmxView(View):
 
         # retrieve data from session (or POST)
         form = get_poll_form(request)
-        options = request.session.get(SESSION_OPTIONS) or {}
+
+        # temporary override of options 
+        try:
+            options = get_poll_options_from_post(request)
+        except:
+            options = request.session.get(SESSION_OPTIONS) or {}
+                
         current_user = request.user
         
         # create object or apply changes
@@ -126,3 +132,18 @@ def poll_form_confirm(request: HttpRequest):
         'poll': poll, 
         'edit': request.session.get(SESSION_IS_EDIT)
     })
+
+
+def get_poll_options_from_post(request: HttpRequest):
+    """TEMP method for extracting poll options from POST"""
+
+    options_keys = [k for k in request.POST.keys() if k.startswith("option-")]
+    
+    options = {}
+    for k in options_keys:
+        options[k.split("-")[1]] = request.POST.get(k)
+    
+    return options
+
+
+    
