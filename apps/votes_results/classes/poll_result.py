@@ -23,9 +23,15 @@ class PollResultVoice:
     """
     The voted option
     """
+    position:int
+    """
+    Position in results
+    """
+
 
     def __init__(self, poll_option: PollOptionModel) -> None:
         self.n_votes = PollResultVoice.__count_n_votes(poll_option)
+        self.position = 0
         self.option = poll_option
 
     @staticmethod
@@ -64,14 +70,39 @@ class PollResult:
         # calculate result
         self.__memoized_result = []
         for option in PollOptionModel.objects.filter(poll_fk=self.poll.id).all():
-            print(option)
             self.__memoized_result.append(PollResultVoice(option))
-
-        print(self.__memoized_result)
 
         # sort by (decreasing) n votes
         def n_votes(voice: PollResultVoice):
             return voice.n_votes
         self.__memoized_result.sort(reverse=True, key=n_votes)
+
+
+        index =0 
+        aux_n_position=[]
+        pos = 1 #temporary position
+        n_pos = 1 #number of option on the same position
+        for option in self.__memoized_result:
+            if(index==0):
+                option.position=pos
+            elif(self.__memoized_result[index-1].n_votes==option.n_votes):
+                option.position=pos
+                n_pos+=1
+            else:
+                pos += n_pos
+                option.position = pos
+                n_pos=1
+            aux_n_position.append([pos,option])
+            index += 1
+
+        index = 0
+        n_position=[]
+        while index <len(aux_n_position)-1:
+            if(aux_n_position[index][0]!=aux_n_position[index+1][0]):
+                n_position.append(aux_n_position[index])
+            index+=1
+        n_position.append(aux_n_position[-1])
         
-        return self.__memoized_result
+        return {"results":self.__memoized_result,
+                "positions":n_position
+                }
