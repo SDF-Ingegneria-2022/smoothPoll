@@ -95,15 +95,9 @@ class PollResult:
             aux_n_position.append([pos,option])
             index += 1
 
-        print(aux_n_position)
-
-        
         index = 0
         n_position=[]
         while index <len(aux_n_position)-1:
-            print(index)
-            print(aux_n_position[index][0],aux_n_position[index+1][0])
-            print(aux_n_position[index][1],aux_n_position[index+1][1])
             if(aux_n_position[index][0]!=aux_n_position[index+1][0]):
                 n_position.append(aux_n_position[index])
             index+=1
