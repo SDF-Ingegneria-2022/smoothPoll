@@ -1,4 +1,4 @@
-from django.http import Http404, HttpRequest
+from django.http import Http404, HttpRequest, QueryDict
 from apps.polls_management.classes.poll_form_utils.poll_form import PollForm
 from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
 from apps.polls_management.exceptions.poll_not_valid_creation_exception import *
@@ -43,6 +43,24 @@ def clean_session(request: HttpRequest) -> None:
 def get_poll_form(request: HttpRequest) -> PollForm:
     """Factory method to get current form 
     from session (or from POST request)."""
+
+    # temp, TODO: fix in a seriuous way
+    try:
+        formdata = request.session.get(SESSION_FORMDATA)
+        
+        if formdata is not None:
+            if isinstance(formdata, QueryDict):
+                formdata = formdata.dict()
+            # various book flags may be undefined 
+            # --> perform the check and adjust
+            for key in [VOTABLE_MJ, PRIVATE, RANDOMIZE_OPTIONS]:
+                if formdata.get(key) == "undefined" :
+                    formdata[key] = False
+            # save again in session
+            request.session[SESSION_FORMDATA] = PollForm(formdata).data
+    except:
+        print(":)")
+    
 
     # build a form for creation (w most updated data)
     if request.session.get(SESSION_POLL_ID) is None:
