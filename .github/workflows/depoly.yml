@@ -1,8 +1,8 @@
 name: Depoly in Production
 on:
   push:
-    tags:
-      - '*' 
+    branches:
+      - master
 jobs:
 
   build:

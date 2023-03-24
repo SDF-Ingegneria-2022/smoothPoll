@@ -1,4 +1,4 @@
-from apps.polls_management.models.poll_model import PollModel, NAME, \
+from apps.polls_management.models.poll_model import RANDOMIZE_OPTIONS, PollModel, NAME, \
                                                     QUESTION, POLL_TYPE, \
                                                     OPEN_DATETIME, CLOSE_DATETIME,\
                                                     PREDEFINITED, VOTABLE_MJ, AUTHOR,\
@@ -23,6 +23,9 @@ class PollForm(ModelForm):
         self.fields[SHORT_ID].initial = ShortIdUtil.generate()
         if self.data.get(SHORT_ID) is None:
             self.data[SHORT_ID] = ShortIdUtil.generate()
+            
+        # Randomize options by default
+        self.fields[RANDOMIZE_OPTIONS].initial = True
 
     class Meta:
         model = PollModel
@@ -35,7 +38,8 @@ class PollForm(ModelForm):
                     PREDEFINITED, 
                     VOTABLE_MJ, 
                     PRIVATE, 
-                    SHORT_ID
+                    SHORT_ID, 
+                    RANDOMIZE_OPTIONS
                 ]
         
         labels = {
@@ -47,7 +51,8 @@ class PollForm(ModelForm):
                     AUTHOR: _("Nome dell'autore"), 
                     VOTABLE_MJ: _("Rendi giudicabile anche con il Giudizio Maggioritario"),
                     PRIVATE: _("Scelta accessibile solo tramite link"), 
-                    SHORT_ID: _("Codice identificativo"), 
+                    SHORT_ID: _("Codice identificativo"),
+                    RANDOMIZE_OPTIONS: _("Durante la fase di scelta o giudizio le opzioni saranno presentate in ordine casuale"), 
                 }
         
         help_texts = {

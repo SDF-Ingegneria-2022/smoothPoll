@@ -90,9 +90,20 @@
                 href="{% url 'apps.votes_results:majority_judgment_results' poll_id=vote.poll.id %}">
                 Vedi risultati
             </a>
+            <button type="button" class="btn btn-info mt-2" 
+                data-bs-toggle="modal" data-bs-target="#shareModal-{{vote.poll.id}}">
+                Condividi 
+            </button>
+        {% include "polls_management/components/share_social/share_social_modal.html" with poll=vote.poll %}
         </div>
     </div>
 
 </div> 
 
 {% endblock content %}
+
+{% block customjs %}
+
+{% include 'polls_management/components/copy_link/copy_link_script.html' with poll=poll %}
+
+{% endblock customjs %}

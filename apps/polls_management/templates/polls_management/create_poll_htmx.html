@@ -40,7 +40,7 @@
             hx-trigger="keyup delay:500ms, change"
             hx-post="{% url 'apps.polls_management:poll_form_htmx_edit' %}"
             hx-swap="none" 
-            hx-params="name, question, poll_type, open_datetime, close_datetime, votable_mj, private, short_id">
+            hx-params="name, question, poll_type, open_datetime, close_datetime, votable_mj, private, short_id, randomize_options">
 
             {% bootstrap_form poll_form %}
         </div>
@@ -49,22 +49,15 @@
 
         <div class="form-group mb-5">
             <div class="mb-2" id="options-inputs" >
-                {% comment %} <form 
-                    hx-trigger="input from:* delay:500ms"
-                    hx-post="{% url 'apps.polls_management:poll_form_htmx_edit_option' 0 %}"
-                    hx-swap="none" >  {% endcomment %}
-                    
-                    {% for i,option in options.items %}         
-                        {% include "polls_management/components/htmx_option_input.html" with option=option i=i %}
-                    {% endfor %}
-                {% comment %} </form> {% endcomment %}
+                {% for i,option in options.items %}         
+                    {% include "polls_management/components/htmx_option_input.html" with option=option i=i %}
+                {% endfor %}
             </div>
             <a id="add-option-button" class="btn btn-primary" role="button"
                 hx-post="{% url 'apps.polls_management:poll_form_htmx_create_option' %}"
                 hx-target="#options-inputs"
                 hx-swap="beforeend"
                 >Aggiungi Opzione</a>
-            {% comment "TODO" %}Find a way to show alerts in htmx{% endcomment %}
         </div>
 
         {% csrf_token %}

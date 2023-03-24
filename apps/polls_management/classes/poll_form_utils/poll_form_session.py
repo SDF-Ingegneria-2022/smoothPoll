@@ -1,9 +1,9 @@
-from django.http import Http404, HttpRequest
+from django.http import Http404, HttpRequest, QueryDict
 from apps.polls_management.classes.poll_form_utils.poll_form import PollForm
 from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
 from apps.polls_management.exceptions.poll_not_valid_creation_exception import *
 from apps.polls_management.services.poll_service import PollService
-from apps.polls_management.models.poll_model import PollModel, NAME, \
+from apps.polls_management.models.poll_model import RANDOMIZE_OPTIONS, PollModel, NAME, \
                                                     QUESTION, POLL_TYPE, \
                                                     OPEN_DATETIME, CLOSE_DATETIME,\
                                                     PREDEFINITED, VOTABLE_MJ, AUTHOR,\
@@ -43,6 +43,24 @@ def clean_session(request: HttpRequest) -> None:
 def get_poll_form(request: HttpRequest) -> PollForm:
     """Factory method to get current form 
     from session (or from POST request)."""
+
+    # temp, TODO: fix in a seriuous way
+    try:
+        formdata = request.session.get(SESSION_FORMDATA)
+        
+        if formdata is not None:
+            if isinstance(formdata, QueryDict):
+                formdata = formdata.dict()
+            # various book flags may be undefined 
+            # --> perform the check and adjust
+            for key in [VOTABLE_MJ, PRIVATE, RANDOMIZE_OPTIONS]:
+                if formdata.get(key) == "undefined" :
+                    formdata[key] = False
+            # save again in session
+            request.session[SESSION_FORMDATA] = PollForm(formdata).data
+    except:
+        print(":)")
+    
 
     # build a form for creation (w most updated data)
     if request.session.get(SESSION_POLL_ID) is None:
@@ -87,6 +105,7 @@ def init_session_for_edit(request: HttpRequest, poll: PollModel,
         VOTABLE_MJ: override_data.get(VOTABLE_MJ, poll.votable_mj),
         PRIVATE: override_data.get(PRIVATE, poll.private), 
         SHORT_ID: override_data.get(SHORT_ID, poll.short_id), 
+        RANDOMIZE_OPTIONS: override_data.get(RANDOMIZE_OPTIONS, poll.randomize_options)
     }, instance=poll)
 
     # init poll options with current ones
