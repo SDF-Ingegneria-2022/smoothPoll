@@ -18,7 +18,7 @@
         </div>
     </div>
     <!-- SO results -->
-    {%for voted_option in poll_results.get_sorted_options %}
+    {%for voted_option in poll_results.get_sorted_options.results %}
         <div class="row m-3">
             <div class="col-1 fs-4 pt-1 {%if voted_option.position == 1%}bg-success {%else%}bg-primary {%endif%}text-center text-white ">
                 {{voted_option.position}}
