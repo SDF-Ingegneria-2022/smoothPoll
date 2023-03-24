@@ -1,4 +1,4 @@
-from apps.polls_management.classes.poll_form_utils.poll_form_session import SESSION_ERROR, SESSION_IS_EDIT, SESSION_OPTIONS, SESSION_POLL_ID, clean_session, get_poll_form
+from apps.polls_management.classes.poll_form_utils.poll_form_session import SESSION_ERROR, SESSION_FORMDATA, SESSION_IS_EDIT, SESSION_OPTIONS, SESSION_POLL_ID, clean_session, get_poll_form
 from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
 from apps.polls_management.models.poll_model import PollModel
 from apps.polls_management.services.poll_create_service import PollCreateService
@@ -135,7 +135,8 @@ def poll_form_confirm(request: HttpRequest):
 
 
 def get_poll_options_from_post(request: HttpRequest):
-    """TEMP method for extracting poll options from POST"""
+    """TEMP method for extracting poll options from POST
+    TODO: fix in a seriuous way"""
 
     options_keys = [k for k in request.POST.keys() if k.startswith("option-")]
     
