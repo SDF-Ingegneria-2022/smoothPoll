@@ -102,6 +102,7 @@ class PollResult:
                 n_position.append(aux_n_position[index])
             index+=1
         n_position.append(aux_n_position[-1])
+        
         return {"results":self.__memoized_result,
                 "positions":n_position
                 }
