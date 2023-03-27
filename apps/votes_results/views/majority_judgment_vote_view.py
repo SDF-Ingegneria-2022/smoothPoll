@@ -1,3 +1,4 @@
+from apps.polls_management.models.poll_option_model import PollOptionModel
 from apps.votes_results.classes.majority_poll_result_data import MajorityPollResultData
 from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
 from apps.votes_results.classes.vote_consistency.check_consistency_session import CheckConsistencySession
@@ -66,7 +67,9 @@ class MajorityJudgmentVoteView(View):
 
         if request.session.get(SESSION_MJ_GUIDE_ALREADY_VIWED) is None:
             request.session[SESSION_MJ_GUIDE_ALREADY_VIWED] = True
-         
+        
+        vote_single_option: PollOptionModel = PollOptionModel.objects.get(id=request.session.get(SESSION_SINGLE_OPTION_VOTE_ID))
+
         return render(request, 'votes_results/majority_judgment_vote.html', {
             'poll': poll, 
             'error': {
@@ -75,6 +78,7 @@ class MajorityJudgmentVoteView(View):
             }, 
             'guide_already_viwed': guide_already_viwed,
             'consistency_check': request.session.get(SESSION_CONSISTENCY_CHECK),
+            'single_option' : vote_single_option.value,
             })    
 
     def post(self, request: HttpRequest, poll_id: int, *args, **kwargs):
