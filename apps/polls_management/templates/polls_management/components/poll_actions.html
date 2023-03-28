@@ -47,12 +47,21 @@
 <div class="container">
 
     <div class="form-outline">
-        <textarea class="form-control" id="textAreaExample1" rows="8">Message</textarea>
+        <textarea class="form-control" id="textAreaExample1" rows="8">{% for link in links %} 
+                {{link}}
+            {% endfor %}
+        </textarea>
         <label class="form-label" for="textAreaExample"></label>
     </div>
 
     <div class="d-grid gap-2">
-        <button type="button" name="" id="" class="btn btn-primary">Genera link con token</button>
+        <form action="{% url 'apps.polls_management:poll_tokens' poll_id=poll.id token_number=tokens %}" method="POST">
+            {% csrf_token %}
+            <input type="text" name="tokens">
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <button type="submit" class="btn btn-success m-2">Genera Token</button>
+            </div>
+        </form>
     </div>
 
 </div> {% endcomment %}

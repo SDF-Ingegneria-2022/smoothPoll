@@ -6,4 +6,5 @@ from .poll_details_management_view import *
 from .form_views.create_poll_init_view import *
 from .form_views.edit_poll_init_view import *
 from .form_views.form_htmx_views import *
+from .poll_token_view import *
 
