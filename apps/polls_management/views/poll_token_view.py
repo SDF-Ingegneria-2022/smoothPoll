@@ -25,9 +25,9 @@ def poll_token(request: HttpRequest, poll_id: int):
     for x in range(token_number):
         phantomuser: User = User.objects.create_user(username="user"+str(x))
         templink = link
-        templink += get_query_string(user=phantomuser, scope=f"poll:{poll_id}")
-        # print(templink)
-        phantomuser.delete()
+        templink += get_query_string(user=phantomuser)
+        print(templink)
+        
         links.append(templink)
 
     try:

@@ -2,11 +2,14 @@ from django.http import Http404, HttpResponseRedirect
 from django.urls import reverse
 from apps.polls_management.models.poll_model import PollModel
 from apps.polls_management.services.poll_service import PollService
+from sesame.decorators import authenticate
+from sesame.utils import get_user
 
-
+@authenticate(required=False)
 def generic_vote_view(request, poll_id: int):
     """Redirect to poll's main vote method"""
 
+    print(get_user(request_or_sesame=request))
     try:
         # Retrieve poll
         poll: PollModel = PollService.get_poll_by_id(poll_id)
