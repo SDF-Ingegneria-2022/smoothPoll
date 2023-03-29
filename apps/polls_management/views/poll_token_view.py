@@ -4,6 +4,7 @@ from django.http import Http404, HttpRequest
 from django.shortcuts import render
 from django.urls import reverse
 from sesame.utils import get_query_string
+from django.utils.crypto import get_random_string
 
 from apps.polls_management.models.poll_model import PollModel
 from apps.polls_management.services.poll_service import PollService
@@ -23,7 +24,10 @@ def poll_token(request: HttpRequest, poll_id: int):
 
     # creation of a token link for as many times as dictated
     for x in range(token_number):
-        phantomuser: User = User.objects.create_user(username="user"+str(x))
+        unique_id = get_random_string(length=8)
+        while (User.objects.filter(username=unique_id).exists()):
+            unique_id = get_random_string(length=8)
+        phantomuser: User = User.objects.create_user(username=unique_id)
         templink = link
         templink += get_query_string(user=phantomuser)
         print(templink)
