@@ -8,8 +8,6 @@ from apps.polls_management.constants.models_constants import POLL_MODEL_NAME
 class PollTokens(models.Model):
 
     """Class used to represent a database table containing poll specific tokens and validation flags."""
-    
-    token_name: CharField = models.CharField(max_length=200)
 
     poll_fk: models.ForeignKey = models.ForeignKey(POLL_MODEL_NAME, on_delete=models.CASCADE)
 
@@ -25,7 +23,6 @@ class PollTokens(models.Model):
     def __str__(self):
         return str({
             'id': self.id,
-            'token_name': self.token_name,
             'poll': str(self.poll_fk),
             'user': self.token_user.username,
             'single_use': self.single_option_use,

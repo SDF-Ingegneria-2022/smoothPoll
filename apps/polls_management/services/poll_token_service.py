@@ -1,7 +1,7 @@
 
 from typing import List
 from django.utils.crypto import get_random_string
-from sesame.utils import get_query_string, get_token
+from sesame.utils import get_query_string
 from django.contrib.auth.models import User
 from apps.polls_management.models.poll_model import PollModel
 
@@ -33,8 +33,7 @@ class PollTokenService:
             templink += get_query_string(user=phantomuser)
 
             # creation of database table for new token
-            token: str = get_token(user=phantomuser)
-            new_token: PollTokens = PollTokens(token_user=phantomuser, token_name=token, poll_fk=poll)
+            new_token: PollTokens = PollTokens(token_user=phantomuser, poll_fk=poll)
             new_token.save()
             
             token_links.append(templink)
