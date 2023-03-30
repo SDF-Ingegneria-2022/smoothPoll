@@ -17,7 +17,7 @@ from django.http import HttpRequest, HttpResponseServerError, HttpResponseRedire
 from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
-from sesame.utils import get_user
+from sesame.utils import get_user, get_token
 from sesame.decorators import authenticate
 
 from apps.votes_results.views.single_option_vote_view import SESSION_SINGLE_OPTION_VOTE_ID
@@ -29,8 +29,7 @@ SESSION_CONSISTENCY_CHECK = 'consistency-check'
 
 class MajorityJudgmentVoteView(View):
     """View to handle Majority Judgment vote process"""
-    
-    @authenticate(required=False)
+
     @staticmethod
     def __get_dummy_poll() -> PollModel:
         """Try to retrieve a dummy MJ poll"""
@@ -88,7 +87,6 @@ class MajorityJudgmentVoteView(View):
             'single_option' : vote_single_option.value,
             })    
 
-    @authenticate(required=False)
     def post(self, request: HttpRequest, poll_id: int, *args, **kwargs):
         """Handle vote perform and redirect to recap (or 
         redirect to form w errors)"""
@@ -127,11 +125,14 @@ class MajorityJudgmentVoteView(View):
         
         try:
             vote: MajorityVoteModel = MajorityJudjmentVoteService.perform_vote(ratings, poll_id=str(poll_id))
-            if get_user(request_or_sesame=request) is not None:
+
+            # invalidation of token if vote is successful
+            if request.session.get('token_used') is not None:
                 try:
-                    token_poll = PollTokenService.get_poll_token_by_user(request.user)
+                    token_user = request.session.get('token_used').token_user
+                    token_poll = PollTokenService.get_poll_token_by_user(token_user)
                 except Exception:
-                    raise Http404(f"Token associated with user {request.user} not found.")
+                    raise Http404(f"Token associated with user {token_user} not found.")
                 PollTokenService.check_majority_option(token_poll)
 
             # Clear session if the mj vote is performed
@@ -143,6 +144,10 @@ class MajorityJudgmentVoteView(View):
             return HttpResponseRedirect(reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))
         except Exception as e:
             raise Http404
+
+        # Clean session data for token validation
+        if request.session.get('token_used') is not None:
+            del request.session['token_used']
 
         # Clean eventual error session.
         if request.session.get(SESSION_MJ_VOTE_SUBMIT_ERROR) is not None:

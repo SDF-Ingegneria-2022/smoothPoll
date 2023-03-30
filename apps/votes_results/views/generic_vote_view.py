@@ -29,14 +29,16 @@ def generic_vote_view(request, poll_id: int):
     elif PollTokenService.is_majority_token_used(token_poll_data):
         return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
     
+    request.session['token_used'] = token_poll_data
+
     # redirect to proper vote method
     if poll.poll_type == PollModel.PollType.MAJORITY_JUDJMENT:
         return HttpResponseRedirect(
-            reverse('apps.votes_results:majority_judgment_vote', args=(poll_id, token_poll_data,)))
+            reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,),))
     else:
         return HttpResponseRedirect(reverse(
             'apps.votes_results:single_option_vote', 
-            args=(poll_id, token_poll_data,)))
+            args=(poll_id,)))
 
 
 def generic_results_view(request, poll_id: int):
