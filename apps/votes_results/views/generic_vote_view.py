@@ -7,6 +7,7 @@ from apps.polls_management.services.poll_token_service import PollTokenService
 from apps.polls_management.models.poll_token import PollTokens
 from sesame.decorators import authenticate
 from sesame.utils import get_user, get_token
+from django.contrib.auth import logout
 
 @authenticate(required=False)
 def generic_vote_view(request, poll_id: int):
@@ -25,8 +26,10 @@ def generic_vote_view(request, poll_id: int):
         return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
     
     if PollTokenService.is_single_option_token_used(token_poll_data):
+        logout(request)
         return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
     elif PollTokenService.is_majority_token_used(token_poll_data):
+        logout(request)
         return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
     
     request.session['token_used'] = token_poll_data
