@@ -3,12 +3,10 @@ from typing import List
 from django.http import Http404, HttpRequest
 from django.shortcuts import render
 from django.urls import reverse
-from sesame.utils import get_query_string
-from django.utils.crypto import get_random_string
 
 from apps.polls_management.models.poll_model import PollModel
 from apps.polls_management.services.poll_service import PollService
-from django.contrib.auth.models import User
+from apps.polls_management.services.poll_token_service import PollTokenService
 
 def poll_token(request: HttpRequest, poll_id: int):
     """View used to create specific poll tokens in details page."""
@@ -19,20 +17,7 @@ def poll_token(request: HttpRequest, poll_id: int):
     link: str = "http://127.0.0.1:8000" + reverse('apps.votes_results:vote', 
             args=(poll_id,))
     
-    links: List[str] = []
-    templink: str = []
-
-    # creation of a token link for as many times as dictated
-    for x in range(token_number):
-        unique_id = get_random_string(length=8)
-        while (User.objects.filter(username=unique_id).exists()):
-            unique_id = get_random_string(length=8)
-        phantomuser: User = User.objects.create_user(username=unique_id)
-        templink = link
-        templink += get_query_string(user=phantomuser)
-        print(templink)
-        
-        links.append(templink)
+    links: List[str] = PollTokenService.create_tokens(link, token_number)
 
     try:
         # Retrieve poll
