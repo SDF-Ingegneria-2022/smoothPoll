@@ -1,3 +1,4 @@
+from apps.polls_management.services.poll_token_service import PollTokenService
 from apps.votes_results.classes.poll_result import PollResult
 from apps.votes_results.classes.poll_result import PollResult
 from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
@@ -13,6 +14,9 @@ from django.http import HttpRequest, HttpResponseServerError, HttpResponseRedire
 from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
+from sesame.utils import get_user
+from sesame.decorators import authenticate
+
 
 REQUEST_VOTE = 'vote'
 
@@ -22,6 +26,7 @@ SESSION_SINGLE_OPTION_VOTE_ID = 'single-option-vote-id'
 class SingleOptionVoteView(View):
     """View to handle Single Option vote operation. """
 
+    @authenticate(required=False)
     def get(self, request: HttpRequest, poll_id: int, *args, **kwargs):
         """Render the form wich permits user to vote"""
 
@@ -51,6 +56,7 @@ class SingleOptionVoteView(View):
                         'error': eventual_error 
                     })
 
+    @authenticate(required=False)
     def post(self, request: HttpRequest, poll_id: int, *args, **kwargs):
         """Handle vote perform and redirect to recap (or 
         redirect to form w errors)"""
@@ -77,6 +83,13 @@ class SingleOptionVoteView(View):
         # Perform vote and handle missing vote or poll exception.
         try:
             vote = SingleOptionVoteService.perform_vote(poll_id, request.POST[REQUEST_VOTE])
+            print(get_user(request_or_sesame=token_poll_dat))
+            if get_user(request_or_sesame=token_poll.token_user) is not None:
+                try:
+                    token_poll = PollTokenService.get_poll_token_by_user(token_poll.user)
+                except Exception:
+                    raise Http404(f"Token associated with user {request.user} not found.")
+                PollTokenService.check_single_option(token_poll)
         except PollOptionUnvalidException:
             request.session[SESSION_SINGLE_OPTION_VOTE_SUBMIT_ERROR] = "Errore! La scelte deve essere " \
                 + "espressa tramite l'apposito form. Se continui a vedere questo " \

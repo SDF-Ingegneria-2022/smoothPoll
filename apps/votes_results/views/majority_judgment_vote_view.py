@@ -1,4 +1,5 @@
 from apps.polls_management.models.poll_option_model import PollOptionModel
+from apps.polls_management.services.poll_token_service import PollTokenService
 from apps.votes_results.classes.majority_poll_result_data import MajorityPollResultData
 from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
 from apps.votes_results.classes.vote_consistency.check_consistency_session import CheckConsistencySession
@@ -16,6 +17,8 @@ from django.http import HttpRequest, HttpResponseServerError, HttpResponseRedire
 from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
+from sesame.utils import get_user
+from sesame.decorators import authenticate
 
 from apps.votes_results.views.single_option_vote_view import SESSION_SINGLE_OPTION_VOTE_ID
 
@@ -27,6 +30,7 @@ SESSION_CONSISTENCY_CHECK = 'consistency-check'
 class MajorityJudgmentVoteView(View):
     """View to handle Majority Judgment vote process"""
     
+    @authenticate(required=False)
     @staticmethod
     def __get_dummy_poll() -> PollModel:
         """Try to retrieve a dummy MJ poll"""
@@ -84,6 +88,7 @@ class MajorityJudgmentVoteView(View):
             'single_option' : vote_single_option.value,
             })    
 
+    @authenticate(required=False)
     def post(self, request: HttpRequest, poll_id: int, *args, **kwargs):
         """Handle vote perform and redirect to recap (or 
         redirect to form w errors)"""
@@ -122,7 +127,13 @@ class MajorityJudgmentVoteView(View):
         
         try:
             vote: MajorityVoteModel = MajorityJudjmentVoteService.perform_vote(ratings, poll_id=str(poll_id))
-            
+            if get_user(request_or_sesame=request) is not None:
+                try:
+                    token_poll = PollTokenService.get_poll_token_by_user(request.user)
+                except Exception:
+                    raise Http404(f"Token associated with user {request.user} not found.")
+                PollTokenService.check_majority_option(token_poll)
+
             # Clear session if the mj vote is performed
             check_consistency_session.clear_session([SESSION_SINGLE_OPTION_VOTE_ID, SESSION_CONSISTENCY_CHECK])
             
