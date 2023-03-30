@@ -1,4 +1,5 @@
 from django.http import Http404, HttpResponseRedirect
+from django.shortcuts import render
 from django.urls import reverse
 from apps.polls_management.models.poll_model import PollModel
 from apps.polls_management.services.poll_service import PollService
@@ -13,14 +14,19 @@ def generic_vote_view(request, poll_id: int):
     except Exception:
         raise Http404(f"Poll with id {poll_id} not found.")
     
-    # redirect to proper vote method
-    if poll.poll_type == PollModel.PollType.MAJORITY_JUDJMENT:
-        return HttpResponseRedirect(
-            reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))
+    if (poll.votable_token):
+        return render(request,
+                      'global/not-token.html')
     else:
-        return HttpResponseRedirect(reverse(
-            'apps.votes_results:single_option_vote', 
-            args=(poll_id,)))
+        # redirect to proper vote method
+        if poll.poll_type == PollModel.PollType.MAJORITY_JUDJMENT:
+            return HttpResponseRedirect(
+                reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))
+        else:
+            return HttpResponseRedirect(reverse(
+                'apps.votes_results:single_option_vote', 
+                args=(poll_id,)))
+    
 
 
 def generic_results_view(request, poll_id: int):
