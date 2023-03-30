@@ -1,15 +1,18 @@
 
 from typing import List
 from django.utils.crypto import get_random_string
-from sesame.utils import get_query_string
+from sesame.utils import get_query_string, get_token
 from django.contrib.auth.models import User
+from apps.polls_management.models.poll_model import PollModel
+
+from apps.polls_management.models.poll_token import PollTokens
 
 class PollTokenService:
 
     """Service class for poll tokens management"""
 
     @staticmethod
-    def create_tokens(link: str, token_number: int) -> List[str]:
+    def create_tokens(link: str, token_number: int, poll: PollModel) -> List[str]:
 
         """Method used to create and store tokens in an object on database"""
 
@@ -29,7 +32,10 @@ class PollTokenService:
             templink = link
             templink += get_query_string(user=phantomuser)
 
-            print(templink)
+            # creation of database table for new token
+            token: str = get_token(user=phantomuser)
+            new_token: PollTokens = PollTokens(token_user=phantomuser, token_name=token, poll_fk=poll)
+            new_token.save()
             
             token_links.append(templink)
 
