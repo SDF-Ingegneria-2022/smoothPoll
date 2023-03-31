@@ -74,7 +74,7 @@ class MajorityJudgmentVoteView(View):
         if poll.poll_type == PollModel.PollType.SINGLE_OPTION and poll.votable_mj == True:
             vote_single_option: PollOptionModel = PollOptionModel.objects.get(id=request.session.get(SESSION_SINGLE_OPTION_VOTE_ID))
         else:
-            vote_single_option: PollOptionModel = PollOptionModel(value="")
+            vote_single_option = None
 
         return render(request, 'votes_results/majority_judgment_vote.html', {
             'poll': poll, 
