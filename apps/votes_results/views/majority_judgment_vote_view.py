@@ -71,10 +71,9 @@ class MajorityJudgmentVoteView(View):
         if request.session.get(SESSION_MJ_GUIDE_ALREADY_VIWED) is None:
             request.session[SESSION_MJ_GUIDE_ALREADY_VIWED] = True
         
-        if poll.poll_type == PollModel.PollType.SINGLE_OPTION and poll.votable_mj == True:
+        if poll.poll_type == PollModel.PollType.SINGLE_OPTION and poll.votable_mj:
             vote_single_option: PollOptionModel = PollOptionModel.objects.get(id=request.session.get(SESSION_SINGLE_OPTION_VOTE_ID))
-        else:
-            vote_single_option = None
+            request.session['os_to_mj'] = vote_single_option.value
 
         return render(request, 'votes_results/majority_judgment_vote.html', {
             'poll': poll, 
@@ -84,7 +83,7 @@ class MajorityJudgmentVoteView(View):
             }, 
             'guide_already_viwed': guide_already_viwed,
             'consistency_check': request.session.get(SESSION_CONSISTENCY_CHECK),
-            'single_option' : vote_single_option.value,
+            'single_option' : request.session.get('os_to_mj'),
             })    
 
     def post(self, request: HttpRequest, poll_id: int, *args, **kwargs):
@@ -148,6 +147,10 @@ class MajorityJudgmentVoteView(View):
         # Clean session data for token validation
         if request.session.get('token_used') is not None:
             del request.session['token_used']
+
+        # Clean session data for single option to majority control
+        if request.session.get('os_tom_mj') is not None:
+            del request.session['os_to_mj']
 
         # Clean eventual error session.
         if request.session.get(SESSION_MJ_VOTE_SUBMIT_ERROR) is not None:
