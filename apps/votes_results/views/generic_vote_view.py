@@ -20,19 +20,20 @@ def generic_vote_view(request, poll_id: int):
         raise Http404(f"Poll with id {poll_id} not found.")
     
     # add control if poll is votable only with tokens
-    try:
-        token_poll_data = PollTokenService.get_poll_token_by_user(request.user)
-    except Exception:
-        return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
-    
-    if PollTokenService.is_single_option_token_used(token_poll_data):
-        logout(request)
-        return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
-    elif PollTokenService.is_majority_token_used(token_poll_data):
-        logout(request)
-        return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
-    
-    request.session['token_used'] = token_poll_data
+    if (poll.votable_token):
+        try:
+            token_poll_data = PollTokenService.get_poll_token_by_user(request.user)
+        except Exception:
+            return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
+        
+        if PollTokenService.is_single_option_token_used(token_poll_data):
+            logout(request)
+            return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
+        elif PollTokenService.is_majority_token_used(token_poll_data):
+            logout(request)
+            return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
+        
+        request.session['token_used'] = token_poll_data
 
     # redirect to proper vote method
     if poll.poll_type == PollModel.PollType.MAJORITY_JUDJMENT:
