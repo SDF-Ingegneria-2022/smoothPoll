@@ -20,6 +20,12 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
 
+        <div class="d-grid gap-2 d-md-block mt-2">
+            <a href="{% url 'apps.votes_results:results' poll_id=poll.id %}" 
+                class="btn btn-secondary mt-2 w-100" 
+                role="button">Vedi risultati</a>
+        </div>
+
     <br>
 
     </div>
