@@ -59,7 +59,7 @@ class MajorityJudgmentVoteView(View):
 
         
         if ((poll.poll_type != PollModel.PollType.MAJORITY_JUDJMENT and poll.votable_mj != True) or
-            (poll.poll_type == PollModel.PollType.SINGLE_OPTION and request.session.get(SESSION_SINGLE_OPTION_VOTE_ID) is None)):
+            (poll.poll_type == PollModel.PollType.SINGLE_OPTION and request.session.get(SESSION_SINGLE_OPTION_VOTE_ID) is None and poll.votable_token != True)):
             raise Http404()
 
         options_selected = request.session.get(SESSION_MJ_VOTE_SUBMIT_ERROR)
@@ -71,7 +71,7 @@ class MajorityJudgmentVoteView(View):
         if request.session.get(SESSION_MJ_GUIDE_ALREADY_VIWED) is None:
             request.session[SESSION_MJ_GUIDE_ALREADY_VIWED] = True
         
-        if poll.poll_type == PollModel.PollType.SINGLE_OPTION and poll.votable_mj:
+        if poll.poll_type == PollModel.PollType.SINGLE_OPTION and poll.votable_mj and request.session.get(SESSION_SINGLE_OPTION_VOTE_ID) is not None:
             vote_single_option: PollOptionModel = PollOptionModel.objects.get(id=request.session.get(SESSION_SINGLE_OPTION_VOTE_ID))
             request.session['os_to_mj'] = vote_single_option.value
 
@@ -127,6 +127,7 @@ class MajorityJudgmentVoteView(View):
 
             # invalidation of token if vote is successful
             if request.session.get('token_used') is not None:
+                print("stop here")
                 try:
                     token_user = request.session.get('token_used').token_user
                     token_poll = PollTokenService.get_poll_token_by_user(token_user)

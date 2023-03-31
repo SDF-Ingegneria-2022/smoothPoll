@@ -31,7 +31,7 @@ class PollTokenService:
 
             phantomuser: User = User.objects.create_user(username=unique_id)
             templink = link
-            templink += get_query_string(user=phantomuser)
+            templink += get_query_string(user=phantomuser, scope=f"Poll:{poll.id}")
 
             # creation of database table for new token
             new_token: PollTokens = PollTokens(token_user=phantomuser, poll_fk=poll)
