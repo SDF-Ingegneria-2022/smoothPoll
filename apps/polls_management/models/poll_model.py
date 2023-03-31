@@ -20,6 +20,7 @@ AUTHOR = 'author'
 PRIVATE = 'private'
 SHORT_ID = 'short_id'
 RANDOMIZE_OPTIONS = 'randomize_options'
+VOTABLE_TOKEN = 'votable_token'
 class PollModel(models.Model): 
 
     class PollType(models.TextChoices):
@@ -75,6 +76,9 @@ class PollModel(models.Model):
     randomize_options: models.BooleanField = models.BooleanField(
         default=False, verbose_name=_("Randomizza Opzioni")
     )
+    votable_token: models.BooleanField = models.BooleanField(
+        default=False, verbose_name=_("Votabile con Token")
+    )
 
     def __str__(self):
         return str({
@@ -88,6 +92,7 @@ class PollModel(models.Model):
             PRIVATE:  self.private,
             SHORT_ID: self.short_id,
             RANDOMIZE_OPTIONS: self.randomize_options,
+            VOTABLE_TOKEN: self.votable_token,
         })
 
     def options(self) -> List[PollOptionModel]:

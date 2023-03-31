@@ -19,6 +19,7 @@ def generic_vote_view(request, poll_id: int):
     except Exception:
         raise Http404(f"Poll with id {poll_id} not found.")
     
+<<<<<<< HEAD
     # add control if poll is votable only with tokens
     try:
         token_poll_data = PollTokenService.get_poll_token_by_user(request.user)
@@ -37,7 +38,7 @@ def generic_vote_view(request, poll_id: int):
     # redirect to proper vote method
     if poll.poll_type == PollModel.PollType.MAJORITY_JUDJMENT:
         return HttpResponseRedirect(
-            reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,),))
+            reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))
     else:
         return HttpResponseRedirect(reverse(
             'apps.votes_results:single_option_vote', 
