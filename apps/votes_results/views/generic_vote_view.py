@@ -26,9 +26,10 @@ def generic_vote_view(request, poll_id: int):
         except Exception:
             return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
         
+        # TODO: find a way to remove the user from the page of invalid tokens
         # token validation controls
         if PollTokenService.is_single_option_token_used(token_poll_data) and not poll.votable_mj:
-            logout(request)
+            # logout(request)
             return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
         elif PollTokenService.is_single_option_token_used(token_poll_data) and poll.votable_mj and not PollTokenService.is_majority_token_used(token_poll_data):
             # pass the token to specific poll type view for vote
@@ -36,10 +37,10 @@ def generic_vote_view(request, poll_id: int):
             return HttpResponseRedirect(
                 reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))
         elif PollTokenService.is_single_option_token_used(token_poll_data) and poll.votable_mj and PollTokenService.is_majority_token_used(token_poll_data):
-            logout(request)
+            # logout(request)
             return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
         elif PollTokenService.is_majority_token_used(token_poll_data) and not poll.votable_mj:
-            logout(request)
+            # logout(request)
             return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
         
         # pass the token to specific poll type view for vote
