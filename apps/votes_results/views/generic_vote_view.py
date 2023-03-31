@@ -19,7 +19,6 @@ def generic_vote_view(request, poll_id: int):
     except Exception:
         raise Http404(f"Poll with id {poll_id} not found.")
     
-<<<<<<< HEAD
     # add control if poll is votable only with tokens
     try:
         token_poll_data = PollTokenService.get_poll_token_by_user(request.user)
