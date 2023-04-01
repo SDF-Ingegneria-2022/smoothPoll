@@ -1,5 +1,6 @@
 
 from typing import List
+from django.urls import reverse
 from django.utils.crypto import get_random_string
 from sesame.utils import get_query_string
 from django.contrib.auth.models import User
@@ -7,6 +8,7 @@ from apps.polls_management.exceptions.token_does_not_exist_exception import Toke
 from apps.polls_management.models.poll_model import PollModel
 from apps.polls_management.models.poll_token import PollTokens
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Q
 
 class PollTokenService:
 
@@ -105,3 +107,25 @@ class PollTokenService:
 
         token.majority_use = True
         token.save()
+
+    @staticmethod
+    def available_token_list(poll: PollModel) -> List[str]:
+
+        """Return a list of available token links.
+        Args:
+            poll_id: id of the poll the tokens belong to.
+        """
+
+        token_list: List[str] = []
+        link: str = "http://127.0.0.1:8000" + reverse('apps.votes_results:vote', 
+            args=(poll.id,))
+    
+
+        tokens: PollTokens = PollTokens.objects.filter(Q(poll_fk=poll) & Q(single_option_use=False) & Q(majority_use=False))
+
+        for token in tokens:
+            templink: str = link
+            templink += get_query_string(user=token.token_user, scope=f"Poll:{poll.id}")
+            token_list.append(templink)
+
+        return token_list

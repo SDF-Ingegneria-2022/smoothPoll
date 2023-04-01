@@ -1,6 +1,6 @@
 
 from typing import List
-from django.http import Http404, HttpRequest
+from django.http import Http404, HttpRequest, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
@@ -17,7 +17,10 @@ def poll_token(request: HttpRequest, poll_id: int):
     except Exception:
         raise Http404(f"Poll with id {poll_id} not found.")
 
-    token_number: int = int(request.POST.get('tokens'))
+    if request.POST.get('tokens').isnumeric():
+        token_number: int = int(request.POST.get('tokens'))
+    else:
+        return HttpResponseRedirect(reverse('apps.polls_management:poll_details', args=(poll_id,)))
 
     # TODO: get the site home url instead
     link: str = "http://127.0.0.1:8000" + reverse('apps.votes_results:vote', 
@@ -26,4 +29,5 @@ def poll_token(request: HttpRequest, poll_id: int):
     links: List[str] = PollTokenService.create_tokens(link, token_number, poll)
     
     # Render details page with tokens list
-    return render(request, 'votes_results/poll_details.html', {'poll': poll, 'token_links': links})
+    return HttpResponseRedirect(reverse('apps.polls_management:poll_details', args=(poll_id,),))
+    # return render(request, 'votes_results/poll_details.html', {'poll': poll, 'token_links': links})
