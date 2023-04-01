@@ -1,5 +1,6 @@
 
 from typing import List
+from django.http import HttpRequest
 from django.urls import reverse
 from django.utils.crypto import get_random_string
 from sesame.utils import get_query_string
@@ -113,7 +114,7 @@ class PollTokenService:
 
         """Return a list of available token links.
         Args:
-            poll_id: id of the poll the tokens belong to.
+            poll: the poll the tokens belong to.
         """
 
         token_list: List[str] = []
@@ -129,3 +130,24 @@ class PollTokenService:
             token_list.append(templink)
 
         return token_list
+    
+
+    def delete_tokens(request: HttpRequest, poll: PollModel):
+
+        """Delete tokens and related phantom users for the specified list.
+        Args:
+            poll: the poll the tokens belong to.
+        """
+
+        # the POST method is used because the operation is going to potentially modify the database
+        if request.method == "POST":
+            # get all tokens for the specified poll, be them available or not
+            tokens: PollTokens = PollTokens.objects.filter(poll_fk=poll)
+
+            # if there are tokens for the poll, delete the phantom users and then their tokens
+            if tokens:
+                for token in tokens:
+                    phantouser: User = token.token_user
+                    phantouser.delete()
+                    token.delete()
+

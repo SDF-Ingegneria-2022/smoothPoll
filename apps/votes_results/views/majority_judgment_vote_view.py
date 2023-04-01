@@ -127,12 +127,10 @@ class MajorityJudgmentVoteView(View):
 
             # invalidation of token if vote is successful
             if request.session.get('token_used') is not None:
-                print("stop here")
                 try:
-                    token_user = request.session.get('token_used').token_user
-                    token_poll = PollTokenService.get_poll_token_by_user(token_user)
+                    token_poll = request.session.get('token_used')
                 except Exception:
-                    raise Http404(f"Token associated with user {token_user} not found.")
+                    raise Http404(f"Token associated with user {token_poll.token_user} not found.")
                 PollTokenService.check_majority_option(token_poll)
 
             # Clear session if the mj vote is performed
