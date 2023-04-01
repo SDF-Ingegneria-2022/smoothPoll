@@ -76,7 +76,7 @@
         <form action="{% url 'apps.polls_management:delete_poll_tokens' poll_id=poll.id %}" method="POST">
             {% csrf_token %}
             <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-                <button type="submit" class="btn btn-danger m-2">Invalida tutti i Token</button>
+                <button type="submit" class="btn btn-danger m-2">Invalida tutti i Token, sia esistenti che già usati</button>
             </div>
         </form>
     </div>

@@ -26,7 +26,7 @@ def generic_vote_view(request, poll_id: int):
         except Exception:
             return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
         
-        # TODO: find a way to remove the user from the page of invalid tokens
+        # TODO: find a way to remove the temporary logged user from the page of invalid tokens
         # token validation controls
         if PollTokenService.is_single_option_token_used(token_poll_data) and not poll.votable_mj:
             # logout(request)

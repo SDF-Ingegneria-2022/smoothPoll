@@ -98,9 +98,10 @@ class SingleOptionVoteView(View):
         except PollDoesNotExistException:
             raise Http404
 
-        # Clean session data for token validation
-        if request.session.get('token_used') is not None:
-            del request.session['token_used']
+        # Clean session data for token validation if poll is not also votable with majority
+        if not poll.votable_mj:
+            if request.session.get('token_used') is not None:
+                del request.session['token_used']
 
         # Clean eventual error session.
         if request.session.get(SESSION_SINGLE_OPTION_VOTE_SUBMIT_ERROR) is not None:

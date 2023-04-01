@@ -119,7 +119,6 @@ class MajorityJudgmentVoteView(View):
         check_consistency_session: CheckConsistencySession = CheckConsistencySession(request)
         if  (not request.session.get(SESSION_CONSISTENCY_CHECK) and # Check used if user has already seen the consistency check
             check_consistency_session.check_consistency(poll, ratings, SESSION_SINGLE_OPTION_VOTE_ID, SESSION_CONSISTENCY_CHECK)):
-            
             return HttpResponseRedirect(reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))    
         
         try:
