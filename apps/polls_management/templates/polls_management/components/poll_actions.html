@@ -48,14 +48,13 @@
 
 <div class="container">
 
+    <div class="text-center fs-4">Area dedicata alla gestione dei Token</div>
+    <br>
+    <div class="fs-5 text-left">Lista dei Token attualmente disponibili</div>
     <div class="form-outline">
-        <textarea class="form-control" id="textAreaExample1" rows="8">{% if token_list %}
-{% for available_token in token_list %}
-{{available_token}}
+        <textarea class="form-control" id="textAreaExample1" rows="8">{% if token_list %}{% for available_token in token_list %}{{available_token}}
 {% endfor %}
 {% endif %}
-{% for link in token_links %}
-{{link}}{% endfor %}
         </textarea>
         <label class="form-label" for="textAreaExample"></label>
     </div>
@@ -64,6 +63,7 @@
         <form action="{% url 'apps.polls_management:poll_tokens' poll_id=poll.id %}" method="POST">
             {% csrf_token %}
             <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                <div class="text-left fs-5">Quanti Token vuoi generare?</div>
                 <input type="text" name="tokens">
                 <button type="submit" class="btn btn-success m-2">Genera Token</button>
             </div>
