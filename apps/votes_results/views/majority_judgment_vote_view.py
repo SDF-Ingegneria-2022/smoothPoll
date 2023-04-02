@@ -53,6 +53,10 @@ class MajorityJudgmentVoteView(View):
             except PollDoesNotExistException:
                 raise Http404()
 
+        # check if the poll is accessed by a single poll url rather than the link with the token
+        if poll.votable_token and request.session.get('token_used') is None:
+            return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
+        
         # redirect to details page if poll is not yet open
         if not poll.is_open() or poll.is_closed():
             return render(request, 'votes_results/poll_details.html', {'poll': poll})
