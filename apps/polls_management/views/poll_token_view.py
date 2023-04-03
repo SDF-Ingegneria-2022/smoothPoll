@@ -38,12 +38,14 @@ def poll_token(request: HttpRequest, poll_id: int):
 def delete_poll_token(request: HttpRequest, poll_id: int):
     """View used to delete all poll tokens and phantom users in details page."""
 
-    try:
-        # Retrieve poll
-        poll: PollModel = PollService.get_poll_by_id(poll_id)
-    except Exception:
-        raise Http404(f"Poll with id {poll_id} not found.")
-    
-    PollTokenService.delete_tokens(request, poll)
+    # the POST method is used because the operation is going to potentially modify the database
+    if request.method == "POST":
+        try:
+            # Retrieve poll
+            poll: PollModel = PollService.get_poll_by_id(poll_id)
+        except Exception:
+            raise Http404(f"Poll with id {poll_id} not found.")
+        
+        PollTokenService.delete_tokens(poll)
 
-    return HttpResponseRedirect(reverse('apps.polls_management:poll_details', args=(poll_id,)))
+        return HttpResponseRedirect(reverse('apps.polls_management:poll_details', args=(poll_id,)))

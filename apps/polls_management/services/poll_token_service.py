@@ -132,22 +132,20 @@ class PollTokenService:
         return token_list
     
 
-    def delete_tokens(request: HttpRequest, poll: PollModel):
+    def delete_tokens(poll: PollModel):
 
         """Delete tokens and related phantom users for the specified list.
         Args:
             poll: the poll the tokens belong to.
         """
 
-        # the POST method is used because the operation is going to potentially modify the database
-        if request.method == "POST":
-            # get all tokens for the specified poll, be them available or not
-            tokens: PollTokens = PollTokens.objects.filter(poll_fk=poll)
+        # get all tokens for the specified poll, be them available or not
+        tokens: PollTokens = PollTokens.objects.filter(poll_fk=poll)
 
-            # if there are tokens for the poll, delete the phantom users and then their tokens
-            if tokens:
-                for token in tokens:
-                    phantouser: User = token.token_user
-                    phantouser.delete()
-                    token.delete()
+        # if there are tokens for the poll, delete the phantom users and then their tokens
+        if tokens:
+            for token in tokens:
+                phantouser: User = token.token_user
+                phantouser.delete()
+                token.delete()
 
