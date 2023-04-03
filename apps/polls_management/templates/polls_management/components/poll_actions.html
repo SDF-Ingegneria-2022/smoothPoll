@@ -50,33 +50,43 @@
 
     <div class="text-center fs-4">Area dedicata alla gestione dei Token</div>
     <br>
-    <div class="fs-5 text-left">Lista dei Token attualmente disponibili</div>
+    {% comment %} <div class="fs-5 text-left">Lista dei Token attualmente disponibili</div> {% endcomment %}
+    <label for="tokenlistarea">Lista dei Token attualmente disponibili</label>
     <div class="form-outline">
-        <textarea class="form-control" id="textAreaExample1" rows="8">{% if token_list %}{% for available_token in token_list %}{{available_token}}
+        <textarea class="form-control" id="tokenlistarea" rows="8">{% if token_list %}{% for available_token in token_list %}{{available_token}}
 {% endfor %}
 {% endif %}
         </textarea>
-        <label class="form-label" for="textAreaExample"></label>
+        <small id="tokenlistarea" class="form-text text-muted">
+            Lista dei Token attualmente utilizzabili per questa scelta.
+        </small>
     </div>
+
+    <br>
 
     <div class="d-grid gap-2">
         <form action="{% url 'apps.polls_management:poll_tokens' poll_id=poll.id %}" method="POST">
             {% csrf_token %}
             <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-                <div class="text-left fs-5">Quanti Token vuoi generare?</div>
-                <input type="text" name="tokens">
-                <button type="submit" class="btn btn-success m-2">Genera Token</button>
+                {% comment %} <div class="text-left fs-5">Quanti Token vuoi generare?</div>
+                <input type="number" name="tokens"> {% endcomment %}
+                <label for="tokensid">Quanti Token vuoi generare?</label>
+                <input type="number" id="tokensid" name="tokens" class="form-control" aria-describedby="tokenshelp">
+                    <small id="tokenshelp" class="form-text text-muted">
+                        Inserire un numero intero non superiore a 20.
+                    </small>
+                <button type="submit" class="btn btn-success m-2 w-100">Genera Token</button>
             </div>
         </form>
     </div>
 
 <br>
 
-    <div class="d-grid gap-2">
+    <div class="d-grid gap-2 d-md-flex justify-content-md-start">
         <form action="{% url 'apps.polls_management:delete_poll_tokens' poll_id=poll.id %}" method="POST">
             {% csrf_token %}
             <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-                <button type="submit" class="btn btn-danger m-2">Invalida tutti i Token, sia esistenti che già usati</button>
+                <button type="submit" class="btn btn-danger m-2 w-100">Invalida tutti i Token, sia esistenti che già usati</button>
             </div>
         </form>
     </div>

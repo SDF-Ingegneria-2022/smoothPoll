@@ -20,7 +20,7 @@ def poll_token(request: HttpRequest, poll_id: int):
     if request.POST.get('tokens').isnumeric():
         token_number: int = int(request.POST.get('tokens'))
         #TODO: handle token number error to show in the page
-        if token_number > 20:
+        if token_number <=0 or token_number > 20:
             return HttpResponseRedirect(reverse('apps.polls_management:poll_details', args=(poll_id,)))
     else:
         return HttpResponseRedirect(reverse('apps.polls_management:poll_details', args=(poll_id,)))
