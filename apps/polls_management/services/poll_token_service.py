@@ -1,6 +1,5 @@
 
 from typing import List
-from django.http import HttpRequest
 from django.urls import reverse
 from django.utils.crypto import get_random_string
 from sesame.utils import get_query_string

@@ -1,7 +1,6 @@
 
 from typing import List
 from django.http import Http404, HttpRequest, HttpResponseRedirect
-from django.shortcuts import render
 from django.urls import reverse
 
 from apps.polls_management.models.poll_model import PollModel
@@ -19,7 +18,7 @@ def poll_token(request: HttpRequest, poll_id: int):
 
     if request.POST.get('tokens').isnumeric():
         token_number: int = int(request.POST.get('tokens'))
-        if token_number <=0 or token_number > 20:
+        if token_number <=0:
             return HttpResponseRedirect(reverse('apps.polls_management:poll_details', args=(poll_id,)))
     else:
         return HttpResponseRedirect(reverse('apps.polls_management:poll_details', args=(poll_id,)))
