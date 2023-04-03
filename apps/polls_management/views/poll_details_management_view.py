@@ -18,7 +18,8 @@ def poll_details(request: HttpRequest, poll_id: int):
     if poll.votable_token:
         host_link: str = "http://" + request.get_host()
         token_links: List[str] = PollTokenService.available_token_list(host_link, poll)
-        return render(request, 'votes_results/poll_details.html', {'poll': poll, 'token_list': token_links})
+        invalid_tokens: List[str] = PollTokenService.unavailable_token_list(host_link, poll)
+        return render(request, 'votes_results/poll_details.html', {'poll': poll, 'token_list': token_links, 'invalid_tokens': invalid_tokens})
     else:
         # Render vote form (with eventual error message)
         return render(request, 'votes_results/poll_details.html', {'poll': poll})

@@ -147,3 +147,23 @@ class PollTokenService:
                 phantouser.delete()
                 token.delete()
 
+    @staticmethod
+    def unavailable_token_list(host:str, poll: PollModel) -> List[str]:
+
+        """Return a list of unavailable token links.
+        Args:
+            poll: the poll the tokens belong to.
+        """
+
+        token_list: List[str] = []
+        link: str = host + reverse('apps.votes_results:vote', 
+            args=(poll.id,))
+    
+        tokens: PollTokens = PollTokens.objects.filter(Q(poll_fk=poll) & Q(Q(single_option_use=True) or Q(majority_use=True)))
+
+        for token in tokens:
+            templink: str = link
+            templink += get_query_string(user=token.token_user, scope=f"Poll:{poll.id}")
+            token_list.append(templink)
+
+        return token_list
