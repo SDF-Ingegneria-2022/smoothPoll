@@ -51,7 +51,7 @@
     <div class="text-center fs-4">Area dedicata alla gestione dei Token</div>
     <br>
     {% comment %} <div class="fs-5 text-left">Lista dei Token attualmente disponibili</div> {% endcomment %}
-    <label for="tokenlistarea">Lista dei Token attualmente disponibili</label>
+    <label for="tokenlistarea">Lista dei Token</label>
     <div class="form-outline">
         <textarea class="form-control" id="tokenlistarea" rows="8">{% if token_list %}{% for available_token in token_list %}{{available_token}}
 {% endfor %}
