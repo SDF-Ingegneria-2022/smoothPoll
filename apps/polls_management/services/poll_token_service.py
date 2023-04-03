@@ -110,7 +110,7 @@ class PollTokenService:
         token.save()
 
     @staticmethod
-    def available_token_list(poll: PollModel) -> List[str]:
+    def available_token_list(host:str, poll: PollModel) -> List[str]:
 
         """Return a list of available token links.
         Args:
@@ -118,7 +118,7 @@ class PollTokenService:
         """
 
         token_list: List[str] = []
-        link: str = "http://127.0.0.1:8000" + reverse('apps.votes_results:vote', 
+        link: str = host + reverse('apps.votes_results:vote', 
             args=(poll.id,))
     
         tokens: PollTokens = PollTokens.objects.filter(Q(poll_fk=poll) & Q(single_option_use=False) & Q(majority_use=False))
