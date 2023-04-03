@@ -38,6 +38,17 @@ class SingleOptionVoteView(View):
         # check if the poll is accessed by a single poll url rather than the link with the token
         if poll.votable_token and request.session.get('token_used') is None:
             return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
+        # check special token case with votable mj
+        elif poll.votable_mj and request.session.get('token_used') is not None:
+            try:
+                token_poll = request.session.get('token_used')
+            except Exception:
+                raise Http404(f"Token associated with user {token_poll.token_user} not found.")
+            if PollTokenService.is_single_option_token_used(token_poll) and poll.votable_mj and not PollTokenService.is_majority_token_used(token_poll):
+                # pass the token to specific poll type view for vote
+                request.session['token_used'] = token_poll
+                return HttpResponseRedirect(
+                reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))
 
         # redirect to details page if poll is not yet open
         if not poll.is_open() or poll.is_closed():

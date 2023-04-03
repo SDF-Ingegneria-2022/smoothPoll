@@ -82,8 +82,8 @@
     <label for="tokenlistarea">Token usati</label>
     <div class="form-outline">
         <textarea class="form-control" id="tokenlistarea" rows="8" readonly>{% if invalid_tokens %}{% for unavailable_token in invalid_tokens %}{{unavailable_token}}
-    {% endfor %}
-    {% endif %}
+{% endfor %}
+{% endif %}
         </textarea>
         <small id="tokenlistarea" class="form-text text-muted">
             Lista dei Token attualmente non utilizzabili per questa scelta.
