@@ -34,14 +34,13 @@ def poll_delete(request: HttpRequest, poll_id: int):
             raise Http404(f"Poll with id {poll_id} not found.")
         if (not request.user == poll.author):
             return render(request, 'global/not-author.html')
-        
-        # delete all tokens related to the poll
-        if poll.votable_token:
-            PollTokenService.delete_tokens(poll)
 
         # If the delete poll service fails an error session variabile is setted to True
         # otherwise a success variable is setted to True and then reloaded the all_polls page in both cases
         try:
+            # delete all tokens related to the poll
+            if poll.votable_token:
+                PollTokenService.delete_tokens(poll)
             PollService.delete_poll(str(poll_id))
         except PollIsOpenException:
             request.session['delete_error'] = True

@@ -121,7 +121,6 @@ class PollTokenService:
         link: str = "http://127.0.0.1:8000" + reverse('apps.votes_results:vote', 
             args=(poll.id,))
     
-
         tokens: PollTokens = PollTokens.objects.filter(Q(poll_fk=poll) & Q(single_option_use=False) & Q(majority_use=False))
 
         for token in tokens:
@@ -130,7 +129,6 @@ class PollTokenService:
             token_list.append(templink)
 
         return token_list
-    
 
     def delete_tokens(poll: PollModel):
 
