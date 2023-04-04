@@ -66,13 +66,18 @@
     <div class="d-grid gap-2">
         <form action="{% url 'apps.polls_management:poll_tokens' poll_id=poll.id %}" method="POST">
             {% csrf_token %}
-            <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-                <label for="tokensid">Quanti Token vuoi generare?</label>
-                <input type="number" id="tokensid" name="tokens" class="form-control" aria-describedby="tokenshelp">
+            {% comment %} <div class="d-grid gap-2 d-md-flex justify-content-md-start"> {% endcomment %}
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="tokensid">Quanti Token vuoi generare?</label>
+                    <input type="number" id="tokensid" name="tokens" class="form-control" aria-describedby="tokenshelp">
                     <small id="tokenshelp" class="form-text text-muted">
                         Inserire un numero intero di Token da generare.
                     </small>
-                <button type="submit" class="btn btn-success m-2 w-100">Genera Token</button>
+                </div>
+                <div class="col-md-6 mt-4">
+                    <button type="submit" class="btn btn-success w-100">Genera Token</button>
+                </div>
             </div>
         </form>
     </div>
@@ -95,8 +100,10 @@
     <div class="d-grid gap-2 d-md-flex justify-content-md-start">
         <form action="{% url 'apps.polls_management:delete_poll_tokens' poll_id=poll.id %}" method="POST">
             {% csrf_token %}
-            <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-                <button type="submit" class="btn btn-danger m-2 w-100">Invalida tutti i Token, sia esistenti che già usati</button>
+            <div class="row">
+                <div class="col-md-12">
+                    <button type="submit" class="btn btn-danger w-100">Invalida tutti i Token, sia esistenti che già usati</button>
+                </div>
             </div>
         </form>
     </div>
