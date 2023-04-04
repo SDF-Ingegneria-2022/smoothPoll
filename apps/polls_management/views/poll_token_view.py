@@ -25,7 +25,7 @@ def poll_token(request: HttpRequest, poll_id: int):
         return HttpResponseRedirect(reverse('apps.polls_management:poll_details', args=(poll_id,)))
 
     # creation of links with token embedded for the specified poll
-    link: str = "http://" + request.get_host() + reverse('apps.votes_results:vote', 
+    link: str = request.get_host() + reverse('apps.votes_results:vote', 
             args=(poll_id,))
     
     links: List[str] = PollTokenService.create_tokens(link, token_number, poll)
