@@ -44,7 +44,7 @@ class SingleOptionVoteView(View):
                 token_poll = request.session.get('token_used')
             except Exception:
                 raise Http404(f"Token associated with user {token_poll.token_user} not found.")
-            if PollTokenService.is_single_option_token_used(token_poll) and poll.votable_mj and not PollTokenService.is_majority_token_used(token_poll):
+            if PollTokenService.is_single_option_token_used(token_poll) and not PollTokenService.is_majority_token_used(token_poll):
                 # pass the token to specific poll type view for vote
                 request.session['token_used'] = token_poll
                 return HttpResponseRedirect(

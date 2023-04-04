@@ -16,6 +16,7 @@ def poll_token(request: HttpRequest, poll_id: int):
     except Exception:
         raise Http404(f"Poll with id {poll_id} not found.")
 
+    # check for errors in token generation form
     if request.POST.get('tokens').isnumeric():
         token_number: int = int(request.POST.get('tokens'))
         if token_number <=0:
@@ -23,6 +24,7 @@ def poll_token(request: HttpRequest, poll_id: int):
     else:
         return HttpResponseRedirect(reverse('apps.polls_management:poll_details', args=(poll_id,)))
 
+    # creation of links with token embedded for the specified poll
     link: str = "http://" + request.get_host() + reverse('apps.votes_results:vote', 
             args=(poll_id,))
     
