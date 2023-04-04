@@ -35,6 +35,10 @@ class SingleOptionVoteView(View):
         except Exception:
             raise Http404(f"Poll with id {poll_id} not found.")
 
+        # redirect to details page if poll is not yet open
+        if not poll.is_open() or poll.is_closed():
+            return render(request, 'votes_results/poll_details.html', {'poll': poll})
+        
         # check if the poll is accessed by a single poll url rather than the link with the token
         if poll.votable_token and request.session.get('token_used') is None:
             return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
@@ -49,11 +53,6 @@ class SingleOptionVoteView(View):
                 request.session['token_used'] = token_poll
                 return HttpResponseRedirect(
                 reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))
-
-        # redirect to details page if poll is not yet open
-        if not poll.is_open() or poll.is_closed():
-            return render(request, 'votes_results/poll_details.html', {'poll': poll})
-
         if poll.poll_type == PollModel.PollType.MAJORITY_JUDJMENT:
             return HttpResponseRedirect(reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))
 
