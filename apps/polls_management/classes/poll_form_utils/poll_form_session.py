@@ -7,7 +7,7 @@ from apps.polls_management.models.poll_model import RANDOMIZE_OPTIONS, PollModel
                                                     QUESTION, POLL_TYPE, \
                                                     OPEN_DATETIME, CLOSE_DATETIME,\
                                                     PREDEFINITED, VOTABLE_MJ, AUTHOR,\
-                                                    PRIVATE, SHORT_ID, VOTABLE_TOKEN, PROTECTION
+                                                    PRIVATE, SHORT_ID, PROTECTION
 
 # Session keys used to store form data 
 # (or create/edit process data)
@@ -53,7 +53,7 @@ def get_poll_form(request: HttpRequest) -> PollForm:
                 formdata = formdata.dict()
             # various book flags may be undefined 
             # --> perform the check and adjust
-            for key in [VOTABLE_MJ, PRIVATE, RANDOMIZE_OPTIONS, VOTABLE_TOKEN]:
+            for key in [VOTABLE_MJ, PRIVATE, RANDOMIZE_OPTIONS]:
                 if formdata.get(key) == "undefined" :
                     formdata[key] = False
             # save again in session
@@ -106,7 +106,6 @@ def init_session_for_edit(request: HttpRequest, poll: PollModel,
         PRIVATE: override_data.get(PRIVATE, poll.private), 
         SHORT_ID: override_data.get(SHORT_ID, poll.short_id), 
         RANDOMIZE_OPTIONS: override_data.get(RANDOMIZE_OPTIONS, poll.randomize_options),
-        VOTABLE_TOKEN: override_data.get(VOTABLE_TOKEN, poll.votable_token),
         PROTECTION: override_data.get(PROTECTION, poll.protection)
     }, instance=poll)
 

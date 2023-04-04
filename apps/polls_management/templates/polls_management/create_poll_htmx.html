@@ -40,7 +40,7 @@
             hx-trigger="keyup delay:500ms, change"
             hx-post="{% url 'apps.polls_management:poll_form_htmx_edit' %}"
             hx-swap="none" 
-            hx-params="name, question, poll_type, open_datetime, close_datetime, votable_mj, private, short_id, randomize_options, votable_token, protection">
+            hx-params="name, question, poll_type, open_datetime, close_datetime, votable_mj, private, short_id, randomize_options, protection">
 
             {% bootstrap_form poll_form %}
         </div>

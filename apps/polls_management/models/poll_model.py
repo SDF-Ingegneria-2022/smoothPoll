@@ -20,7 +20,6 @@ AUTHOR = 'author'
 PRIVATE = 'private'
 SHORT_ID = 'short_id'
 RANDOMIZE_OPTIONS = 'randomize_options'
-VOTABLE_TOKEN = 'votable_token'
 PROTECTION = 'protection'
 class PollModel(models.Model): 
 
@@ -83,11 +82,6 @@ class PollModel(models.Model):
         default=False, verbose_name=_("Randomizza Opzioni")
     )
     
-    # TODO: remove afer related changes
-    votable_token: models.BooleanField = models.BooleanField(
-        default=False, verbose_name=_("Votabile con Token")
-    )
-    
     protection: models.CharField = models.CharField(
         max_length=200,
         choices=PollVoteProtection.choices, 
@@ -106,7 +100,6 @@ class PollModel(models.Model):
             PRIVATE:  self.private,
             SHORT_ID: self.short_id,
             RANDOMIZE_OPTIONS: self.randomize_options,
-            VOTABLE_TOKEN: self.votable_token,
             PROTECTION: self.protection
         })
 
