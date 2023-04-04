@@ -375,11 +375,3 @@ class TestPollCreate:
             .when_called_with(poll_form=form2, 
                               options=self.options2, 
                               user=create_user)
-        
-
-
-    
-
-
-
-

@@ -55,6 +55,8 @@ def open_poll_by_id(request: HttpRequest, poll_id: int):
 
 
         # Redirect to form edit
-        return HttpResponseRedirect(reverse('apps.polls_management:poll_form'))   
+        return HttpResponseRedirect(reverse('apps.polls_management:poll_form'))
+    
+    return HttpResponseRedirect(reverse('apps.polls_management:poll_details', args=(poll_id,)))
 
    

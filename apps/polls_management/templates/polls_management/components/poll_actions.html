@@ -44,7 +44,7 @@
 
 <br>
 
-{% if poll.votable_token and not poll.is_closed and user.is_authenticated %}
+{% if poll.is_votable_token and not poll.is_closed and user.is_authenticated %}
 
 <div class="container">
 

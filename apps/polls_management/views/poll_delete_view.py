@@ -39,7 +39,7 @@ def poll_delete(request: HttpRequest, poll_id: int):
         # otherwise a success variable is setted to True and then reloaded the all_polls page in both cases
         try:
             # delete all tokens related to the poll
-            if poll.votable_token:
+            if poll.is_votable_token():
                 PollTokenService.delete_tokens(poll)
             PollService.delete_poll(str(poll_id))
         except PollIsOpenException:
