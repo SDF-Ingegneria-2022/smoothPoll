@@ -25,7 +25,7 @@ class PollShortIdView(View):
         
         if poll.is_open() and not poll.is_closed():
             # check if a short link with token is used
-            if poll.votable_token:
+            if poll.is_votable_token():
                 try:
                     short_token: PollTokens = PollTokens.objects.get(token_user=get_user(request_or_sesame=request, scope=f"Poll:{poll.id}"))
                     token_poll_data = PollTokenService.get_poll_token_by_user(short_token.token_user)

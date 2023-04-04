@@ -22,7 +22,7 @@ REQUEST_VOTE = 'vote'
 
 SESSION_SINGLE_OPTION_VOTE_SUBMIT_ERROR = 'vote-submit-error'
 SESSION_SINGLE_OPTION_VOTE_ID = 'single-option-vote-id'
-
+SESSION_TOKEN_USED = 'token_used'
 class SingleOptionVoteView(View):
     """View to handle Single Option vote operation. """
 
@@ -40,19 +40,19 @@ class SingleOptionVoteView(View):
             return render(request, 'votes_results/poll_details.html', {'poll': poll})
         
         # check if the poll is accessed by a single poll url rather than the link with the token
-        if poll.votable_token and request.session.get('token_used') is None:
+        if poll.is_votable_token() and request.session.get(SESSION_TOKEN_USED) is None:
             return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
         # check special token case with votable mj
-        elif poll.votable_mj and request.session.get('token_used') is not None:
+        elif poll.votable_mj and request.session.get(SESSION_TOKEN_USED) is not None:
             try:
-                token_poll = request.session.get('token_used')
+                token_poll = request.session.get(SESSION_TOKEN_USED)
             except Exception:
                 raise Http404(f"Token associated with user {token_poll.token_user} not found.")
             if PollTokenService.is_single_option_token_used(token_poll) and not PollTokenService.is_majority_token_used(token_poll):
                 # pass the token to specific poll type view for vote
-                request.session['token_used'] = token_poll
-                return HttpResponseRedirect(
-                reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))
+                request.session[SESSION_TOKEN_USED] = token_poll
+                return HttpResponseRedirect(reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))
+        
         if poll.poll_type == PollModel.PollType.MAJORITY_JUDJMENT:
             return HttpResponseRedirect(reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))
 

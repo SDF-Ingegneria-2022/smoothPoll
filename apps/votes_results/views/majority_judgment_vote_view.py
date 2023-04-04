@@ -58,11 +58,14 @@ class MajorityJudgmentVoteView(View):
             return render(request, 'votes_results/poll_details.html', {'poll': poll})
         
         # check if the poll is accessed by a single poll url rather than the link with the token
-        if poll.votable_token and request.session.get('token_used') is None:
+        if poll.is_votable_token() and request.session.get('token_used') is None:
             return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
         
-        if ((poll.poll_type != PollModel.PollType.MAJORITY_JUDJMENT and poll.votable_mj != True) or
-            (poll.poll_type == PollModel.PollType.SINGLE_OPTION and request.session.get(SESSION_SINGLE_OPTION_VOTE_ID) is None and poll.votable_token != True)):
+        if ((poll.poll_type != PollModel.PollType.MAJORITY_JUDJMENT and not poll.votable_mj) or
+            ( poll.poll_type == PollModel.PollType.SINGLE_OPTION and
+              request.session.get(SESSION_SINGLE_OPTION_VOTE_ID) is None and 
+              not poll.is_votable_token())
+            ):
             raise Http404()
 
         options_selected = request.session.get(SESSION_MJ_VOTE_SUBMIT_ERROR)

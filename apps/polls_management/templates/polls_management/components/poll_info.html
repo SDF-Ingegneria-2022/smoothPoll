@@ -110,7 +110,7 @@
         <div class="fs-4">Modalità di voto:</div>
     </div>
     <div class="col">
-        {% if poll.votable_token %}
+        {% if poll.is_votable_token %}
                 <div class="fw-light fs-5 mt-1 text-success">Tramite token</div>
         {% else %}
             <div class="fw-light fs-5 mt-1 text-info">Accesso libero</div>

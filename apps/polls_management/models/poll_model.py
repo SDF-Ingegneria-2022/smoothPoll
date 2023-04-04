@@ -21,6 +21,7 @@ PRIVATE = 'private'
 SHORT_ID = 'short_id'
 RANDOMIZE_OPTIONS = 'randomize_options'
 VOTABLE_TOKEN = 'votable_token'
+PROTECTION = 'protection'
 class PollModel(models.Model): 
 
     class PollType(models.TextChoices):
@@ -29,6 +30,11 @@ class PollModel(models.Model):
         belongs to one PollType"""
         SINGLE_OPTION = 'single_option', _('Opzione Singola')
         MAJORITY_JUDJMENT = 'majority_judjment', _('Giudizio Maggioritario')
+        
+    class PollVoteProtection(models.TextChoices):
+        """Possible vote protection modes a poll can have"""
+        UNPROTECTED = 'unprotected', _('Non protetto')
+        TOKEN = 'token', _('Giudicabile tramite Token')
 
     name: CharField = models.CharField(
         max_length=200, verbose_name=_('Nome Scelta'))
@@ -76,9 +82,17 @@ class PollModel(models.Model):
     randomize_options: models.BooleanField = models.BooleanField(
         default=False, verbose_name=_("Randomizza Opzioni")
     )
+    
+    # TODO: remove afer related changes
     votable_token: models.BooleanField = models.BooleanField(
         default=False, verbose_name=_("Votabile con Token")
     )
+    
+    protection: models.CharField = models.CharField(
+        max_length=200,
+        choices=PollVoteProtection.choices, 
+        default=PollVoteProtection.UNPROTECTED
+        )  
 
     def __str__(self):
         return str({
@@ -93,6 +107,7 @@ class PollModel(models.Model):
             SHORT_ID: self.short_id,
             RANDOMIZE_OPTIONS: self.randomize_options,
             VOTABLE_TOKEN: self.votable_token,
+            PROTECTION: self.protection
         })
 
     def options(self) -> List[PollOptionModel]:
@@ -112,13 +127,21 @@ class PollModel(models.Model):
         return timezone.now() > self.open_datetime
 
     def is_closed(self) -> bool:
-        """Chech if Poll is closed"""
+        """Check if Poll is closed"""
         
         if self.close_datetime is None:
             return False
         
         return timezone.now() > self.close_datetime
+    
+    def is_votable_token(self) -> bool:
+        """Check if Poll is votable with token
 
+        Returns:
+            bool: True if votable with token, False otherwise
+        """
+        return self.protection == PollModel.PollVoteProtection.TOKEN
+    
     def get_state_label(self) -> str: 
         """Get a label rappresentative of the state"""
 
