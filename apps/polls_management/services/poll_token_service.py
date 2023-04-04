@@ -158,7 +158,7 @@ class PollTokenService:
         link: str = host + reverse('apps.votes_results:vote', 
             args=(poll.id,))
     
-        tokens: PollTokens = PollTokens.objects.filter(Q(poll_fk=poll) & Q(Q(single_option_use=True) or Q(majority_use=True)))
+        tokens: PollTokens = PollTokens.objects.filter(Q(poll_fk=poll) & Q(Q(single_option_use=True) | Q(majority_use=True)))
 
         for token in tokens:
             templink: str = link
