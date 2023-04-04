@@ -117,8 +117,7 @@ class PollTokenService:
         """
 
         token_list: List[str] = []
-        link: str = host + reverse('apps.votes_results:vote', 
-            args=(poll.id,))
+        link: str = host + '/' + poll.short_id
     
         tokens: PollTokens = PollTokens.objects.filter(Q(poll_fk=poll) & Q(single_option_use=False) & Q(majority_use=False))
 
@@ -155,8 +154,7 @@ class PollTokenService:
         """
 
         token_list: List[str] = []
-        link: str = host + reverse('apps.votes_results:vote', 
-            args=(poll.id,))
+        link: str = host + '/' + poll.short_id
     
         tokens: PollTokens = PollTokens.objects.filter(Q(poll_fk=poll) & Q(Q(single_option_use=True) | Q(majority_use=True)))
 
