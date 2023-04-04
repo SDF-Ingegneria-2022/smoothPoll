@@ -19,6 +19,8 @@
     <h1>{{ poll.name }}</h1>
 </div>
 
+{% if poll.votable_mj %}
+
 <div class="modal mt-5" id="voteconsistencyerror" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -36,6 +38,8 @@
       </div>
     </div>
   </div>
+
+{% endif %}
 
 <div class="container border">
 

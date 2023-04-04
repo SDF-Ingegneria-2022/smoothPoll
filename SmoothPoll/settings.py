@@ -63,7 +63,8 @@ INSTALLED_APPS = [
 
 AUTHENTICATION_BACKENDS = [
   'django.contrib.auth.backends.ModelBackend',
-  'allauth.account.auth_backends.AuthenticationBackend'
+  'allauth.account.auth_backends.AuthenticationBackend',
+  "sesame.backends.ModelBackend",
 ]
 
 SITE_ID = int(SITE_id)
@@ -204,3 +205,7 @@ else:
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Sesame settings
+
+SESAME_TOKEN_NAME = "token"

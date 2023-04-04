@@ -20,6 +20,7 @@ gunicorn = "*"
 django-htmx = "*"
 django-allauth = "*"
 psycopg2-binary = "*"
+django-sesame = "*"
 
 [dev-packages]
 

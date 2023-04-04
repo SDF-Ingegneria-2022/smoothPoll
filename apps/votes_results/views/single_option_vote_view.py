@@ -1,3 +1,4 @@
+from apps.polls_management.services.poll_token_service import PollTokenService
 from apps.votes_results.classes.poll_result import PollResult
 from apps.votes_results.classes.poll_result import PollResult
 from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
@@ -13,6 +14,9 @@ from django.http import HttpRequest, HttpResponseServerError, HttpResponseRedire
 from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
+from sesame.utils import get_user, get_token
+from sesame.decorators import authenticate
+
 
 REQUEST_VOTE = 'vote'
 
@@ -34,7 +38,21 @@ class SingleOptionVoteView(View):
         # redirect to details page if poll is not yet open
         if not poll.is_open() or poll.is_closed():
             return render(request, 'votes_results/poll_details.html', {'poll': poll})
-
+        
+        # check if the poll is accessed by a single poll url rather than the link with the token
+        if poll.votable_token and request.session.get('token_used') is None:
+            return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
+        # check special token case with votable mj
+        elif poll.votable_mj and request.session.get('token_used') is not None:
+            try:
+                token_poll = request.session.get('token_used')
+            except Exception:
+                raise Http404(f"Token associated with user {token_poll.token_user} not found.")
+            if PollTokenService.is_single_option_token_used(token_poll) and not PollTokenService.is_majority_token_used(token_poll):
+                # pass the token to specific poll type view for vote
+                request.session['token_used'] = token_poll
+                return HttpResponseRedirect(
+                reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))
         if poll.poll_type == PollModel.PollType.MAJORITY_JUDJMENT:
             return HttpResponseRedirect(reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))
 
@@ -77,6 +95,15 @@ class SingleOptionVoteView(View):
         # Perform vote and handle missing vote or poll exception.
         try:
             vote = SingleOptionVoteService.perform_vote(poll_id, request.POST[REQUEST_VOTE])
+
+            # invalidation of token if vote is successful
+            if request.session.get('token_used') is not None:
+                try:
+                    token_poll = request.session.get('token_used')
+                except Exception:
+                    raise Http404(f"Token associated with user {token_poll.token_user} not found.")
+                PollTokenService.check_single_option(token_poll)
+
         except PollOptionUnvalidException:
             request.session[SESSION_SINGLE_OPTION_VOTE_SUBMIT_ERROR] = "Errore! La scelte deve essere " \
                 + "espressa tramite l'apposito form. Se continui a vedere questo " \
@@ -84,6 +111,11 @@ class SingleOptionVoteView(View):
             return HttpResponseRedirect(reverse('apps.votes_results:single_option_vote', args=(poll_id,)))
         except PollDoesNotExistException:
             raise Http404
+
+        # Clean session data for token validation if poll is not also votable with majority
+        if not poll.votable_mj:
+            if request.session.get('token_used') is not None:
+                del request.session['token_used']
 
         # Clean eventual error session.
         if request.session.get(SESSION_SINGLE_OPTION_VOTE_SUBMIT_ERROR) is not None:

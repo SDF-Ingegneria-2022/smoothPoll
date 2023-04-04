@@ -1,4 +1,5 @@
 from apps.polls_management.models.poll_option_model import PollOptionModel
+from apps.polls_management.services.poll_token_service import PollTokenService
 from apps.votes_results.classes.majority_poll_result_data import MajorityPollResultData
 from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
 from apps.votes_results.classes.vote_consistency.check_consistency_session import CheckConsistencySession
@@ -16,6 +17,8 @@ from django.http import HttpRequest, HttpResponseServerError, HttpResponseRedire
 from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
+from sesame.utils import get_user, get_token
+from sesame.decorators import authenticate
 
 from apps.votes_results.views.single_option_vote_view import SESSION_SINGLE_OPTION_VOTE_ID
 
@@ -26,7 +29,7 @@ SESSION_CONSISTENCY_CHECK = 'consistency-check'
 
 class MajorityJudgmentVoteView(View):
     """View to handle Majority Judgment vote process"""
-    
+
     @staticmethod
     def __get_dummy_poll() -> PollModel:
         """Try to retrieve a dummy MJ poll"""
@@ -53,10 +56,13 @@ class MajorityJudgmentVoteView(View):
         # redirect to details page if poll is not yet open
         if not poll.is_open() or poll.is_closed():
             return render(request, 'votes_results/poll_details.html', {'poll': poll})
-
+        
+        # check if the poll is accessed by a single poll url rather than the link with the token
+        if poll.votable_token and request.session.get('token_used') is None:
+            return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
         
         if ((poll.poll_type != PollModel.PollType.MAJORITY_JUDJMENT and poll.votable_mj != True) or
-            (poll.poll_type == PollModel.PollType.SINGLE_OPTION and request.session.get(SESSION_SINGLE_OPTION_VOTE_ID) is None)):
+            (poll.poll_type == PollModel.PollType.SINGLE_OPTION and request.session.get(SESSION_SINGLE_OPTION_VOTE_ID) is None and poll.votable_token != True)):
             raise Http404()
 
         options_selected = request.session.get(SESSION_MJ_VOTE_SUBMIT_ERROR)
@@ -68,7 +74,9 @@ class MajorityJudgmentVoteView(View):
         if request.session.get(SESSION_MJ_GUIDE_ALREADY_VIWED) is None:
             request.session[SESSION_MJ_GUIDE_ALREADY_VIWED] = True
         
-        vote_single_option: PollOptionModel = PollOptionModel.objects.get(id=request.session.get(SESSION_SINGLE_OPTION_VOTE_ID))
+        if poll.poll_type == PollModel.PollType.SINGLE_OPTION and poll.votable_mj and request.session.get(SESSION_SINGLE_OPTION_VOTE_ID) is not None:
+            vote_single_option: PollOptionModel = PollOptionModel.objects.get(id=request.session.get(SESSION_SINGLE_OPTION_VOTE_ID))
+            request.session['os_to_mj'] = vote_single_option.value
 
         return render(request, 'votes_results/majority_judgment_vote.html', {
             'poll': poll, 
@@ -78,7 +86,7 @@ class MajorityJudgmentVoteView(View):
             }, 
             'guide_already_viwed': guide_already_viwed,
             'consistency_check': request.session.get(SESSION_CONSISTENCY_CHECK),
-            'single_option' : vote_single_option.value,
+            'single_option' : request.session.get('os_to_mj'),
             })    
 
     def post(self, request: HttpRequest, poll_id: int, *args, **kwargs):
@@ -114,12 +122,19 @@ class MajorityJudgmentVoteView(View):
         check_consistency_session: CheckConsistencySession = CheckConsistencySession(request)
         if  (not request.session.get(SESSION_CONSISTENCY_CHECK) and # Check used if user has already seen the consistency check
             check_consistency_session.check_consistency(poll, ratings, SESSION_SINGLE_OPTION_VOTE_ID, SESSION_CONSISTENCY_CHECK)):
-            
             return HttpResponseRedirect(reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))    
         
         try:
             vote: MajorityVoteModel = MajorityJudjmentVoteService.perform_vote(ratings, poll_id=str(poll_id))
-            
+
+            # invalidation of token if vote is successful
+            if request.session.get('token_used') is not None:
+                try:
+                    token_poll = request.session.get('token_used')
+                except Exception:
+                    raise Http404(f"Token associated with user {token_poll.token_user} not found.")
+                PollTokenService.check_majority_option(token_poll)
+
             # Clear session if the mj vote is performed
             check_consistency_session.clear_session([SESSION_SINGLE_OPTION_VOTE_ID, SESSION_CONSISTENCY_CHECK])
             
@@ -129,6 +144,14 @@ class MajorityJudgmentVoteView(View):
             return HttpResponseRedirect(reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))
         except Exception as e:
             raise Http404
+
+        # Clean session data for token validation
+        if request.session.get('token_used') is not None:
+            del request.session['token_used']
+
+        # Clean session data for single option to majority control
+        if request.session.get('os_tom_mj') is not None:
+            del request.session['os_to_mj']
 
         # Clean eventual error session.
         if request.session.get(SESSION_MJ_VOTE_SUBMIT_ERROR) is not None:
