@@ -25,7 +25,7 @@ urlpatterns = [
     path('<int:poll_id>/cancellazione-token/', views.delete_poll_token, name='delete_poll_tokens'),
 
     # page with cards containing qr-code to print
-    path('<int:poll_id>/token-pdf', views.poll_, name='poll_qr_code'),
+    path('<int:poll_id>/token-pdf/', views.poll_qr_code, name='poll_qr_code'),
     
     # htmx form to create and edit polls
     path('form/', login_required(views.CreatePollHtmxView.as_view()), name="poll_form"),

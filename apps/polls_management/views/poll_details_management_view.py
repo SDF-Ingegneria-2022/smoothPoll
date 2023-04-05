@@ -23,3 +23,14 @@ def poll_details(request: HttpRequest, poll_id: int):
     else:
         # Render vote form (with eventual error message)
         return render(request, 'votes_results/poll_details.html', {'poll': poll})
+
+def poll_qr_code(request: HttpRequest, poll_id: int):
+    """Render the details page for a poll"""
+    try:
+        # Retrieve poll
+        poll: PollModel = PollService.get_poll_by_id(poll_id)
+    except Exception:
+        raise Http404(f"Poll with id {poll_id} not found.")
+    
+    # Render vote form (with eventual error message)
+    return render(request, 'polls_management/print_qr_code.html', {'poll': poll})
