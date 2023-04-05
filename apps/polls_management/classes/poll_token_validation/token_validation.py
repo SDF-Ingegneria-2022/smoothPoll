@@ -10,7 +10,7 @@ class TokenValidation:
     @staticmethod
     def validate(poll: PollModel, token: PollTokens) -> bool:
 
-        """Validate token if poll is not also votable with mj"""
+        """Validate token"""
 
         # token validation controls
         if not PollTokenService.is_single_option_token_used(token) and poll.poll_type == PollModel.PollType.SINGLE_OPTION and not poll.votable_mj:
@@ -29,9 +29,8 @@ class TokenValidation:
     @staticmethod
     def validate_mj_special_case(poll: PollModel, token: PollTokens) -> bool:
 
-        """Validate token if poll is also votable with mj"""
+        """Validate token if poll is also votable with mj (special case, single option used but not majority)"""
 
-        # token validation controls
         if PollTokenService.is_single_option_token_used(token) and not PollTokenService.is_majority_token_used(token) and poll.poll_type == PollModel.PollType.SINGLE_OPTION and poll.votable_mj:
             return True
         else:
