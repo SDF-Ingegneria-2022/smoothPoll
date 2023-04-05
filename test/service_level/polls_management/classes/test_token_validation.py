@@ -43,9 +43,9 @@ class TestTokenValidation:
         test_token2: PollTokens = PollTokens(token_user=user, poll_fk=poll_majority)
         test_token3: PollTokens = PollTokens(token_user=user, poll_fk=poll_mj)
 
-        assert_that(TokenValidation.validate(poll=poll_single, token=test_token1)).is_true()
-        assert_that(TokenValidation.validate(poll=poll_majority, token=test_token2)).is_true()
-        assert_that(TokenValidation.validate(poll=poll_mj, token=test_token3)).is_true()
+        assert_that(TokenValidation.validate(token=test_token1)).is_true()
+        assert_that(TokenValidation.validate(token=test_token2)).is_true()
+        assert_that(TokenValidation.validate(token=test_token3)).is_true()
 
         # bad test, token not valid
         test_token1.single_option_use = True
@@ -56,33 +56,33 @@ class TestTokenValidation:
         test_token3.majority_use = True
         test_token3.save()
 
-        assert_that(TokenValidation.validate(poll=poll_single, token=test_token1)).is_false()
-        assert_that(TokenValidation.validate(poll=poll_majority, token=test_token2)).is_false()
-        assert_that(TokenValidation.validate(poll=poll_mj, token=test_token3)).is_false()
+        assert_that(TokenValidation.validate(token=test_token1)).is_false()
+        assert_that(TokenValidation.validate(token=test_token2)).is_false()
+        assert_that(TokenValidation.validate(token=test_token3)).is_false()
 
         # test special case for votable mj
         test_token3.majority_use = False
         test_token3.save()
 
-        assert_that(TokenValidation.validate(poll=poll_mj, token=test_token3)).is_false()
-        assert_that(TokenValidation.validate_mj_special_case(poll=poll_mj, token=test_token3)).is_true()
+        assert_that(TokenValidation.validate(token=test_token3)).is_false()
+        assert_that(TokenValidation.validate_mj_special_case(token=test_token3)).is_true()
 
         # mixed tests, token type checks for not same type of poll
         test_token1.single_option_use = False
         test_token1.save()
 
-        assert_that(TokenValidation.validate(poll=poll_single, token=test_token1)).is_true()
+        assert_that(TokenValidation.validate(token=test_token1)).is_true()
 
         test_token2.majority_use = False
         test_token2.save()
 
-        assert_that(TokenValidation.validate(poll=poll_majority, token=test_token2)).is_true()
+        assert_that(TokenValidation.validate(token=test_token2)).is_true()
 
         # unusual/impossible case for validate_mj_special_case
         test_token3.single_option_use = False
         test_token3.majority_use = True
         test_token3.save()
 
-        assert_that(TokenValidation.validate_mj_special_case(poll=poll_mj, token=test_token3)).is_false()
+        assert_that(TokenValidation.validate_mj_special_case(token=test_token3)).is_false()
 
 

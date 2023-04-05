@@ -28,7 +28,7 @@ def generic_vote_view(request, poll_id: int):
             return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
         
         # token validation checks
-        if TokenValidation.validate(poll, token_poll_data):
+        if TokenValidation.validate(token_poll_data):
             request.session['token_used'] = token_poll_data
             # redirect to proper vote method
             if poll.poll_type == PollModel.PollType.MAJORITY_JUDJMENT:
@@ -38,7 +38,7 @@ def generic_vote_view(request, poll_id: int):
                 return HttpResponseRedirect(reverse(
                     'apps.votes_results:single_option_vote', 
                     args=(poll.id,)))
-        elif TokenValidation.validate_mj_special_case(poll, token_poll_data):
+        elif TokenValidation.validate_mj_special_case(token_poll_data):
             request.session['token_used'] = token_poll_data
             return HttpResponseRedirect(
                 reverse('apps.votes_results:majority_judgment_vote', args=(poll.id,)))

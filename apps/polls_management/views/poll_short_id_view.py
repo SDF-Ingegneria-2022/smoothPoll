@@ -33,7 +33,7 @@ class PollShortIdView(View):
                     return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
                 
                 # token validation checks
-                if TokenValidation.validate(poll, short_token):
+                if TokenValidation.validate(short_token):
                     request.session['token_used'] = short_token
                     # redirect to proper vote method
                     if poll.poll_type == PollModel.PollType.MAJORITY_JUDJMENT:
@@ -43,7 +43,7 @@ class PollShortIdView(View):
                         return HttpResponseRedirect(reverse(
                             'apps.votes_results:single_option_vote', 
                             args=(poll.id,)))
-                elif TokenValidation.validate_mj_special_case(poll, short_token):
+                elif TokenValidation.validate_mj_special_case(short_token):
                         request.session['token_used'] = short_token
                         return HttpResponseRedirect(
                             reverse('apps.votes_results:majority_judgment_vote', args=(poll.id,)))
