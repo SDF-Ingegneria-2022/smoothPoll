@@ -1,3 +1,4 @@
+from apps.polls_management.classes.poll_token_validation.token_validation import TokenValidation
 from apps.polls_management.services.poll_token_service import PollTokenService
 from apps.votes_results.classes.poll_result import PollResult
 from apps.votes_results.classes.poll_result import PollResult
@@ -48,7 +49,7 @@ class SingleOptionVoteView(View):
                 token_poll = request.session.get(SESSION_TOKEN_USED)
             except Exception:
                 raise Http404(f"Token associated with user {token_poll.token_user} not found.")
-            if PollTokenService.is_single_option_token_used(token_poll) and not PollTokenService.is_majority_token_used(token_poll):
+            if TokenValidation.validate_mj_special_case(token_poll):
                 # pass the token to specific poll type view for vote
                 request.session[SESSION_TOKEN_USED] = token_poll
                 return HttpResponseRedirect(reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))

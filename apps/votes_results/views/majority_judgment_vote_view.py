@@ -1,3 +1,4 @@
+from apps.polls_management.classes.poll_token_validation.token_validation import TokenValidation
 from apps.polls_management.models.poll_option_model import PollOptionModel
 from apps.polls_management.services.poll_token_service import PollTokenService
 from apps.votes_results.classes.majority_poll_result_data import MajorityPollResultData
@@ -60,7 +61,10 @@ class MajorityJudgmentVoteView(View):
         # check if the poll is accessed by a single poll url rather than the link with the token
         if poll.is_votable_token() and request.session.get('token_used') is None:
             return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
-        
+        elif poll.is_votable_token() and request.session.get('token_used') and poll.votable_mj:
+            if TokenValidation.validate(request.session.get('token_used')):
+                return HttpResponseRedirect(reverse('apps.votes_results:single_option_vote', args=(poll_id,)))
+
         if ((poll.poll_type != PollModel.PollType.MAJORITY_JUDJMENT and not poll.votable_mj) or
             ( poll.poll_type == PollModel.PollType.SINGLE_OPTION and
               request.session.get(SESSION_SINGLE_OPTION_VOTE_ID) is None and 
