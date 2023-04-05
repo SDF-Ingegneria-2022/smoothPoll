@@ -28,11 +28,11 @@
                 {%for voted_option in poll_results.get_sorted_options %}
                     {%if voted_option.position == position.0%}
                         <div class="row">
-                            <div class="col-5 fs-5 fw-light ms-1 my-1 bg-light text-start ">
+                            <div class="col-sm-5 fs-5 fw-light ms-1 my-1 bg-light text-start ">
                                 {{voted_option.option.value|truncatechars:40}}
                             </div>
                         </br>
-                            <div class="col fs-5 fw-light ms-1 my-1 bg-light ">
+                            <div class="col-sm fs-5 fw-light ms-1 my-1 bg-light ">
                                 {{voted_option.n_votes}} {%if voted_option.n_votes == 1%}preferenza{%else%}preferenze{%endif%}
                             </div>
                         </div>
@@ -51,10 +51,10 @@
             <div class="col-1 fs-4 pt-1 {%if voted_option.position == 1%}bg-success {%else%}bg-primary {%endif%}text-center text-white ">
                 {{voted_option.position}}
             </div>
-            <div class="col-5 fs-5 fw-light ms-1 pt-1 bg-light text-start">
+            <div class="col-sm-5 fs-5 fw-light ms-1 pt-1 bg-light text-start">
                 {{ voted_option.option.value|truncatechars:20 }}
             </div>
-            <div class="col fs-5 fw-light ms-1 pt-1 bg-light">
+            <div class="col-sm fs-5 fw-light ms-1 pt-1 bg-light">
                 {{voted_option.n_votes}} {%if voted_option.n_votes == 1%}preferenza{%else%}preferenze{%endif%}
             </div>
         </div>

@@ -1,3 +1,4 @@
+from apps.polls_management.models.poll_token import PollTokens
 from .models.poll_model import PollModel
 from .models.poll_option_model import PollOptionModel
 from .models.vote_model import VoteModel
@@ -17,8 +18,12 @@ class PollAdmin(admin.ModelAdmin):
 class PollOptionAdmin(admin.ModelAdmin):
     pass
 
+class PollTokenAdmin(admin.ModelAdmin):
+    pass
+
 admin.site.register(PollModel, PollAdmin)
 admin.site.register(PollOptionModel, PollOptionAdmin)
+admin.site.register(PollTokens, PollTokenAdmin)
 
 # ----------------------------------------
 # vote models

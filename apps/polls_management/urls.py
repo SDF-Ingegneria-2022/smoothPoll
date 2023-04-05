@@ -19,6 +19,10 @@ urlpatterns = [
     
     # details page for poll not yet open
     path('<int:poll_id>/dettagli/', login_required(views.poll_details), name='poll_details'),
+
+    # poll token creation and delete page path
+    path('<int:poll_id>/generazione-token/', views.poll_token, name='poll_tokens'),
+    path('<int:poll_id>/cancellazione-token/', views.delete_poll_token, name='delete_poll_tokens'),
     
     # htmx form to create and edit polls
     path('form/', login_required(views.CreatePollHtmxView.as_view()), name="poll_form"),

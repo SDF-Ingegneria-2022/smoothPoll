@@ -33,7 +33,8 @@ class TestPollEdit:
         form2 = PollForm({
             "name": self.name2, 
             "question": self.question2, 
-            "poll_type": self.type2
+            "poll_type": self.type2,
+            
             })
 
         return {"form1": form1, "form2": form2,}

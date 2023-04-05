@@ -2,7 +2,7 @@ from apps.polls_management.models.poll_model import RANDOMIZE_OPTIONS, PollModel
                                                     QUESTION, POLL_TYPE, \
                                                     OPEN_DATETIME, CLOSE_DATETIME,\
                                                     PREDEFINITED, VOTABLE_MJ, AUTHOR,\
-                                                    PRIVATE, SHORT_ID
+                                                    PRIVATE, SHORT_ID, PROTECTION
 from django.forms import ModelForm, DateTimeInput, HiddenInput
 from django.utils.translation import gettext as _
 from apps.polls_management.classes.poll_form_utils.short_id_util import ShortIdUtil
@@ -26,6 +26,13 @@ class PollForm(ModelForm):
             
         # Randomize options by default
         self.fields[RANDOMIZE_OPTIONS].initial = True
+        
+        # Protection 
+        if self.data.get(PROTECTION) is None:
+            self.data[PROTECTION] = PollModel.PollVoteProtection.UNPROTECTED
+        self.fields[PROTECTION].initial = PollModel.PollVoteProtection.UNPROTECTED
+        
+    
 
     class Meta:
         model = PollModel
@@ -39,7 +46,8 @@ class PollForm(ModelForm):
                     VOTABLE_MJ, 
                     PRIVATE, 
                     SHORT_ID, 
-                    RANDOMIZE_OPTIONS
+                    RANDOMIZE_OPTIONS,
+                    PROTECTION
                 ]
         
         labels = {
@@ -52,7 +60,8 @@ class PollForm(ModelForm):
                     VOTABLE_MJ: _("Rendi giudicabile anche con il Giudizio Maggioritario"),
                     PRIVATE: _("Scelta accessibile solo tramite link"), 
                     SHORT_ID: _("Codice identificativo"),
-                    RANDOMIZE_OPTIONS: _("Durante la fase di scelta o giudizio le opzioni saranno presentate in ordine casuale"), 
+                    RANDOMIZE_OPTIONS: _("Durante la fase di scelta o giudizio le opzioni saranno presentate in ordine casuale"),
+                    PROTECTION: _("Tipo di protezione della scelta")
                 }
         
         help_texts = {
@@ -65,6 +74,7 @@ class PollForm(ModelForm):
                         VOTABLE_MJ: _("(abilita questa opzione se vuoi che una scelta a Opzione Singola sia giudicabile anche con il Giudizio Maggioritario)"),
                         PRIVATE: _("(se abiliti questa opzione la scelta non sarà visibile nella sezione con tutte le scelte)"),
                         SHORT_ID: _("Codice identificativo univoco per il link"), 
+                        PROTECTION: _("come evitare che la scelta venga effetuata più volte dallo stesso utente")
                     }
         
         error_messages = {
@@ -106,11 +116,6 @@ class PollForm(ModelForm):
 
     def get_min_options(self) -> int: 
         """Get poll min options (according to poll_type)"""
-
-        if self.data.get(POLL_TYPE) == PollModel.PollType.MAJORITY_JUDJMENT or \
-            self.data.get(VOTABLE_MJ):
-            return 2
-        
         return 2
 
     def get_type_verbose_name(self) -> str:
