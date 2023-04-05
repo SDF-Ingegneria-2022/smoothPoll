@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
 from django.core.exceptions import ObjectDoesNotExist
+from apps.polls_management.classes.poll_token_validation.token_validation import TokenValidation
 from apps.polls_management.constants.template_path_constants import POLL_DETAILS_PAGE_TEMPLATE_PATH
 from apps.polls_management.models.poll_model import PollModel
 from apps.polls_management.models.poll_token import PollTokens
@@ -28,35 +29,52 @@ class PollShortIdView(View):
             if poll.is_votable_token():
                 try:
                     short_token: PollTokens = PollTokens.objects.get(token_user=get_user(request_or_sesame=request, scope=f"Poll:{poll.id}"))
-                    token_poll_data = PollTokenService.get_poll_token_by_user(short_token.token_user)
                 except Exception:
                     return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
                 
-                # TODO: find a way to remove the temporary logged user from the page of invalid tokens
-                # token validation controls
-                if PollTokenService.is_single_option_token_used(token_poll_data) and not poll.votable_mj:
-                    # logout(request)
-                    return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
-                elif PollTokenService.is_single_option_token_used(token_poll_data) and poll.votable_mj and not PollTokenService.is_majority_token_used(token_poll_data):
-                    # pass the token to specific poll type view for vote
-                    request.session['token_used'] = token_poll_data
-                    return HttpResponseRedirect(
-                        reverse('apps.votes_results:majority_judgment_vote', args=(poll.id,)))
-                elif PollTokenService.is_single_option_token_used(token_poll_data) and poll.votable_mj and PollTokenService.is_majority_token_used(token_poll_data):
-                    # logout(request)
-                    return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
-                elif PollTokenService.is_majority_token_used(token_poll_data) and not poll.votable_mj:
-                    # logout(request)
-                    return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
-                request.session['token_used'] = short_token
-                # redirect to proper vote method
-                if poll.poll_type == PollModel.PollType.MAJORITY_JUDJMENT:
-                    return HttpResponseRedirect(
-                        reverse('apps.votes_results:majority_judgment_vote', args=(poll.id,)))
+                # token validation checks
+                if TokenValidation.validate(poll, short_token):
+                    request.session['token_used'] = short_token
+                    # redirect to proper vote method
+                    if poll.poll_type == PollModel.PollType.MAJORITY_JUDJMENT:
+                        return HttpResponseRedirect(
+                            reverse('apps.votes_results:majority_judgment_vote', args=(poll.id,)))
+                    else:
+                        return HttpResponseRedirect(reverse(
+                            'apps.votes_results:single_option_vote', 
+                            args=(poll.id,)))
+                elif TokenValidation.validate_mj_special_case(poll, short_token):
+                        request.session['token_used'] = short_token
+                        return HttpResponseRedirect(
+                            reverse('apps.votes_results:majority_judgment_vote', args=(poll.id,)))
                 else:
-                    return HttpResponseRedirect(reverse(
-                        'apps.votes_results:single_option_vote', 
-                        args=(poll.id,)))
+                        return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
+
+                # # TODO: find a way to remove the temporary logged user from the page of invalid tokens
+                # # token validation controls
+                # if PollTokenService.is_single_option_token_used(short_token) and not poll.votable_mj:
+                #     # logout(request)
+                #     return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
+                # elif PollTokenService.is_single_option_token_used(short_token) and poll.votable_mj and not PollTokenService.is_majority_token_used(short_token):
+                #     # pass the token to specific poll type view for vote
+                #     request.session['token_used'] = short_token
+                #     return HttpResponseRedirect(
+                #         reverse('apps.votes_results:majority_judgment_vote', args=(poll.id,)))
+                # elif PollTokenService.is_single_option_token_used(short_token) and poll.votable_mj and PollTokenService.is_majority_token_used(short_token):
+                #     # logout(request)
+                #     return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
+                # elif PollTokenService.is_majority_token_used(short_token) and not poll.votable_mj:
+                #     # logout(request)
+                #     return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
+                # request.session['token_used'] = short_token
+                # # redirect to proper vote method
+                # if poll.poll_type == PollModel.PollType.MAJORITY_JUDJMENT:
+                #     return HttpResponseRedirect(
+                #         reverse('apps.votes_results:majority_judgment_vote', args=(poll.id,)))
+                # else:
+                #     return HttpResponseRedirect(reverse(
+                #         'apps.votes_results:single_option_vote', 
+                #         args=(poll.id,)))
             else:
                 return HttpResponseRedirect(reverse('apps.votes_results:vote', args=(poll.id,)))
         elif poll.is_closed():
