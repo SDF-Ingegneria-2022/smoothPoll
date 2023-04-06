@@ -52,7 +52,7 @@
     <br>
     <label for="tokenlistarea">Lista dei Token</label>
     <div class="form-outline">
-        <textarea class="form-control" id="tokenlistarea" rows="8" readonly>{% if token_list %}{% for available_token in token_list %}{{available_token}}
+        <textarea class="form-control" id="tokenlistarea" rows="8" readonly>{% if token_list %}{% for available_token in token_list.token_list %}{{available_token}}
 {% endfor %}
 {% endif %}
         </textarea>

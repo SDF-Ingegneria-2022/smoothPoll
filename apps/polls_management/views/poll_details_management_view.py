@@ -36,14 +36,16 @@ def poll_qr_code(request: HttpRequest, poll_id: int):
     
     if poll.is_votable_token():
         host_link: str = request.get_host()
-        token_links: List[str] = PollTokenService.available_token_list(host_link, poll)["query_list"]
+        query_links: List[str] = PollTokenService.available_token_list(host_link, poll)["query_list"]
+        token_links: List[str] = PollTokenService.available_token_list(host_link, poll)["token_list"]
         qr_codes: List[str] = []
-        for token in token_links:
+        for token, query in zip(token_links, query_links):
             img = qrcode.make(token, image_factory=PyPNGImage)
-            name_img :str= str(token[1:])+'.png'
+            name_img :str= str(poll_id) + str(query[1:])+'.png'
             qr_codes.append(name_img)
             img.save(f'static/qr_codes/{name_img}')
         # Render vote form (with eventual error message)
+        print(qr_codes)
         return render(request, 'polls_management/print_qr_code.html', {'poll': poll, 'qr_codes':qr_codes})
     else:
         return render(request, 'polls_management/print_qr_code.html', {'poll': poll })

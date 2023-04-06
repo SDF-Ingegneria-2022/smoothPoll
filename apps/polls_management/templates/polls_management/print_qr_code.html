@@ -1,9 +1,5 @@
 <h>hi</h>
 {% load static %}
 {% for token in qr_codes %}
-{% with 'tokens/'|add:token as imagePath %}
-<img src='{% static imagePath %}'/>
-{% endwith %}
+<img src='/static/qr_codes/{{token}}'/>
 {% endfor %}
-
-<img src="{% static 'logo-scegli-meglio.png' %}" 
