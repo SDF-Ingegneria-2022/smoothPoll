@@ -109,6 +109,17 @@ class MajorityJudgmentVoteView(View):
         if not poll.is_open() or poll.is_closed():
             return HttpResponseRedirect(reverse('apps.polls_management:poll_details', args=(poll_id,)))
         
+        # check if there is an attempt to vote with a token already used
+        if poll.is_votable_token() and request.session.get('token_used') is not None:
+            try:
+                token_poll_data = request.session.get('token_used')
+                updated_token = PollTokenService.get_poll_token_by_user(token_poll_data.token_user)
+            except Exception:
+                return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
+            
+            if not TokenValidation.validate(updated_token) and not TokenValidation.validate_mj_special_case(updated_token):
+                return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
+
         ratings: List[dict] = []
         session_object: dict = {
             'id': []
@@ -152,12 +163,8 @@ class MajorityJudgmentVoteView(View):
         except Exception as e:
             raise Http404
 
-        # Clean session data for token validation
-        if request.session.get('token_used') is not None:
-            del request.session['token_used']
-
         # Clean session data for single option to majority control
-        if request.session.get('os_tom_mj') is not None:
+        if request.session.get('os_to_mj') is not None:
             del request.session['os_to_mj']
 
         # Clean eventual error session.
@@ -198,6 +205,10 @@ def majority_judgment_recap_view(request: HttpRequest, poll_id: int):
         request.session[SESSION_MJ_VOTE_SUBMIT_ERROR] = "Errore! Non hai ancora espresso " \
             + "nessun giudizio. Usa questo form per esprimere la tua preferenza."
         return HttpResponseRedirect(reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))
+    
+    # Clean session data for token validation
+    # if request.session.get('token_used') is not None:
+    #     del request.session['token_used']
 
     return render(request, 'votes_results/majority_judgment_recap.html', {'vote': vote})
 
