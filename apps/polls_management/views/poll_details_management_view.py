@@ -5,6 +5,9 @@ from django.shortcuts import render
 from apps.polls_management.models.poll_model import PollModel
 from apps.polls_management.services.poll_service import PollService
 from apps.polls_management.services.poll_token_service import PollTokenService
+import qrcode
+import qrcode.image.svg
+
 
 
 def poll_details(request: HttpRequest, poll_id: int):
@@ -31,6 +34,10 @@ def poll_qr_code(request: HttpRequest, poll_id: int):
         poll: PollModel = PollService.get_poll_by_id(poll_id)
     except Exception:
         raise Http404(f"Poll with id {poll_id} not found.")
-    
+
+    img = qrcode.make('http://www.google.com/', image_factory=qrcode.image.svg.SvgImage)
+    with open('qr.svg', 'wb') as qr:
+        img.save(qr)
     # Render vote form (with eventual error message)
-    return render(request, 'polls_management/print_qr_code.html', {'poll': poll})
+    return render(request, 'polls_management/print_qr_code.html', {'poll': poll, 'img':img})
+
