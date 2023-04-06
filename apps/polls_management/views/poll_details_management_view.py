@@ -6,8 +6,7 @@ from apps.polls_management.models.poll_model import PollModel
 from apps.polls_management.services.poll_service import PollService
 from apps.polls_management.services.poll_token_service import PollTokenService
 import qrcode
-import qrcode.image.svg
-
+from qrcode.image.pure import PyPNGImage
 
 
 def poll_details(request: HttpRequest, poll_id: int):
@@ -34,10 +33,18 @@ def poll_qr_code(request: HttpRequest, poll_id: int):
         poll: PollModel = PollService.get_poll_by_id(poll_id)
     except Exception:
         raise Http404(f"Poll with id {poll_id} not found.")
-
-    img = qrcode.make('http://www.google.com/', image_factory=qrcode.image.svg.SvgImage)
-    with open('qr.svg', 'wb') as qr:
-        img.save(qr)
-    # Render vote form (with eventual error message)
-    return render(request, 'polls_management/print_qr_code.html', {'poll': poll, 'img':img})
+    
+    if poll.is_votable_token():
+        host_link: str = request.get_host()
+        token_links: List[str] = PollTokenService.available_token_list(host_link, poll)["query_list"]
+        qr_codes: List[str] = []
+        for token in token_links:
+            img = qrcode.make(token, image_factory=PyPNGImage)
+            name_img :str= str(token[1:])+'.png'
+            qr_codes.append(name_img)
+            img.save(f'static/qr_codes/{name_img}')
+        # Render vote form (with eventual error message)
+        return render(request, 'polls_management/print_qr_code.html', {'poll': poll, 'qr_codes':qr_codes})
+    else:
+        return render(request, 'polls_management/print_qr_code.html', {'poll': poll })
 

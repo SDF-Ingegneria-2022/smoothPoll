@@ -117,16 +117,18 @@ class PollTokenService:
         """
 
         token_list: List[str] = []
+        query_list: List[str] = []
         link: str = host + '/' + poll.short_id
     
         tokens: PollTokens = PollTokens.objects.filter(Q(poll_fk=poll) & Q(single_option_use=False) & Q(majority_use=False))
-
+        
         for token in tokens:
             templink: str = link
-            templink += get_query_string(user=token.token_user, scope=f"Poll:{poll.id}")
+            tempquery: str =get_query_string(user=token.token_user, scope=f"Poll:{poll.id}")
+            templink += tempquery
             token_list.append(templink)
-
-        return token_list
+            query_list.append(tempquery)
+        return {"token_list":token_list, "query_list":query_list}
 
     def delete_tokens(poll: PollModel):
 
