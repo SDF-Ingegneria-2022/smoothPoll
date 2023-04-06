@@ -149,6 +149,8 @@ class SingleOptionVoteView(View):
             
             elif poll.is_votable_google:
                 PollTokenService.create_google_record(request.user, poll)
+                g_token = PollTokens.objects.get(token_user=request.user, poll_fk=poll)
+                PollTokenService.check_single_option(g_token)
 
         except PollOptionUnvalidException:
             request.session[SESSION_SINGLE_OPTION_VOTE_SUBMIT_ERROR] = "Errore! La scelte deve essere " \

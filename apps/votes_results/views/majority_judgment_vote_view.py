@@ -200,6 +200,8 @@ class MajorityJudgmentVoteView(View):
             
             elif poll.is_votable_google:
                 PollTokenService.create_google_record(request.user, poll)
+                g_token = PollTokens.objects.get(token_user=request.user, poll_fk=poll)
+                PollTokenService.check_majority_option(g_token)
 
             # Clear session if the mj vote is performed
             check_consistency_session.clear_session([SESSION_SINGLE_OPTION_VOTE_ID, SESSION_CONSISTENCY_CHECK])
