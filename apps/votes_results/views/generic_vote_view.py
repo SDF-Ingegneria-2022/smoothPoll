@@ -1,6 +1,7 @@
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from apps.polls_management.classes.poll_token_validation.token_validation import TokenValidation
 from apps.polls_management.models.poll_model import PollModel
 from apps.polls_management.services.poll_service import PollService
 from apps.polls_management.services.poll_token_service import PollTokenService
@@ -26,34 +27,53 @@ def generic_vote_view(request, poll_id: int):
         except Exception:
             return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
         
-        # TODO: find a way to remove the temporary logged user from the page of invalid tokens
-        # token validation controls
-        if PollTokenService.is_single_option_token_used(token_poll_data) and not poll.votable_mj:
-            # logout(request)
-            return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
-        elif PollTokenService.is_single_option_token_used(token_poll_data) and poll.votable_mj and not PollTokenService.is_majority_token_used(token_poll_data):
-            # pass the token to specific poll type view for vote
+        # token validation checks
+        if TokenValidation.validate(token_poll_data):
+            request.session['token_used'] = token_poll_data
+            # redirect to proper vote method
+            if poll.poll_type == PollModel.PollType.MAJORITY_JUDJMENT:
+                return HttpResponseRedirect(
+                    reverse('apps.votes_results:majority_judgment_vote', args=(poll.id,)))
+            else:
+                return HttpResponseRedirect(reverse(
+                    'apps.votes_results:single_option_vote', 
+                    args=(poll.id,)))
+        elif TokenValidation.validate_mj_special_case(token_poll_data):
             request.session['token_used'] = token_poll_data
             return HttpResponseRedirect(
-                reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))
-        elif PollTokenService.is_single_option_token_used(token_poll_data) and poll.votable_mj and PollTokenService.is_majority_token_used(token_poll_data):
-            # logout(request)
-            return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
-        elif PollTokenService.is_majority_token_used(token_poll_data) and not poll.votable_mj:
-            # logout(request)
+                reverse('apps.votes_results:majority_judgment_vote', args=(poll.id,)))
+        else:
             return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
         
-        # pass the token to specific poll type view for vote
-        request.session['token_used'] = token_poll_data
+        # TODO: find a way to remove the temporary logged user from the page of invalid tokens
+        # token validation controls
+        # if PollTokenService.is_single_option_token_used(token_poll_data) and not poll.votable_mj:
+        #     # logout(request)
+        #     return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
+        # elif PollTokenService.is_single_option_token_used(token_poll_data) and poll.votable_mj and not PollTokenService.is_majority_token_used(token_poll_data):
+        #     # pass the token to specific poll type view for vote
+        #     request.session['token_used'] = token_poll_data
+        #     return HttpResponseRedirect(
+        #         reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))
+        # elif PollTokenService.is_single_option_token_used(token_poll_data) and poll.votable_mj and PollTokenService.is_majority_token_used(token_poll_data):
+        #     # logout(request)
+        #     return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
+        # elif PollTokenService.is_majority_token_used(token_poll_data) and not poll.votable_mj:
+        #     # logout(request)
+        #     return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
+        
+        # # pass the token to specific poll type view for vote
+        # request.session['token_used'] = token_poll_data
 
-    # redirect to proper vote method
-    if poll.poll_type == PollModel.PollType.MAJORITY_JUDJMENT:
-        return HttpResponseRedirect(
-            reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))
     else:
-        return HttpResponseRedirect(reverse(
-            'apps.votes_results:single_option_vote', 
-            args=(poll_id,)))
+        # redirect to proper vote method
+        if poll.poll_type == PollModel.PollType.MAJORITY_JUDJMENT:
+            return HttpResponseRedirect(
+                reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))
+        else:
+            return HttpResponseRedirect(reverse(
+                'apps.votes_results:single_option_vote', 
+                args=(poll_id,)))
 
 
 def generic_results_view(request, poll_id: int):

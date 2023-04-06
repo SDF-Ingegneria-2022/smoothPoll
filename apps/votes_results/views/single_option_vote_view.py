@@ -1,3 +1,4 @@
+from apps.polls_management.classes.poll_token_validation.token_validation import TokenValidation
 from apps.polls_management.services.poll_token_service import PollTokenService
 from apps.votes_results.classes.poll_result import PollResult
 from apps.votes_results.classes.poll_result import PollResult
@@ -23,6 +24,7 @@ REQUEST_VOTE = 'vote'
 SESSION_SINGLE_OPTION_VOTE_SUBMIT_ERROR = 'vote-submit-error'
 SESSION_SINGLE_OPTION_VOTE_ID = 'single-option-vote-id'
 SESSION_TOKEN_USED = 'token_used'
+
 class SingleOptionVoteView(View):
     """View to handle Single Option vote operation. """
 
@@ -40,18 +42,28 @@ class SingleOptionVoteView(View):
             return render(request, 'votes_results/poll_details.html', {'poll': poll})
         
         # check if the poll is accessed by a single poll url rather than the link with the token
-        if poll.is_votable_token() and request.session.get(SESSION_TOKEN_USED) is None:
-            return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
-        # check special token case with votable mj
-        elif poll.votable_mj and request.session.get(SESSION_TOKEN_USED) is not None:
-            try:
-                token_poll = request.session.get(SESSION_TOKEN_USED)
-            except Exception:
-                raise Http404(f"Token associated with user {token_poll.token_user} not found.")
-            if PollTokenService.is_single_option_token_used(token_poll) and not PollTokenService.is_majority_token_used(token_poll):
-                # pass the token to specific poll type view for vote
-                request.session[SESSION_TOKEN_USED] = token_poll
-                return HttpResponseRedirect(reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))
+        # and control of token validity
+        if poll.is_votable_token():
+            if request.session.get(SESSION_TOKEN_USED) is None:
+                return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
+            else:
+                try:
+                    token_poll = request.session.get(SESSION_TOKEN_USED)
+                except Exception:
+                    raise Http404(f"Token associated with user {token_poll.token_user} not found.")
+
+                if not TokenValidation.validate(token_poll) and not poll.votable_mj:
+                    return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
+                
+                elif poll.votable_mj:
+                    # check special token case with votable mj
+                    if not TokenValidation.validate(token_poll):
+                        if TokenValidation.validate_mj_special_case(token_poll):
+                            # pass the token to specific poll type view for vote
+                            request.session[SESSION_TOKEN_USED] = token_poll
+                            return HttpResponseRedirect(reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))
+                        else:
+                            return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
         
         if poll.poll_type == PollModel.PollType.MAJORITY_JUDJMENT:
             return HttpResponseRedirect(reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))
@@ -83,6 +95,17 @@ class SingleOptionVoteView(View):
         if not poll.is_open() or poll.is_closed():
             return HttpResponseRedirect(reverse('apps.polls_management:poll_details', args=(poll_id,)))
 
+        # check if there is an attempt to vote with a token already used
+        if poll.is_votable_token() and request.session.get(SESSION_TOKEN_USED) is not None:
+            try:
+                token_poll_data = request.session.get(SESSION_TOKEN_USED)
+                updated_token = PollTokenService.get_poll_token_by_user(token_poll_data.token_user)
+            except Exception:
+                return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
+
+            if not TokenValidation.validate(updated_token):
+                return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
+
         # Check is passed any data.
         if REQUEST_VOTE not in request.POST:
             request.session[SESSION_SINGLE_OPTION_VOTE_SUBMIT_ERROR] = "Errore! Per confermare la scelta " \
@@ -97,12 +120,12 @@ class SingleOptionVoteView(View):
             vote = SingleOptionVoteService.perform_vote(poll_id, request.POST[REQUEST_VOTE])
 
             # invalidation of token if vote is successful
-            if request.session.get('token_used') is not None:
+            if poll.is_votable_token and request.session.get(SESSION_TOKEN_USED) is not None:
                 try:
-                    token_poll = request.session.get('token_used')
+                    token_poll = request.session.get(SESSION_TOKEN_USED)
+                    PollTokenService.check_single_option(token_poll)
                 except Exception:
                     raise Http404(f"Token associated with user {token_poll.token_user} not found.")
-                PollTokenService.check_single_option(token_poll)
 
         except PollOptionUnvalidException:
             request.session[SESSION_SINGLE_OPTION_VOTE_SUBMIT_ERROR] = "Errore! La scelte deve essere " \
@@ -111,11 +134,6 @@ class SingleOptionVoteView(View):
             return HttpResponseRedirect(reverse('apps.votes_results:single_option_vote', args=(poll_id,)))
         except PollDoesNotExistException:
             raise Http404
-
-        # Clean session data for token validation if poll is not also votable with majority
-        if not poll.votable_mj:
-            if request.session.get('token_used') is not None:
-                del request.session['token_used']
 
         # Clean eventual error session.
         if request.session.get(SESSION_SINGLE_OPTION_VOTE_SUBMIT_ERROR) is not None:
@@ -171,6 +189,11 @@ def single_option_recap_view(request: HttpRequest, poll_id: int):
     
     if poll.votable_mj:
         mj_vote_counter: SingleOptionVoteCounter = SingleOptionVoteCounter(poll)
+
+    # Clean session data for token validation if poll is not also votable with majority
+    # if not poll.votable_mj:
+    #     if request.session.get(SESSION_TOKEN_USED) is not None:
+    #         del request.session[SESSION_TOKEN_USED]
         
     return render(request, 'votes_results/single_option_recap.html', {'vote': vote,
                                                                       'mj_vote_counter': mj_vote_counter})
