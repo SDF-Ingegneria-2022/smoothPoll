@@ -64,6 +64,10 @@ class SingleOptionVoteView(View):
                             return HttpResponseRedirect(reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))
                         else:
                             return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
+                        
+        elif poll.is_votable_google:
+            if not request.user.is_authenticated:
+                return render(request, 'global/login.html')
         
         if poll.poll_type == PollModel.PollType.MAJORITY_JUDJMENT:
             return HttpResponseRedirect(reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))
