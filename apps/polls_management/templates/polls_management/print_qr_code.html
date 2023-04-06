@@ -1,5 +1,7 @@
-<h>hi</h>
 {% load static %}
 {% for token in qr_codes %}
-<img src='/static/qr_codes/{{token}}'/>
+<div class="container text-center mt-5 mb-5 bg-secondary">
+    <h1>nome scelta</h1><p>{{poll.name}}</p>
+    <img src='/static/qr_codes/{{token}}'/>
+</div>
 {% endfor %}
