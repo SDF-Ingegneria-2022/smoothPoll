@@ -5,7 +5,7 @@ OLD_VERSION=$(git describe --abbrev=0 --tags)
 echo "Saving old version: $OLD_VERSION"
 git checkout master &> /dev/null
 git pull  &> /dev/null
-NEW_VERSION=$(git describe --abbrev=0 --tags) 
+NEW_VERSION=$(git describe --tags $(git rev-list --tags --max-count=1))
 echo "Pull last version available: $NEW_VERSION"
 if [ "$OLD_VERSION" != "$NEW_VERSION" ]; then
     echo "New version available, deploying..."
@@ -17,7 +17,7 @@ if [ "$OLD_VERSION" != "$NEW_VERSION" ]; then
     echo "Deployment done!"
     echo "Restarting gunicorn..."
     sleep 5
-    sudo systemctl restart gunicorn &> /dev/null
+    echo $1 | sudo -S systemctl restart gunicorn &> /dev/null
     echo -e "\033[1;32mDeployment done!\033[1;32m"
 else
     echo -e "\033[0;31mNo new version available, nothing to do.\033[0;31m"
