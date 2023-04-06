@@ -113,6 +113,7 @@ class PollTokenService:
 
         """Return a list of available token links.
         Args:
+            host: a string with the host link for the url
             poll: the poll the tokens belong to.
         """
 
@@ -150,6 +151,7 @@ class PollTokenService:
 
         """Return a list of unavailable token links.
         Args:
+            host: a string with the host link for the url
             poll: the poll the tokens belong to.
         """
 
@@ -164,3 +166,17 @@ class PollTokenService:
             token_list.append(templink)
 
         return token_list
+    
+    @staticmethod
+    def create_google_record(user: User, poll: PollModel) -> PollTokens:
+
+        """Creates an object PollTokens used to record a vote for a Google auth user.
+        Args:
+            user: the user whose vote has to be recorded.
+            poll: the poll the tokens belong to.
+        """
+
+        google_vote: PollTokens = PollTokens(token_user=user, poll_fk=poll)
+        google_vote.save()
+
+        return google_vote

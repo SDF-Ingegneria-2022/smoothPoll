@@ -1,5 +1,6 @@
 from apps.polls_management.classes.poll_token_validation.token_validation import TokenValidation
 from apps.polls_management.models.poll_option_model import PollOptionModel
+from apps.polls_management.models.poll_token import PollTokens
 from apps.polls_management.services.poll_token_service import PollTokenService
 from apps.votes_results.classes.majority_poll_result_data import MajorityPollResultData
 from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
@@ -92,6 +93,16 @@ class MajorityJudgmentVoteView(View):
         elif poll.is_votable_google:
             if not request.user.is_authenticated:
                 return render(request, 'global/login.html')
+            elif PollTokens.objects.filter(token_user=request.user, poll_fk=poll).exists():
+                google_token = PollTokens.objects.get(token_user=request.user, poll_fk=poll)
+                if not TokenValidation.validate(google_token) and not poll.votable_mj:
+                    return render(request, 'global/login.html')
+                elif poll.votable_mj:
+                    # check special token case with votable mj
+                    if TokenValidation.validate(google_token):
+                        return HttpResponseRedirect(reverse('apps.votes_results:single_option_vote', args=(poll_id,)))
+                    elif not TokenValidation.validate_mj_special_case(google_token):
+                        return render(request, 'global/login.html')
 
         if ((poll.poll_type != PollModel.PollType.MAJORITY_JUDJMENT and not poll.votable_mj) or
             ( poll.poll_type == PollModel.PollType.SINGLE_OPTION and
@@ -148,6 +159,12 @@ class MajorityJudgmentVoteView(View):
             if not TokenValidation.validate(updated_token) and not TokenValidation.validate_mj_special_case(updated_token):
                 return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
 
+        elif poll.is_votable_google:
+            if PollTokens.objects.filter(token_user=request.user, poll_fk=poll).exists():
+                google_token = PollTokens.objects.get(token_user=request.user, poll_fk=poll)
+                if not TokenValidation.validate(google_token) and not TokenValidation.validate_mj_special_case(google_token):
+                    return render(request, 'global/login.html')
+
         ratings: List[dict] = []
         session_object: dict = {
             'id': []
@@ -180,6 +197,9 @@ class MajorityJudgmentVoteView(View):
                     PollTokenService.check_majority_option(token_poll)
                 except Exception:
                     raise Http404(f"Token associated with user {token_poll.token_user} not found.")
+            
+            elif poll.is_votable_google:
+                PollTokenService.create_google_record(request.user, poll)
 
             # Clear session if the mj vote is performed
             check_consistency_session.clear_session([SESSION_SINGLE_OPTION_VOTE_ID, SESSION_CONSISTENCY_CHECK])
