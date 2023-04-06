@@ -120,12 +120,12 @@ class SingleOptionVoteView(View):
             vote = SingleOptionVoteService.perform_vote(poll_id, request.POST[REQUEST_VOTE])
 
             # invalidation of token if vote is successful
-            if request.session.get(SESSION_TOKEN_USED) is not None:
+            if poll.is_votable_token and request.session.get(SESSION_TOKEN_USED) is not None:
                 try:
                     token_poll = request.session.get(SESSION_TOKEN_USED)
+                    PollTokenService.check_single_option(token_poll)
                 except Exception:
                     raise Http404(f"Token associated with user {token_poll.token_user} not found.")
-                PollTokenService.check_single_option(token_poll)
 
         except PollOptionUnvalidException:
             request.session[SESSION_SINGLE_OPTION_VOTE_SUBMIT_ERROR] = "Errore! La scelte deve essere " \

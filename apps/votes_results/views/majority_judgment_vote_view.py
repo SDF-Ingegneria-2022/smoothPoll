@@ -170,12 +170,12 @@ class MajorityJudgmentVoteView(View):
             vote: MajorityVoteModel = MajorityJudjmentVoteService.perform_vote(ratings, poll_id=str(poll_id))
 
             # invalidation of token if vote is successful
-            if request.session.get(SESSION_TOKEN_USED) is not None:
+            if poll.is_votable_token and request.session.get(SESSION_TOKEN_USED) is not None:
                 try:
                     token_poll = request.session.get(SESSION_TOKEN_USED)
+                    PollTokenService.check_majority_option(token_poll)
                 except Exception:
                     raise Http404(f"Token associated with user {token_poll.token_user} not found.")
-                PollTokenService.check_majority_option(token_poll)
 
             # Clear session if the mj vote is performed
             check_consistency_session.clear_session([SESSION_SINGLE_OPTION_VOTE_ID, SESSION_CONSISTENCY_CHECK])
