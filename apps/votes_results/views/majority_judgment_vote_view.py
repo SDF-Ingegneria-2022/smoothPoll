@@ -92,15 +92,15 @@ class MajorityJudgmentVoteView(View):
                     
         elif poll.is_votable_google:
             if not request.user.is_authenticated:
-                return render(request, 'global/login.html')
+                return render(request, 'global/login.html', {'poll': poll})
             elif PollTokens.objects.filter(token_user=request.user, poll_fk=poll).exists():
                 google_token = PollTokens.objects.get(token_user=request.user, poll_fk=poll)
                 if not TokenValidation.validate(google_token) and not poll.votable_mj:
-                    return render(request, 'global/login.html')
+                    return render(request, 'global/login.html', {'poll': poll})
                 elif poll.votable_mj:
                     if not TokenValidation.validate(google_token):
                         if not TokenValidation.validate_mj_special_case(google_token):
-                            return render(request, 'global/login.html')
+                            return render(request, 'global/login.html', {'poll': poll})
             elif not PollTokens.objects.filter(token_user=request.user, poll_fk=poll).exists() and poll.votable_mj:
                 return HttpResponseRedirect(reverse('apps.votes_results:single_option_vote', args=(poll_id,)))
 
@@ -163,7 +163,7 @@ class MajorityJudgmentVoteView(View):
             if PollTokens.objects.filter(token_user=request.user, poll_fk=poll).exists():
                 google_token = PollTokens.objects.get(token_user=request.user, poll_fk=poll)
                 if not TokenValidation.validate(google_token) and not TokenValidation.validate_mj_special_case(google_token):
-                    return render(request, 'global/login.html')
+                    return render(request, 'global/login.html', {'poll': poll})
 
         ratings: List[dict] = []
         session_object: dict = {

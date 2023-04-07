@@ -86,7 +86,7 @@ class PollShortIdView(View):
                             'apps.votes_results:single_option_vote', 
                             args=(poll.id,)))
                 else:
-                    return render(request, 'global/login.html')
+                    return render(request, 'global/login.html', {'poll': poll})
             else:
                 return HttpResponseRedirect(reverse('apps.votes_results:vote', args=(poll.id,)))
         elif poll.is_closed():

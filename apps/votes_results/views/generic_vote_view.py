@@ -76,7 +76,7 @@ def generic_vote_view(request, poll_id: int):
                     'apps.votes_results:single_option_vote', 
                     args=(poll_id,)))
         else:
-            return render(request, 'global/login.html')
+            return render(request, 'global/login.html', {'poll': poll})
 
     else:
         # redirect to proper vote method
