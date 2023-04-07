@@ -6,6 +6,10 @@ from apps.polls_management.models.poll_model import PollModel
 from apps.polls_management.services.poll_service import PollService
 
 
+SESSION_DELETE_SUCCESS = 'delete_success'
+SESSION_DELETE_ERROR  = 'delete_error'
+SESSION_CANNOT_EDIT   = 'cannot_edit'
+
 def all_votable_polls(request: HttpRequest):
     """
     Render page with all polls.
@@ -26,20 +30,20 @@ def all_votable_polls(request: HttpRequest):
         page: int = int(page_information)
 
     # session variables for modal toggle of delete poll result
-    delete_success = request.session.get('delete_success')
-    delete_error = request.session.get('delete_error')
+    delete_success = request.session.get(SESSION_DELETE_SUCCESS)
+    delete_error = request.session.get(SESSION_DELETE_ERROR)
 
     # session variable for edit alert message
-    not_editable = request.session.get('cannot_edit')
+    not_editable = request.session.get(SESSION_CANNOT_EDIT)
 
     if delete_success:
-        del request.session['delete_success']
+        del request.session[SESSION_DELETE_SUCCESS]
 
     if delete_error:
-        del request.session['delete_error']
+        del request.session[SESSION_DELETE_ERROR]
 
     if not_editable:
-        del request.session['cannot_edit']
+        del request.session[SESSION_CANNOT_EDIT]
     
     return render(  request, 
                     'votes_results/vote_all_polls.html', 
