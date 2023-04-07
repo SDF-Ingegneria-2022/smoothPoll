@@ -128,13 +128,22 @@
                                 Vai a gestione
                             </a>
                         {% endif %}
+                        <a class="dropdown-item" role="button" data-bs-toggle="modal" 
+                            data-bs-toggle="modal" data-bs-target="#shareModal-{{poll.id}}">
+                            Condividi
+                        </a>
                       </div>
                 </div>
             </div>
             <!-- End Dropdown action menu -->
         </div>
-      </div>
-  </div>
+    </div>
+
+    <!-- Social share modal (poll {{poll.id}}) -->
+    {% include "polls_management/components/share_social/share_social_modal.html" with poll=poll %}
+    <!-- End Social share modal (poll {{poll.id}}) -->
+</div>
+
 <hr>
 
   
