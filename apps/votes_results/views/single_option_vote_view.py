@@ -67,7 +67,7 @@ class SingleOptionVoteView(View):
                         else:
                             return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
                         
-        elif poll.is_votable_google:
+        elif poll.is_votable_google():
             if not request.user.is_authenticated:
                 return render(request, 'global/login.html', {'poll': poll})
             elif PollTokens.objects.filter(token_user=request.user, poll_fk=poll).exists():
@@ -124,7 +124,7 @@ class SingleOptionVoteView(View):
             if not TokenValidation.validate(updated_token):
                 return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
             
-        elif poll.is_votable_google:
+        elif poll.is_votable_google():
             if PollTokens.objects.filter(token_user=request.user, poll_fk=poll).exists():
                 google_token = PollTokens.objects.get(token_user=request.user, poll_fk=poll)
                 if not TokenValidation.validate(google_token):
@@ -146,14 +146,14 @@ class SingleOptionVoteView(View):
             vote = SingleOptionVoteService.perform_vote(poll_id, request.POST[REQUEST_VOTE])
 
             # invalidation of token if vote is successful
-            if poll.is_votable_token and request.session.get(SESSION_TOKEN_USED) is not None:
+            if poll.is_votable_token() and request.session.get(SESSION_TOKEN_USED) is not None:
                 try:
                     token_poll = request.session.get(SESSION_TOKEN_USED)
                     PollTokenService.check_single_option(token_poll)
                 except Exception:
                     raise Http404(f"Token associated with user {token_poll.token_user} not found.")
             
-            elif poll.is_votable_google:
+            elif poll.is_votable_google():
                 PollTokenService.create_google_record(request.user, poll)
                 g_token = PollTokens.objects.get(token_user=request.user, poll_fk=poll)
                 PollTokenService.check_single_option(g_token)

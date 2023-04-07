@@ -90,7 +90,7 @@ class MajorityJudgmentVoteView(View):
                     elif not TokenValidation.validate_mj_special_case(token_poll):
                         return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
                     
-        elif poll.is_votable_google:
+        elif poll.is_votable_google():
             if not request.user.is_authenticated:
                 return render(request, 'global/login.html', {'poll': poll})
             elif PollTokens.objects.filter(token_user=request.user, poll_fk=poll).exists():
@@ -159,7 +159,7 @@ class MajorityJudgmentVoteView(View):
             if not TokenValidation.validate(updated_token) and not TokenValidation.validate_mj_special_case(updated_token):
                 return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
 
-        elif poll.is_votable_google:
+        elif poll.is_votable_google():
             if PollTokens.objects.filter(token_user=request.user, poll_fk=poll).exists():
                 google_token = PollTokens.objects.get(token_user=request.user, poll_fk=poll)
                 if not TokenValidation.validate(google_token) and not TokenValidation.validate_mj_special_case(google_token):
@@ -191,14 +191,14 @@ class MajorityJudgmentVoteView(View):
             vote: MajorityVoteModel = MajorityJudjmentVoteService.perform_vote(ratings, poll_id=str(poll_id))
 
             # invalidation of token if vote is successful
-            if poll.is_votable_token and request.session.get(SESSION_TOKEN_USED) is not None:
+            if poll.is_votable_token() and request.session.get(SESSION_TOKEN_USED) is not None:
                 try:
                     token_poll = request.session.get(SESSION_TOKEN_USED)
                     PollTokenService.check_majority_option(token_poll)
                 except Exception:
                     raise Http404(f"Token associated with user {token_poll.token_user} not found.")
             
-            elif poll.is_votable_google:
+            elif poll.is_votable_google():
 
                 if PollTokens.objects.filter(token_user=request.user, poll_fk=poll).exists():
                     g_token = PollTokens.objects.get(token_user=request.user, poll_fk=poll)
