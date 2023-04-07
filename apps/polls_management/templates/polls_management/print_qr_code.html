@@ -1,10 +1,14 @@
 {% load static %}
+{% if page_obj %}
 {% for token in page_obj %}
 <div class="container text-center mt-5 mb-5 bg-secondary">
     <h1>nome scelta</h1><p>{{poll.name}}</p>
     <img src='/static/qr_codes/{{token}}'/>
 </div>
 {% endfor %}
+{% else %}
+<p>no tokens</p>
+{% endif %}
 <div class="pagination">
     <span class="step-links">
         {% if page_obj.has_previous %}

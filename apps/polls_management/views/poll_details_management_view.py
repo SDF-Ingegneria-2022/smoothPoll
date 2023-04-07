@@ -14,6 +14,7 @@ from django.template.loader import get_template
 from io import BytesIO
 from xhtml2pdf import pisa
 from django.views import View
+import os
 
 
 
@@ -45,6 +46,9 @@ def poll_qr_code(request: HttpRequest, poll_id: int):
         raise Http404(f"Poll with id {poll_id} not found.")
     
     if poll.is_votable_token():
+        path = 'static/qr_codes/'
+        if not os.path.exists(path):
+            os.makedirs(path)
         host_link: str = request.get_host()
         query_links: List[str] = PollTokenService.available_token_list(host_link, poll)["query_list"]
         token_links: List[str] = PollTokenService.available_token_list(host_link, poll)["token_list"]
