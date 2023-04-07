@@ -62,7 +62,8 @@ class SingleOptionVoteView(View):
                         if TokenValidation.validate_mj_special_case(token_poll):
                             # pass the token to specific poll type view for vote
                             request.session[SESSION_TOKEN_USED] = token_poll
-                            return HttpResponseRedirect(reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))
+                            return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll, 'mj_not_used': True})
+                            # return HttpResponseRedirect(reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))
                         else:
                             return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
                         
@@ -79,7 +80,8 @@ class SingleOptionVoteView(View):
                     # check special token case with votable mj
                     else:
                         if TokenValidation.validate_mj_special_case(google_token):
-                            return HttpResponseRedirect(reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))
+                            return render(request, 'global/login.html', {'poll': poll, 'mj_not_used': True})
+                            # return HttpResponseRedirect(reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))
         
         if poll.poll_type == PollModel.PollType.MAJORITY_JUDJMENT:
             return HttpResponseRedirect(reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))
@@ -127,6 +129,8 @@ class SingleOptionVoteView(View):
                 google_token = PollTokens.objects.get(token_user=request.user, poll_fk=poll)
                 if not TokenValidation.validate(google_token):
                     return render(request, 'global/login.html', {'poll': poll})
+                elif TokenValidation.validate_mj_special_case(google_token):
+                    return render(request, 'global/login.html', {'poll': poll, 'mj_not_used': True})
 
         # Check is passed any data.
         if REQUEST_VOTE not in request.POST:

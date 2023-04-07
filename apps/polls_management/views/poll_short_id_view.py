@@ -45,8 +45,9 @@ class PollShortIdView(View):
                             args=(poll.id,)))
                 elif TokenValidation.validate_mj_special_case(short_token):
                         request.session['token_used'] = short_token
-                        return HttpResponseRedirect(
-                            reverse('apps.votes_results:majority_judgment_vote', args=(poll.id,)))
+                        # return HttpResponseRedirect(
+                        #     reverse('apps.votes_results:majority_judgment_vote', args=(poll.id,)))
+                        return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll, 'mj_not_used': True})
                 else:
                         return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
 

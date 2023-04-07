@@ -40,8 +40,10 @@ def generic_vote_view(request, poll_id: int):
                     args=(poll.id,)))
         elif TokenValidation.validate_mj_special_case(token_poll_data):
             request.session['token_used'] = token_poll_data
-            return HttpResponseRedirect(
-                reverse('apps.votes_results:majority_judgment_vote', args=(poll.id,)))
+            # return HttpResponseRedirect(
+            #     reverse('apps.votes_results:majority_judgment_vote', args=(poll.id,)))
+            return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll, 'mj_not_used': True})
+
         else:
             return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
         

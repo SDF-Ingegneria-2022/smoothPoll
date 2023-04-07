@@ -67,6 +67,16 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
 
+        {% if mj_not_used %}
+
+            <div class="fw-lighter fs-5">Puoi anche esprimere una preferenza mediante il metodo del giudizio maggioritario. Vuoi provare?</div>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                <a href="{% url 'apps.votes_results:majority_judgment_vote' poll_id=poll.id %}" 
+                class="btn btn-primary mt-2">Esprimi un giudizio</a>
+            </div>
+
+        {% endif %}
+
         {% if poll.is_votable_google %}
 
             <div class="d-grid gap-2 d-md-flex justify-content-md-center">
