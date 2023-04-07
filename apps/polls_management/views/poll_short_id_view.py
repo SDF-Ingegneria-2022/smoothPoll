@@ -76,7 +76,7 @@ class PollShortIdView(View):
                 #     return HttpResponseRedirect(reverse(
                 #         'apps.votes_results:single_option_vote', 
                 #         args=(poll.id,)))
-            elif poll.is_votable_google:
+            elif poll.is_votable_google():
                 if request.user.is_authenticated:
                     # redirect to proper vote method
                     if poll.poll_type == PollModel.PollType.MAJORITY_JUDJMENT:

@@ -67,7 +67,7 @@ def generic_vote_view(request, poll_id: int):
         # # pass the token to specific poll type view for vote
         # request.session['token_used'] = token_poll_data
 
-    elif poll.is_votable_google:
+    elif poll.is_votable_google():
         if request.user.is_authenticated:
             # redirect to proper vote method
             if poll.poll_type == PollModel.PollType.MAJORITY_JUDJMENT:
