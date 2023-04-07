@@ -1,12 +1,22 @@
+import datetime
 from typing import List
-from django.http import Http404, HttpRequest
+from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import render
-
 from apps.polls_management.models.poll_model import PollModel
 from apps.polls_management.services.poll_service import PollService
 from apps.polls_management.services.poll_token_service import PollTokenService
 import qrcode
 from qrcode.image.pure import PyPNGImage
+from django.core.paginator import Paginator
+import pdfkit
+import datetime
+from django.template.loader import get_template
+from io import BytesIO
+from xhtml2pdf import pisa
+from django.views import View
+
+
+
 
 
 def poll_details(request: HttpRequest, poll_id: int):
@@ -46,7 +56,37 @@ def poll_qr_code(request: HttpRequest, poll_id: int):
             img.save(f'static/qr_codes/{name_img}')
         # Render vote form (with eventual error message)
         print(qr_codes)
-        return render(request, 'polls_management/print_qr_code.html', {'poll': poll, 'qr_codes':qr_codes})
+        paginator = Paginator(qr_codes, 20)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        
+        #path_wkthmltopdf = b'apps/polls_management/templates/polls_management/print_qr_code.html'
+        #config = pdfkit.configuration(wkhtmltopdf=path_wkthmltopdf)
+        #pdfkit.from_file('apps/polls_management/templates/polls_management/print_qr_code.html', 'out.pdf', configuration=config)
+        return render(request, 'polls_management/print_qr_code.html', 
+                      {'poll': poll, 'qr_codes':qr_codes,
+                       'page_obj':page_obj})
     else:
         return render(request, 'polls_management/print_qr_code.html', {'poll': poll })
+
+def render_to_pdf(template_src, context_dict={}):
+    template = get_template(template_src)
+    html  = template.render(context_dict)
+    result = BytesIO()
+    pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result)
+    if not pdf.err:
+        return HttpResponse(result.getvalue(), content_type='application/pdf')
+    return None
+data = {
+             'today': datetime.date.today(), 
+             'amount': 39.99,
+            'customer_name': 'Cooper Mann',
+            'order_id': 1233434,
+        }
+class ViewPDF(View):
+    def get(self, request, *args, **kwargs):
+        pdf = render_to_pdf('apps/polls_management/templates/polls_management/print_qr_code.html',data)
+        return pdf
+    
+
 

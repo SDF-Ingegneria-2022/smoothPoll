@@ -23,6 +23,9 @@ psycopg2-binary = "*"
 django-sesame = "*"
 qrcode = "*"
 mkdocstrings = {extras = [ "python",], version = "*"}
+pdfkit = "*"
+wkhtmltopdf = "*"
+xhtml2pdf = "*"
 
 [dev-packages]
 
