@@ -13,8 +13,11 @@ class CheckConsistencyMjVote:
         Returns:
             bool: True if the single option vote key is consistent with the majority judgment votes, False otherwise.
         """
-        max_rating: dict = [max(mj_votes, key=lambda x:x['rating'])]
-        items_with_max_rating: List[dict] = [item for item in mj_votes if item['rating'] == max_rating[0]['rating']]
+        if mj_votes:
+            max_rating: dict = [max(mj_votes, key=lambda x:x['rating'])]
+            items_with_max_rating: List[dict] = [item for item in mj_votes if item['rating'] == max_rating[0]['rating']]
+        else:
+            return False
         
         for item in items_with_max_rating:
             if item['poll_choice_id'] == int(single_option_vote_key):

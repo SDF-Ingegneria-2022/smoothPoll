@@ -34,6 +34,7 @@ class PollModel(models.Model):
         """Possible vote protection modes a poll can have"""
         UNPROTECTED = 'unprotected', _('Non protetto')
         TOKEN = 'token', _('Giudicabile tramite Token')
+        GOOGLE = 'google', _('Giudicabile tramite autenticazione Google')
 
     name: CharField = models.CharField(
         max_length=200, verbose_name=_('Nome Scelta'))
@@ -134,6 +135,14 @@ class PollModel(models.Model):
             bool: True if votable with token, False otherwise
         """
         return self.protection == PollModel.PollVoteProtection.TOKEN
+    
+    def is_votable_google(self) -> bool:
+        """Check if Poll is votable with Google
+
+        Returns:
+            bool: True if votable with Google, False otherwise
+        """
+        return self.protection == PollModel.PollVoteProtection.GOOGLE
     
     def get_state_label(self) -> str: 
         """Get a label rappresentative of the state"""

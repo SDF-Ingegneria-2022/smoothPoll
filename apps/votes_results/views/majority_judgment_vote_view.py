@@ -1,4 +1,6 @@
+from apps.polls_management.classes.poll_token_validation.token_validation import TokenValidation
 from apps.polls_management.models.poll_option_model import PollOptionModel
+from apps.polls_management.models.poll_token import PollTokens
 from apps.polls_management.services.poll_token_service import PollTokenService
 from apps.votes_results.classes.majority_poll_result_data import MajorityPollResultData
 from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
@@ -26,6 +28,7 @@ SESSION_MJ_GUIDE_ALREADY_VIWED = 'mj-guide-already-viewed'
 SESSION_MJ_VOTE_SUBMIT_ERROR = 'majvote-submit-error'
 SESSION_MJ_SUBMIT_ID = 'majvote-submit-id'
 SESSION_CONSISTENCY_CHECK = 'consistency-check'
+SESSION_TOKEN_USED = 'token_used'
 
 class MajorityJudgmentVoteView(View):
     """View to handle Majority Judgment vote process"""
@@ -58,13 +61,53 @@ class MajorityJudgmentVoteView(View):
             return render(request, 'votes_results/poll_details.html', {'poll': poll})
         
         # check if the poll is accessed by a single poll url rather than the link with the token
-        if poll.is_votable_token() and request.session.get('token_used') is None:
-            return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
-        
+        # if poll.is_votable_token() and request.session.get('token_used') is None:
+        #     return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
+        # elif not TokenValidation.validate(request.session.get('token_used')):
+        #         return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
+        # elif poll.is_votable_token() and request.session.get('token_used') and poll.votable_mj:
+        #     if TokenValidation.validate(request.session.get('token_used')):
+        #         return HttpResponseRedirect(reverse('apps.votes_results:single_option_vote', args=(poll_id,)))
+            
+        # check if the poll is accessed by a single poll url rather than the link with the token
+        # and control of token validity
+        if poll.is_votable_token():
+            if request.session.get(SESSION_TOKEN_USED) is None:
+                return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
+            else:
+                try:
+                    token_poll = request.session.get(SESSION_TOKEN_USED)
+                except Exception:
+                    raise Http404(f"Token associated with user {token_poll.token_user} not found.")
+
+                if not TokenValidation.validate(token_poll) and not poll.votable_mj:
+                    return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
+                
+                elif poll.votable_mj:
+                    # check special token case with votable mj
+                    if TokenValidation.validate(token_poll):
+                        return HttpResponseRedirect(reverse('apps.votes_results:single_option_vote', args=(poll_id,)))
+                    elif not TokenValidation.validate_mj_special_case(token_poll):
+                        return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
+                    
+        elif poll.is_votable_google():
+            if not request.user.is_authenticated:
+                return render(request, 'global/login.html', {'poll': poll})
+            elif PollTokens.objects.filter(token_user=request.user, poll_fk=poll).exists():
+                google_token = PollTokens.objects.get(token_user=request.user, poll_fk=poll)
+                if not TokenValidation.validate(google_token) and not poll.votable_mj:
+                    return render(request, 'global/login.html', {'poll': poll})
+                elif poll.votable_mj:
+                    if not TokenValidation.validate(google_token):
+                        if not TokenValidation.validate_mj_special_case(google_token):
+                            return render(request, 'global/login.html', {'poll': poll})
+            elif not PollTokens.objects.filter(token_user=request.user, poll_fk=poll).exists() and poll.votable_mj:
+                return HttpResponseRedirect(reverse('apps.votes_results:single_option_vote', args=(poll_id,)))
+
         if ((poll.poll_type != PollModel.PollType.MAJORITY_JUDJMENT and not poll.votable_mj) or
             ( poll.poll_type == PollModel.PollType.SINGLE_OPTION and
               request.session.get(SESSION_SINGLE_OPTION_VOTE_ID) is None and 
-              not poll.is_votable_token())
+              not poll.is_votable_token() and not poll.is_votable_google())
             ):
             raise Http404()
 
@@ -105,6 +148,23 @@ class MajorityJudgmentVoteView(View):
         if not poll.is_open() or poll.is_closed():
             return HttpResponseRedirect(reverse('apps.polls_management:poll_details', args=(poll_id,)))
         
+        # check if there is an attempt to vote with a token already used
+        if poll.is_votable_token() and request.session.get(SESSION_TOKEN_USED) is not None:
+            try:
+                token_poll_data = request.session.get(SESSION_TOKEN_USED)
+                updated_token = PollTokenService.get_poll_token_by_user(token_poll_data.token_user)
+            except Exception:
+                return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
+            
+            if not TokenValidation.validate(updated_token) and not TokenValidation.validate_mj_special_case(updated_token):
+                return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
+
+        elif poll.is_votable_google():
+            if PollTokens.objects.filter(token_user=request.user, poll_fk=poll).exists():
+                google_token = PollTokens.objects.get(token_user=request.user, poll_fk=poll)
+                if not TokenValidation.validate(google_token) and not TokenValidation.validate_mj_special_case(google_token):
+                    return render(request, 'global/login.html', {'poll': poll})
+
         ratings: List[dict] = []
         session_object: dict = {
             'id': []
@@ -131,12 +191,22 @@ class MajorityJudgmentVoteView(View):
             vote: MajorityVoteModel = MajorityJudjmentVoteService.perform_vote(ratings, poll_id=str(poll_id))
 
             # invalidation of token if vote is successful
-            if request.session.get('token_used') is not None:
+            if poll.is_votable_token() and request.session.get(SESSION_TOKEN_USED) is not None:
                 try:
-                    token_poll = request.session.get('token_used')
+                    token_poll = request.session.get(SESSION_TOKEN_USED)
+                    PollTokenService.check_majority_option(token_poll)
                 except Exception:
                     raise Http404(f"Token associated with user {token_poll.token_user} not found.")
-                PollTokenService.check_majority_option(token_poll)
+            
+            elif poll.is_votable_google():
+
+                if PollTokens.objects.filter(token_user=request.user, poll_fk=poll).exists():
+                    g_token = PollTokens.objects.get(token_user=request.user, poll_fk=poll)
+                else:
+                    PollTokenService.create_google_record(request.user, poll)
+                    g_token = PollTokens.objects.get(token_user=request.user, poll_fk=poll)
+
+                PollTokenService.check_majority_option(g_token)
 
             # Clear session if the mj vote is performed
             check_consistency_session.clear_session([SESSION_SINGLE_OPTION_VOTE_ID, SESSION_CONSISTENCY_CHECK])
@@ -148,12 +218,8 @@ class MajorityJudgmentVoteView(View):
         except Exception as e:
             raise Http404
 
-        # Clean session data for token validation
-        if request.session.get('token_used') is not None:
-            del request.session['token_used']
-
         # Clean session data for single option to majority control
-        if request.session.get('os_tom_mj') is not None:
+        if request.session.get('os_to_mj') is not None:
             del request.session['os_to_mj']
 
         # Clean eventual error session.
@@ -194,6 +260,10 @@ def majority_judgment_recap_view(request: HttpRequest, poll_id: int):
         request.session[SESSION_MJ_VOTE_SUBMIT_ERROR] = "Errore! Non hai ancora espresso " \
             + "nessun giudizio. Usa questo form per esprimere la tua preferenza."
         return HttpResponseRedirect(reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))
+    
+    # Clean session data for token validation
+    # if request.session.get('token_used') is not None:
+    #     del request.session['token_used']
 
     return render(request, 'votes_results/majority_judgment_recap.html', {'vote': vote})
 
