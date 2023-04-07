@@ -1,5 +1,5 @@
 {% load static %}
-{% for token in qr_codes %}
+{% for token in page_obj %}
 <div class="container text-center mt-5 mb-5 bg-secondary">
     <h1>nome scelta</h1><p>{{poll.name}}</p>
     <img src='/static/qr_codes/{{token}}'/>
@@ -22,4 +22,3 @@
         {% endif %}
     </span>
 </div>
-<a class="btn btn-info" href="{% url 'apps.polls_management:pdf_views' %}" target="_blank">View Invoice</a>
