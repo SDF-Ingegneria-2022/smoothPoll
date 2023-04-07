@@ -26,7 +26,7 @@ urlpatterns = [
 
     # page with cards containing qr-code to print
     path('<int:poll_id>/token-pdf/', views.poll_qr_code, name='poll_qr_code'),
-    path('<int:poll_id>/token-pdf/pdf-view', views.ViewPDF.as_view(), name='pdf_view'),
+    path('pdf_view/', views.ViewPDF.as_view(), name="pdf_view"),
     
     # htmx form to create and edit polls
     path('form/', login_required(views.CreatePollHtmxView.as_view()), name="poll_form"),

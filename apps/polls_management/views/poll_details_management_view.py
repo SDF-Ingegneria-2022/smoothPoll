@@ -89,7 +89,7 @@ data = {
         }
 class ViewPDF(View):
     def get(self, request, *args, **kwargs):
-        pdf = render_to_pdf('apps/polls_management/templates/polls_management/print_qr_code.html',data)
+        pdf = render_to_pdf('polls_management/print_qr_code.html',data)
         return pdf
     
 
