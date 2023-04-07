@@ -1,4 +1,5 @@
 from apps.polls_management.classes.poll_token_validation.token_validation import TokenValidation
+from apps.polls_management.models.poll_token import PollTokens
 from apps.polls_management.services.poll_token_service import PollTokenService
 from apps.votes_results.classes.poll_result import PollResult
 from apps.votes_results.classes.poll_result import PollResult
@@ -61,9 +62,26 @@ class SingleOptionVoteView(View):
                         if TokenValidation.validate_mj_special_case(token_poll):
                             # pass the token to specific poll type view for vote
                             request.session[SESSION_TOKEN_USED] = token_poll
-                            return HttpResponseRedirect(reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))
+                            return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll, 'mj_not_used': True})
+                            # return HttpResponseRedirect(reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))
                         else:
                             return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
+                        
+        elif poll.is_votable_google:
+            if not request.user.is_authenticated:
+                return render(request, 'global/login.html', {'poll': poll})
+            elif PollTokens.objects.filter(token_user=request.user, poll_fk=poll).exists():
+                google_token = PollTokens.objects.get(token_user=request.user, poll_fk=poll)
+                if not TokenValidation.validate(google_token) and not poll.votable_mj:
+                    return render(request, 'global/login.html', {'poll': poll})
+                elif not TokenValidation.validate(google_token) and poll.votable_mj:
+                    if not TokenValidation.validate_mj_special_case(google_token):
+                        return render(request, 'global/login.html', {'poll': poll})
+                    # check special token case with votable mj
+                    else:
+                        if TokenValidation.validate_mj_special_case(google_token):
+                            return render(request, 'global/login.html', {'poll': poll, 'mj_not_used': True})
+                            # return HttpResponseRedirect(reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))
         
         if poll.poll_type == PollModel.PollType.MAJORITY_JUDJMENT:
             return HttpResponseRedirect(reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))
@@ -105,6 +123,14 @@ class SingleOptionVoteView(View):
 
             if not TokenValidation.validate(updated_token):
                 return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
+            
+        elif poll.is_votable_google:
+            if PollTokens.objects.filter(token_user=request.user, poll_fk=poll).exists():
+                google_token = PollTokens.objects.get(token_user=request.user, poll_fk=poll)
+                if not TokenValidation.validate(google_token):
+                    return render(request, 'global/login.html', {'poll': poll})
+                elif TokenValidation.validate_mj_special_case(google_token):
+                    return render(request, 'global/login.html', {'poll': poll, 'mj_not_used': True})
 
         # Check is passed any data.
         if REQUEST_VOTE not in request.POST:
@@ -126,6 +152,11 @@ class SingleOptionVoteView(View):
                     PollTokenService.check_single_option(token_poll)
                 except Exception:
                     raise Http404(f"Token associated with user {token_poll.token_user} not found.")
+            
+            elif poll.is_votable_google:
+                PollTokenService.create_google_record(request.user, poll)
+                g_token = PollTokens.objects.get(token_user=request.user, poll_fk=poll)
+                PollTokenService.check_single_option(g_token)
 
         except PollOptionUnvalidException:
             request.session[SESSION_SINGLE_OPTION_VOTE_SUBMIT_ERROR] = "Errore! La scelte deve essere " \

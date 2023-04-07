@@ -10,7 +10,7 @@ from sesame.decorators import authenticate
 from sesame.utils import get_user, get_token
 from django.contrib.auth import logout
 
-@authenticate(required=False, scope="Poll:{poll_id}")
+# @authenticate(required=False, scope="Poll:{poll_id}")
 def generic_vote_view(request, poll_id: int):
     """Redirect to poll's main vote method"""
 
@@ -40,8 +40,10 @@ def generic_vote_view(request, poll_id: int):
                     args=(poll.id,)))
         elif TokenValidation.validate_mj_special_case(token_poll_data):
             request.session['token_used'] = token_poll_data
-            return HttpResponseRedirect(
-                reverse('apps.votes_results:majority_judgment_vote', args=(poll.id,)))
+            # return HttpResponseRedirect(
+            #     reverse('apps.votes_results:majority_judgment_vote', args=(poll.id,)))
+            return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll, 'mj_not_used': True})
+
         else:
             return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
         
@@ -64,6 +66,19 @@ def generic_vote_view(request, poll_id: int):
         
         # # pass the token to specific poll type view for vote
         # request.session['token_used'] = token_poll_data
+
+    elif poll.is_votable_google:
+        if request.user.is_authenticated:
+            # redirect to proper vote method
+            if poll.poll_type == PollModel.PollType.MAJORITY_JUDJMENT:
+                return HttpResponseRedirect(
+                    reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))
+            else:
+                return HttpResponseRedirect(reverse(
+                    'apps.votes_results:single_option_vote', 
+                    args=(poll_id,)))
+        else:
+            return render(request, 'global/login.html', {'poll': poll})
 
     else:
         # redirect to proper vote method

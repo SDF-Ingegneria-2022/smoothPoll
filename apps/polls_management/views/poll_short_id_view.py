@@ -45,8 +45,9 @@ class PollShortIdView(View):
                             args=(poll.id,)))
                 elif TokenValidation.validate_mj_special_case(short_token):
                         request.session['token_used'] = short_token
-                        return HttpResponseRedirect(
-                            reverse('apps.votes_results:majority_judgment_vote', args=(poll.id,)))
+                        # return HttpResponseRedirect(
+                        #     reverse('apps.votes_results:majority_judgment_vote', args=(poll.id,)))
+                        return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll, 'mj_not_used': True})
                 else:
                         return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
 
@@ -75,6 +76,18 @@ class PollShortIdView(View):
                 #     return HttpResponseRedirect(reverse(
                 #         'apps.votes_results:single_option_vote', 
                 #         args=(poll.id,)))
+            elif poll.is_votable_google:
+                if request.user.is_authenticated:
+                    # redirect to proper vote method
+                    if poll.poll_type == PollModel.PollType.MAJORITY_JUDJMENT:
+                        return HttpResponseRedirect(
+                            reverse('apps.votes_results:majority_judgment_vote', args=(poll.id,)))
+                    else:
+                        return HttpResponseRedirect(reverse(
+                            'apps.votes_results:single_option_vote', 
+                            args=(poll.id,)))
+                else:
+                    return render(request, 'global/login.html', {'poll': poll})
             else:
                 return HttpResponseRedirect(reverse('apps.votes_results:vote', args=(poll.id,)))
         elif poll.is_closed():

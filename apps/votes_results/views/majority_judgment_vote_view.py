@@ -1,5 +1,6 @@
 from apps.polls_management.classes.poll_token_validation.token_validation import TokenValidation
 from apps.polls_management.models.poll_option_model import PollOptionModel
+from apps.polls_management.models.poll_token import PollTokens
 from apps.polls_management.services.poll_token_service import PollTokenService
 from apps.votes_results.classes.majority_poll_result_data import MajorityPollResultData
 from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
@@ -88,11 +89,25 @@ class MajorityJudgmentVoteView(View):
                         return HttpResponseRedirect(reverse('apps.votes_results:single_option_vote', args=(poll_id,)))
                     elif not TokenValidation.validate_mj_special_case(token_poll):
                         return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
+                    
+        elif poll.is_votable_google:
+            if not request.user.is_authenticated:
+                return render(request, 'global/login.html', {'poll': poll})
+            elif PollTokens.objects.filter(token_user=request.user, poll_fk=poll).exists():
+                google_token = PollTokens.objects.get(token_user=request.user, poll_fk=poll)
+                if not TokenValidation.validate(google_token) and not poll.votable_mj:
+                    return render(request, 'global/login.html', {'poll': poll})
+                elif poll.votable_mj:
+                    if not TokenValidation.validate(google_token):
+                        if not TokenValidation.validate_mj_special_case(google_token):
+                            return render(request, 'global/login.html', {'poll': poll})
+            elif not PollTokens.objects.filter(token_user=request.user, poll_fk=poll).exists() and poll.votable_mj:
+                return HttpResponseRedirect(reverse('apps.votes_results:single_option_vote', args=(poll_id,)))
 
         if ((poll.poll_type != PollModel.PollType.MAJORITY_JUDJMENT and not poll.votable_mj) or
             ( poll.poll_type == PollModel.PollType.SINGLE_OPTION and
               request.session.get(SESSION_SINGLE_OPTION_VOTE_ID) is None and 
-              not poll.is_votable_token())
+              not poll.is_votable_token() and not poll.is_votable_google())
             ):
             raise Http404()
 
@@ -144,6 +159,12 @@ class MajorityJudgmentVoteView(View):
             if not TokenValidation.validate(updated_token) and not TokenValidation.validate_mj_special_case(updated_token):
                 return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
 
+        elif poll.is_votable_google:
+            if PollTokens.objects.filter(token_user=request.user, poll_fk=poll).exists():
+                google_token = PollTokens.objects.get(token_user=request.user, poll_fk=poll)
+                if not TokenValidation.validate(google_token) and not TokenValidation.validate_mj_special_case(google_token):
+                    return render(request, 'global/login.html', {'poll': poll})
+
         ratings: List[dict] = []
         session_object: dict = {
             'id': []
@@ -176,6 +197,16 @@ class MajorityJudgmentVoteView(View):
                     PollTokenService.check_majority_option(token_poll)
                 except Exception:
                     raise Http404(f"Token associated with user {token_poll.token_user} not found.")
+            
+            elif poll.is_votable_google:
+
+                if PollTokens.objects.filter(token_user=request.user, poll_fk=poll).exists():
+                    g_token = PollTokens.objects.get(token_user=request.user, poll_fk=poll)
+                else:
+                    PollTokenService.create_google_record(request.user, poll)
+                    g_token = PollTokens.objects.get(token_user=request.user, poll_fk=poll)
+
+                PollTokenService.check_majority_option(g_token)
 
             # Clear session if the mj vote is performed
             check_consistency_session.clear_session([SESSION_SINGLE_OPTION_VOTE_ID, SESSION_CONSISTENCY_CHECK])
