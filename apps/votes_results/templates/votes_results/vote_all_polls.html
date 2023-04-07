@@ -50,7 +50,6 @@
             <!-- Proper list -->
             <div class="list-group mt-2">
                 {% for poll in page.object_list %}
-                  
                     {% include "votes_results/components/vote_poll_listitem.html" with poll=poll %}
                 {% empty %}
                     <p class="fs-3 fw-bold mt-5"> Attualmente non ci sono scelte disponibili! </p>
