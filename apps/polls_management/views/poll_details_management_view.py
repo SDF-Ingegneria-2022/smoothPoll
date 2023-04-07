@@ -63,10 +63,6 @@ def poll_qr_code(request: HttpRequest, poll_id: int):
         paginator = Paginator(qr_codes, 20)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
-        
-        #path_wkthmltopdf = b'apps/polls_management/templates/polls_management/print_qr_code.html'
-        #config = pdfkit.configuration(wkhtmltopdf=path_wkthmltopdf)
-        #pdfkit.from_file('apps/polls_management/templates/polls_management/print_qr_code.html', 'out.pdf', configuration=config)
         return render(request, 'polls_management/print_qr_code.html', 
                       {'poll': poll, 'qr_codes':qr_codes,
                        'page_obj':page_obj})
@@ -88,9 +84,31 @@ data = {
             'order_id': 1233434,
         }
 class ViewPDF(View):
-    def get(self, request, *args, **kwargs):
-        pdf = render_to_pdf('polls_management/print_qr_code.html',data)
+    def get(self, request:HttpRequest, poll_id:int, *args, **kwargs):
+        try:
+        # Retrieve poll
+            poll: PollModel = PollService.get_poll_by_id(poll_id)
+        except Exception:
+            raise Http404(f"Poll with id {poll_id} not found.")
+        
+        if poll.is_votable_token():
+            path = 'static/qr_codes/'
+            if not os.path.exists(path):
+                os.makedirs(path)
+            host_link: str = request.get_host()
+            query_links: List[str] = PollTokenService.available_token_list(host_link, poll)["query_list"]
+            token_links: List[str] = PollTokenService.available_token_list(host_link, poll)["token_list"]
+            qr_codes: List[str] = []
+            for token, query in zip(token_links, query_links):
+                name_img :str= str(poll_id) + str(query[1:])+'.png'
+                qr_codes.append(name_img)
+            paginator = Paginator(qr_codes, 20)
+            page_number = request.GET.get('page')
+            page_obj = paginator.get_page(page_number)
+            print(page_obj)
+        pdf = render_to_pdf('polls_management/print_qr_code.html', 
+                            {'poll': poll, 'qr_codes':qr_codes,
+                            'page_obj':page_obj})
         return pdf
-    
 
 

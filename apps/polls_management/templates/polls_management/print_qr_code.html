@@ -1,11 +1,4 @@
-{% extends 'global/skeleton.html' %}
-
 {% load static %}
-
-{% block pagename %}Gestione scelte{% endblock pagename %}
-
-{# Page container (you can override it) #}
-{% block container %}
 
 {% if page_obj %}
 {% for token in page_obj %}
@@ -34,10 +27,4 @@
         {% endif %}
     </span>
 </div>
-<a class="btn btn-info"  href="{% url 'apps.polls_management:pdf_view' %}">Download Invoice</a>
- <a name="" id="" role="button"
-                    class="btn btn-primary m-2" 
-                    href="{% url 'apps.votes_results:votable_polls' %}?page=1&per_page=10" >
-                    Ritorna alla lista di tutte le scelte
-                </a>
-{% endblock container %}
+<a class="btn btn-info"  href="{% url 'apps.polls_management:pdf_view' poll_id=poll.id %}">Vedi PDF</a>
