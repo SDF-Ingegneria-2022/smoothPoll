@@ -73,9 +73,11 @@ class SingleOptionVoteView(View):
                 google_token = PollTokens.objects.get(token_user=request.user, poll_fk=poll)
                 if not TokenValidation.validate(google_token) and not poll.votable_mj:
                     return render(request, 'global/login.html')
-                elif poll.votable_mj:
+                elif not TokenValidation.validate(google_token) and poll.votable_mj:
+                    if not TokenValidation.validate_mj_special_case(google_token):
+                        return render(request, 'global/login.html')
                     # check special token case with votable mj
-                    if not TokenValidation.validate(google_token):
+                    else:
                         if TokenValidation.validate_mj_special_case(google_token):
                             return HttpResponseRedirect(reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))
         

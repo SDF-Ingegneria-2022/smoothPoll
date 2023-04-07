@@ -67,6 +67,24 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
 
+        {% if poll.is_votable_google %}
+
+            <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                <a href="{% url 'apps.votes_results:results' poll_id=poll.id %}" 
+                    class="btn btn-secondary mt-2" 
+                    role="button">Vedi risultati</a>
+            </div>
+
+            {% if poll.votable_mj and poll.poll_type == "single_option"%}
+            <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                <a href="{% url 'apps.votes_results:majority_judgment_results' poll_id=poll.id %}" 
+                    class="btn btn-secondary mt-2" 
+                    role="button">Vedi risultati Giudizio Maggioritario</a>
+            </div>
+            {% endif %}
+            
+        {% endif %}
+
     </div>
     
 </div>
