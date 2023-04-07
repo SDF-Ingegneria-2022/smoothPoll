@@ -20,16 +20,16 @@
 
 {% include 'votes_results/components/vote_management_navbar.html'%}
 
-<div class="container pt-0 pb-5 pt-md-5">
+<div class="container pt-0 pb-5 ">
 
     
 
-    <div class="container">
+    <div class="container mt-0">
         <!-- Page content -->
         {% block content %}
         <div class="row">
             <div class="col-12 col-lg-8">
-                <h1 class="fs-md-3 fs-4 mt-2">Tutte le scelte</h1>
+                <h1 class="fs-md-3 fs-4 mt-2"></h1>
             </div>
             <div class="col-12 col-lg-4">
                 <div class="d-flex justify-content-lg-end">
@@ -47,35 +47,16 @@
             </div>
         </div>
 
-        <div class="mt-5">
-
-            <!-- List header -->
-            <div class="row fw-light text-primary pt-2 pb-2 d-none d-md-flex text-center mt-5">
-                <div class="col-4 text-start">
-                    <p class="m-0">Nome e domanda</p>
-                </div>
-                <div class="col-7 text-center">
-                    <div class="row">
-                        <div class="col-4">
-                            <p class="m-0">Stato</p>
-                        </div>
-                        <div class="col-4">
-                            <p class="m-0">Chiusura</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-1"></div>
-            </div> <!-- END: List header -->
-
             <!-- Proper list -->
             <div class="list-group mt-2">
                 {% for poll in page.object_list %}
-                    <!-- poll w id={{poll.id}} -->
+                  
                     {% include "votes_results/components/vote_poll_listitem.html" with poll=poll %}
                 {% empty %}
                     <p class="fs-3 fw-bold mt-5"> Attualmente non ci sono scelte disponibili! </p>
                 {% endfor %}
-            </div> <!-- END: Proper list -->
+            </div>  
+           
 
             <!-- Pagination nav -->
             <div class="row justify-content-around">
@@ -83,7 +64,7 @@
                     {% include "polls_management/components/pagination/pagination_nav.html" with page=page per_page=per_page %}
                 </div>
             </div> <!-- END: Pagination nav -->
-        </div>
+        
         {% endblock content %}
     </div>
 </div>
@@ -93,6 +74,10 @@
 {% block customjs %}
 
 {% include 'polls_management/components/copy_link/copy_link_script.html' with poll=poll %}
+<script>
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+  </script>
 
 {% endblock customjs %}
 
