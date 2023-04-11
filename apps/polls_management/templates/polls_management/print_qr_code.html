@@ -1,10 +1,14 @@
 {% load static %}
-
+{{page_obj}}
 {% if page_obj %}
 {% for token in page_obj %}
+{{token}}
 <div class="container text-center mt-5 mb-5 bg-secondary">
     <h1>nome scelta</h1><p>{{poll.name}}</p>
-    <img src='/static/qr_codes/{{token}}'/>
+    <p>Scansiona il QR-Code oppure usa il link.
+        Se ti viene chiesto, inserisci questo codice</p>
+    <img src="{% static 'qr_codes/' %}{{token}}">
+    <p>Link:</p>
 </div>
 {% endfor %}
 {% else %}

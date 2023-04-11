@@ -8,17 +8,16 @@ from apps.polls_management.services.poll_token_service import PollTokenService
 import qrcode
 from qrcode.image.pure import PyPNGImage
 from django.core.paginator import Paginator
-import pdfkit
-import datetime
 from django.template.loader import get_template
 from io import BytesIO
 from xhtml2pdf import pisa
 from django.views import View
 import os
 
-
-
-
+def link_callback(uri, rel):
+    # harcoded to escape the first /
+    return uri[1:]
+        
 
 def poll_details(request: HttpRequest, poll_id: int):
     """Render the details page for a poll"""
@@ -52,14 +51,14 @@ def poll_qr_code(request: HttpRequest, poll_id: int):
         host_link: str = request.get_host()
         query_links: List[str] = PollTokenService.available_token_list(host_link, poll)["query_list"]
         token_links: List[str] = PollTokenService.available_token_list(host_link, poll)["token_list"]
+        print("ql: "+str(query_links))
+        print("tl: "+str(query_links))
         qr_codes: List[str] = []
         for token, query in zip(token_links, query_links):
             img = qrcode.make(token, image_factory=PyPNGImage)
             name_img :str= str(poll_id) + str(query[1:])+'.png'
             qr_codes.append(name_img)
             img.save(f'static/qr_codes/{name_img}')
-        # Render vote form (with eventual error message)
-        print(qr_codes)
         paginator = Paginator(qr_codes, 20)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
@@ -73,16 +72,11 @@ def render_to_pdf(template_src, context_dict={}):
     template = get_template(template_src)
     html  = template.render(context_dict)
     result = BytesIO()
-    pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result)
+    pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result,link_callback=link_callback)
     if not pdf.err:
         return HttpResponse(result.getvalue(), content_type='application/pdf')
     return None
-data = {
-             'today': datetime.date.today(), 
-             'amount': 39.99,
-            'customer_name': 'Cooper Mann',
-            'order_id': 1233434,
-        }
+
 class ViewPDF(View):
     def get(self, request:HttpRequest, poll_id:int, *args, **kwargs):
         try:
@@ -90,9 +84,8 @@ class ViewPDF(View):
             poll: PollModel = PollService.get_poll_by_id(poll_id)
         except Exception:
             raise Http404(f"Poll with id {poll_id} not found.")
-        
         if poll.is_votable_token():
-            path = 'static/qr_codes/'
+            path = 'static/qr_codes'
             if not os.path.exists(path):
                 os.makedirs(path)
             host_link: str = request.get_host()
@@ -105,10 +98,7 @@ class ViewPDF(View):
             paginator = Paginator(qr_codes, 20)
             page_number = request.GET.get('page')
             page_obj = paginator.get_page(page_number)
-            print(page_obj)
         pdf = render_to_pdf('polls_management/print_qr_code.html', 
                             {'poll': poll, 'qr_codes':qr_codes,
                             'page_obj':page_obj})
         return pdf
-
-
