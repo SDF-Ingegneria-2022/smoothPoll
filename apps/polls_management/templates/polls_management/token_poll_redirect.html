@@ -22,26 +22,48 @@
 
         {% if mj_not_used %}
 
-            <div class="fw-lighter fs-5">Puoi anche esprimere una preferenza mediante il metodo del giudizio maggioritario. Vuoi provare?</div>
-            <div class="d-grid gap-2 d-md-flex justify-content-md-center">
-                <a href="{% url 'apps.votes_results:majority_judgment_vote' poll_id=poll.id %}" 
-                class="btn btn-primary mt-2">Esprimi un giudizio</a>
+        <br>
+
+            <div class="fw-lighter fs-5 text-center">Puoi anche esprimere una preferenza mediante il metodo del giudizio maggioritario. Vuoi provare?</div>
+            <div class="row">
+                <div class="col-md-4"></div>
+                <div class="col-md-4">
+                    <div class="d-grid gap-2 mt-2 w-100">
+                        <a href="{% url 'apps.votes_results:majority_judgment_vote' poll_id=poll.id %}" 
+                        class="btn btn-primary mt-2">Esprimi un giudizio</a>
+                    </div>
+                </div>
+                <div class="col-md-4"></div>
             </div>
 
         {% endif %}
 
-        <div class="d-grid gap-2 d-md-flex justify-content-md-center">
-            <a href="{% url 'apps.votes_results:results' poll_id=poll.id %}" 
-                class="btn btn-secondary mt-2" 
-                role="button">Vedi risultati</a>
+        <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <div class="d-grid gap-2 mt-2 w-100">
+                    <a href="{% url 'apps.votes_results:results' poll_id=poll.id %}" 
+                        class="btn btn-secondary mt-2" 
+                        role="button">Vedi risultati</a>
+                </div>
+            </div>
         </div>
 
         {% if poll.votable_mj and poll.poll_type == "single_option"%}
-        <div class="d-grid gap-2 d-md-flex justify-content-md-center">
-            <a href="{% url 'apps.votes_results:majority_judgment_results' poll_id=poll.id %}" 
-                class="btn btn-secondary mt-2" 
-                role="button">Vedi risultati Giudizio Maggioritario</a>
+
+        <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <div class="d-grid gap-2 mt-2 w-100">
+                    <a href="{% url 'apps.votes_results:majority_judgment_results' poll_id=poll.id %}" 
+                        class="btn btn-secondary mt-2" 
+                        role="button">Vedi risultati Giudizio Maggioritario</a>
+                </div>
+            </div>
         </div>
+
         {% endif %}
 
     <br>
