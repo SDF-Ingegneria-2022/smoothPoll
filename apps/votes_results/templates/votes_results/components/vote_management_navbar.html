@@ -1,0 +1,15 @@
+    <!-- Vote and management path -->
+    <nav class="navbar navbar-light bg-light pb-0 mb-2 shadow-sm p-3 mb-0 rounded">
+        <div class="container">
+            <div class="row">
+                <div class="col-auto border-3 pb-2 px-3 {% if request.get_full_path|get_url_path == 'scelte-e-risultati' %}border-bottom border-primary {% endif %}">
+                    <a class="navbar-brand m-0 {% if request.get_full_path|get_url_path == 'scelte-e-risultati' %} text-primary {% endif %} " href="{% url 'apps.votes_results:votable_polls' %}">Tutte le scelte</a>
+                </div>
+                <div class="col-auto border-3 pb-2 px-3 {% if request.get_full_path|get_url_path == 'gestione-scelte' %}border-bottom border-primary {% endif %}">
+                    <a class="navbar-brand m-0 {% if request.get_full_path|get_url_path == 'gestione-scelte' %} text-primary {% endif %} " href="{% url 'apps.polls_management:all_user_polls' %}"> Le tue scelte</a>
+                </div>
+            </div>
+        
+        
+        </div>
+    </nav>
