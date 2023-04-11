@@ -160,7 +160,7 @@ class PollService:
             List: list of votable/closed polls.
         """
 
-        all_public_polls_list = PollModel.objects.filter(Q(private=False) & Q(protection=PollModel.PollVoteProtection.UNPROTECTED))
+        all_public_polls_list = PollModel.objects.filter(private=False)
         votable_polls_list = all_public_polls_list.filter(Q(close_datetime__gte=timezone.now()) & Q(open_datetime__lte=timezone.now())).order_by('close_datetime')
         closed_polls_list = all_public_polls_list.filter(close_datetime__lte=timezone.now()).order_by('-close_datetime')
         

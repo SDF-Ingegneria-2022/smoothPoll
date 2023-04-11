@@ -111,7 +111,9 @@
     </div>
     <div class="col">
         {% if poll.is_votable_token %}
-                <div class="fw-light fs-5 mt-1 text-success">Tramite token</div>
+            <div class="fw-light fs-5 mt-1 text-success">Tramite token</div>
+        {% elif poll.is_votable_google %}
+            <div class="fw-light fs-5 mt-1 text-success">Tramite Google</div>
         {% else %}
             <div class="fw-light fs-5 mt-1 text-info">Accesso libero</div>
         {% endif %}
