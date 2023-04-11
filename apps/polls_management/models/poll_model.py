@@ -148,11 +148,11 @@ class PollModel(models.Model):
         """Get a label rappresentative of the state"""
 
         if self.is_closed():
-            return "CHIUSO"
+            return "Chiuso"
         elif self.is_open():
-            return "APERTO"
+            return "Aperto"
         elif not self.is_open():
-            return "NON APERTO"
+            return "Non aperto"
 
     def get_state_color(self) -> str: 
         """Get a color associateto to the state"""
