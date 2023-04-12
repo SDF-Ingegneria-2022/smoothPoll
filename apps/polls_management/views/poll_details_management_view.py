@@ -59,9 +59,11 @@ def poll_qr_code(request: HttpRequest, poll_id: int):
             img.save(f'static/qr_codes/{name_img}')
         paginator = Paginator(qr_codes, 20)
         page_number = request.GET.get('page')
+        if(page_number is None):
+            page_number=1
         page_obj = paginator.get_page(page_number)
         return render(request, 'polls_management/print_qr_code.html', 
-                      {'poll': poll, 'page_obj':page_obj, 'print':False})
+                      {'poll': poll, 'page_obj':page_obj, 'print':False, 'page_number':page_number})
     else:
         return render(request, 'polls_management/print_qr_code.html', {'poll': poll })
 
@@ -75,7 +77,7 @@ def render_to_pdf(template_src, context_dict={}):
     return None
 
 class ViewPDF(View):
-    def get(self, request:HttpRequest, poll_id:int, *args, **kwargs):
+    def get(self, request:HttpRequest, poll_id:int, page_number:int, *args, **kwargs):
         try:
         # Retrieve poll
             poll: PollModel = PollService.get_poll_by_id(poll_id)
@@ -93,7 +95,6 @@ class ViewPDF(View):
                 name_img :str= str(poll_id) + str(query[1:])+'.png'
                 qr_codes.append({'name_img':name_img,'link':link, 'token':query[7:]})
             paginator = Paginator(qr_codes, 20)
-            page_number = request.GET.get('page')
             page_obj = paginator.get_page(page_number)
         pdf = render_to_pdf('polls_management/print_qr_code.html', 
                             {'poll': poll, 'page_obj':page_obj, 'print':True})
@@ -101,7 +102,7 @@ class ViewPDF(View):
 
 #Automaticly downloads to PDF file
 class DownloadPDF(View):
-    def get(self, request:HttpRequest, poll_id:int, *args, **kwargs):
+    def get(self, request:HttpRequest, poll_id:int, page_number:int, *args, **kwargs):
         try:
         # Retrieve poll
             poll: PollModel = PollService.get_poll_by_id(poll_id)
@@ -119,12 +120,11 @@ class DownloadPDF(View):
                 name_img :str= str(poll_id) + str(query[1:])+'.png'
                 qr_codes.append({'name_img':name_img,'link':link, 'token':query[7:]})
             paginator = Paginator(qr_codes, 20)
-            page_number = request.GET.get('page')
             page_obj = paginator.get_page(page_number)
         pdf = render_to_pdf('polls_management/print_qr_code.html', 
                             {'poll': poll, 'page_obj':page_obj, 'print':True})
         response = HttpResponse(pdf, content_type='application/pdf')
-        filename = "scelta %s.pdf" %(poll.short_id)
+        filename = f'{poll.name} tokens ({page_number})'
         content = "attachment; filename='%s'" %(filename)
         response['Content-Disposition'] = content
         return response

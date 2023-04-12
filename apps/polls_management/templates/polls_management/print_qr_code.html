@@ -40,6 +40,6 @@
         {% endif %}
     </span>
 </div>
-<a class="btn btn-info"  href="{% url 'apps.polls_management:pdf_view' poll_id=poll.id %}">Vedi PDF</a>
-<a class="btn btn-info"  href="{% url 'apps.polls_management:pdf_download' poll_id=poll.id%}">Download PDF</a>
+<a class="btn btn-info"  href="{% url 'apps.polls_management:pdf_view' poll_id=poll.id page_number=page_number %}">Vedi PDF</a>
+<a class="btn btn-info"  href="{% url 'apps.polls_management:pdf_download' poll_id=poll.id page_number=page_number %}">Download PDF</a>
 {% endif %}

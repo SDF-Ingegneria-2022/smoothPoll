@@ -128,7 +128,6 @@ class PollTokenService:
             templink += tempquery
             token_list.append(templink)
             query_list.append(tempquery)
-            print(tempquery)
         return {"token_list":token_list, "query_list":query_list}
 
     def delete_tokens(poll: PollModel):
