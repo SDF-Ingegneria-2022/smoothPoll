@@ -1,0 +1,78 @@
+<!-- Main voter-side actions -->
+<div class="flex-grow-1"> 
+     
+    <div class="row">
+        {% if poll.is_open and not poll.is_closed %}
+            <div class="col-auto">
+                <a  href="{% url 'apps.votes_results:vote' poll_id=poll.id %}" 
+                    class="text-white text-decoration-none">
+                    
+                    <svg    xmlns="http://www.w3.org/2000/svg" 
+                            width="16" height="16" 
+                            fill="currentColor" 
+                            class="bi bi-arrow-right-circle-fill" 
+                            viewBox="0 0 16 16">
+                                <path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0zM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z"/>
+                    </svg>
+                            {% if poll.poll_type == "majority_judjment" %}
+                              Giudica
+                            {% else %}
+                              Scegli
+                            {% endif %}
+                </a>
+            </div>
+        {% endif %}
+                
+        <div class="col-auto">
+            <a  href="{% url 'apps.votes_results:results' poll_id=poll.id %}" 
+                class="text-white text-decoration-none">
+                    
+                    <svg    xmlns="http://www.w3.org/2000/svg" 
+                            width="16" height="16" 
+                            fill="currentColor" 
+                            class="bi bi-list-ol" 
+                            viewBox="0 0 16 16">
+                                
+                            <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5z"/>
+                            <path d="M1.713 11.865v-.474H2c.217 0 .363-.137.363-.317 0-.185-.158-.31-.361-.31-.223 0-.367.152-.373.31h-.59c.016-.467.373-.787.986-.787.588-.002.954.291.957.703a.595.595 0 0 1-.492.594v.033a.615.615 0 0 1 .569.631c.003.533-.502.8-1.051.8-.656 0-1-.37-1.008-.794h.582c.008.178.186.306.422.309.254 0 .424-.145.422-.35-.002-.195-.155-.348-.414-.348h-.3zm-.004-4.699h-.604v-.035c0-.408.295-.844.958-.844.583 0 .96.326.96.756 0 .389-.257.617-.476.848l-.537.572v.03h1.054V9H1.143v-.395l.957-.99c.138-.142.293-.304.293-.508 0-.18-.147-.32-.342-.32a.33.33 0 0 0-.342.338v.041zM2.564 5h-.635V2.924h-.031l-.598.42v-.567l.629-.443h.635V5z"/>
+                    </svg>
+                            Vedi risultati
+            </a>
+        </div>
+        
+        {% if poll.votable_mj and poll.poll_type == "single_option"%}
+            <div class="col-auto d-md-block d-none">
+                <a  href="{% url 'apps.votes_results:majority_judgment_results' poll_id=poll.id %}" 
+                    class="text-white text-decoration-none">
+                        
+                        <svg    xmlns="http://www.w3.org/2000/svg"
+                                width="16" height="16" 
+                                fill="currentColor" class="bi bi-list-stars" viewBox="0 0 16 16">
+                                
+                                <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5z"/>
+                                <path d="M2.242 2.194a.27.27 0 0 1 .516 0l.162.53c.035.115.14.194.258.194h.551c.259 0 .37.333.164.493l-.468.363a.277.277 0 0 0-.094.3l.173.569c.078.256-.213.462-.423.3l-.417-.324a.267.267 0 0 0-.328 0l-.417.323c-.21.163-.5-.043-.423-.299l.173-.57a.277.277 0 0 0-.094-.299l-.468-.363c-.206-.16-.095-.493.164-.493h.55a.271.271 0 0 0 .259-.194l.162-.53zm0 4a.27.27 0 0 1 .516 0l.162.53c.035.115.14.194.258.194h.551c.259 0 .37.333.164.493l-.468.363a.277.277 0 0 0-.094.3l.173.569c.078.255-.213.462-.423.3l-.417-.324a.267.267 0 0 0-.328 0l-.417.323c-.21.163-.5-.043-.423-.299l.173-.57a.277.277 0 0 0-.094-.299l-.468-.363c-.206-.16-.095-.493.164-.493h.55a.271.271 0 0 0 .259-.194l.162-.53zm0 4a.27.27 0 0 1 .516 0l.162.53c.035.115.14.194.258.194h.551c.259 0 .37.333.164.493l-.468.363a.277.277 0 0 0-.094.3l.173.569c.078.255-.213.462-.423.3l-.417-.324a.267.267 0 0 0-.328 0l-.417.323c-.21.163-.5-.043-.423-.299l.173-.57a.277.277 0 0 0-.094-.299l-.468-.363c-.206-.16-.095-.493.164-.493h.55a.271.271 0 0 0 .259-.194l.162-.53z"/>
+                        </svg>
+                            Vedi risultati con Giudizio Maggioritario
+                </a>
+            </div>
+        {% endif %}
+                    
+            <div class="col-auto d-md-block d-none">
+                <a  class="text-white text-decoration-none" 
+                    role="button" 
+                    data-bs-toggle="modal" data-bs-toggle="modal" data-bs-target="#shareModal-{{poll.id}}">
+                            
+                            <svg    xmlns="http://www.w3.org/2000/svg" 
+                                    width="16" height="16" 
+                                    fill="currentColor" 
+                                    class="bi bi-share" 
+                                    viewBox="0 0 16 16">
+                                    
+                                    <path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5zm-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/>
+                            </svg>
+                            Condividi
+                </a>
+            </div>
+    </div>
+</div>
+<!-- End Main voter-side actions -->
