@@ -1,19 +1,28 @@
 {% load static %}
-{{page_obj}}
 {% if page_obj %}
-{% for token in page_obj %}
-{{token}}
-<div class="container text-center mt-5 mb-5 bg-secondary">
-    <h1>nome scelta</h1><p>{{poll.name}}</p>
-    <p>Scansiona il QR-Code oppure usa il link.
-        Se ti viene chiesto, inserisci questo codice</p>
-    <img src="{% static 'qr_codes/' %}{{token}}">
-    <p>Link:</p>
+{% for obj in page_obj.object_list %}
+<div class="container border mt-3 pt-3 pb-3">
+        <div class="row border">
+            <div class="col-md-4">
+                <img class="img-fluid" src="{% static 'qr_codes/' %}{{obj.name_img}}" >
+            </div>
+            <div class="col-md-4">
+                    <p>nome scelta {{poll.name}}
+                    Scansiona il QR-Code oppure usa il link.
+                    Se ti viene chiesto, inserisci questo codice {{obj.token}}</p>
+            </div>
+        </div>
+        <div class="row">
+            <p>Link: {{obj.link}}</p>
+        </div>
 </div>
+
 {% endfor %}
 {% else %}
 <p>no tokens</p>
 {% endif %}
+<!--flag used to show/hide pagination in pdf-->
+{% if  not print %}
 <div class="pagination">
     <span class="step-links">
         {% if page_obj.has_previous %}
@@ -32,3 +41,5 @@
     </span>
 </div>
 <a class="btn btn-info"  href="{% url 'apps.polls_management:pdf_view' poll_id=poll.id %}">Vedi PDF</a>
+<a class="btn btn-info"  href="{% url 'apps.polls_management:pdf_download' poll_id=poll.id%}">Download PDF</a>
+{% endif %}
