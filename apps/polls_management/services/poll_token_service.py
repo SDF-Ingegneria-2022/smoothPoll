@@ -109,20 +109,14 @@ class PollTokenService:
         token.save()
 
     @staticmethod
-    def available_token_list(poll: PollModel) -> List[str]:
+    def available_token_list(poll: PollModel) -> List[PollTokens]:
 
-        """Return a list of available token links.
+        """Return a list of available tokens.
         Args:
-            host: a string with the host link for the url
             poll: the poll the tokens belong to.
         """
 
-        token_list: List[str] = []    
-        tokens: List[PollTokens] = PollTokens.objects.filter(Q(poll_fk=poll) & Q(single_option_use=False) & Q(majority_use=False))
-        for token in tokens:
-            token_list.append(token.get_token_url())
-
-        return token_list
+        return PollTokens.objects.filter(Q(poll_fk=poll) & Q(single_option_use=False) & Q(majority_use=False))
 
     def delete_tokens(poll: PollModel):
 
@@ -142,22 +136,14 @@ class PollTokenService:
                 token.delete()
 
     @staticmethod
-    def unavailable_token_list(poll: PollModel) -> List[str]:
+    def unavailable_token_list(poll: PollModel) -> List[PollTokens]:
 
         """Return a list of unavailable token links.
         Args:
-            host: a string with the host link for the url
             poll: the poll the tokens belong to.
         """
 
-        token_list: List[str] = []    
-        tokens: List[PollTokens] = PollTokens.objects.filter(Q(poll_fk=poll) & Q(Q(single_option_use=True) | Q(majority_use=True)))
-
-        for token in tokens:
-            token_list.append(token.get_token_url())
-
-
-        return token_list
+        return PollTokens.objects.filter(Q(poll_fk=poll) & Q(Q(single_option_use=True) | Q(majority_use=True))).all()
     
     @staticmethod
     def create_google_record(user: User, poll: PollModel) -> PollTokens:
