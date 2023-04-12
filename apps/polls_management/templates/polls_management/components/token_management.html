@@ -2,67 +2,57 @@
 Section to manage a poll's tokens and their distribution.
 {% endcomment %}
 
-<div class="container">
+<div class="mt-5 mb-5">
 
-    <div class="text-center fs-4">Area dedicata alla gestione dei Token</div>
-    <br>
-    <div class="row">
-        <div class="col-md-6">
-            <label for="tokenlistarea">Lista dei Token</label>
-            <div class="form-outline">
-                <textarea class="form-control" id="tokenlistarea" rows="8" readonly>
-                    {% if token_list %}
-                        {% for available_token in token_list %}
-                            {{request.get_host}}/{{available_token.get_token_url}}
-                        {% endfor %}
-                    {% endif %}
-                </textarea>
-                <small id="tokenlistarea" class="form-text text-muted">
-                    Lista dei Token attualmente utilizzabili per questa scelta.
-                </small>
-            </div>
+    <h3 class="text-center">Token per il voto</h3>
 
-            <br>
-
-            <div class="d-grid gap-2">
-                <form action="{% url 'apps.polls_management:poll_tokens' poll_id=poll.id %}" method="POST">
-                    {% csrf_token %}
-                    {% comment %} <div class="d-grid gap-2 d-md-flex justify-content-md-start"> {% endcomment %}
-                    <div class="row">
-                        <div class="col-md-5">
-                            <label for="tokensid">Quanti Token vuoi generare?</label>
-                            <input type="number" id="tokensid" name="tokens" class="form-control" aria-describedby="tokenshelp">
-                            <small id="tokenshelp" class="form-text text-muted">
-                                Inserire un numero intero di Token da generare.
-                            </small>
-                        </div>
-                        <div class="col-md-5">
-                            <br>
-                            <button type="submit" class="btn btn-success mb-4 w-100">Genera Token</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <div class="col-md-6">
-            <label for="tokenlistarea">Token usati</label>
-            <div class="form-outline">
-                <textarea class="form-control" id="tokenlistarea" rows="8" readonly>
-                    {% if invalid_tokens %}
-                        {% for unavailable_token in invalid_tokens %}
-                            {{request.get_host}}/{{unavailable_token.get_token_url}}
-                        {% endfor %}
-                    {% endif %}
-                </textarea>
-                <small id="tokenlistarea" class="form-text text-muted">
-                    Lista dei Token attualmente non utilizzabili per questa scelta.
-                </small>
-            </div>
-        </div>
-
+    <div class="mb-5" style="max-width: 700px;">
+        <h6>Token ancora validi ({{token_list|length}})</h6>
+        {% if token_list %}
+            {% for available_token in token_list %}
+                <div class="d-flex m-1">
+                    <span class="w-100">
+                        {% include "polls_management/components/copy_link/poll_copy_token.html" with poll=poll token=available_token %}
+                    </span>
+                </div>
+                {% include "polls_management/components/copy_link/copy_link_script.html" with poll=poll token=available_token %}
+            {% endfor %}
+        {% endif %}
     </div>
-    <br>
+    <!-- Generate tokens form -->
+    <div class="d-grid gap-2 mb-5">
+        <form action="{% url 'apps.polls_management:poll_tokens' poll_id=poll.id %}" method="POST">
+            {% csrf_token %}
+            {% comment %} <div class="d-grid gap-2 d-md-flex justify-content-md-start"> {% endcomment %}
+            <div class="row">
+                <div class="col-md-4">
+                    <label for="tokensid">
+                        Genera nuovi token
+                    </label>
+                    <input type="number" min="1" step="1" value="1"
+                        id="tokensid" name="tokens" class="form-control" aria-describedby="tokenshelp">
+                    <small id="tokenshelp" class="form-text text-muted">
+                        Quanti nuovi token vuoi generare?
+                    </small>
+                </div>
+                <div class="col-md-2">
+                    <br>
+                    <button type="submit" class="btn btn-success mb-4 w-100">Genera Token</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    {% if invalid_tokens %}
+        <div class="mb-2">
+            <h6>Token già usati ({{invalid_tokens|length}})</h6>
+            <ul>
+                {% for unavailable_token in invalid_tokens %}
+                    <li>{{unavailable_token}}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
 
     {% comment %} 
     <div class="d-grid gap-2 d-md-flex justify-content-md-start">

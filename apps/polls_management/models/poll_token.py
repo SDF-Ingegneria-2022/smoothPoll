@@ -22,15 +22,17 @@ class PollTokens(models.Model):
     majority_use: models.BooleanField = models.BooleanField(default=False)
 
     def __str__(self):
-        return str({
-            'id': self.id,
-            'poll': str(self.poll_fk),
-            'user': self.token_user.username,
-            'single_use': self.single_option_use,
-            'majority_use': self.majority_use
-        })
+        return self.get_token()
     
-    def get_token_url(self) -> str:
+    def get_token_path(self) -> str:
         """Return the link that voter may use to vote with this token."""
-        return self.poll_fk.short_id + \
+        return "/" + self.poll_fk.short_id + \
             get_query_string(user=self.token_user, scope=f"Poll:{self.poll_fk.id}")
+
+    def get_token_query_string(self) -> str:
+        """Return the query string that voter may use to vote with this token."""
+        return get_query_string(user=self.token_user, scope=f"Poll:{self.poll_fk.id}")
+    
+    def get_token(self) -> str:
+        """Return the token that voter may use to vote with this token."""
+        return self.get_token_query_string().split('=')[1]
