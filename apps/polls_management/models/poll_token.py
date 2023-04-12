@@ -30,8 +30,7 @@ class PollTokens(models.Model):
             'majority_use': self.majority_use
         })
     
-    def get_token_url(self, host: str) -> str:
+    def get_token_url(self) -> str:
         """Return the link that voter may use to vote with this token."""
-        link: str = host + '/' + self.poll_fk.short_id
-        link += get_query_string(user=self.token_user, scope=f"Poll:{self.poll_fk.id}")
-        return link
+        return self.poll_fk.short_id + \
+            get_query_string(user=self.token_user, scope=f"Poll:{self.poll_fk.id}")

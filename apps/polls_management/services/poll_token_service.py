@@ -109,7 +109,7 @@ class PollTokenService:
         token.save()
 
     @staticmethod
-    def available_token_list(host:str, poll: PollModel) -> List[str]:
+    def available_token_list(poll: PollModel) -> List[str]:
 
         """Return a list of available token links.
         Args:
@@ -120,7 +120,7 @@ class PollTokenService:
         token_list: List[str] = []    
         tokens: List[PollTokens] = PollTokens.objects.filter(Q(poll_fk=poll) & Q(single_option_use=False) & Q(majority_use=False))
         for token in tokens:
-            token_list.append(token.get_token_url(host))
+            token_list.append(token.get_token_url())
 
         return token_list
 
@@ -142,7 +142,7 @@ class PollTokenService:
                 token.delete()
 
     @staticmethod
-    def unavailable_token_list(host:str, poll: PollModel) -> List[str]:
+    def unavailable_token_list(poll: PollModel) -> List[str]:
 
         """Return a list of unavailable token links.
         Args:
@@ -154,7 +154,7 @@ class PollTokenService:
         tokens: List[PollTokens] = PollTokens.objects.filter(Q(poll_fk=poll) & Q(Q(single_option_use=True) | Q(majority_use=True)))
 
         for token in tokens:
-            token_list.append(token.get_token_url(host))
+            token_list.append(token.get_token_url())
 
 
         return token_list
