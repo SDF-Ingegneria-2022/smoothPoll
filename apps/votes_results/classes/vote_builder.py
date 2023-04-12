@@ -29,7 +29,7 @@ class VoteBuilder:
         self.__vote_model = None
         
 
-    def set_poll(self, poll_id: str) -> "PollVoteBuilder":
+    def set_poll(self, poll_id: str) -> "VoteBuilder":
         """
         Set the poll you want to vote. It resets choosed option
         Args:
@@ -48,7 +48,7 @@ class VoteBuilder:
 
         return self
 
-    def set_voted_option(self, poll_option_id: str) -> "PollVoteBuilder":
+    def set_voted_option(self, poll_option_id: str) -> "VoteBuilder":
         """
         Set the option you want to vote
         Args:
