@@ -2,6 +2,7 @@
 from django.db import models
 from django.conf import settings
 from django.db.models import CharField
+from sesame.utils import get_query_string
 
 from apps.polls_management.constants.models_constants import POLL_MODEL_NAME
 
@@ -28,3 +29,9 @@ class PollTokens(models.Model):
             'single_use': self.single_option_use,
             'majority_use': self.majority_use
         })
+    
+    def get_token_url(self, host: str) -> str:
+        """Return the link that voter may use to vote with this token."""
+        link: str = host + '/' + self.poll_fk.short_id
+        link += get_query_string(user=self.token_user, scope=f"Poll:{self.poll_fk.id}")
+        return link

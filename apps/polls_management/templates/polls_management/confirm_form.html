@@ -34,7 +34,7 @@
 
     <!-- Token management -->
     {% if poll.is_votable_token and not poll.is_closed and user.is_authenticated %}
-        {% include "polls_management/components/token_management.html" with token_list=token_list %}
+        {% include "polls_management/components/token_management.html" with token_list=token_list invalid_tokens=invalid_tokens %}
     {% endif %}
 </div>
 

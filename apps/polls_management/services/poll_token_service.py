@@ -117,15 +117,10 @@ class PollTokenService:
             poll: the poll the tokens belong to.
         """
 
-        token_list: List[str] = []
-        link: str = host + '/' + poll.short_id
-    
-        tokens: PollTokens = PollTokens.objects.filter(Q(poll_fk=poll) & Q(single_option_use=False) & Q(majority_use=False))
-
+        token_list: List[str] = []    
+        tokens: List[PollTokens] = PollTokens.objects.filter(Q(poll_fk=poll) & Q(single_option_use=False) & Q(majority_use=False))
         for token in tokens:
-            templink: str = link
-            templink += get_query_string(user=token.token_user, scope=f"Poll:{poll.id}")
-            token_list.append(templink)
+            token_list.append(token.get_token_url(host))
 
         return token_list
 
@@ -155,15 +150,12 @@ class PollTokenService:
             poll: the poll the tokens belong to.
         """
 
-        token_list: List[str] = []
-        link: str = host + '/' + poll.short_id
-    
-        tokens: PollTokens = PollTokens.objects.filter(Q(poll_fk=poll) & Q(Q(single_option_use=True) | Q(majority_use=True)))
+        token_list: List[str] = []    
+        tokens: List[PollTokens] = PollTokens.objects.filter(Q(poll_fk=poll) & Q(Q(single_option_use=True) | Q(majority_use=True)))
 
         for token in tokens:
-            templink: str = link
-            templink += get_query_string(user=token.token_user, scope=f"Poll:{poll.id}")
-            token_list.append(templink)
+            token_list.append(token.get_token_url(host))
+
 
         return token_list
     
