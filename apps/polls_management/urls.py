@@ -23,7 +23,10 @@ urlpatterns = [
     # poll token creation and delete page path
     path('<int:poll_id>/generazione-token/', views.poll_token, name='poll_tokens'),
     path('<int:poll_id>/cancellazione-token/', views.delete_poll_token, name='delete_poll_tokens'),
-    
+
+    #check token 
+    path('search_view/', views.PollSearchView, name='poll_search'),
+        
     # htmx form to create and edit polls
     path('form/', login_required(views.CreatePollHtmxView.as_view()), name="poll_form"),
     path('form/annulla', views.poll_form_clean_go_back_home, name="poll_form_clean_go_back_home"), 
