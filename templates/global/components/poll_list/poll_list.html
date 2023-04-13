@@ -93,7 +93,13 @@
         </div>
         <!-- End Open/Closed + timestamp label -->
     </div>
-    <div class="card-footer bg-primary fw-light">
+    <div class="card-footer 
+                {% if request.get_full_path|get_url_path == 'scelte-e-risultati' %}
+                    bg-primary 
+                {% else %}
+                    bg-dark 
+                {% endif %}
+                fw-light">
         <div class="d-flex">
             {% if request.get_full_path|get_url_path == 'scelte-e-risultati' %}
                 {% include "global/components/poll_list/link_vote.html" with poll=poll %}
