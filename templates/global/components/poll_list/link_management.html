@@ -1,0 +1,215 @@
+<!-- Main voter-side actions -->
+<div class="flex-grow-1"> 
+     
+    <div class="row">
+       
+        {% if not poll.is_open and not poll.is_closed %}
+            <div class="col-auto  d-md-block d-none">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil text-white" viewBox="0 0 16 16">
+                    <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+                </svg>
+                
+                <a href="{% url 'apps.polls_management:poll_edit' poll_id=poll.id %}" 
+                    class="text-white text-decoration-none"> 
+                    Modifica
+                </a>
+            </div>
+
+            <div class="col-auto">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3 text-white" viewBox="0 0 16 16">
+                    <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"/>
+                </svg>
+
+                <a  data-bs-toggle="modal" data-bs-target="#deletepoll-{{poll.id}}" 
+                    class="text-white text-decoration-none pt-1" 
+                    role="button">
+                    Elimina
+                </a>
+            </div>
+
+            <div class="col-auto  d-md-block d-none">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-door-open text-white" viewBox="0 0 16 16">
+                    <path d="M8.5 10c-.276 0-.5-.448-.5-1s.224-1 .5-1 .5.448.5 1-.224 1-.5 1z"/>
+                    <path d="M10.828.122A.5.5 0 0 1 11 .5V1h.5A1.5 1.5 0 0 1 13 2.5V15h1.5a.5.5 0 0 1 0 1h-13a.5.5 0 0 1 0-1H3V1.5a.5.5 0 0 1 .43-.495l7-1a.5.5 0 0 1 .398.117zM11.5 2H11v13h1V2.5a.5.5 0 0 0-.5-.5zM4 1.934V15h6V1.077l-6 .857z"/>
+                </svg>
+
+                <a data-bs-toggle="modal" data-bs-target="#openpoll-{{poll.id}}" 
+                    class="text-white text-decoration-none"
+                    role="button">
+                    Apri ora
+                </a>
+            </div>
+        {% endif %}
+            <div class="col-auto">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-stack text-white" viewBox="0 0 16 16">
+                    <path d="m14.12 10.163 1.715.858c.22.11.22.424 0 .534L8.267 15.34a.598.598 0 0 1-.534 0L.165 11.555a.299.299 0 0 1 0-.534l1.716-.858 5.317 2.659c.505.252 1.1.252 1.604 0l5.317-2.66zM7.733.063a.598.598 0 0 1 .534 0l7.568 3.784a.3.3 0 0 1 0 .535L8.267 8.165a.598.598 0 0 1-.534 0L.165 4.382a.299.299 0 0 1 0-.535L7.733.063z"/>
+                    <path d="m14.12 6.576 1.715.858c.22.11.22.424 0 .534l-7.568 3.784a.598.598 0 0 1-.534 0L.165 7.968a.299.299 0 0 1 0-.534l1.716-.858 5.317 2.659c.505.252 1.1.252 1.604 0l5.317-2.659z"/>
+                </svg>
+                
+                <a href="{% url 'apps.polls_management:poll_details' poll_id=poll.id %}" 
+                    class="text-white text-decoration-none"
+                    role="button">
+                    Vedi dettagli
+                </a>
+            </div>
+                    
+            <div class="col-auto  d-md-block d-none">
+                <a  class="text-white text-decoration-none " 
+                    role="button" 
+                    data-bs-toggle="modal" data-bs-toggle="modal" data-bs-target="#shareModal-{{poll.id}}">
+                            
+                            <svg    xmlns="http://www.w3.org/2000/svg" 
+                                    width="16" height="16" 
+                                    fill="currentColor" 
+                                    class="bi bi-share" 
+                                    viewBox="0 0 16 16">
+                                    
+                                    <path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5zm-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/>
+                            </svg>
+                            Condividi
+                </a>
+            </div>
+    </div>
+</div>
+<!-- End Main voter-side actions -->
+
+<div class="flex-shrink-1">
+    <div class="row">
+        <div class="col text-end">
+            <div class="dropdown d-inline-block">
+                <a  class="text-white text-decoration-none" 
+                    role="button" 
+                    id="dropdownMenuLink-poll{{poll.id}}" 
+                    data-bs-toggle="dropdown" 
+                    aria-haspopup="true" aria-expanded="false">
+                        
+                           <svg    xmlns="http://www.w3.org/2000/svg" 
+                                width="16" 
+                                height="16" 
+                                fill="currentColor" 
+                                class="bi bi-three-dots" 
+                                viewBox="0 0 16 16">
+                                    <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
+                        </svg>
+                </a>
+                    
+                    <div    class="dropdown-menu" 
+                            aria-labelledby="dropdownMenuLink-poll{{poll.id}}">
+                            
+                            {% if not poll.is_open and not poll.is_closed %}
+                            
+                                <a href="{% url 'apps.polls_management:poll_edit' poll_id=poll.id %}" 
+                                    class="dropdown-item" > 
+                                    Modifica
+                                </a>
+                            
+                                <a data-bs-toggle="modal" data-bs-target="#deletepoll-{{poll.id}}" 
+                                    class="dropdown-item" 
+                                    role="button">Elimina
+                                </a>
+
+                                <a data-bs-toggle="modal" data-bs-target="#openpoll-{{poll.id}}" 
+                                    class="dropdown-item"
+                                    role="button">Apri ora
+                                </a>
+
+                            {% endif %}
+                    
+                    
+                            <a href="{% url 'apps.polls_management:poll_details' poll_id=poll.id %}" 
+                                class="dropdown-item"
+                                role="button">Vedi dettagli
+                            </a>
+                    
+
+                            <a  class="dropdown-item" 
+                                role="button" 
+                                data-bs-toggle="modal" data-bs-toggle="modal" data-bs-target="#shareModal-{{poll.id}}">
+                                Condividi
+                            </a>
+                
+                    </div>
+               
+             </div>
+        </div>
+        
+            <div class="col-auto d-md-none d-block">
+                <a  class="text-white text-decoration-none" 
+                    role="button" 
+                    data-bs-toggle="modal" data-bs-toggle="modal" data-bs-target="#shareModal-{{poll.id}}">
+                            
+                        <svg    xmlns="http://www.w3.org/2000/svg" 
+                                width="16" height="16" 
+                                fill="currentColor" 
+                                class="bi bi-share" 
+                                viewBox="0 0 16 16">
+                                                
+                                    <path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5zm-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/>
+                        </svg>
+                </a>
+            </div>
+    </div>
+</div>
+
+    <!-- Popup to confirm deletion of poll w id={{poll.id}} -->
+<div    class="modal fade" id="deletepoll-{{poll.id}}" tabindex="-1" 
+        aria-labelledby="deletepollabel" aria-hidden="true">
+        
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h4 class="modal-title">Cancellazione elemento</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                
+                <div class="modal-body bg-warning text-dark">
+                    <h5 class="modal-title">Sei sicuro di volere cancellare questa scelta?</h5>
+                </div>
+                
+                <div class="modal-footer">
+                    
+                    <div class="alert alert-info text-center" role="alert">
+                        Attenzione, l'operazione è definitiva.
+                    </div>
+                    
+                    <form action="{% url 'apps.polls_management:poll_delete' poll_id=poll.id %}" method="POST">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary">Conferma</button>
+                    </form>
+                   
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Indietro</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Popup to confirm open of poll w id={{poll.id}} -->
+<div    class="modal fade" 
+        id="openpoll-{{poll.id}}" tabindex="-1" 
+        aria-labelledby="openpollabel" aria-hidden="true">
+        
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h4 class="modal-title">Apertura</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                
+                <div class="modal-body bg-warning text-dark">
+                    <h5 class="modal-title">Sei sicuro di volere aprire adesso questa scelta?</h5>
+                </div>
+                
+                <div class="modal-footer">
+                    <div class="alert alert-info text-center" role="alert">
+                        Attenzione: una scelta dopo che viene aperta
+                        non può più essere eliminata o modificata
+                    </div>
+                    <form action="{% url 'apps.polls_management:poll_open' poll_id=poll.id %}" method="POST">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary">Apri adesso</button>
+                    </form>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Indietro</button>
+                </div>
+            </div>
+        </div>
+</div>
