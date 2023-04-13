@@ -152,25 +152,31 @@
 </div>
 
     <!-- Popup to confirm deletion of poll w id={{poll.id}} -->
-    <div class="modal fade" id="deletepoll-{{poll.id}}" tabindex="-1" 
+<div    class="modal fade" id="deletepoll-{{poll.id}}" tabindex="-1" 
         aria-labelledby="deletepollabel" aria-hidden="true">
+        
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header bg-primary text-white">
                     <h4 class="modal-title">Cancellazione elemento</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
+                
                 <div class="modal-body bg-warning text-dark">
                     <h5 class="modal-title">Sei sicuro di volere cancellare questa scelta?</h5>
                 </div>
+                
                 <div class="modal-footer">
+                    
                     <div class="alert alert-info text-center" role="alert">
                         Attenzione, l'operazione è definitiva.
                     </div>
+                    
                     <form action="{% url 'apps.polls_management:poll_delete' poll_id=poll.id %}" method="POST">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-primary">Conferma</button>
                     </form>
+                   
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Indietro</button>
                 </div>
             </div>
@@ -178,17 +184,21 @@
     </div>
 
     <!-- Popup to confirm open of poll w id={{poll.id}} -->
-    <div class="modal fade" id="openpoll-{{poll.id}}" tabindex="-1" 
+<div    class="modal fade" 
+        id="openpoll-{{poll.id}}" tabindex="-1" 
         aria-labelledby="openpollabel" aria-hidden="true">
+        
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header bg-primary text-white">
                     <h4 class="modal-title">Apertura</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
+                
                 <div class="modal-body bg-warning text-dark">
                     <h5 class="modal-title">Sei sicuro di volere aprire adesso questa scelta?</h5>
                 </div>
+                
                 <div class="modal-footer">
                     <div class="alert alert-info text-center" role="alert">
                         Attenzione: una scelta dopo che viene aperta
@@ -202,4 +212,4 @@
                 </div>
             </div>
         </div>
-    </div>
+</div>
