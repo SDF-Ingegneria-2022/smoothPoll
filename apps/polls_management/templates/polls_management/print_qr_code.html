@@ -1,45 +1,45 @@
+{% extends 'global/skeleton.html' %}
+
+{% block pagename %}Lista dei QR code{% endblock pagename %}
+
+{% block content %}
+
+
 {% load static %}
+<div class="container text-center mt-3">
+    <h1 class="fw-normal">Condividi i Qr code della scelta: {{ poll.name }}</h1>
+</div>
 {% if page_obj %}
 {% for obj in page_obj.object_list %}
-<div class="container border mt-3 pt-3 pb-3">
-        <div class="row border">
-            <div class="col-md-4">
-                <img class="img-fluid" src="{% static 'qr_codes/' %}{{obj.name_img}}" >
-            </div>
-            <div class="col-md-4">
-                    <p>nome scelta {{poll.name}}
-                    Scansiona il QR-Code oppure usa il link.
-                    Se ti viene chiesto, inserisci questo codice {{obj.token}}</p>
-            </div>
+<div class="container border my-5 text-center">
+    <div class="row">
+        <div class="col-md-4">
+            <img src="{% static 'qr_codes/' %}{{obj.name_img}}" class="img-fluid" >
         </div>
-        <div class="row">
-            <p>Link: {{obj.link}}</p>
+        <div class="col-md-8 mt-5">
+            <p class="fw-bold">{{poll.name}}</p>
+            <p class="fw-light">Scansiona il QR-Code oppure usa il link.
+            Se ti viene chiesto, inserisci questo codice </p>
+            <p class="fw-bold">{{obj.token}}</p>
         </div>
+    </div>
+    <div class="row">
+        <p class="fw-bold">Link: {{obj.link}}</p>
+    </div>
 </div>
-
 {% endfor %}
+
 {% else %}
 <p>no tokens</p>
 {% endif %}
-<!--flag used to show/hide pagination in pdf-->
-{% if  not print %}
-<div class="pagination">
-    <span class="step-links">
-        {% if page_obj.has_previous %}
-            <a href="?page=1">&laquo; first</a>
-            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
-        {% endif %}
-
-        <span class="current">
-            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-        </span>
-
-        {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">next</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-        {% endif %}
-    </span>
+<div class="d-grid gap-2 d-md-flex justify-content-md-end">
+<a class="btn btn-primary"  href="{% url 'apps.polls_management:pdf_view' poll_id=poll.id page_number=page_number %}">Vedi PDF</a>
+<a class="btn btn-primary"  href="{% url 'apps.polls_management:pdf_download' poll_id=poll.id page_number=page_number %}">Download PDF</a>
 </div>
-<a class="btn btn-info"  href="{% url 'apps.polls_management:pdf_view' poll_id=poll.id page_number=page_number %}">Vedi PDF</a>
-<a class="btn btn-info"  href="{% url 'apps.polls_management:pdf_download' poll_id=poll.id page_number=page_number %}">Download PDF</a>
-{% endif %}
+<!-- Pagination nav -->
+<div class="row justify-content-around">
+    <div class="col-auto">
+        {% include "polls_management/components/pagination/pagination_nav.html" with page=page_obj per_page=20 %}
+    </div>
+</div> <!-- END: Pagination nav -->
+{% endblock content %}
