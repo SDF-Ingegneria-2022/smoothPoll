@@ -19,7 +19,7 @@
     <h1>{{ poll.name }}</h1>
 </div>
 
-{% if poll.votable_mj %}
+{% if poll.is_votable_w_so_and_mj %}
 
 <div class="modal mt-5" id="voteconsistencyerror" tabindex="-1">
     <div class="modal-dialog">

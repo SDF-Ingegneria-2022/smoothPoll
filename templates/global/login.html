@@ -85,7 +85,7 @@
                     role="button">Vedi risultati</a>
             </div>
 
-            {% if poll.votable_mj and poll.poll_type == "single_option"%}
+            {% if poll.is_votable_w_so_and_mj%}
             <div class="d-grid gap-2 d-md-flex justify-content-md-center">
                 <a href="{% url 'apps.votes_results:majority_judgment_results' poll_id=poll.id %}" 
                     class="btn btn-secondary mt-2" 

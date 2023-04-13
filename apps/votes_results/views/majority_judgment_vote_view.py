@@ -65,7 +65,7 @@ class MajorityJudgmentVoteView(View):
         #     return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
         # elif not TokenValidation.validate(request.session.get('token_used')):
         #         return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
-        # elif poll.is_votable_token() and request.session.get('token_used') and poll.votable_mj:
+        # elif poll.is_votable_token() and request.session.get('token_used') and poll.is_votable_w_so_and_mj():
         #     if TokenValidation.validate(request.session.get('token_used')):
         #         return HttpResponseRedirect(reverse('apps.votes_results:single_option_vote', args=(poll_id,)))
             
@@ -80,10 +80,10 @@ class MajorityJudgmentVoteView(View):
                 except Exception:
                     raise Http404(f"Token associated with user {token_poll.token_user} not found.")
 
-                if not TokenValidation.validate(token_poll) and not poll.votable_mj:
+                if not TokenValidation.validate(token_poll) and not poll.is_votable_w_so_and_mj():
                     return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
                 
-                elif poll.votable_mj:
+                elif poll.is_votable_w_so_and_mj():
                     # check special token case with votable mj
                     if TokenValidation.validate(token_poll):
                         return HttpResponseRedirect(reverse('apps.votes_results:single_option_vote', args=(poll_id,)))
@@ -95,16 +95,16 @@ class MajorityJudgmentVoteView(View):
                 return render(request, 'global/login.html', {'poll': poll})
             elif PollTokens.objects.filter(token_user=request.user, poll_fk=poll).exists():
                 google_token = PollTokens.objects.get(token_user=request.user, poll_fk=poll)
-                if not TokenValidation.validate(google_token) and not poll.votable_mj:
+                if not TokenValidation.validate(google_token) and not poll.is_votable_w_so_and_mj():
                     return render(request, 'global/login.html', {'poll': poll})
-                elif poll.votable_mj:
+                elif poll.is_votable_w_so_and_mj():
                     if not TokenValidation.validate(google_token):
                         if not TokenValidation.validate_mj_special_case(google_token):
                             return render(request, 'global/login.html', {'poll': poll})
-            elif not PollTokens.objects.filter(token_user=request.user, poll_fk=poll).exists() and poll.votable_mj:
+            elif not PollTokens.objects.filter(token_user=request.user, poll_fk=poll).exists() and poll.is_votable_w_so_and_mj():
                 return HttpResponseRedirect(reverse('apps.votes_results:single_option_vote', args=(poll_id,)))
 
-        if ((poll.poll_type != PollModel.PollType.MAJORITY_JUDJMENT and not poll.votable_mj) or
+        if ((poll.poll_type != PollModel.PollType.MAJORITY_JUDJMENT and not poll.is_votable_w_so_and_mj()) or
             ( poll.poll_type == PollModel.PollType.SINGLE_OPTION and
               request.session.get(SESSION_SINGLE_OPTION_VOTE_ID) is None and 
               not poll.is_votable_token() and not poll.is_votable_google())
@@ -120,7 +120,7 @@ class MajorityJudgmentVoteView(View):
         if request.session.get(SESSION_MJ_GUIDE_ALREADY_VIWED) is None:
             request.session[SESSION_MJ_GUIDE_ALREADY_VIWED] = True
         
-        if poll.poll_type == PollModel.PollType.SINGLE_OPTION and poll.votable_mj and request.session.get(SESSION_SINGLE_OPTION_VOTE_ID) is not None:
+        if poll.poll_type == PollModel.PollType.SINGLE_OPTION and poll.is_votable_w_so_and_mj() and request.session.get(SESSION_SINGLE_OPTION_VOTE_ID) is not None:
             vote_single_option: PollOptionModel = PollOptionModel.objects.get(id=request.session.get(SESSION_SINGLE_OPTION_VOTE_ID))
             request.session['os_to_mj'] = vote_single_option.value
 
@@ -280,7 +280,7 @@ def majority_judgment_results_view(request: HttpRequest, poll_id: int):
     if not poll.is_open():
         return HttpResponseRedirect(reverse('apps.polls_management:poll_details', args=(poll_id,)))
 
-    if poll.poll_type != PollModel.PollType.MAJORITY_JUDJMENT and poll.votable_mj != True:
+    if poll.poll_type == PollModel.PollType.SINGLE_OPTION and not poll.is_votable_w_so_and_mj():
         raise Http404()
     
     try:
