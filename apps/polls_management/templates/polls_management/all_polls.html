@@ -50,7 +50,7 @@
 
 
             <!-- New poll botton mobile -->
-            <div class="d-md-none position-fixed bottom-0 start-0 end-0 p-2" style="z-index:1000;"> 
+            {% comment %} <div class="d-md-none position-fixed bottom-0 start-0 end-0 p-2" style="z-index:1000;"> 
                 <a href="{% url 'apps.polls_management:poll_create' %}" 
                     class="float-end" role="button">
                     <div class="bg-success text-center align-item-center rounded-circle">
@@ -60,7 +60,7 @@
                     </div>
                     
                 </a>
-            </div>
+            </div> {% endcomment %}
 
 
                 <!-- List with polls -->
