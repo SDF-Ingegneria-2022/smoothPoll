@@ -1,15 +1,15 @@
 {% load static %}
 <!-- Copy link -->
 <div class="input-group" style="max-width: 400px;">
-    <input  id="bar-{{poll.id}}"
+    <input  id="bar-{{poll.id}}{% if token %}-{{token}}{% endif %}"
             type="text" 
             readonly 
             class="form-control"
-            value="{{request.get_host}}{% url 'poll_details_page' poll_short_id=poll.short_id %}"/>
+            value="{{request.get_host}}{% url 'poll_details_page' poll_short_id=poll.short_id %}{% if token %}{{token.get_token_query_string}}{% endif %}"/>
     <button 
             class="btn btn-secondary" 
             data-clipboard-action="copy" 
-            data-clipboard-target="#bar-{{poll.id}}">
+            data-clipboard-target="#bar-{{poll.id}}{% if token %}-{{token}}{% endif %}">
             <img src="{% static 'icon/copy.png' %}">
     </button>
 </div>

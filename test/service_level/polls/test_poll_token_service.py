@@ -75,28 +75,28 @@ class TestPollTokenService():
 
         PollTokenService.check_single_option(token_list[0])
 
-        assert_that(PollTokenService.available_token_list(host, poll)).is_length(9)
-        assert_that(PollTokenService.unavailable_token_list(host, poll)).is_length(1)
+        assert_that(PollTokenService.available_token_list(poll)).is_length(9)
+        assert_that(PollTokenService.unavailable_token_list(poll)).is_length(1)
 
         PollTokenService.check_majority_option(token_list[0])
 
-        assert_that(PollTokenService.available_token_list(host, poll)).is_length(9)
-        assert_that(PollTokenService.unavailable_token_list(host, poll)).is_length(1)
+        assert_that(PollTokenService.available_token_list(poll)).is_length(9)
+        assert_that(PollTokenService.unavailable_token_list(poll)).is_length(1)
 
         PollTokenService.check_majority_option(token_list[1])
 
-        assert_that(PollTokenService.available_token_list(host, poll)).is_length(8)
-        assert_that(PollTokenService.unavailable_token_list(host, poll)).is_length(2)
+        assert_that(PollTokenService.available_token_list(poll)).is_length(8)
+        assert_that(PollTokenService.unavailable_token_list(poll)).is_length(2)
 
         PollTokenService.check_majority_option(token_list[2])
 
-        assert_that(PollTokenService.available_token_list(host, poll)).is_length(7)
-        assert_that(PollTokenService.unavailable_token_list(host, poll)).is_length(3)
+        assert_that(PollTokenService.available_token_list(poll)).is_length(7)
+        assert_that(PollTokenService.unavailable_token_list(poll)).is_length(3)
 
         PollTokenService.check_single_option(token_list[2])
 
-        assert_that(PollTokenService.available_token_list(host, poll)).is_length(7)
-        assert_that(PollTokenService.unavailable_token_list(host, poll)).is_length(3)
+        assert_that(PollTokenService.available_token_list(poll)).is_length(7)
+        assert_that(PollTokenService.unavailable_token_list(poll)).is_length(3)
 
 
         
