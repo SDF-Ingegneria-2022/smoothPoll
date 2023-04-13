@@ -49,18 +49,18 @@ def generic_vote_view(request, poll_id: int):
         
         # TODO: find a way to remove the temporary logged user from the page of invalid tokens
         # token validation controls
-        # if PollTokenService.is_single_option_token_used(token_poll_data) and not poll.votable_mj:
+        # if PollTokenService.is_single_option_token_used(token_poll_data) and not poll.is_votable_w_so_and_mj():
         #     # logout(request)
         #     return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
-        # elif PollTokenService.is_single_option_token_used(token_poll_data) and poll.votable_mj and not PollTokenService.is_majority_token_used(token_poll_data):
+        # elif PollTokenService.is_single_option_token_used(token_poll_data) and poll.is_votable_w_so_and_mj() and not PollTokenService.is_majority_token_used(token_poll_data):
         #     # pass the token to specific poll type view for vote
         #     request.session['token_used'] = token_poll_data
         #     return HttpResponseRedirect(
         #         reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))
-        # elif PollTokenService.is_single_option_token_used(token_poll_data) and poll.votable_mj and PollTokenService.is_majority_token_used(token_poll_data):
+        # elif PollTokenService.is_single_option_token_used(token_poll_data) and poll.is_votable_w_so_and_mj() and PollTokenService.is_majority_token_used(token_poll_data):
         #     # logout(request)
         #     return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
-        # elif PollTokenService.is_majority_token_used(token_poll_data) and not poll.votable_mj:
+        # elif PollTokenService.is_majority_token_used(token_poll_data) and not poll.is_votable_w_so_and_mj():
         #     # logout(request)
         #     return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
         

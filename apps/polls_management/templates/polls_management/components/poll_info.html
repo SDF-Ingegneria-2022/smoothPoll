@@ -49,7 +49,7 @@
     <div class="col">
         <div class="fw-light fs-5 mt-1">
             {{ poll.get_type_verbose_name }}
-            {% if poll.poll_type == "single_option" and poll.votable_mj %}
+            {% if poll.is_votable_w_so_and_mj %}
                 <span>(giudicabile anche con Giudizio Maggioritario)</span>
             {% endif %}
         </div>

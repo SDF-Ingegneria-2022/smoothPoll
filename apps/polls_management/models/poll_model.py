@@ -144,6 +144,11 @@ class PollModel(models.Model):
         """
         return self.protection == PollModel.PollVoteProtection.GOOGLE
     
+    def is_votable_w_so_and_mj(self) -> bool:
+        """Check if Poll is votable both with single option and majority judgment"""
+        
+        return self.votable_mj and self.poll_type == PollModel.PollType.SINGLE_OPTION
+    
     def get_state_label(self) -> str: 
         """Get a label rappresentative of the state"""
 

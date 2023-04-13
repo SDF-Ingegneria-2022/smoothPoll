@@ -23,19 +23,15 @@
             </div>
             <!-- End Poll type indicator -->
             
-           
-
             <!-- Poll state indicator -->
             <!-- Note: used only in management section-->
-            
-             {% if poll.get_state_label == 'Non aperto' %}
-             <div class="ms-1">
+            {% if poll.get_state_label == 'Non aperto' %}
+            <div class="ms-1">
                 <span class="badge rounded-pill bg-dark fs-6 fw-light"
                     data-bs-toggle="tooltip" data-bs-placement="top" >
                     Bozza
                 </span>
             </div>
-            
             {% endif%}
             <!-- End Poll state indicator -->
         </div>
@@ -71,7 +67,7 @@
                         <span class="text-secondary">Terminato {{poll.close_datetime|timesince}} fa</span>
                     </div>
                 {% elif poll.get_state_label == 'Non aperto' %}
-                    {% if poll.is_open is not None and poll.is_closed is not None %}
+                    {% if poll.open_datetime %}
                         <div class="col-auto">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-hourglass-top text-muted" viewBox="0 0 16 16">
                                 <path d="M2 14.5a.5.5 0 0 0 .5.5h11a.5.5 0 1 0 0-1h-1v-1a4.5 4.5 0 0 0-2.557-4.06c-.29-.139-.443-.377-.443-.59v-.7c0-.213.154-.451.443-.59A4.5 4.5 0 0 0 12.5 3V2h1a.5.5 0 0 0 0-1h-11a.5.5 0 0 0 0 1h1v1a4.5 4.5 0 0 0 2.557 4.06c.29.139.443.377.443.59v.7c0 .213-.154.451-.443.59A4.5 4.5 0 0 0 3.5 13v1h-1a.5.5 0 0 0-.5.5zm2.5-.5v-1a3.5 3.5 0 0 1 1.989-3.158c.533-.256 1.011-.79 1.011-1.491v-.702s.18.101.5.101.5-.1.5-.1v.7c0 .701.478 1.236 1.011 1.492A3.5 3.5 0 0 1 11.5 13v1h-7z"/>
@@ -87,7 +83,7 @@
                             <span class="text-secondary text-muted">Termina il {{poll.close_datetime| date:'Y-m-d'}} alle  {{poll.close_datetime| date:'H:i'}}</span>
                         </div>
                     {% else %}
-                        Apertura e chiusura non sono impostate
+                        <span class="text-secondary ">Apertura e chiusura non sono impostate</span>
                     {% endif %}
                 {% endif %}
         </div>

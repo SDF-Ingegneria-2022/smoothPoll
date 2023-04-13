@@ -83,7 +83,7 @@
             
             
                         
-            {% if poll_results.poll.votable_mj %}
+            {% if poll_results.poll.is_votable_w_so_and_mj %}
             <a href="{% url 'apps.votes_results:majority_judgment_results' poll_id=poll_results.poll.id %}" 
                 class="btn btn-primary" 
                 role="button">Vedi risultati con il Giudizio Maggioritario</a>

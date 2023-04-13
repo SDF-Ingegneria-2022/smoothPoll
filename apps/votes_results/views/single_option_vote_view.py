@@ -53,10 +53,10 @@ class SingleOptionVoteView(View):
                 except Exception:
                     raise Http404(f"Token associated with user {token_poll.token_user} not found.")
 
-                if not TokenValidation.validate(token_poll) and not poll.votable_mj:
+                if not TokenValidation.validate(token_poll) and not poll.is_votable_w_so_and_mj():
                     return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
                 
-                elif poll.votable_mj:
+                elif poll.is_votable_w_so_and_mj():
                     # check special token case with votable mj
                     if not TokenValidation.validate(token_poll):
                         if TokenValidation.validate_mj_special_case(token_poll):
@@ -72,9 +72,9 @@ class SingleOptionVoteView(View):
                 return render(request, 'global/login.html', {'poll': poll})
             elif PollTokens.objects.filter(token_user=request.user, poll_fk=poll).exists():
                 google_token = PollTokens.objects.get(token_user=request.user, poll_fk=poll)
-                if not TokenValidation.validate(google_token) and not poll.votable_mj:
+                if not TokenValidation.validate(google_token) and not poll.is_votable_w_so_and_mj():
                     return render(request, 'global/login.html', {'poll': poll})
-                elif not TokenValidation.validate(google_token) and poll.votable_mj:
+                elif not TokenValidation.validate(google_token) and poll.is_votable_w_so_and_mj():
                     if not TokenValidation.validate_mj_special_case(google_token):
                         return render(request, 'global/login.html', {'poll': poll})
                     # check special token case with votable mj
@@ -218,11 +218,11 @@ def single_option_recap_view(request: HttpRequest, poll_id: int):
     # show confirm page
     mj_vote_counter: SingleOptionVoteCounter = None
     
-    if poll.votable_mj:
+    if poll.is_votable_w_so_and_mj():
         mj_vote_counter: SingleOptionVoteCounter = SingleOptionVoteCounter(poll)
 
     # Clean session data for token validation if poll is not also votable with majority
-    # if not poll.votable_mj:
+    # if not poll.is_votable_w_so_and_mj():
     #     if request.session.get(SESSION_TOKEN_USED) is not None:
     #         del request.session[SESSION_TOKEN_USED]
         

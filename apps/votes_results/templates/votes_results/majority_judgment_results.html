@@ -171,7 +171,7 @@
         {% include "polls_management/components/share_social/share_social_modal.html" with poll=poll %}
 
 
-        {% if poll.votable_mj and poll.poll_type == "single_option" %}
+        {% if poll.is_votable_w_so_and_mj %}
             <a href="{% url 'apps.votes_results:single_option_results' poll_id=poll.id %}" 
                 class="btn btn-primary" 
                 role="button">Vedi risultati per Opzione Singola</a>

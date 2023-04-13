@@ -81,7 +81,7 @@
                         </a>
                     </div>
         
-                    {% if poll.votable_mj and poll.poll_type == "single_option"%}
+                    {% if poll.is_votable_w_so_and_mj %}
                     <div class="col-auto d-md-block d-none">
                         <a href="{% url 'apps.votes_results:majority_judgment_results' poll_id=poll.id %}" 
                             class="text-white text-decoration-none">
@@ -132,7 +132,7 @@
                                 </a>
                                 {% endif %}
                                 <a class="dropdown-item" href="{% url 'apps.votes_results:results' poll_id=poll.id %}">Vedi risultati</a>
-                                {% if poll.votable_mj and poll.poll_type == "single_option" %}
+                                {% if poll.is_votable_w_so_and_mj %}
                                 <a class="dropdown-item" href="{% url 'apps.votes_results:majority_judgment_results' poll_id=poll.id %}">
                                     Vedi risultati con Giudizio Maggioritario
                                 </a>
