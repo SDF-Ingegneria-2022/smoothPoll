@@ -18,24 +18,26 @@ from django.contrib.auth.models import User
 def PollSearchView(request:HttpRequest, poll_id):
 
     token_string: str = request.GET.get('token')
-    poll_ids = PollModel.objects.all().values_list('id', flat=True)
     user_list = User.objects.all()
     tempuser: User = None
     temp: str = ""
     tempid: int = 0
 
     #find the id and the user of the token
-    for x in poll_ids:
-        for y in user_list:
-            temp = get_token(user=y, scope=f"Poll:{x}")
-            if (temp==token_string):
-                tempid = x
-                tempuser = y
+    for y in user_list:
+        temp = get_token(user=y, scope=f"Poll:{poll_id}")
+        if (temp==token_string):
+            tempid = poll_id
+            tempuser = y
+
 
     #check if the tempid is empty(=0) or full(!=0)
     if (tempid!=0):
-        poll: PollModel = PollModel.objects.get(id=tempid)
-        searchpolltoken: PollTokens = PollTokens.objects.get(token_user=tempuser, poll_fk=poll)
+        try:
+            poll: PollModel = PollModel.objects.get(id=tempid)
+            searchpolltoken: PollTokens = PollTokens.objects.get(token_user=tempuser, poll_fk=poll)
+        except Exception:
+            raise Http404(f"Poll with id {tempid} not found.")
 
         if searchpolltoken:
             # token validation checks
@@ -59,6 +61,5 @@ def PollSearchView(request:HttpRequest, poll_id):
         else:
             return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll, 'tokennotfound':True })
     else:
-        #problema: trovare pollid originale
         poll: PollModel = PollModel.objects.get(id=poll_id)
         return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll, 'tokennotfound':False })
