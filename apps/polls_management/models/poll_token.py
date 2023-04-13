@@ -2,6 +2,7 @@
 from django.db import models
 from django.conf import settings
 from django.db.models import CharField
+from sesame.utils import get_query_string
 
 from apps.polls_management.constants.models_constants import POLL_MODEL_NAME
 
@@ -21,10 +22,17 @@ class PollTokens(models.Model):
     majority_use: models.BooleanField = models.BooleanField(default=False)
 
     def __str__(self):
-        return str({
-            'id': self.id,
-            'poll': str(self.poll_fk),
-            'user': self.token_user.username,
-            'single_use': self.single_option_use,
-            'majority_use': self.majority_use
-        })
+        return self.get_token()
+    
+    def get_token_path(self) -> str:
+        """Return the link that voter may use to vote with this token."""
+        return "/" + self.poll_fk.short_id + \
+            get_query_string(user=self.token_user, scope=f"Poll:{self.poll_fk.id}")
+
+    def get_token_query_string(self) -> str:
+        """Return the query string that voter may use to vote with this token."""
+        return get_query_string(user=self.token_user, scope=f"Poll:{self.poll_fk.id}")
+    
+    def get_token(self) -> str:
+        """Return the token that voter may use to vote with this token."""
+        return self.get_token_query_string().split('=')[1]

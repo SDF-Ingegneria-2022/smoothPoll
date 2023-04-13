@@ -131,9 +131,8 @@ def poll_form_confirm(request: HttpRequest):
         raise Http404(f"Poll with id {poll_id} not found.")
     
     if poll.is_votable_token():
-        host_link: str = request.get_host()
-        token_links: List[str] = PollTokenService.available_token_list(host_link, poll)
-        invalid_tokens: List[str] = PollTokenService.unavailable_token_list(host_link, poll)
+        token_links = PollTokenService.available_token_list(poll)
+        invalid_tokens = PollTokenService.unavailable_token_list(poll)
         
         return render(request, 'polls_management/confirm_form.html', {'poll': poll, 'edit': request.session.get(SESSION_IS_EDIT), 'token_list': token_links, 'invalid_tokens': invalid_tokens})
     else:
