@@ -24,6 +24,11 @@ urlpatterns = [
     path('<int:poll_id>/generazione-token/', views.poll_token, name='poll_tokens'),
     path('<int:poll_id>/cancellazione-token/', views.delete_poll_token, name='delete_poll_tokens'),
 
+    # page with cards containing qr-code to print
+    path('<int:poll_id>/token-pdf/', views.poll_qr_code, name='poll_qr_code'),
+    path('<int:poll_id>/pdf_view/<int:page_number>/', views.pdf_view, name="pdf_view"),
+    path('<int:poll_id>/pdf_download/<int:page_number>/', views.pdf_download, name="pdf_download"),
+    
     #check token 
     path('<int:poll_id>search_view/', views.PollSearchView, name='poll_search'),
         
