@@ -13,17 +13,13 @@ class TestPollTokenService():
     @pytest.fixture()
     def create_polls(request, django_user_model):
         """Fixture for creating polls."""
-        create_single_option_polls(django_user_model, number_of_polls=1)
+        return create_single_option_polls(django_user_model, number_of_polls=1)
 
     @pytest.mark.django_db
     def test_create_tokens_for_poll(self, create_polls):
         """Test used to create and verify tokens."""
 
-        poll_list: List[PollModel] = PollModel.objects.all()
-        poll: PollModel = poll_list[0]
-        host: str = "http://127.0.0.1:8000"
-        link: str = host + reverse('apps.votes_results:vote', 
-            args=(poll.id,))
+        poll: PollModel = create_polls[0]
 
         PollTokenService.create_tokens(10, poll)
 
@@ -41,11 +37,7 @@ class TestPollTokenService():
     def test_tokens_bools(self, create_polls):
         """Test if token bools are correctly handled."""
 
-        poll_list: List[PollModel] = PollModel.objects.all()
-        poll: PollModel = poll_list[0]
-        host: str = "http://127.0.0.1:8000"
-        link: str = host + reverse('apps.votes_results:vote', 
-            args=(poll.id,))
+        poll: PollModel = create_polls[0]
 
         PollTokenService.create_tokens(10, poll)
 
@@ -63,8 +55,8 @@ class TestPollTokenService():
     def test_available_and_unavailable_tokens(self, create_polls):
         """Test if available and unavailable token lists are returned correctly."""
 
-        poll_list: List[PollModel] = PollModel.objects.all()
-        poll: PollModel = poll_list[0]
+        poll: PollModel = create_polls[0]
+
         PollTokenService.create_tokens(10, poll)
 
         token_list: List[PollTokens] = list(PollTokens.objects.filter(poll_fk=poll))
