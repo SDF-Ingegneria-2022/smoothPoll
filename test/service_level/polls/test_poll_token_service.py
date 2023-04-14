@@ -1,3 +1,4 @@
+import time
 from typing import List
 from django.urls import reverse
 import pytest
@@ -6,6 +7,8 @@ from apps.polls_management.models.poll_model import PollModel
 from apps.polls_management.models.poll_token import PollTokens
 from test.service_level.utils.create_polls_utils import create_single_option_polls
 from apps.polls_management.services.poll_token_service import PollTokenService
+
+from django.utils import timezone
 
 class TestPollTokenService():
     """Tests related to token service level."""
@@ -87,6 +90,26 @@ class TestPollTokenService():
 
         assert_that(PollTokenService.available_token_list(poll)).is_length(7)
         assert_that(PollTokenService.unavailable_token_list(poll)).is_length(3)
+
+    @pytest.mark.django_db
+    def test_tokens_datetime(self, create_polls):   
+        """Check token created_at property is correctly handled."""
+
+        poll: PollModel = create_polls[0]
+
+        token: PollTokens = list(PollTokenService.create_tokens(1, poll))[0]
+
+        # ensure created_at is now()
+        assert_that(token.created_at).is_equal_to_ignoring_seconds(timezone.now())
+
+        # ensure created_at is not updated
+        initial_create = token.created_at 
+
+        time.sleep(0.1)
+        PollTokenService.check_single_option(token)
+        PollTokenService.check_majority_option(token)
+        assert_that(token.created_at).is_equal_to(initial_create)
+        assert_that(token.created_at).is_not_equal_to(timezone.now())
 
 
 
