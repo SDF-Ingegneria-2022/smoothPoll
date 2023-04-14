@@ -65,13 +65,9 @@ class TestPollTokenService():
 
         poll_list: List[PollModel] = PollModel.objects.all()
         poll: PollModel = poll_list[0]
-        host: str = "http://127.0.0.1:8000"
-        link: str = host + reverse('apps.votes_results:vote', 
-            args=(poll.id,))
-
         PollTokenService.create_tokens(10, poll)
 
-        token_list: List[PollTokens] = PollTokens.objects.filter(poll_fk=poll)
+        token_list: List[PollTokens] = list(PollTokens.objects.filter(poll_fk=poll))
 
         PollTokenService.check_single_option(token_list[0])
 
@@ -80,7 +76,9 @@ class TestPollTokenService():
 
         PollTokenService.check_majority_option(token_list[0])
 
-        assert_that(PollTokenService.available_token_list(poll)).is_length(9)
+        available_tokens = PollTokenService.available_token_list(poll)
+
+        assert_that(available_tokens).is_length(9)
         assert_that(PollTokenService.unavailable_token_list(poll)).is_length(1)
 
         PollTokenService.check_majority_option(token_list[1])
@@ -99,6 +97,5 @@ class TestPollTokenService():
         assert_that(PollTokenService.unavailable_token_list(poll)).is_length(3)
 
 
-        
 
 
