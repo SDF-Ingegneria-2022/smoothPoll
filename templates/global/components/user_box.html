@@ -25,7 +25,7 @@
 
 
         <div class="mt-1 text-end">
-            <form action="{% url 'account_logout' %}" method="POST">
+            <form action="{% url 'account_logout' %}?next={{ request.path }}" method="POST">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-link text-dark">
                     <img src="{% static 'icon/logout.png' %}" alt="Icona logout" 
@@ -44,7 +44,7 @@
         </p>
 
         <!-- Google login button -->
-        <form action="{% provider_login_url 'google' %}" method="POST">
+        <form action="{% provider_login_url 'google' %}?next={{ request.path }}" method="POST">
             {% csrf_token %}
             <button type="submit" class="btn btn-light border border-dark">
                 <img width="20px" style="margin-bottom:3px; margin-right:5px" alt="Google sign-in" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png" />
