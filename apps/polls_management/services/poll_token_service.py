@@ -113,7 +113,10 @@ class PollTokenService:
             poll: the poll the tokens belong to.
         """
 
-        return PollTokens.objects.filter(Q(poll_fk=poll) & Q(single_option_use=False) & Q(majority_use=False))
+        return PollTokens.objects.filter(
+                Q(poll_fk=poll) & Q(single_option_use=False) 
+                & Q(majority_use=False)
+            ).order_by('-created_at').all()
 
     def delete_tokens(poll: PollModel):
 

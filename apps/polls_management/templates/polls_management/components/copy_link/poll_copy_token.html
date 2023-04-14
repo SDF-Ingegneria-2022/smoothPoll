@@ -1,13 +1,20 @@
 {% load static %}
 <!-- Copy link -->
-<div class="input-group"> 
-    
-    <input id="bar-{{poll.id}}-{{token}}-token"
-        type="text" 
-        readonly 
-        class="form-control"
-        value="{{token}}"
-        style="min-width: 300px;"/>
+<div class="input-group mt-1"> 
+    <div>
+        <input id="bar-{{poll.id}}-{{token}}-token"
+            type="text" 
+            readonly 
+            class="form-control"
+            value="{{token}}"
+            style="min-width: 300px;"/>
+        {% if token.created_at %}
+        <small class="form-text text-muted">
+            Generato {{token.created_at|timesince}} fa
+        </small>
+        {% endif %}
+        
+    </div>
     
     <div class="">
         <button class="btn btn-link text-dark text-decoration-none" 
@@ -36,9 +43,10 @@
             </svg> <span class="d-md-inline-block d-none">Condividi</span>
         </button>
     </div>
-
     {% include "polls_management/components/share_social/share_social_modal.html" with poll=poll token=token %}
 </div>
+<hr class="mt-1">
+
 
 
 
