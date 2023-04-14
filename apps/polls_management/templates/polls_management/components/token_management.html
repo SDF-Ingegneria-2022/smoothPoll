@@ -1,0 +1,68 @@
+{% comment %}
+Section to manage a poll's tokens and their distribution.
+{% endcomment %}
+
+<div class="mt-5 mb-5">
+
+    <h3 class="text-center">Token per il voto</h3>
+
+    <div class="mb-5" style="max-width: 700px;">
+        <h6>Token ancora validi ({{token_list|length}})</h6>
+        {% if token_list %}
+            {% for available_token in token_list %}
+                <div class="d-flex m-1">
+                    <span class="w-100">
+                        {% include "polls_management/components/copy_link/poll_copy_token.html" with poll=poll token=available_token %}
+                    </span>
+                </div>
+                {% include "polls_management/components/copy_link/copy_link_script.html" with poll=poll token=available_token %}
+            {% endfor %}
+        {% endif %}
+    </div>
+    <!-- Generate tokens form -->
+    <div class="d-grid gap-2 mb-5">
+        <form action="{% url 'apps.polls_management:poll_tokens' poll_id=poll.id %}" method="POST">
+            {% csrf_token %}
+            {% comment %} <div class="d-grid gap-2 d-md-flex justify-content-md-start"> {% endcomment %}
+            <div class="row">
+                <div class="col-md-4">
+                    <label for="tokensid">
+                        Genera nuovi token
+                    </label>
+                    <input type="number" min="1" step="1" value="1"
+                        id="tokensid" name="tokens" class="form-control" aria-describedby="tokenshelp">
+                    <small id="tokenshelp" class="form-text text-muted">
+                        Quanti nuovi token vuoi generare?
+                    </small>
+                </div>
+                <div class="col-md-2">
+                    <br>
+                    <button type="submit" class="btn btn-success mb-4 w-100">Genera Token</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    {% if invalid_tokens %}
+        <div class="mb-2">
+            <h6>Token già usati ({{invalid_tokens|length}})</h6>
+            <ul>
+                {% for unavailable_token in invalid_tokens %}
+                    <li>{{unavailable_token}}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+    {% comment %} 
+    <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+        <form action="{% url 'apps.polls_management:delete_poll_tokens' poll_id=poll.id %}" method="POST">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-12">
+                    <button type="submit" class="btn btn-danger w-100">Invalida tutti i Token, sia esistenti che già usati</button>
+                </div>
+            </div>
+        </form>
+    </div> {% endcomment %}
+</div>

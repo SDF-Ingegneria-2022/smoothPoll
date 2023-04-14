@@ -1,3 +1,4 @@
+import time
 from typing import List
 from django.urls import reverse
 import pytest
@@ -7,25 +8,23 @@ from apps.polls_management.models.poll_token import PollTokens
 from test.service_level.utils.create_polls_utils import create_single_option_polls
 from apps.polls_management.services.poll_token_service import PollTokenService
 
+from django.utils import timezone
+
 class TestPollTokenService():
     """Tests related to token service level."""
 
     @pytest.fixture()
     def create_polls(request, django_user_model):
         """Fixture for creating polls."""
-        create_single_option_polls(django_user_model, number_of_polls=1)
+        return create_single_option_polls(django_user_model, number_of_polls=1)
 
     @pytest.mark.django_db
     def test_create_tokens_for_poll(self, create_polls):
         """Test used to create and verify tokens."""
 
-        poll_list: List[PollModel] = PollModel.objects.all()
-        poll: PollModel = poll_list[0]
-        host: str = "http://127.0.0.1:8000"
-        link: str = host + reverse('apps.votes_results:vote', 
-            args=(poll.id,))
+        poll: PollModel = create_polls[0]
 
-        PollTokenService.create_tokens(link, 10, poll)
+        PollTokenService.create_tokens(10, poll)
 
         token_list: List[PollTokens] = PollTokens.objects.filter(poll_fk=poll)
 
@@ -41,13 +40,9 @@ class TestPollTokenService():
     def test_tokens_bools(self, create_polls):
         """Test if token bools are correctly handled."""
 
-        poll_list: List[PollModel] = PollModel.objects.all()
-        poll: PollModel = poll_list[0]
-        host: str = "http://127.0.0.1:8000"
-        link: str = host + reverse('apps.votes_results:vote', 
-            args=(poll.id,))
+        poll: PollModel = create_polls[0]
 
-        PollTokenService.create_tokens(link, 10, poll)
+        PollTokenService.create_tokens(10, poll)
 
         token_list: List[PollTokens] = PollTokens.objects.filter(poll_fk=poll)
 
@@ -63,42 +58,59 @@ class TestPollTokenService():
     def test_available_and_unavailable_tokens(self, create_polls):
         """Test if available and unavailable token lists are returned correctly."""
 
-        poll_list: List[PollModel] = PollModel.objects.all()
-        poll: PollModel = poll_list[0]
-        host: str = "http://127.0.0.1:8000"
-        link: str = host + reverse('apps.votes_results:vote', 
-            args=(poll.id,))
+        poll: PollModel = create_polls[0]
 
-        PollTokenService.create_tokens(link, 10, poll)
+        PollTokenService.create_tokens(10, poll)
 
-        token_list: List[PollTokens] = PollTokens.objects.filter(poll_fk=poll)
+        token_list: List[PollTokens] = list(PollTokens.objects.filter(poll_fk=poll))
 
         PollTokenService.check_single_option(token_list[0])
 
-        assert_that(PollTokenService.available_token_list(host, poll)['token_list']).is_length(9)
-        assert_that(PollTokenService.unavailable_token_list(host, poll)).is_length(1)
+        assert_that(PollTokenService.available_token_list(poll)).is_length(9)
+        assert_that(PollTokenService.unavailable_token_list(poll)).is_length(1)
 
         PollTokenService.check_majority_option(token_list[0])
 
-        assert_that(PollTokenService.available_token_list(host, poll)['token_list']).is_length(9)
-        assert_that(PollTokenService.unavailable_token_list(host, poll)).is_length(1)
+        available_tokens = PollTokenService.available_token_list(poll)
+
+        assert_that(available_tokens).is_length(9)
+        assert_that(PollTokenService.unavailable_token_list(poll)).is_length(1)
 
         PollTokenService.check_majority_option(token_list[1])
 
-        assert_that(PollTokenService.available_token_list(host, poll)['token_list']).is_length(8)
-        assert_that(PollTokenService.unavailable_token_list(host, poll)).is_length(2)
+        assert_that(PollTokenService.available_token_list(poll)).is_length(8)
+        assert_that(PollTokenService.unavailable_token_list(poll)).is_length(2)
 
         PollTokenService.check_majority_option(token_list[2])
 
-        assert_that(PollTokenService.available_token_list(host, poll)['token_list']).is_length(7)
-        assert_that(PollTokenService.unavailable_token_list(host, poll)).is_length(3)
+        assert_that(PollTokenService.available_token_list(poll)).is_length(7)
+        assert_that(PollTokenService.unavailable_token_list(poll)).is_length(3)
 
         PollTokenService.check_single_option(token_list[2])
 
-        assert_that(PollTokenService.available_token_list(host, poll)['token_list']).is_length(7)
-        assert_that(PollTokenService.unavailable_token_list(host, poll)).is_length(3)
+        assert_that(PollTokenService.available_token_list(poll)).is_length(7)
+        assert_that(PollTokenService.unavailable_token_list(poll)).is_length(3)
+
+    @pytest.mark.django_db
+    def test_tokens_datetime(self, create_polls):   
+        """Check token created_at property is correctly handled."""
+
+        poll: PollModel = create_polls[0]
+
+        token: PollTokens = list(PollTokenService.create_tokens(1, poll))[0]
+
+        # ensure created_at is now()
+        assert_that(token.created_at).is_equal_to_ignoring_seconds(timezone.now())
+
+        # ensure created_at is not updated
+        initial_create = token.created_at 
+
+        time.sleep(0.1)
+        PollTokenService.check_single_option(token)
+        PollTokenService.check_majority_option(token)
+        assert_that(token.created_at).is_equal_to(initial_create)
+        assert_that(token.created_at).is_not_equal_to(timezone.now())
 
 
-        
 
 

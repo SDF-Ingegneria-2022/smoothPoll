@@ -169,8 +169,16 @@
             Condividi 
         </button>
         {% include "polls_management/components/share_social/share_social_modal.html" with poll=poll %}
+
+
+        {% if poll.is_votable_w_so_and_mj %}
+            <a href="{% url 'apps.votes_results:single_option_results' poll_id=poll.id %}" 
+                class="btn btn-primary" 
+                role="button">Vedi risultati per Opzione Singola</a>
+        {% endif %}
+
         <a
-            class="btn btn-primary" 
+            class="btn btn-secondary" 
             href="{% url 'apps.votes_results:votable_polls' %}?page=1&per_page=10" >
             Ritorna alla lista di tutte le scelte
         </a>

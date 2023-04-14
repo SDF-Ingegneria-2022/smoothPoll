@@ -28,7 +28,7 @@ def poll_token(request: HttpRequest, poll_id: int):
     link: str = request.get_host() + reverse('apps.votes_results:vote', 
             args=(poll_id,))
     
-    links: List[str] = PollTokenService.create_tokens(link, token_number, poll)
+    PollTokenService.create_tokens(token_number, poll)
     
     # Render details page with tokens list
     return HttpResponseRedirect(reverse('apps.polls_management:poll_details', args=(poll_id,),))

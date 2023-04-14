@@ -34,6 +34,7 @@ class PollModel(models.Model):
         """Possible vote protection modes a poll can have"""
         UNPROTECTED = 'unprotected', _('Non protetto')
         TOKEN = 'token', _('Giudicabile tramite Token')
+        GOOGLE = 'google', _('Giudicabile tramite autenticazione Google')
 
     name: CharField = models.CharField(
         max_length=200, verbose_name=_('Nome Scelta'))
@@ -135,15 +136,28 @@ class PollModel(models.Model):
         """
         return self.protection == PollModel.PollVoteProtection.TOKEN
     
+    def is_votable_google(self) -> bool:
+        """Check if Poll is votable with Google
+
+        Returns:
+            bool: True if votable with Google, False otherwise
+        """
+        return self.protection == PollModel.PollVoteProtection.GOOGLE
+    
+    def is_votable_w_so_and_mj(self) -> bool:
+        """Check if Poll is votable both with single option and majority judgment"""
+        
+        return self.votable_mj and self.poll_type == PollModel.PollType.SINGLE_OPTION
+    
     def get_state_label(self) -> str: 
         """Get a label rappresentative of the state"""
 
         if self.is_closed():
-            return "CHIUSO"
+            return "Chiuso"
         elif self.is_open():
-            return "APERTO"
+            return "Aperto"
         elif not self.is_open():
-            return "NON APERTO"
+            return "Non aperto"
 
     def get_state_color(self) -> str: 
         """Get a color associateto to the state"""

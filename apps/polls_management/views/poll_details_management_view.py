@@ -33,9 +33,8 @@ def poll_details(request: HttpRequest, poll_id: int):
         raise Http404(f"Poll with id {poll_id} not found.")
     
     if poll.is_votable_token():
-        host_link: str = request.get_host()
-        token_links: List[str] = PollTokenService.available_token_list(host_link, poll)
-        invalid_tokens: List[str] = PollTokenService.unavailable_token_list(host_link, poll)
+        token_links = PollTokenService.available_token_list(poll)
+        invalid_tokens = PollTokenService.unavailable_token_list(poll)
         return render(request, 'votes_results/poll_details.html', {'poll': poll, 'token_list': token_links, 'invalid_tokens': invalid_tokens})
     else:
         # Render vote form (with eventual error message)
@@ -53,9 +52,17 @@ def poll_qr_code(request: HttpRequest, poll_id: int):
         path = 'static/qr_codes/'
         if not os.path.exists(path):
             os.makedirs(path)
+
+
+        # get all tokens
+        tokens = PollTokenService.available_token_list(poll)
+
         host_link: str = request.get_host()
-        query_links: List[str] = PollTokenService.available_token_list(host_link, poll)["query_list"]
-        token_links: List[str] = PollTokenService.available_token_list(host_link, poll)["token_list"]
+        
+        query_links: List[str] = [host_link + t.get_token_path() for t in tokens]
+        token_links: List[str] = [t.get_token_query_string() for t in tokens]
+
+
         qr_codes: List[str] = []
         for link, query in zip(token_links, query_links):
             img = qrcode.make(link, image_factory=PyPNGImage)

@@ -15,12 +15,11 @@ class PollTokenService:
     """Service class for poll tokens management"""
 
     @staticmethod
-    def create_tokens(link: str, token_number: int, poll: PollModel) -> List[str]:
+    def create_tokens(token_number: int, poll: PollModel) -> List[PollTokens]:
 
         """Method used to create and store tokens in an object on database"""
 
-        token_links: List[str] = []
-        templink: str = []
+        tokens: List[PollTokens] = []
 
         # creation of a token link for as many times as dictated
         for x in range(token_number):
@@ -32,16 +31,14 @@ class PollTokenService:
                 unique_id = get_random_string(length=8)
 
             phantomuser: User = User.objects.create_user(username=unique_id)
-            templink = link
-            templink += get_query_string(user=phantomuser, scope=f"Poll:{poll.id}")
-
+  
             # creation of database table for new token
             new_token: PollTokens = PollTokens(token_user=phantomuser, poll_fk=poll)
             new_token.save()
             
-            token_links.append(templink)
+            tokens.append(new_token)
 
-        return token_links
+        return tokens
     
     @staticmethod
     def get_poll_token_by_user(user: User) -> PollTokens:
@@ -109,26 +106,17 @@ class PollTokenService:
         token.save()
 
     @staticmethod
-    def available_token_list(host:str, poll: PollModel) -> List[str]:
+    def available_token_list(poll: PollModel) -> List[PollTokens]:
 
-        """Return a list of available token links.
+        """Return a list of available tokens.
         Args:
             poll: the poll the tokens belong to.
         """
 
-        token_list: List[str] = []
-        query_list: List[str] = []
-        link: str = host + '/' + poll.short_id
-    
-        tokens: PollTokens = PollTokens.objects.filter(Q(poll_fk=poll) & Q(single_option_use=False) & Q(majority_use=False))
-        
-        for token in tokens:
-            templink: str = link
-            tempquery: str =get_query_string(user=token.token_user, scope=f"Poll:{poll.id}")
-            templink += tempquery
-            token_list.append(templink)
-            query_list.append(tempquery)
-        return {"token_list":token_list, "query_list":query_list}
+        return PollTokens.objects.filter(
+                Q(poll_fk=poll) & Q(single_option_use=False) 
+                & Q(majority_use=False)
+            ).order_by('-created_at').all()
 
     def delete_tokens(poll: PollModel):
 
@@ -148,21 +136,27 @@ class PollTokenService:
                 token.delete()
 
     @staticmethod
-    def unavailable_token_list(host:str, poll: PollModel) -> List[str]:
+    def unavailable_token_list(poll: PollModel) -> List[PollTokens]:
 
         """Return a list of unavailable token links.
         Args:
             poll: the poll the tokens belong to.
         """
 
-        token_list: List[str] = []
-        link: str = host + '/' + poll.short_id
+        return PollTokens.objects.filter(Q(poll_fk=poll) & Q(Q(single_option_use=True) | Q(majority_use=True))).all()
     
-        tokens: PollTokens = PollTokens.objects.filter(Q(poll_fk=poll) & Q(Q(single_option_use=True) | Q(majority_use=True)))
+    @staticmethod
+    def create_google_record(user: User, poll: PollModel) -> PollTokens:
 
-        for token in tokens:
-            templink: str = link
-            templink += get_query_string(user=token.token_user, scope=f"Poll:{poll.id}")
-            token_list.append(templink)
+        """Creates an object PollTokens used to record a vote for a Google auth user.
+        Args:
+            user: the user whose vote has to be recorded.
+            poll: the poll the tokens belong to.
+        """
 
-        return token_list
+        google_vote: PollTokens = PollTokens(token_user=user, poll_fk=poll)
+        google_vote.save()
+
+        return google_vote
+    
+    

@@ -1,3 +1,4 @@
+from typing import List
 from apps.polls_management.classes.poll_form_utils.poll_form_session import SESSION_ERROR, SESSION_FORMDATA, SESSION_IS_EDIT, SESSION_OPTIONS, SESSION_POLL_ID, clean_session, get_poll_form
 from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
 from apps.polls_management.models.poll_model import PollModel
@@ -9,6 +10,8 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
 from allauth.account.decorators import login_required
+
+from apps.polls_management.services.poll_token_service import PollTokenService
 
 
 # -------------------------------------------------
@@ -127,11 +130,16 @@ def poll_form_confirm(request: HttpRequest):
     except PollDoesNotExistException:
         raise Http404(f"Poll with id {poll_id} not found.")
     
-
-    return render(request, 'polls_management/confirm_form.html', {
-        'poll': poll, 
-        'edit': request.session.get(SESSION_IS_EDIT)
-    })
+    if poll.is_votable_token():
+        token_links = PollTokenService.available_token_list(poll)
+        invalid_tokens = PollTokenService.unavailable_token_list(poll)
+        
+        return render(request, 'polls_management/confirm_form.html', {'poll': poll, 'edit': request.session.get(SESSION_IS_EDIT), 'token_list': token_links, 'invalid_tokens': invalid_tokens})
+    else:
+        return render(request, 'polls_management/confirm_form.html', {
+            'poll': poll, 
+            'edit': request.session.get(SESSION_IS_EDIT)
+        })
 
 
 def get_poll_options_from_post(request: HttpRequest):

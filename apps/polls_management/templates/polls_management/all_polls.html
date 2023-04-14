@@ -22,26 +22,15 @@
 
 {# Page container (you can override it) #}
 {% block container %}
-<div class="container pt-0 pb-5 pt-md-5">
-    
-    <!-- Tabs to swith between "vote" and "management" section -->
-    <nav class="d-block mb-4">
-        <div class="row g-0 border-bottom border-lightgray">
-            <div class="col-6 col-lg-2 col-md-4 text-center">
-                <a class="nav-link bg-light w-100" href="{% url 'apps.votes_results:votable_polls' %}">Esprimi scelte</a>
-            </div>
-            <div class="col-6 col-lg-2 col-md-4 text-center">
-                <a class="nav-link bg-light border-bottom border-3 border-dark rounded-0 w-100 text-dark fw-bold" href="{% url 'apps.polls_management:all_user_polls' %}">Crea e gestisci</a>
-            <div>
-        </div>
-    </nav>
+{% include 'votes_results/components/vote_management_navbar.html'%}
+<div class="container pt-0 pb-5">
     <div class="container">
         <!-- Page content -->
         {% block content %}
 
             <div class="row">
                 <div class="col-12 col-lg-8">
-                    <h1 class="fs-md-3 fs-4 mt-2">Area personale con le scelte create da te</h1>
+                    <h1 class="fs-md-3 fs-4 mt-2"></h1>
                 </div>
                 <div class="col-12 col-lg-4">
                     <div class="d-flex justify-content-lg-end">
@@ -61,7 +50,7 @@
 
 
             <!-- New poll botton mobile -->
-            <div class="d-md-none position-fixed bottom-0 start-0 end-0 p-2" style="z-index:1000;"> 
+            {% comment %} <div class="d-md-none position-fixed bottom-0 start-0 end-0 p-2" style="z-index:1000;"> 
                 <a href="{% url 'apps.polls_management:poll_create' %}" 
                     class="float-end" role="button">
                     <div class="bg-success text-center align-item-center rounded-circle">
@@ -71,41 +60,20 @@
                     </div>
                     
                 </a>
-            </div>
+            </div> {% endcomment %}
 
-            <div class="mt-5">
-                <!-- List header -->
-                <div class="row fw-light text-primary pt-2 pb-2 d-none d-md-flex text-center mt-5">
-                    <div class="col-4">
-                        <p class="m-0 text-start">Nome e domanda</p>
-                    </div>
-                    <div class="col-7">
-                        <div class="row">
-                            <div class="col-4">
-                                <p class="m-0">Stato</p>
-                            </div>
-                            <div class="col-4">
-                                <p class="m-0">Data di apertura</p>
-                            </div>
-                            <div class="col-4">
-                                <p class="m-0">Data di chiusura</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-1"></div>
-                </div> <!-- END: List header -->
 
-                <!-- Proper list -->
-                <div class="list-group mt-2">
+                <!-- List with polls -->
+                <div class="list-group mt-2 bg-gray">
                     {% for poll in page.object_list %}
                         <!-- poll w id={{poll.id}} -->
-                        {% include "polls_management/components/list/management_poll_listitem.html" with poll=poll %}
+                        {% include "global/components/poll_list/poll_list.html" with poll=poll %}
                     {% empty %}
                         <p class="fs-3 fw-bold mt-5"> Attualmente non ci sono scelte! </p>
                     {% endfor %}
                 </div>
-                <!-- END: Proper list -->
-            </div>
+                <!-- END: List with pollsx-->
+          
 
 
             <!-- Pagination nav -->

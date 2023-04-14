@@ -49,7 +49,7 @@
     <div class="col">
         <div class="fw-light fs-5 mt-1">
             {{ poll.get_type_verbose_name }}
-            {% if poll.poll_type == "single_option" and poll.votable_mj %}
+            {% if poll.is_votable_w_so_and_mj %}
                 <span>(giudicabile anche con Giudizio Maggioritario)</span>
             {% endif %}
         </div>
@@ -111,7 +111,9 @@
     </div>
     <div class="col">
         {% if poll.is_votable_token %}
-                <div class="fw-light fs-5 mt-1 text-success">Tramite token</div>
+            <div class="fw-light fs-5 mt-1 text-success">Tramite token</div>
+        {% elif poll.is_votable_google %}
+            <div class="fw-light fs-5 mt-1 text-success">Tramite Google</div>
         {% else %}
             <div class="fw-light fs-5 mt-1 text-info">Accesso libero</div>
         {% endif %}

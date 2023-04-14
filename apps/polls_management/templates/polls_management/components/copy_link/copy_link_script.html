@@ -1,7 +1,11 @@
 {% load static %}
 <script src="{% static 'js/clipboard.min.js' %}" ></script>
-<script>
+{% comment %} <script>
     new ClipboardJS('.btn', {
         container: document.getElementById('shareModal-{{poll.id}}')
     });
+</script> {% endcomment %}
+
+<script>
+    new ClipboardJS('.btn');
 </script>
