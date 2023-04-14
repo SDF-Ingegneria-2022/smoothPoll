@@ -59,21 +59,25 @@ def poll_qr_code(request: HttpRequest, poll_id: int):
 
         host_link: str = request.get_host()
         
-        query_links: List[str] = [host_link + t.get_token_path() for t in tokens]
-        token_links: List[str] = [t.get_token_query_string() for t in tokens]
-
-
         qr_codes: List[str] = []
-        for link, query in zip(token_links, query_links):
-            img = qrcode.make(link, image_factory=PyPNGImage)
-            name_img :str= str(poll_id) + str(query[1:])+'.png'
-            qr_codes.append({'name_img':name_img,'link':link, 'token':query[7:]})
+        
+        for t in tokens:
+            img = qrcode.make(host_link + t.get_token_path() , image_factory=PyPNGImage)
+            name_img :str= str(poll_id) + str(t.get_token_query_string()[1:])+'.png'
+            qr_codes.append({
+                'name_img':name_img,
+                'link':host_link + t.get_token_path(), 
+                'token': t.get_token() 
+                })
             img.save(f'static/qr_codes/{name_img}')
+            
+            
         paginator = Paginator(qr_codes, 20)
         page_number = request.GET.get('page')
         if(page_number is None):
             page_number=1
         page_obj = paginator.get_page(page_number)
+        
         return render(request, 'polls_management/print_qr_code.html', 
                       {'poll': poll, 'page_obj':page_obj, 'print':False, 'page_number':page_number})
     else:
@@ -87,16 +91,25 @@ def pdf_download(request,poll_id:int, page_number:int):
     except Exception:
         raise Http404(f"Poll with id {poll_id} not found.")
     if poll.is_votable_token():
+        
         path = 'static/qr_codes'
         if not os.path.exists(path):
             os.makedirs(path)
+            
         host_link: str = request.get_host()
-        query_links: List[str] = PollTokenService.available_token_list(host_link, poll)["query_list"]
-        token_links: List[str] = PollTokenService.available_token_list(host_link, poll)["token_list"]
+        
+        # get all tokens
+        tokens = PollTokenService.available_token_list(poll)
+
         qr_codes: List[str] = []
-        for link, query in zip(token_links, query_links):
-            name_img :str= str(poll_id) + str(query[1:])+'.png'
-            qr_codes.append({'name_img':name_img,'link':link, 'token':query[7:]})
+        for t in tokens:
+            name_img :str= str(poll_id) + str(t.get_token_query_string()[1:])+'.png'
+            qr_codes.append({
+                'name_img':name_img,
+                'link':host_link + t.get_token_path(), 
+                'token': t.get_token() 
+                })
+            
         paginator = Paginator(qr_codes, 20)
         page_obj = paginator.get_page(page_number)
 
@@ -154,13 +167,21 @@ def pdf_view(request,poll_id:int, page_number:int):
         path = 'static/qr_codes'
         if not os.path.exists(path):
             os.makedirs(path)
+        
         host_link: str = request.get_host()
-        query_links: List[str] = PollTokenService.available_token_list(host_link, poll)["query_list"]
-        token_links: List[str] = PollTokenService.available_token_list(host_link, poll)["token_list"]
+        
+        # get all tokens
+        tokens = PollTokenService.available_token_list(poll)
+
         qr_codes: List[str] = []
-        for link, query in zip(token_links, query_links):
-            name_img :str= str(poll_id) + str(query[1:])+'.png'
-            qr_codes.append({'name_img':name_img,'link':link, 'token':query[7:]})
+        for t in tokens:
+            name_img :str= str(poll_id) + str(t.get_token_query_string()[1:])+'.png'
+            qr_codes.append({
+                'name_img':name_img,
+                'link':host_link + t.get_token_path(), 
+                'token': t.get_token() 
+                })
+        
         paginator = Paginator(qr_codes, 20)
         page_obj = paginator.get_page(page_number)
 
