@@ -32,7 +32,7 @@
     
         <div class="container text-center md-5 mt-5">
             <div class="d-grid gap-2 d-md-flex justify-content-md-center">
-                <form action="{% provider_login_url 'google' %}" method="POST">
+                <form action="{% provider_login_url 'google' %}?next={{ request.path }}" method="POST">
 
                     {% csrf_token %}
                     <button type="submit" class="btn btn-border border-dark">
