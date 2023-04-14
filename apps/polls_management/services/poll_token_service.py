@@ -15,12 +15,11 @@ class PollTokenService:
     """Service class for poll tokens management"""
 
     @staticmethod
-    def create_tokens(link: str, token_number: int, poll: PollModel) -> List[str]:
+    def create_tokens(token_number: int, poll: PollModel) -> List[PollTokens]:
 
         """Method used to create and store tokens in an object on database"""
 
-        token_links: List[str] = []
-        templink: str = []
+        tokens: List[PollTokens] = []
 
         # creation of a token link for as many times as dictated
         for x in range(token_number):
@@ -32,16 +31,14 @@ class PollTokenService:
                 unique_id = get_random_string(length=8)
 
             phantomuser: User = User.objects.create_user(username=unique_id)
-            templink = link
-            templink += get_query_string(user=phantomuser, scope=f"Poll:{poll.id}")
-
+  
             # creation of database table for new token
             new_token: PollTokens = PollTokens(token_user=phantomuser, poll_fk=poll)
             new_token.save()
             
-            token_links.append(templink)
+            tokens.append(new_token)
 
-        return token_links
+        return tokens
     
     @staticmethod
     def get_poll_token_by_user(user: User) -> PollTokens:

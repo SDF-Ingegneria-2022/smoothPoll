@@ -25,7 +25,7 @@ class TestPollTokenService():
         link: str = host + reverse('apps.votes_results:vote', 
             args=(poll.id,))
 
-        PollTokenService.create_tokens(link, 10, poll)
+        PollTokenService.create_tokens(10, poll)
 
         token_list: List[PollTokens] = PollTokens.objects.filter(poll_fk=poll)
 
@@ -47,7 +47,7 @@ class TestPollTokenService():
         link: str = host + reverse('apps.votes_results:vote', 
             args=(poll.id,))
 
-        PollTokenService.create_tokens(link, 10, poll)
+        PollTokenService.create_tokens(10, poll)
 
         token_list: List[PollTokens] = PollTokens.objects.filter(poll_fk=poll)
 
@@ -69,7 +69,7 @@ class TestPollTokenService():
         link: str = host + reverse('apps.votes_results:vote', 
             args=(poll.id,))
 
-        PollTokenService.create_tokens(link, 10, poll)
+        PollTokenService.create_tokens(10, poll)
 
         token_list: List[PollTokens] = PollTokens.objects.filter(poll_fk=poll)
 
