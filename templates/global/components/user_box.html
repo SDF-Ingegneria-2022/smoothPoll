@@ -25,7 +25,7 @@
 
 
         <div class="mt-1 text-end">
-            <form action="{% url 'account_logout' %}" method="POST">
+            <form action="{% url 'account_logout' %}?next={{ request.path }}" method="POST">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-link text-dark">
                     <img src="{% static 'icon/logout.png' %}" alt="Icona logout" 

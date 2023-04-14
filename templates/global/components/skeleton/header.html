@@ -48,7 +48,7 @@
                         <!-- Action to logout -->
                         <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
                             <li>
-                                <form action="{% url 'account_logout' %}" method="POST">
+                                <form action="{% url 'account_logout' %}?next={{ request.path }}" method="POST">
                                 {% csrf_token %}
                                 <button type="submit" class="dropdown-item">Logout</button>
                                 </form>
