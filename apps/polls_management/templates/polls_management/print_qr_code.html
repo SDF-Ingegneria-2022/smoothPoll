@@ -6,9 +6,23 @@
 
 
 {% load static %}
-<div class="container text-center mt-3">
-    <h1 class="fw-normal">Condividi i Qr code della scelta: {{ poll.name }}</h1>
+<div class="container text-center mb-5">
+    <h1>Condividi i QR code della scelta: </h1>
+    <h2 class="text-secondary"> {{ poll.name }}</h2>
 </div>
+<div class="d-grid gap-2 d-md-flex justify-content-md-center">
+<a class="btn btn-secondary"  href="{% url 'apps.polls_management:pdf_view' poll_id=poll.id page_number=page_number %}">Vedi pagina come PDF</a>
+<a class="btn btn-danger"  href="{% url 'apps.polls_management:pdf_download' poll_id=poll.id page_number=page_number %}"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+    <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+    <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+  </svg> Download pagina come PDF</a>
+</div>
+<!-- Pagination nav -->
+<div class="row justify-content-center">
+    <div class="col-auto">
+        {% include "polls_management/components/pagination/pagination_nav.html" with page=page_obj per_page=20 %}
+    </div>
+</div> <!-- END: Pagination nav -->
 {% if page_obj %}
 {% for obj in page_obj.object_list %}
 <div class="container border my-5 text-center">
@@ -33,8 +47,11 @@
 <p>no tokens</p>
 {% endif %}
 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-<a class="btn btn-primary"  href="{% url 'apps.polls_management:pdf_view' poll_id=poll.id page_number=page_number %}">Vedi PDF</a>
-<a class="btn btn-primary"  href="{% url 'apps.polls_management:pdf_download' poll_id=poll.id page_number=page_number %}">Download PDF</a>
+<a class="btn btn-secondary"  href="{% url 'apps.polls_management:pdf_view' poll_id=poll.id page_number=page_number %}">Vedi pagina come PDF</a>
+<a class="btn btn-danger"  href="{% url 'apps.polls_management:pdf_download' poll_id=poll.id page_number=page_number %}"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+    <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+    <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+  </svg> Download pagina come PDF</a>
 </div>
 <!-- Pagination nav -->
 <div class="row justify-content-around">
