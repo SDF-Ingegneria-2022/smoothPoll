@@ -5,7 +5,13 @@
 <div class="row mt-4">
     <div class="col">
         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-
+        {% if poll.is_votable_token and not poll.is_closed and user.is_authenticated %}
+            <a name="" id="" role="button"
+            class="btn btn-primary m-2"
+            href="{% url 'apps.polls_management:poll_qr_code' poll_id=poll.id %}">
+            Stampa QR code
+            </a>
+        {% endif %}
             <!-- Go back to all polls link -->
             <a name="" id="" role="button"
                 class="btn btn-primary m-2" 

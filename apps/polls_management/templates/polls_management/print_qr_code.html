@@ -1,0 +1,62 @@
+{% extends 'global/skeleton.html' %}
+
+{% block pagename %}Lista dei QR code{% endblock pagename %}
+
+{% block content %}
+
+
+{% load static %}
+<div class="container text-center mb-5">
+    <h1>Condividi i QR code della scelta: </h1>
+    <h2 class="text-secondary"> {{ poll.name }}</h2>
+</div>
+<div class="d-grid gap-2 d-md-flex justify-content-md-center">
+<a class="btn btn-secondary"  href="{% url 'apps.polls_management:pdf_view' poll_id=poll.id page_number=page_number %}">Vedi pagina come PDF</a>
+<a class="btn btn-danger"  href="{% url 'apps.polls_management:pdf_download' poll_id=poll.id page_number=page_number %}"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+    <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+    <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+  </svg> Download pagina come PDF</a>
+</div>
+<!-- Pagination nav -->
+<div class="row justify-content-center">
+    <div class="col-auto">
+        {% include "polls_management/components/pagination/pagination_nav.html" with page=page_obj per_page=20 %}
+    </div>
+</div> <!-- END: Pagination nav -->
+{% if page_obj %}
+{% for obj in page_obj.object_list %}
+<div class="container border my-5 text-center">
+    <div class="row">
+        <div class="col-md-4">
+            <img src="{% static 'qr_codes/' %}{{obj.name_img}}" class="img-fluid" >
+        </div>
+        <div class="col-md-8 mt-5">
+            <p class="fw-bold">{{poll.name}}</p>
+            <p class="fw-light">Scansiona il QR-Code oppure usa il link.
+            Se ti viene chiesto, inserisci questo codice </p>
+            <p class="fw-bold">{{obj.token}}</p>
+        </div>
+    </div>
+    <div class="row">
+        <p class="fw-bold">Link: {{obj.link}}</p>
+    </div>
+</div>
+{% endfor %}
+
+{% else %}
+<p>no tokens</p>
+{% endif %}
+<div class="d-grid gap-2 d-md-flex justify-content-md-end">
+<a class="btn btn-secondary"  href="{% url 'apps.polls_management:pdf_view' poll_id=poll.id page_number=page_number %}">Vedi pagina come PDF</a>
+<a class="btn btn-danger"  href="{% url 'apps.polls_management:pdf_download' poll_id=poll.id page_number=page_number %}"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+    <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+    <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+  </svg> Download pagina come PDF</a>
+</div>
+<!-- Pagination nav -->
+<div class="row justify-content-around">
+    <div class="col-auto">
+        {% include "polls_management/components/pagination/pagination_nav.html" with page=page_obj per_page=20 %}
+    </div>
+</div> <!-- END: Pagination nav -->
+{% endblock content %}

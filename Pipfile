@@ -21,12 +21,16 @@ django-htmx = "*"
 django-allauth = "*"
 psycopg2-binary = "*"
 django-sesame = "*"
+qrcode = "*"
+mkdocstrings = {extras = [ "python",], version = "*"}
+pdfkit = "*"
+wkhtmltopdf = "*"
+reportlab = "*"
 
 [dev-packages]
 
 [requires]
 python_version = "3.9"
 
-[packages.mkdocstrings]
-extras = [ "python",]
-version = "*"
+[pipenv]
+allow_prereleases = true
