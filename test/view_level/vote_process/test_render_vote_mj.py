@@ -1,6 +1,7 @@
 from django.urls import reverse
 import pytest
 from apps.polls_management.models.poll_model import PollModel
+from apps.polls_management.services.poll_token_service import PollTokenService
 from test.service_level.utils.create_polls_utils import create_single_option_polls
 from test.view_level.vote_process.test_render_vote_generic import TestRenderVoteGeneric
 
@@ -26,6 +27,7 @@ class TestRenderVoteMJ(TestRenderVoteGeneric):
             "vote_page_template": "votes_results/majority_judgment_vote.html", 
             "poll_not_yet_open_template": "votes_results/poll_details.html", 
             "poll_closed_template": "votes_results/poll_details.html", 
+            "insert_token_template": "polls_management/token_poll_redirect.html", 
         }
     
     @pytest.mark.django_db
@@ -47,3 +49,19 @@ class TestRenderVoteMJ(TestRenderVoteGeneric):
     @pytest.mark.django_db
     def test_short_id_redirect(self, client, create_poll, test_config):
         self._test_short_id_redirect(client, create_poll, test_config)
+
+    @pytest.mark.django_db
+    def test_render_vote_page_w_token(self, client, create_poll, test_config):
+        self._test_render_vote_page_w_token(client, create_poll, test_config)
+
+    @pytest.mark.django_db
+    def test_missing_token(self, client, create_poll, test_config):
+        self._test_missing_token(client, create_poll, test_config)
+
+    @pytest.mark.django_db
+    def test_wrong_token(self, client, create_poll, test_config):
+        self._test_wrong_token(client, create_poll, test_config)
+
+    @pytest.mark.django_db
+    def test_used_token(self, client, create_poll, test_config):
+        self._test_used_token(client, create_poll, test_config)
