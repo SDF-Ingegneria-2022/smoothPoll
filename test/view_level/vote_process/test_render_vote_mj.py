@@ -1,26 +1,31 @@
 from django.urls import reverse
 import pytest
+from apps.polls_management.models.poll_model import PollModel
 from test.service_level.utils.create_polls_utils import create_single_option_polls
 from test.view_level.vote_process.test_render_vote_generic import TestRenderVoteGeneric
 
 
-class TestRenderVoteSO(TestRenderVoteGeneric):
+class TestRenderVoteMJ(TestRenderVoteGeneric):
 
     @pytest.fixture
     def create_poll(self, django_user_model):
-        return create_single_option_polls(django_user_model, number_of_polls=1)[0]
+        poll = create_single_option_polls(django_user_model, number_of_polls=1)[0]
+        poll.poll_type = PollModel.PollType.MAJORITY_JUDJMENT
+        poll.save()
+
+        return poll
 
     @pytest.fixture
     def test_config(self, create_poll):
         return {
             "vote_page_url": reverse(
-                'apps.votes_results:single_option_vote', args=(create_poll.id,)), 
+                'apps.votes_results:majority_judgment_vote', args=(create_poll.id,)), 
             "short_id_url": "/" + create_poll.short_id,
             "generic_vote_url": reverse('apps.votes_results:vote', args=(create_poll.id,)),
 
-            "vote_page_template": "votes_results/single_option_vote.html", 
+            "vote_page_template": "votes_results/majority_judgment_vote.html", 
             "poll_not_yet_open_template": "votes_results/poll_details.html", 
-            "poll_closed_template": "votes_results/poll_details.html",     
+            "poll_closed_template": "votes_results/poll_details.html", 
         }
     
     @pytest.mark.django_db
