@@ -165,3 +165,31 @@ class PollService:
         closed_polls_list = all_public_polls_list.filter(close_datetime__lte=timezone.now()).order_by('-close_datetime')
         
         return list(votable_polls_list) + list(closed_polls_list)
+    
+    @staticmethod
+    def close_poll(id:str):
+        """Close a poll by id. If a poll has already been closed, it can't be closed.
+        
+        Args:
+            id: Id of the poll to close. The poll can be a majority poll or a single option poll.
+        
+        Raises:
+            PollDoesNotExistException: If the poll not exist.
+            PollIsCloseException: If the poll is already close.
+            
+        Returns: 
+            PollModel: the closed poll.
+        """
+        try:
+            poll: PollModel = PollModel.objects.get(id=id)
+        except ObjectDoesNotExist:
+            raise PollDoesNotExistException(f"Poll with id={id} does not exit.")  
+        
+        if poll.is_closed():
+            raise PollIsCloseException(f"Poll with id={id} is already close.")
+        else:
+            poll.is_closed=True
+            poll.save()
+            return poll
+            
+        
