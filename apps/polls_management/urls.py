@@ -30,7 +30,7 @@ urlpatterns = [
     path('<int:poll_id>/pdf_download/<int:page_number>/', views.pdf_download, name="pdf_download"),
     
     #check token 
-    path('<int:poll_id>search_view/', views.PollSearchView, name='poll_search'),
+    path('<int:poll_id>/search_view/', views.PollSearchView, name='poll_search'),
         
     # htmx form to create and edit polls
     path('form/', login_required(views.CreatePollHtmxView.as_view()), name="poll_form"),
