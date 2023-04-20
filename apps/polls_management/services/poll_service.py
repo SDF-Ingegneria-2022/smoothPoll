@@ -2,6 +2,7 @@ from typing import List
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator
 from apps.polls_management.exceptions.paginator_page_size_exception import PaginatorPageSizeException
+from apps.polls_management.exceptions.poll_cannot_be_closed_exception import PollCannotBeClosedException
 from apps.polls_management.exceptions.poll_cannot_be_opened_exception import PollCannotBeOpenedException
 from apps.polls_management.exceptions.poll_is_close_exception import PollIsCloseException
 from apps.polls_management.exceptions.poll_is_open_exception import PollIsOpenException
@@ -189,8 +190,12 @@ class PollService:
         if poll.is_closed():
             raise PollIsCloseException(f"Poll with id={id} is already close.")
 
-        poll.close_datetime = timezone.now()
-        poll.save()
-        return poll
+        if poll.is_open():
+            poll.close_datetime = timezone.now()
+            poll.save()
+            return poll
+        else:
+            #poll must be open to be closed
+            raise PollCannotBeClosedException(f"Poll with id={id} cannot be close.")
             
         
