@@ -6,6 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from apps.polls_management.constants.template_path_constants import POLL_DETAILS_PAGE_TEMPLATE_PATH
 from apps.polls_management.models.poll_model import PollModel
 from apps.polls_management.models.poll_token import PollTokens
+from apps.polls_management.services.poll_service import PollService
 from apps.polls_management.services.poll_token_service import PollTokenService
 from apps.votes_results.views.majority_judgment_vote_view import MajorityJudgmentVoteView
 from apps.votes_results.views.single_option_vote_view import SingleOptionVoteView
@@ -22,4 +23,4 @@ def PollCloseView(request:HttpRequest, poll_id):
     except Exception:
         raise Http404(f"Poll with id {poll_id} not found")
 
-    return render(request, 'votes_results/poll_details.html', {'poll': poll })
+    return HttpResponseRedirect("%s?page=last&per_page=10" % reverse('apps.polls_management:all_user_polls'))
