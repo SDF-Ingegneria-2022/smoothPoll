@@ -23,6 +23,7 @@ from sesame.utils import get_user, get_token
 from sesame.decorators import authenticate
 
 from apps.votes_results.views.vote.single_option_vote_view import SESSION_SINGLE_OPTION_VOTE_ID
+from apps.votes_results.views.vote.vote_view_schema import VoteViewSchema
 
 SESSION_MJ_GUIDE_ALREADY_VIWED = 'mj-guide-already-viewed'
 SESSION_MJ_VOTE_SUBMIT_ERROR = 'majvote-submit-error'
@@ -30,7 +31,7 @@ SESSION_MJ_SUBMIT_ID = 'majvote-submit-id'
 SESSION_CONSISTENCY_CHECK = 'consistency-check'
 SESSION_TOKEN_USED = 'token_used'
 
-class MajorityJudgmentVoteView(View):
+class MajorityJudgmentVoteView(VoteViewSchema):
     """View to handle Majority Judgment vote process"""
 
     @staticmethod

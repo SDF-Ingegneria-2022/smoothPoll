@@ -19,6 +19,8 @@ from django.views import View
 from sesame.utils import get_user, get_token
 from sesame.decorators import authenticate
 
+from apps.votes_results.views.vote.vote_view_schema import VoteViewSchema
+
 
 REQUEST_VOTE = 'vote'
 
@@ -26,7 +28,7 @@ SESSION_SINGLE_OPTION_VOTE_SUBMIT_ERROR = 'vote-submit-error'
 SESSION_SINGLE_OPTION_VOTE_ID = 'single-option-vote-id'
 SESSION_TOKEN_USED = 'token_used'
 
-class SingleOptionVoteView(View):
+class SingleOptionVoteView(VoteViewSchema):
     """View to handle Single Option vote operation. """
 
     def get(self, request: HttpRequest, poll_id: int, *args, **kwargs):
