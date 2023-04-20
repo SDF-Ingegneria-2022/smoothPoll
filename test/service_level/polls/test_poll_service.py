@@ -403,8 +403,10 @@ class TestPollService():
         self.user.save()
         poll = PollService.create(self.name, self.question, self.options, self.user)
         id = poll.id
-        open_date = datetime.datetime(year=2020, month=12, day=31, hour=12, minute=12, tzinfo=datetime.timezone.utc)
-        close_date = datetime.datetime(year=2025, month=12, day=31, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+        #yesterday 
+        open_date = timezone.now() - timezone.timedelta(days=1)
+        #tomorrow
+        close_date = timezone.now() + timezone.timedelta(days=1)
         poll.open_datetime = open_date
         poll.close_datetime = close_date
         poll.save()
@@ -419,7 +421,8 @@ class TestPollService():
         self.user.save()
         poll = PollService.create(self.name, self.question, self.options, self.user)
         id = poll.id
-        open_date = datetime.datetime(year=2020, month=12, day=31, hour=12, minute=12, tzinfo=datetime.timezone.utc)
+        #yesterday 
+        open_date = timezone.now() - timezone.timedelta(days=1)
         close_date = timezone.now()
         poll.open_datetime = open_date
         poll.close_datetime = close_date
