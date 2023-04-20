@@ -39,5 +39,4 @@ class VotePermissionsChecker:
             return True # same vote method --> OK
         
         # else I check the special case "votable also w MJ"
-        return self.poll.is_votable_w_so_and_mj() \
-            and votemethod == PollModel.PollType.SINGLE_OPTION        
+        return self.poll.is_votable_w_so_and_mj()
