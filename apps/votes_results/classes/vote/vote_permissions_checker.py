@@ -23,11 +23,21 @@ class VotePermissionsChecker:
             return False
         
         try:
-            self.poll = PollService.get_poll_by_id(poll_id)
+            self.poll: PollModel = PollService.get_poll_by_id(poll_id)
             return True
         except PollDoesNotExistException:
             return False
         
-    def is_poll_votable(self) -> bool:
-        """Check if the poll is votable"""
+    def is_poll_open_for_votes(self) -> bool:
+        """Check if curr date is in the dates interval where poll is open for vote"""
         return self.poll.is_open() and not self.poll.is_closed()
+    
+    def is_poll_votable_through_method(self, votemethod: PollModel.PollType) -> bool:
+        """Check if the poll is votable through the given method"""
+        
+        if self.poll.poll_type == votemethod:
+            return True # same vote method --> OK
+        
+        # else I check the special case "votable also w MJ"
+        return self.poll.is_votable_w_so_and_mj() \
+            and votemethod == PollModel.PollType.SINGLE_OPTION        

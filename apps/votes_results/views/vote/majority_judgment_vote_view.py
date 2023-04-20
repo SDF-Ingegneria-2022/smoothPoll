@@ -35,16 +35,9 @@ SESSION_TOKEN_USED = 'token_used'
 class MajorityJudgmentVoteView(VoteViewSchema):
     """View to handle Majority Judgment vote process"""
 
-    @staticmethod
-    def __get_dummy_poll() -> PollModel:
-        """Try to retrieve a dummy MJ poll"""
+    def get_votemethod(self) -> PollModel.PollType:
+        return PollModel.PollType.MAJORITY_JUDJMENT
 
-        try:
-            return PollModel.objects.filter(poll_type='majority_judjment').first()
-        except Exception:
-            raise HttpResponseServerError("Error: if you are seeing this message " \
-                + "it means developer didn't seeded the database with a majority " \
-                + "judgment dummy poll")
 
     def get(self, request: HttpRequest, poll_id: int, *args, **kwargs):
         """Render the form wich permits user to vote"""

@@ -31,6 +31,9 @@ SESSION_TOKEN_USED = 'token_used'
 class SingleOptionVoteView(VoteViewSchema):
     """View to handle Single Option vote operation. """
 
+    def get_votemethod(self) -> PollModel.PollType:
+        return PollModel.PollType.SINGLE_OPTION
+
     def get(self, request: HttpRequest, poll_id: int, *args, **kwargs):
         """Render the form wich permits user to vote"""
 
