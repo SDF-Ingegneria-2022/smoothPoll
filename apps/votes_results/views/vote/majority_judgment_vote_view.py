@@ -22,7 +22,7 @@ from django.views import View
 from sesame.utils import get_user, get_token
 from sesame.decorators import authenticate
 
-from apps.votes_results.views.single_option_vote_view import SESSION_SINGLE_OPTION_VOTE_ID
+from apps.votes_results.views.vote.single_option_vote_view import SESSION_SINGLE_OPTION_VOTE_ID
 
 SESSION_MJ_GUIDE_ALREADY_VIWED = 'mj-guide-already-viewed'
 SESSION_MJ_VOTE_SUBMIT_ERROR = 'majvote-submit-error'
@@ -232,38 +232,4 @@ class MajorityJudgmentVoteView(View):
         # Redirect to get request.
         return HttpResponseRedirect(reverse('apps.votes_results:majority_judgment_recap', args=(poll_id, )))
 
-
-
-def majority_judgment_recap_view(request: HttpRequest, poll_id: int):
-    """Render page with confirmation of majority vote validation."""
-
-    try:
-        poll = PollService.get_poll_by_id(poll_id)
-    except PollDoesNotExistException:
-        raise Http404()
-        
-    # Redirect to details page if poll is not yet open
-    if not poll.is_open() or poll.is_closed():
-        return HttpResponseRedirect(reverse('apps.polls_management:poll_details', args=(poll_id,)))
-
-    # Retrieve session saved vote ID
-    vote_id = request.session.get(SESSION_MJ_SUBMIT_ID)
-    if vote_id is None:
-        request.session[SESSION_MJ_VOTE_SUBMIT_ERROR] = "Errore! Non hai ancora espresso " \
-            + "nessun giudizio. Usa questo form per esprimere la tua preferenza."
-        return HttpResponseRedirect(reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))
-
-    # Retrieve vote 
-    try:
-        vote = MajorityJudjmentVoteService.get_vote_by_id(vote_id)
-    except VoteDoesNotExistException:
-        request.session[SESSION_MJ_VOTE_SUBMIT_ERROR] = "Errore! Non hai ancora espresso " \
-            + "nessun giudizio. Usa questo form per esprimere la tua preferenza."
-        return HttpResponseRedirect(reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))
-    
-    # Clean session data for token validation
-    # if request.session.get('token_used') is not None:
-    #     del request.session['token_used']
-
-    return render(request, 'votes_results/majority_judgment_recap.html', {'vote': vote})
 

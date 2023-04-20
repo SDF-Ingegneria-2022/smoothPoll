@@ -7,10 +7,7 @@ from apps.polls_management.classes.poll_token_validation.token_validation import
 from apps.polls_management.constants.template_path_constants import POLL_DETAILS_PAGE_TEMPLATE_PATH
 from apps.polls_management.models.poll_model import PollModel
 from apps.polls_management.models.poll_token import PollTokens
-from apps.polls_management.services.poll_token_service import PollTokenService
-from apps.votes_results.views.majority_judgment_vote_view import MajorityJudgmentVoteView
-from apps.votes_results.views.single_option_vote_view import SingleOptionVoteView
-from sesame.utils import get_user, get_token
+from sesame.utils import get_user
 
 class PollShortIdView(View):
     def get(self, request, poll_short_id):
