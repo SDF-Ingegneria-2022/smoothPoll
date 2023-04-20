@@ -22,10 +22,10 @@ django-allauth = "*"
 psycopg2-binary = "*"
 django-sesame = "*"
 qrcode = "*"
-mkdocstrings = {extras = [ "python",], version = "*"}
 pdfkit = "*"
 wkhtmltopdf = "*"
 reportlab = "*"
+mkdocstrings-python = "*"
 
 [dev-packages]
 
@@ -34,3 +34,7 @@ python_version = "3.9"
 
 [pipenv]
 allow_prereleases = true
+
+[packages.mkdocstrings]
+extras = [ "python",]
+version = "*"
