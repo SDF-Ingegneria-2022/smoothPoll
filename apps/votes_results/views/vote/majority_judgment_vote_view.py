@@ -4,6 +4,7 @@ from apps.polls_management.models.poll_token import PollTokens
 from apps.polls_management.services.poll_token_service import PollTokenService
 from apps.votes_results.classes.majority_poll_result_data import MajorityPollResultData
 from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
+from apps.votes_results.classes.vote.vote_permissions_checker import VotePermissionsChecker
 from apps.votes_results.classes.vote_consistency.check_consistency_session import CheckConsistencySession
 from apps.votes_results.exceptions.poll_not_yet_voted_exception import PollNotYetVodedException
 from apps.votes_results.exceptions.poll_option_rating_unvalid_exception import PollOptionRatingUnvalidException
@@ -47,15 +48,10 @@ class MajorityJudgmentVoteView(VoteViewSchema):
 
     def get(self, request: HttpRequest, poll_id: int, *args, **kwargs):
         """Render the form wich permits user to vote"""
-       
-        if poll_id is None:
-            # if poll_id is none I try retrieving a dummy poll
-            poll = MajorityJudgmentVoteView.__get_dummy_poll()
-        else: 
-            try:
-                poll = PollService.get_poll_by_id(poll_id)
-            except PollDoesNotExistException:
-                raise Http404()
+        
+        super().get(request, poll_id, *args, **kwargs)
+
+        poll = self.vote_permission_checker.poll
 
         # redirect to details page if poll is not yet open
         if not poll.is_open() or poll.is_closed():
@@ -140,10 +136,10 @@ class MajorityJudgmentVoteView(VoteViewSchema):
         """Handle vote perform and redirect to recap (or 
         redirect to form w errors)"""
 
-        try:
-            poll = PollService.get_poll_by_id(poll_id)
-        except PollDoesNotExistException:
-            raise Http404()
+        super().post(request, poll_id, *args, **kwargs)
+
+        
+        poll = self.vote_permission_checker.poll
         
         # redirect to details page if poll is not yet open
         if not poll.is_open() or poll.is_closed():

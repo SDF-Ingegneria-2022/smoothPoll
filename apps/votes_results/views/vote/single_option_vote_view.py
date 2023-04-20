@@ -34,11 +34,9 @@ class SingleOptionVoteView(VoteViewSchema):
     def get(self, request: HttpRequest, poll_id: int, *args, **kwargs):
         """Render the form wich permits user to vote"""
 
-        try:
-            # Retrieve poll
-            poll: PollModel = PollService.get_poll_by_id(poll_id)
-        except Exception:
-            raise Http404(f"Poll with id {poll_id} not found.")
+        super().get(request, poll_id, *args, **kwargs)
+
+        poll = self.vote_permission_checker.poll
 
         # redirect to details page if poll is not yet open
         if not poll.is_open() or poll.is_closed():
@@ -105,11 +103,9 @@ class SingleOptionVoteView(VoteViewSchema):
         """Handle vote perform and redirect to recap (or 
         redirect to form w errors)"""
 
-        try:
-            # Retrieve poll
-            poll: PollModel = PollService.get_poll_by_id(poll_id)
-        except Exception:
-            raise Http404(f"Poll with id {poll_id} not found.")
+        super().post(request, poll_id, *args, **kwargs)
+
+        poll = self.vote_permission_checker.poll
 
         # redirect to details page if poll is not yet open
         if not poll.is_open() or poll.is_closed():
