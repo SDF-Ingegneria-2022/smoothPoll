@@ -4,6 +4,7 @@ from django.core.paginator import Paginator
 from apps.polls_management.exceptions.paginator_page_size_exception import PaginatorPageSizeException
 from apps.polls_management.exceptions.poll_cannot_be_opened_exception import PollCannotBeOpenedException
 from apps.polls_management.exceptions.poll_is_open_exception import PollIsOpenException
+from apps.polls_management.exceptions.poll_is_close_exception import PollIsCloseException
 from apps.polls_management.exceptions.poll_not_valid_creation_exception import PollNotValidCreationException
 from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
 from apps.polls_management.models.poll_option_model import PollOptionModel
