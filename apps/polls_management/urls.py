@@ -31,7 +31,10 @@ urlpatterns = [
     
     #check token 
     path('<int:poll_id>search_view/', views.PollSearchView, name='poll_search'),
-        
+
+    #close poll
+    path('<int:poll_id>close_view/', views.PollCloseView, name='poll_close'),
+
     # htmx form to create and edit polls
     path('form/', login_required(views.CreatePollHtmxView.as_view()), name="poll_form"),
     path('form/annulla', views.poll_form_clean_go_back_home, name="poll_form_clean_go_back_home"), 
