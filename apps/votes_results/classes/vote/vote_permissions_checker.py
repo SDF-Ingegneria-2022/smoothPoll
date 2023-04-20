@@ -27,3 +27,7 @@ class VotePermissionsChecker:
             return True
         except PollDoesNotExistException:
             return False
+        
+    def is_poll_votable(self) -> bool:
+        """Check if the poll is votable"""
+        return self.poll.is_open() and not self.poll.is_closed()

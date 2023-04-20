@@ -38,10 +38,6 @@ class SingleOptionVoteView(VoteViewSchema):
 
         poll = self.vote_permission_checker.poll
 
-        # redirect to details page if poll is not yet open
-        if not poll.is_open() or poll.is_closed():
-            return render(request, 'votes_results/poll_details.html', {'poll': poll})
-        
         # check if the poll is accessed by a single poll url rather than the link with the token
         # and control of token validity
         if poll.is_votable_token():
@@ -106,10 +102,6 @@ class SingleOptionVoteView(VoteViewSchema):
         super().post(request, poll_id, *args, **kwargs)
 
         poll = self.vote_permission_checker.poll
-
-        # redirect to details page if poll is not yet open
-        if not poll.is_open() or poll.is_closed():
-            return HttpResponseRedirect(reverse('apps.polls_management:poll_details', args=(poll_id,)))
 
         # check if there is an attempt to vote with a token already used
         if poll.is_votable_token() and request.session.get(SESSION_TOKEN_USED) is not None:
