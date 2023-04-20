@@ -26,6 +26,7 @@ pdfkit = "*"
 wkhtmltopdf = "*"
 reportlab = "*"
 mkdocstrings-python = "*"
+mkdocstrings = "*"
 
 [dev-packages]
 
@@ -34,7 +35,3 @@ python_version = "3.9"
 
 [pipenv]
 allow_prereleases = true
-
-[packages.mkdocstrings]
-extras = [ "python",]
-version = "*"
