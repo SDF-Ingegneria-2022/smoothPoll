@@ -1,23 +1,16 @@
 from apps.polls_management.classes.poll_token_validation.token_validation import TokenValidation
 from apps.polls_management.models.poll_token import PollTokens
 from apps.polls_management.services.poll_token_service import PollTokenService
-from apps.votes_results.classes.poll_result import PollResult
-from apps.votes_results.classes.poll_result import PollResult
 from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
-from apps.votes_results.exceptions.vote_does_not_exixt_exception import VoteDoesNotExistException
 from apps.polls_management.models.poll_model import PollModel
-from apps.polls_management.services.poll_service import PollService
 from apps.votes_results.exceptions.poll_option_unvalid_exception import PollOptionUnvalidException
 from apps.votes_results.classes.single_option_vote_counter import SingleOptionVoteCounter
 from apps.votes_results.services.single_option_vote_service import SingleOptionVoteService
 
 from django.http import Http404  
-from django.http import HttpRequest, HttpResponseServerError, HttpResponseRedirect
+from django.http import HttpRequest, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from django.views import View
-from sesame.utils import get_user, get_token
-from sesame.decorators import authenticate
 
 from apps.votes_results.views.vote.vote_view_schema import VoteViewSchema
 
@@ -39,34 +32,9 @@ class SingleOptionVoteView(VoteViewSchema):
 
         super().get(request, poll_id, *args, **kwargs)
 
-        poll = self.vote_permission_checker.poll
-
-        # check if the poll is accessed by a single poll url rather than the link with the token
-        # and control of token validity
-        if poll.is_votable_token():
-            if request.session.get(SESSION_TOKEN_USED) is None:
-                return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
-            else:
-                try:
-                    token_poll = request.session.get(SESSION_TOKEN_USED)
-                except Exception:
-                    raise Http404(f"Token associated with user {token_poll.token_user} not found.")
-
-                if not TokenValidation.validate(token_poll) and not poll.is_votable_w_so_and_mj():
-                    return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
-                
-                elif poll.is_votable_w_so_and_mj():
-                    # check special token case with votable mj
-                    if not TokenValidation.validate(token_poll):
-                        if TokenValidation.validate_mj_special_case(token_poll):
-                            # pass the token to specific poll type view for vote
-                            request.session[SESSION_TOKEN_USED] = token_poll
-                            return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll, 'mj_not_used': True})
-                            # return HttpResponseRedirect(reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))
-                        else:
-                            return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
-                        
-        elif poll.is_votable_google():
+        poll = self.poll()
+    
+        if poll.is_votable_google():
             if not request.user.is_authenticated:
                 return render(request, 'global/login.html', {'poll': poll})
             elif PollTokens.objects.filter(token_user=request.user, poll_fk=poll).exists():
@@ -104,20 +72,9 @@ class SingleOptionVoteView(VoteViewSchema):
 
         super().post(request, poll_id, *args, **kwargs)
 
-        poll = self.vote_permission_checker.poll
+        poll = self.poll()
 
-        # check if there is an attempt to vote with a token already used
-        if poll.is_votable_token() and request.session.get(SESSION_TOKEN_USED) is not None:
-            try:
-                token_poll_data = request.session.get(SESSION_TOKEN_USED)
-                updated_token = PollTokenService.get_poll_token_by_user(token_poll_data.token_user)
-            except Exception:
-                return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
-
-            if not TokenValidation.validate(updated_token):
-                return render(request, 'polls_management/token_poll_redirect.html', {'poll': poll})
-            
-        elif poll.is_votable_google():
+        if poll.is_votable_google():
             if PollTokens.objects.filter(token_user=request.user, poll_fk=poll).exists():
                 google_token = PollTokens.objects.get(token_user=request.user, poll_fk=poll)
                 if not TokenValidation.validate(google_token):

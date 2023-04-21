@@ -3,15 +3,11 @@ from apps.polls_management.models.poll_model import PollModel
 from apps.polls_management.services.poll_service import PollService
 
 
-class VotePermissionsChecker:
+class IsPollVotableChecker:
     """
-    A class (inspired to the Strategy pattern 
-    - https://refactoring.guru/design-patterns/strategy -
-    but less complicate) that contains all the "permission checks"
-    you have to do before submitting a vote or rendering the
-    vote page.
+    A class  that contains all the checks to ensure a poll is votable now.
 
-    Each method, returns True if the check is passed, False otherwise.
+    Each method, makes a check and returns True if the check is passed, False otherwise.
     """
 
     poll: PollModel = None
