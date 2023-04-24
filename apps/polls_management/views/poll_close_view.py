@@ -19,8 +19,11 @@ from django.contrib.auth.models import User
 def PollCloseView(request:HttpRequest, poll_id):
 
     try:
-        PollService.close_poll(poll_id)
+        # Retrieve poll
+        poll: PollModel = PollService.get_poll_by_id(poll_id)
     except Exception:
-        raise Http404(f"Poll with id {poll_id} not found")
-
-    return HttpResponseRedirect("%s?page=last&per_page=10" % reverse('apps.polls_management:all_user_polls'))
+        raise Http404(f"Poll with id {poll_id} not found.")
+    if poll.is_open:
+        PollService.close_poll(poll_id)
+    
+    return HttpResponseRedirect(reverse('apps.polls_management:poll_details', args=(poll_id,)))
