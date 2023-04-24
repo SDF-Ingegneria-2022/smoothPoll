@@ -5,7 +5,7 @@
 <div class="d-grid gap-2 d-md-flex justify-content-md-end m-2">
     <a onclick="$(window).on('load', $('#polldelete').modal('show'))"
         class="btn btn-danger me-md-2 mt-2"  
-        role="button">Chiudi la scelta</a>
+        role="button">Chiudi la Scelta</a>
 </div>
 
 
@@ -17,7 +17,7 @@
         </div>
         <div class="modal-body">
           <p class="fw-light">Sei sicuro di voler chiudere questa scelta?</p>
-          <p class="fw-light">Dopo aver chiuso la scelta non sarà più possibile raccogliere preferenze</p>
+          <p class="fw-light">Dopo aver chiuso la scelta non sarà più possibile raccogliere preferenze.</p>
         </div>
         <div class="modal-footer">
             <a href="{% url 'apps.polls_management:poll_close' poll_id=poll.id %}"  class="btn btn-primary me-md-2 mt-2"  role="button">Voglio procedere lo stesso!</a>          
