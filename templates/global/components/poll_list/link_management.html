@@ -90,7 +90,7 @@
             
             {% if not poll.is_closed %}
                 <div class="col-auto d-md-block d-none">
-                    <a  onclick="$(window).on('load', $('#polldelete').modal('show'))"
+                    <a  onclick="$(window).on('load', $('#polldelete-{{poll.id}}').modal('show'))"
                         role="button" 
                         class="text-white text-decoration-none">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
@@ -256,7 +256,7 @@
     </div>
 
     <!-- Popup to confirm close of poll w id={{poll.id}} -->
-    <div class="modal mt-5" id="polldelete" tabindex="-1">
+    <div class="modal mt-5" id="polldelete-{{poll.id}}" tabindex="-1">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header  bg-warning">
