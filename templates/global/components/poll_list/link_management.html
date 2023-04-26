@@ -87,6 +87,21 @@
                     </a>
                 </div>
             {% endif %}
+            
+            {% if not poll.is_closed %}
+                <div class="col-auto d-md-block d-none">
+                    <a  onclick="$(window).on('load', $('#polldelete-{{poll.id}}').modal('show'))"
+                        role="button" 
+                        class="text-white text-decoration-none">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-door-closed" viewBox="0 0 16 16">
+                            <path d="M3 2a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v13h1.5a.5.5 0 0 1 0 1h-13a.5.5 0 0 1 0-1H3V2zm1 13h8V2H4v13z"/>
+                            <path d="M9 9a1 1 0 1 0 2 0 1 1 0 0 0-2 0z"/>
+                          </svg>
+                        Chiudi la Scelta
+                    </a>
+                </div>
+            {% endif %}
+
         {% endif %}
                     
         <div class="col-auto  d-md-block d-none">
@@ -171,7 +186,13 @@
                                 class="dropdown-item"
                                 role="button">Vedi dettagli
                             </a>
-                    
+                            
+                            {% if not poll.is_closed %}
+                            <a onclick="$(window).on('load', $('#polldelete-{{poll.id}}').modal('show'))"
+                                class="dropdown-item"
+                                role="button">Chiudi la Scelta
+                            </a>
+                            {% endif %}
 
                             <a  class="dropdown-item" 
                                 role="button" 
@@ -233,6 +254,37 @@
             </div>
         </div>
     </div>
+
+
+    <!-- Popup to confirm open of poll w id={{poll.id}} -->
+    <div    class="modal fade" 
+    id="polldelete-{{poll.id}}" tabindex="-1" 
+    aria-labelledby="openpollabel" aria-hidden="true">
+    
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h4 class="modal-title">Attenzione!</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            
+            <div class="modal-body bg-warning text-dark">
+                <h5 class="modal-title">Sei sicuro di voler chiudere questa scelta?</h5>
+            </div>
+            
+            <div class="modal-footer">
+                <div class="alert alert-info text-center" role="alert">
+                    Dopo aver chiuso la scelta non sarà più possibile raccogliere preferenze.
+                </div>
+                <a href="{% url 'apps.polls_management:poll_close' poll_id=poll.id %}"  class="btn btn-primary me-md-2 mt-2"  role="button">Voglio procedere lo stesso!</a>          
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Ho cambiato idea</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 
     <!-- Popup to confirm open of poll w id={{poll.id}} -->
 <div    class="modal fade" 
