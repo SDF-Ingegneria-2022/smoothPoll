@@ -8,7 +8,7 @@ from apps.polls_management.models.poll_model import PollModel
 from apps.polls_management.models.poll_token import PollTokens
 
 from apps.votes_results.classes.vote.is_poll_votable_checker import IsPollVotableChecker
-from apps.votes_results.classes.vote.token_validator import TokenValidator
+from apps.votes_results.classes.vote.is_user_allowed_checker import is_user_allowed_factory
 
 
 class VoteViewSchema(abc.ABC, View):
@@ -28,6 +28,14 @@ class VoteViewSchema(abc.ABC, View):
     
     def token(self) -> PollTokens:
         return self.token_validator.token
+    
+    def nonauth_user_template_name(self):
+
+        if self.poll().is_votable_google():
+            return 'global/login.html'
+        
+        return 'polls_management/token_poll_redirect.html'
+
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -35,12 +43,8 @@ class VoteViewSchema(abc.ABC, View):
         # init tool to check poll is votable (now)
         self.poll_votable_checker = IsPollVotableChecker()
 
-        # init tool to validate eventual token
-        self.token_validator = TokenValidator()
-
-    # def dispatch(self, request, poll_id, *args, **kwargs):
-    #     return super().dispatch(request, poll_id, *args, **kwargs)
-
+        # tool to check if user is allowed to vote
+        self.is_user_allowed_checker = None
     
     def get(self, request, poll_id, *args, **kwargs):
         
@@ -61,32 +65,27 @@ class VoteViewSchema(abc.ABC, View):
                 {'poll': self.poll_votable_checker.poll}
                 )
         
-        if self.poll().is_votable_token():
-            # TODO: replace with just user
-            token = request.session.get('token_used')
+        # init checker with appropriate votemethod
+        self.is_user_allowed_checker = is_user_allowed_factory(request, self.poll())
 
-            # check token is 1) valid, 2) related to this poll 
-            if token is None or \
-                not self.token_validator.load_token_from_user(token.token_user) or \
-                not self.token_validator.is_token_related_to_poll(self.poll()):
-
-                return render(
-                    request, 
-                    'polls_management/token_poll_redirect.html', 
-                    {'poll': self.poll(), })
-            
-            # check token is 3) available for this method 
-            # (+ handle special SO + MJ case)
-            if not self.token_validator.is_token_available_for_votemethod(self.get_votemethod()):
-                return render(
-                    request, 
-                    'polls_management/token_poll_redirect.html', 
-                    {
-                        'poll': self.poll(), 
-                        'mj_not_used': self.poll().is_votable_w_so_and_mj() and \
-                            self.token_validator.is_token_voted_so_but_not_mj() 
-                    })
-
+        # check user is generally allowed to access this poll 
+        if not self.is_user_allowed_checker.is_user_allowed():
+            return render(
+                request, 
+                self.nonauth_user_template_name(), 
+                {'poll': self.poll(), })
+        
+        # check user is allowed to use specifically this votemethod
+        if not self.is_user_allowed_checker.is_user_allowed_for_votemethod(self.get_votemethod()):
+            return render(
+                request, 
+                self.nonauth_user_template_name(), 
+                {
+                    'poll': self.poll(), 
+                    'mj_not_used': self.poll().is_votable_w_so_and_mj() and \
+                        self.is_user_allowed_checker.is_voted_so_but_not_mj() 
+                })
+        
         return None
 
     def post(self, request, poll_id, *args, **kwargs):
@@ -107,23 +106,19 @@ class VoteViewSchema(abc.ABC, View):
                 args=(poll_id,)
                 ))
         
-        if self.poll().is_votable_token():
-            # TODO: replace with just user
-            # TODO: move constant here
-            token = request.session.get('token_used')
+        # init checker with appropriate votemethod
+        self.is_user_allowed_checker = is_user_allowed_factory(request, self.poll())
 
-            # check token is 1) valid, 2) related to this poll, 
-            # 3) available for this method 
-            if token is None or \
-                not self.token_validator.load_token_from_user(token.token_user) or \
-                not self.token_validator.is_token_related_to_poll(self.poll()) or \
-                not self.token_validator.is_token_available_for_votemethod(self.get_votemethod()):
+        # check user is allowed to submit this vote
+        if not self.is_user_allowed_checker.is_user_allowed() or \
+            not self.is_user_allowed_checker.is_user_allowed_for_votemethod(
+            self.get_votemethod()):
+
+            return render(
+                request, 
+                self.nonauth_user_template_name(), 
+                {'poll': self.poll(), })
                 
-                # no special case handling, control on POST is more a security
-                # check than a thing that should help the user
-                return render(
-                    request, 
-                    'polls_management/token_poll_redirect.html', 
-                    {'poll': self.poll(), })
-        
         return None
+
+

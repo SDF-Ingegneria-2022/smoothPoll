@@ -30,25 +30,11 @@ class SingleOptionVoteView(VoteViewSchema):
     def get(self, request: HttpRequest, poll_id: int, *args, **kwargs):
         """Render the form wich permits user to vote"""
 
-        super().get(request, poll_id, *args, **kwargs)
+        res = super().get(request, poll_id, *args, **kwargs)
+        if res is not None:
+            return res
 
         poll = self.poll()
-    
-        if poll.is_votable_google():
-            if not request.user.is_authenticated:
-                return render(request, 'global/login.html', {'poll': poll})
-            elif PollTokens.objects.filter(token_user=request.user, poll_fk=poll).exists():
-                google_token = PollTokens.objects.get(token_user=request.user, poll_fk=poll)
-                if not TokenValidation.validate(google_token) and not poll.is_votable_w_so_and_mj():
-                    return render(request, 'global/login.html', {'poll': poll})
-                elif not TokenValidation.validate(google_token) and poll.is_votable_w_so_and_mj():
-                    if not TokenValidation.validate_mj_special_case(google_token):
-                        return render(request, 'global/login.html', {'poll': poll})
-                    # check special token case with votable mj
-                    else:
-                        if TokenValidation.validate_mj_special_case(google_token):
-                            return render(request, 'global/login.html', {'poll': poll, 'mj_not_used': True})
-                            # return HttpResponseRedirect(reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))
         
         if poll.poll_type == PollModel.PollType.MAJORITY_JUDJMENT:
             return HttpResponseRedirect(reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))
@@ -70,17 +56,11 @@ class SingleOptionVoteView(VoteViewSchema):
         """Handle vote perform and redirect to recap (or 
         redirect to form w errors)"""
 
-        super().post(request, poll_id, *args, **kwargs)
+        res = super().post(request, poll_id, *args, **kwargs)
+        if res is not None:
+            return res
 
         poll = self.poll()
-
-        if poll.is_votable_google():
-            if PollTokens.objects.filter(token_user=request.user, poll_fk=poll).exists():
-                google_token = PollTokens.objects.get(token_user=request.user, poll_fk=poll)
-                if not TokenValidation.validate(google_token):
-                    return render(request, 'global/login.html', {'poll': poll})
-                elif TokenValidation.validate_mj_special_case(google_token):
-                    return render(request, 'global/login.html', {'poll': poll, 'mj_not_used': True})
 
         # Check is passed any data.
         if REQUEST_VOTE not in request.POST:

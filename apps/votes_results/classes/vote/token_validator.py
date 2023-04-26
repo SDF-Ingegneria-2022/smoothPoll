@@ -1,34 +1,31 @@
-import abc
-from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
+from apps.polls_management.exceptions.token_does_not_exist_exception import TokenDoesNotExistException
 
 from apps.polls_management.models.poll_model import PollModel
 from apps.polls_management.models.poll_token import PollTokens
 from apps.polls_management.services.poll_token_service import PollTokenService
+from django.core.exceptions import ObjectDoesNotExist
 
 
-class TokenValidator(abc.ABC):
+class TokenValidator:
     """A tool to validate a token using a sequence of steps
     """
 
 
-    def load_token_from_user(self, user) -> bool:
-
-        if user is None:
-            return False
+    def load_token_from_user(self, user, poll: PollModel):
 
         try:
-            self.token: PollTokens = \
-                PollTokenService.get_poll_token_by_user(user)
-        except PollDoesNotExistException:
-            return False
+            self.token = PollTokens.objects.get(
+                token_user=user, poll_fk = poll)
+        except ObjectDoesNotExist:
+            self.token = None
+
+    def is_token_valid(self): 
+        return self.token is not None
         
-        return True
-
-
-    def is_token_related_to_poll(self, poll: PollModel) -> bool:
-        return self.token.poll_fk == poll
-    
     def is_token_available_for_votemethod(self, votemethod: PollModel.PollType) -> bool:
+        
+        if self.token is None:
+            return False
         
         if votemethod == PollModel.PollType.SINGLE_OPTION:
             return not self.token.single_option_use
@@ -39,6 +36,10 @@ class TokenValidator(abc.ABC):
         return False
         
     def is_token_voted_so_but_not_mj(self) -> bool:
+
+        if self.token is None:
+            return False
+
         return self.token.single_option_use and not self.token.majority_use
  
 
