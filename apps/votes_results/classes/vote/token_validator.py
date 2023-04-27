@@ -41,6 +41,28 @@ class TokenValidator:
             return False
 
         return self.token.single_option_use and not self.token.majority_use
+    
+    def mark_votemethod_as_used(self, votemethod: PollModel.PollType):
+        
+        if self.token is None:
+            raise Exception("Cannot mark a token as used if it's not load")
+        
+        if votemethod == PollModel.PollType.SINGLE_OPTION:
+            if self.token.single_option_use:
+                raise Exception("Cannot vote two times with same method (single option)")
+            
+            self.token.single_option_use = True
+            self.token.save()
+
+        if votemethod == PollModel.PollType.MAJORITY_JUDJMENT:
+            if self.token.majority_use:
+                raise Exception("Cannot vote two times with same method (majority judgment)")
+
+            self.token.majority_use = True
+            self.token.save()
+
+        raise Exception("Unvalid votemethod")
+
  
 
     

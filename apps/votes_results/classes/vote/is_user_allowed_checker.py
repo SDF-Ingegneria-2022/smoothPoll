@@ -27,11 +27,11 @@ class IsUserAllowedChecker(abc.ABC):
         the special double vote case."""
         pass
     
-    # @abc.abstractclassmethod
-    # def check_votemethod_as_used(self, votemethod: PollModel.PollType) -> None:
-    #     """Save that a certain votemethod has been used 
-    #     for current user/token."""
-    #     pass 
+    @abc.abstractmethod
+    def mark_votemethod_as_used(self, votemethod: PollModel.PollType) -> None:
+        """Save that a certain votemethod has been used 
+        for current user/token."""
+        pass 
 
 class NoAuthChecker(IsUserAllowedChecker):
 
@@ -43,6 +43,9 @@ class NoAuthChecker(IsUserAllowedChecker):
 
     def is_voted_so_but_not_mj(self):
         return False
+    
+    def mark_votemethod_as_used(self, votemethod: PollModel.PollType):
+        pass
     
 class TokenChecker(IsUserAllowedChecker):
 
@@ -65,6 +68,10 @@ class TokenChecker(IsUserAllowedChecker):
 
     def is_voted_so_but_not_mj(self):
         return self.token_validator.is_token_voted_so_but_not_mj()
+    
+    def mark_votemethod_as_used(self, votemethod: PollModel.PollType):
+        self.token_validator.mark_votemethod_as_used(votemethod)
+
     
 class GoogleChecker(IsUserAllowedChecker):
 
@@ -91,6 +98,9 @@ class GoogleChecker(IsUserAllowedChecker):
 
     def is_voted_so_but_not_mj(self):
         return self._checker.is_voted_so_but_not_mj()
+    
+    def mark_votemethod_as_used(self, votemethod: PollModel.PollType):
+        self._checker.mark_votemethod_as_used(votemethod)
     
 
 def is_user_allowed_factory(request: HttpRequest, poll: PollModel) -> IsUserAllowedChecker:

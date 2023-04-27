@@ -5,7 +5,6 @@ from django.urls import reverse
 
 from django.views import View
 from apps.polls_management.models.poll_model import PollModel
-from apps.polls_management.models.poll_token import PollTokens
 
 from apps.votes_results.classes.vote.is_poll_votable_checker import IsPollVotableChecker
 from apps.votes_results.classes.vote.is_user_allowed_checker import is_user_allowed_factory

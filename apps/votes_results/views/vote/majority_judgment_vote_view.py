@@ -116,22 +116,7 @@ class MajorityJudgmentVoteView(VoteViewSchema):
             vote: MajorityVoteModel = MajorityJudjmentVoteService.perform_vote(ratings, poll_id=str(poll_id))
 
             # invalidation of token if vote is successful
-            if poll.is_votable_token() and request.session.get(SESSION_TOKEN_USED) is not None:
-                try:
-                    token_poll = request.session.get(SESSION_TOKEN_USED)
-                    PollTokenService.check_majority_option(token_poll)
-                except Exception:
-                    raise Http404(f"Token associated with user {token_poll.token_user} not found.")
-            
-            elif poll.is_votable_google():
-
-                if PollTokens.objects.filter(token_user=request.user, poll_fk=poll).exists():
-                    g_token = PollTokens.objects.get(token_user=request.user, poll_fk=poll)
-                else:
-                    PollTokenService.create_google_record(request.user, poll)
-                    g_token = PollTokens.objects.get(token_user=request.user, poll_fk=poll)
-
-                PollTokenService.check_majority_option(g_token)
+            self.is_user_allowed_checker.mark_votemethod_as_used(self.get_votemethod())
 
             # Clear session if the mj vote is performed
             check_consistency_session.clear_session([SESSION_SINGLE_OPTION_VOTE_ID, SESSION_CONSISTENCY_CHECK])
