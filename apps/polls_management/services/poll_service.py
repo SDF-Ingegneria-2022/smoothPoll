@@ -2,7 +2,9 @@ from typing import List
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator
 from apps.polls_management.exceptions.paginator_page_size_exception import PaginatorPageSizeException
+from apps.polls_management.exceptions.poll_cannot_be_closed_exception import PollCannotBeClosedException
 from apps.polls_management.exceptions.poll_cannot_be_opened_exception import PollCannotBeOpenedException
+from apps.polls_management.exceptions.poll_is_close_exception import PollIsCloseException
 from apps.polls_management.exceptions.poll_is_open_exception import PollIsOpenException
 from apps.polls_management.exceptions.poll_not_valid_creation_exception import PollNotValidCreationException
 from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
@@ -165,3 +167,35 @@ class PollService:
         closed_polls_list = all_public_polls_list.filter(close_datetime__lte=timezone.now()).order_by('-close_datetime')
         
         return list(votable_polls_list) + list(closed_polls_list)
+    
+    @staticmethod
+    def close_poll(id:str):
+        """Close a poll by id. If a poll has already been closed, it can't be closed.
+        
+        Args:
+            id: Id of the poll to close. The poll can be a majority poll or a single option poll.
+        
+        Raises:
+            PollDoesNotExistException: If the poll not exist.
+            PollIsCloseException: If the poll is already close.
+            
+        Returns: 
+            PollModel: the closed poll.
+        """
+        try:
+            poll: PollModel = PollModel.objects.get(id=id)
+        except ObjectDoesNotExist:
+            raise PollDoesNotExistException(f"Poll with id={id} does not exit.")  
+        
+        if poll.is_closed():
+            raise PollIsCloseException(f"Poll with id={id} is already close.")
+
+        if poll.is_open():
+            poll.close_datetime = timezone.now()
+            poll.save()
+            return poll
+        else:
+            #poll must be open to be closed
+            raise PollCannotBeClosedException(f"Poll with id={id} cannot be close.")
+            
+        

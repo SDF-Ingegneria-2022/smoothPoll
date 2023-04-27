@@ -22,10 +22,11 @@ django-allauth = "*"
 psycopg2-binary = "*"
 django-sesame = "*"
 qrcode = "*"
-mkdocstrings = {extras = [ "python",], version = "*"}
 pdfkit = "*"
 wkhtmltopdf = "*"
 reportlab = "*"
+mkdocstrings-python = "*"
+mkdocstrings = "*"
 
 [dev-packages]
 

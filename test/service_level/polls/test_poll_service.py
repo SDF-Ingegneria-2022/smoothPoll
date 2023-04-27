@@ -5,9 +5,12 @@ from assertpy import assert_that
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
+from django.utils import timezone
 from apps.polls_management.classes.poll_form_utils.poll_form import PollForm
 from apps.polls_management.exceptions.paginator_page_size_exception import PaginatorPageSizeException
+from apps.polls_management.exceptions.poll_cannot_be_closed_exception import PollCannotBeClosedException
 from apps.polls_management.exceptions.poll_cannot_be_opened_exception import PollCannotBeOpenedException
+from apps.polls_management.exceptions.poll_is_close_exception import PollIsCloseException
 from apps.polls_management.exceptions.poll_is_open_exception import PollIsOpenException
 from apps.polls_management.models.poll_model import PollModel
 from apps.polls_management.models.poll_option_model import PollOptionModel
@@ -390,6 +393,58 @@ class TestPollService():
             .when_called_with(id=id)
 
     # =================== END legacy creation mode ===================
+
+
+    # ====== Close poll anytime ======
+    
+    @pytest.mark.django_db
+    def test_close_poll(self):
+        """Test close poll"""
+        self.user.save()
+        poll = PollService.create(self.name, self.question, self.options, self.user)
+        id = poll.id
+        #yesterday 
+        open_date = timezone.now() - timezone.timedelta(days=1)
+        #tomorrow
+        close_date = timezone.now() + timezone.timedelta(days=1)
+        poll.open_datetime = open_date
+        poll.close_datetime = close_date
+        poll.save()
+
+        closed_poll: PollModel = PollService.close_poll(id)
+
+        assert_that(closed_poll.is_closed()).is_true()
+
+    @pytest.mark.django_db
+    def test_close_poll_already_closed(self):
+        """Test close poll, poll already closed"""
+        self.user.save()
+        poll = PollService.create(self.name, self.question, self.options, self.user)
+        id = poll.id
+        #yesterday 
+        open_date = timezone.now() - timezone.timedelta(days=1)
+        close_date = timezone.now()
+        poll.open_datetime = open_date
+        poll.close_datetime = close_date
+        poll.save()
+
+        assert_that(PollService.close_poll) \
+            .raises(PollIsCloseException) \
+            .when_called_with(id=id)
+
+    @pytest.mark.django_db
+    def test_close_poll_not_open(self):
+        """Test close poll, poll that need to be opened"""
+        self.user.save()
+        poll = PollService.create(self.name, self.question, self.options, self.user)
+        id = poll.id
+        poll.save()
+
+        assert_that(PollService.close_poll) \
+            .raises(PollCannotBeClosedException) \
+            .when_called_with(id=id)
+
+
 
 
 

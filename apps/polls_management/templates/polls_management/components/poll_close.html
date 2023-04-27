@@ -1,0 +1,28 @@
+{% comment %} List of actions a poll owner can do on a poll {% endcomment %}
+
+{% load socialaccount %}
+
+<div class="d-grid gap-2 d-md-flex justify-content-md-end m-2">
+    <a onclick="$(window).on('load', $('#polldelete').modal('show'))"
+        class="btn btn-danger me-md-2 mt-2"  
+        role="button">Chiudi la Scelta</a>
+</div>
+
+
+<div class="modal mt-5" id="polldelete" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header  bg-warning">
+          <h5 class="modal-title">Attenzione!</h5>
+        </div>
+        <div class="modal-body">
+          <p class="fw-light">Sei sicuro di voler chiudere questa scelta?</p>
+          <p class="fw-light">Dopo aver chiuso la scelta non sarà più possibile raccogliere preferenze.</p>
+        </div>
+        <div class="modal-footer">
+            <a href="{% url 'apps.polls_management:poll_close' poll_id=poll.id %}"  class="btn btn-primary me-md-2 mt-2"  role="button">Voglio procedere lo stesso!</a>          
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Ho cambiato idea</button>
+        </div>
+      </div>
+    </div>
+  </div>

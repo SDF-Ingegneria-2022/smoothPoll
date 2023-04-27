@@ -19,11 +19,17 @@
         {% include 'polls_management/components/copy_link/poll_copy_link.html' with poll=poll %}
     </div>
 
+
+
     {% comment %} Vote and view results actions {% endcomment %}
     {% if poll.is_open and not poll.is_closed %}
         <div class="d-grid gap-2 d-md-flex justify-content-md-end m-2">
             {% include "votes_results/components/vote_button.html" with poll=poll btn_classes="me-md-2 mt-2" %}
         </div>
+
+    <!-- Close poll -->
+    {% include 'polls_management/components/poll_close.html' with poll=poll %}
+
     {% elif poll.is_closed %}
         <div class="d-grid gap-2 d-md-flex justify-content-md-end m-2">
             <a href="{% url 'apps.votes_results:single_option_results' poll_id=poll.id %}" 

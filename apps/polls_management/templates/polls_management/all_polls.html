@@ -188,6 +188,10 @@
 {% endif %}
 
 {% include 'polls_management/components/copy_link/copy_link_script.html' with poll=poll %}
+<script>
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+</script>
 
 {% endblock customjs %}
 
