@@ -8,6 +8,7 @@ from apps.polls_management.models.poll_model import PollModel
 
 from apps.votes_results.classes.vote.is_poll_votable_checker import IsPollVotableChecker
 from apps.votes_results.classes.vote.is_user_allowed_checker import is_user_allowed_factory
+from apps.votes_results.classes.vote.vote_template_names import nonauth_user_template_name
 
 
 class VoteViewSchema(abc.ABC, View):
@@ -47,12 +48,8 @@ class VoteViewSchema(abc.ABC, View):
     def nonauth_user_template_name(self) -> str:
         """Name of template to display if user is not 
         authorized to perform a vote"""
-
-        if self.poll().is_votable_google():
-            return 'global/login.html'
         
-        return 'polls_management/token_poll_redirect.html'
-    
+        return nonauth_user_template_name(self.poll())
     
 
     def __init__(self, *args, **kwargs):

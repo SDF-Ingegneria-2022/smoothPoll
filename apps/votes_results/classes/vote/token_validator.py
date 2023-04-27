@@ -5,10 +5,17 @@ from apps.polls_management.models.poll_token import PollTokens
 from django.core.exceptions import ObjectDoesNotExist
 
 
+class NoToken:
+    single_option_use = False
+    majority_use = False
+
+
 class TokenValidator:
     """A tool to validate a token using a sequence of steps
     """
 
+    def __init__(self) -> None:
+        self.token = NoToken()
 
     def load_token_from_user(self, user, poll: PollModel):
 
@@ -16,15 +23,15 @@ class TokenValidator:
             self.token = PollTokens.objects.get(
                 token_user=user, poll_fk = poll)
         except ObjectDoesNotExist:
-            self.token = None
+            self.token = NoToken()
+
+    def is_token_load(self):
+        return not isinstance(self.token, NoToken)
 
     def is_token_valid(self): 
-        return self.token is not None
+        return not isinstance(self.token, NoToken)
         
     def is_token_available_for_votemethod(self, votemethod: PollModel.PollType) -> bool:
-        
-        if self.token is None:
-            return False
         
         if votemethod == PollModel.PollType.SINGLE_OPTION:
             return not self.token.single_option_use
@@ -36,14 +43,14 @@ class TokenValidator:
         
     def is_token_voted_so_but_not_mj(self) -> bool:
 
-        if self.token is None:
+        if not self.is_token_load():
             return False
 
         return self.token.single_option_use and not self.token.majority_use
     
     def mark_votemethod_as_used(self, votemethod: PollModel.PollType):
         
-        if self.token is None:
+        if not self.is_token_load():
             raise Exception("Cannot mark a token as used if it's not load")
         
         if votemethod == PollModel.PollType.SINGLE_OPTION:
