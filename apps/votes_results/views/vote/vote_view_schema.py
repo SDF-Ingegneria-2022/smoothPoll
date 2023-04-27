@@ -1,5 +1,5 @@
 import abc
-from django.http import Http404, HttpResponseRedirect
+from django.http import Http404, HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
@@ -21,21 +21,26 @@ class VoteViewSchema(abc.ABC, View):
 
     @abc.abstractmethod
     def get_votemethod(self) -> PollModel.PollType:
+        """Get the votemethod user is using"""
+        pass
+    
+    @abc.abstractmethod
+    def render_vote_form(self, request: HttpRequest) -> HttpResponse:
+        """Render the form user will use to vote"""
         pass
 
     def poll(self) -> PollModel:
+        """Current poll object"""
         return self.poll_votable_checker.poll
     
-    def token(self) -> PollTokens:
-        return self.token_validator.token
-    
-    def nonauth_user_template_name(self):
+    def nonauth_user_template_name(self) -> str:
+        """Name of template to display if user is not 
+        authorized to perform a vote"""
 
         if self.poll().is_votable_google():
             return 'global/login.html'
         
         return 'polls_management/token_poll_redirect.html'
-
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -86,7 +91,8 @@ class VoteViewSchema(abc.ABC, View):
                         self.is_user_allowed_checker.is_voted_so_but_not_mj() 
                 })
         
-        return None
+        # render vote form (or other response)
+        return self.render_vote_form(request)
 
     def post(self, request, poll_id, *args, **kwargs):
 

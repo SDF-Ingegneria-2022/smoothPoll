@@ -10,16 +10,28 @@ from apps.votes_results.classes.vote.token_validator import TokenValidator
 class IsUserAllowedChecker(abc.ABC): 
 
     @abc.abstractmethod
-    def is_user_allowed(self): 
+    def is_user_allowed(self) -> bool: 
+        """Check current user is allowed to access the poll"""
         pass
 
     @abc.abstractmethod
-    def is_user_allowed_for_votemethod(self, votemethod: PollModel.PollType): 
+    def is_user_allowed_for_votemethod(self, votemethod: PollModel.PollType) -> bool: 
+        """Check current user is allowed to submit 
+        a vote with a certain votemethod"""
         pass
 
     @abc.abstractmethod
-    def is_voted_so_but_not_mj(self):
+    def is_voted_so_but_not_mj(self) -> bool:
+        """Check a poll is voted (by this user) w
+        SO but not with MJ. It is used to handle 
+        the special double vote case."""
         pass
+    
+    # @abc.abstractclassmethod
+    # def check_votemethod_as_used(self, votemethod: PollModel.PollType) -> None:
+    #     """Save that a certain votemethod has been used 
+    #     for current user/token."""
+    #     pass 
 
 class NoAuthChecker(IsUserAllowedChecker):
 

@@ -7,7 +7,7 @@ from apps.votes_results.exceptions.poll_option_unvalid_exception import PollOpti
 from apps.votes_results.classes.single_option_vote_counter import SingleOptionVoteCounter
 from apps.votes_results.services.single_option_vote_service import SingleOptionVoteService
 
-from django.http import Http404  
+from django.http import Http404, HttpResponse  
 from django.http import HttpRequest, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
@@ -26,17 +26,10 @@ class SingleOptionVoteView(VoteViewSchema):
 
     def get_votemethod(self) -> PollModel.PollType:
         return PollModel.PollType.SINGLE_OPTION
+    
+    def render_vote_form(self, request: HttpRequest) -> HttpResponse:
 
-    def get(self, request: HttpRequest, poll_id: int, *args, **kwargs):
-        """Render the form wich permits user to vote"""
-
-        res = super().get(request, poll_id, *args, **kwargs)
-        if res is not None:
-            return res
-
-        poll = self.poll()
-        
-        if poll.poll_type == PollModel.PollType.MAJORITY_JUDJMENT:
+        if self.poll().poll_type == PollModel.PollType.MAJORITY_JUDJMENT:
             return HttpResponseRedirect(reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))
 
         # Get eventual error message and clean it
@@ -48,10 +41,18 @@ class SingleOptionVoteView(VoteViewSchema):
         return render(request, 
                     'votes_results/single_option_vote.html', 
                     { 
-                        'poll': poll, 
+                        'poll': self.poll(), 
                         'error': eventual_error 
                     })
 
+    # def get(self, request: HttpRequest, poll_id: int, *args, **kwargs):
+    #     """Render the form wich permits user to vote"""
+
+    #     res = super().get(request, poll_id, *args, **kwargs)
+    #     if res is not None:
+    #         return res
+
+        
     def post(self, request: HttpRequest, poll_id: int, *args, **kwargs):
         """Handle vote perform and redirect to recap (or 
         redirect to form w errors)"""

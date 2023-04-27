@@ -9,7 +9,7 @@ from apps.polls_management.models.poll_model import PollModel
 from apps.votes_results.services.majority_judgment_vote_service import MajorityJudjmentVoteService
 
 from typing import List
-from django.http import Http404  
+from django.http import Http404, HttpResponse  
 from django.http import HttpRequest, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
@@ -28,23 +28,22 @@ class MajorityJudgmentVoteView(VoteViewSchema):
 
     def get_votemethod(self) -> PollModel.PollType:
         return PollModel.PollType.MAJORITY_JUDJMENT
+    
+    def render_vote_form(self, request: HttpRequest) -> HttpResponse:
 
-    def get(self, request: HttpRequest, poll_id: int, *args, **kwargs):
-        """Render the form wich permits user to vote"""
-        
-        res = super().get(request, poll_id, *args, **kwargs)
-        if res is not None:
-            return res
-
-        poll = self.poll()
-  
-        if ((poll.poll_type != PollModel.PollType.MAJORITY_JUDJMENT and not poll.is_votable_w_so_and_mj()) or
-            ( poll.poll_type == PollModel.PollType.SINGLE_OPTION and
-              request.session.get(SESSION_SINGLE_OPTION_VOTE_ID) is None and 
-              not poll.is_votable_token() and not poll.is_votable_google())
+        # TODO: remove this if is not necessary
+        if (
+                self.poll().poll_type != PollModel.PollType.MAJORITY_JUDJMENT and 
+                not self.poll().is_votable_w_so_and_mj()
+            ) or \
+            ( 
+                self.poll().poll_type == PollModel.PollType.SINGLE_OPTION and
+                request.session.get(SESSION_SINGLE_OPTION_VOTE_ID) is None and 
+                not self.poll().is_votable_token() and not self.poll().is_votable_google()
             ):
-            raise Http404()
 
+            raise Http404()
+        
         options_selected = request.session.get(SESSION_MJ_VOTE_SUBMIT_ERROR)
         if options_selected is not None:
             del request.session[SESSION_MJ_VOTE_SUBMIT_ERROR]
@@ -54,12 +53,15 @@ class MajorityJudgmentVoteView(VoteViewSchema):
         if request.session.get(SESSION_MJ_GUIDE_ALREADY_VIWED) is None:
             request.session[SESSION_MJ_GUIDE_ALREADY_VIWED] = True
         
-        if poll.poll_type == PollModel.PollType.SINGLE_OPTION and poll.is_votable_w_so_and_mj() and request.session.get(SESSION_SINGLE_OPTION_VOTE_ID) is not None:
+        if self.poll().poll_type == PollModel.PollType.SINGLE_OPTION and \
+            self.poll().is_votable_w_so_and_mj() and \
+            request.session.get(SESSION_SINGLE_OPTION_VOTE_ID) is not None:
+
             vote_single_option: PollOptionModel = PollOptionModel.objects.get(id=request.session.get(SESSION_SINGLE_OPTION_VOTE_ID))
             request.session['os_to_mj'] = vote_single_option.value
 
         return render(request, 'votes_results/majority_judgment_vote.html', {
-            'poll': poll, 
+            'poll': self.poll(), 
             'error': {
                 'message': "Attenzione! Non è stata selezionata nessuna opzione.",
                 'options_selected': options_selected,
@@ -68,6 +70,15 @@ class MajorityJudgmentVoteView(VoteViewSchema):
             'consistency_check': request.session.get(SESSION_CONSISTENCY_CHECK),
             'single_option' : request.session.get('os_to_mj'),
             })    
+        
+
+    # def get(self, request: HttpRequest, poll_id: int, *args, **kwargs):
+    #     """Render the form wich permits user to vote"""
+        
+    #     res = super().get(request, poll_id, *args, **kwargs)
+    #     if res is not None:
+    #         return res
+
 
     def post(self, request: HttpRequest, poll_id: int, *args, **kwargs):
         """Handle vote perform and redirect to recap (or 
