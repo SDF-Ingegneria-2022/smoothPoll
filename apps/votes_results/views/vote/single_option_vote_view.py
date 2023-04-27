@@ -27,6 +27,9 @@ class SingleOptionVoteView(VoteViewSchema):
     def get_votemethod(self) -> PollModel.PollType:
         return PollModel.PollType.SINGLE_OPTION
     
+    def get_recap_page_url_name(self) -> str:
+        return 'apps.votes_results:single_option_recap'
+    
     def render_vote_form(self, request: HttpRequest) -> HttpResponse:
 
         if self.poll().poll_type == PollModel.PollType.MAJORITY_JUDJMENT:
@@ -45,24 +48,8 @@ class SingleOptionVoteView(VoteViewSchema):
                         'error': eventual_error 
                     })
 
-    # def get(self, request: HttpRequest, poll_id: int, *args, **kwargs):
-    #     """Render the form wich permits user to vote"""
-
-    #     res = super().get(request, poll_id, *args, **kwargs)
-    #     if res is not None:
-    #         return res
-
+    def perform_vote_or_redirect_to_form(self, request: HttpRequest) -> HttpResponse:
         
-    def post(self, request: HttpRequest, poll_id: int, *args, **kwargs):
-        """Handle vote perform and redirect to recap (or 
-        redirect to form w errors)"""
-
-        res = super().post(request, poll_id, *args, **kwargs)
-        if res is not None:
-            return res
-
-        poll = self.poll()
-
         # Check is passed any data.
         if REQUEST_VOTE not in request.POST:
             request.session[SESSION_SINGLE_OPTION_VOTE_SUBMIT_ERROR] = "Errore! Per confermare la scelta " \
@@ -74,11 +61,8 @@ class SingleOptionVoteView(VoteViewSchema):
         
         # Perform vote and handle missing vote or poll exception.
         try:
-            vote = SingleOptionVoteService.perform_vote(poll_id, request.POST[REQUEST_VOTE])
-
-            # invalidation of token if vote is successful
-            self.is_user_allowed_checker.mark_votemethod_as_used(self.get_votemethod())
-
+            vote = SingleOptionVoteService.perform_vote(
+                self.poll().id, request.POST[REQUEST_VOTE])
         except PollOptionUnvalidException:
             request.session[SESSION_SINGLE_OPTION_VOTE_SUBMIT_ERROR] = "Errore! La scelte deve essere " \
                 + "espressa tramite l'apposito form. Se continui a vedere questo " \
@@ -94,7 +78,5 @@ class SingleOptionVoteView(VoteViewSchema):
         # Save user vote in session (so when I re-render with GET I have the vote).
         request.session['vote-submit-id'] = vote.id
 
-        # RE-direct to get request.
-        return HttpResponseRedirect(reverse('apps.votes_results:single_option_recap', args=(poll_id, ))) 
+        return None
 
-    

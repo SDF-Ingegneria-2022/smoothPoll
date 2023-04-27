@@ -2,7 +2,6 @@ from apps.polls_management.exceptions.token_does_not_exist_exception import Toke
 
 from apps.polls_management.models.poll_model import PollModel
 from apps.polls_management.models.poll_token import PollTokens
-from apps.polls_management.services.poll_token_service import PollTokenService
 from django.core.exceptions import ObjectDoesNotExist
 
 
@@ -53,6 +52,7 @@ class TokenValidator:
             
             self.token.single_option_use = True
             self.token.save()
+            return
 
         if votemethod == PollModel.PollType.MAJORITY_JUDJMENT:
             if self.token.majority_use:
@@ -60,6 +60,7 @@ class TokenValidator:
 
             self.token.majority_use = True
             self.token.save()
+            return
 
         raise Exception("Unvalid votemethod")
 

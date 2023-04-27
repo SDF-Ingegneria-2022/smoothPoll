@@ -27,6 +27,18 @@ class VoteViewSchema(abc.ABC, View):
     def render_vote_form(self, request: HttpRequest) -> HttpResponse:
         """Render the form user will use to vote"""
         pass
+    
+    @abc.abstractmethod
+    def perform_vote_or_redirect_to_form(self, request: HttpRequest) -> HttpResponse:
+        """Perform a vote or redirect to vote form if it fails.
+            :Return None if everything is okay, else the redirect
+        """
+        pass 
+    
+    @abc.abstractmethod
+    def get_recap_page_url_name(self) -> str:
+        """The django name of the url where I will render vote recap"""
+        pass
 
     def poll(self) -> PollModel:
         """Current poll object"""
@@ -40,6 +52,8 @@ class VoteViewSchema(abc.ABC, View):
             return 'global/login.html'
         
         return 'polls_management/token_poll_redirect.html'
+    
+    
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -124,6 +138,20 @@ class VoteViewSchema(abc.ABC, View):
                 self.nonauth_user_template_name(), 
                 {'poll': self.poll(), })
                 
-        return None
+        # submit vote (or return error if something got wrong)
+        res = self.perform_vote_or_redirect_to_form(request)
+        if not res is None:
+            return res
+        
+        # mark poll as "voted" for a certain votemethod
+        self.is_user_allowed_checker.mark_votemethod_as_used(
+            self.get_votemethod())
+
+        # redirect to recap page
+        return HttpResponseRedirect(reverse(
+            self.get_recap_page_url_name(), args=(poll_id, )
+            ))
+
+
 
 

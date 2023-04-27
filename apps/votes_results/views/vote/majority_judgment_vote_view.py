@@ -29,6 +29,9 @@ class MajorityJudgmentVoteView(VoteViewSchema):
     def get_votemethod(self) -> PollModel.PollType:
         return PollModel.PollType.MAJORITY_JUDJMENT
     
+    def get_recap_page_url_name(self) -> str:
+        return 'apps.votes_results:majority_judgment_recap'
+    
     def render_vote_form(self, request: HttpRequest) -> HttpResponse:
 
         # TODO: remove this if is not necessary
@@ -69,26 +72,9 @@ class MajorityJudgmentVoteView(VoteViewSchema):
             'guide_already_viwed': guide_already_viwed,
             'consistency_check': request.session.get(SESSION_CONSISTENCY_CHECK),
             'single_option' : request.session.get('os_to_mj'),
-            })    
-        
+            })
 
-    # def get(self, request: HttpRequest, poll_id: int, *args, **kwargs):
-    #     """Render the form wich permits user to vote"""
-        
-    #     res = super().get(request, poll_id, *args, **kwargs)
-    #     if res is not None:
-    #         return res
-
-
-    def post(self, request: HttpRequest, poll_id: int, *args, **kwargs):
-        """Handle vote perform and redirect to recap (or 
-        redirect to form w errors)"""
-
-        res = super().post(request, poll_id, *args, **kwargs)
-        if res is not None:
-            return res
-        
-        poll = self.poll()
+    def perform_vote_or_redirect_to_form(self, request: HttpRequest) -> HttpResponse:
         
         ratings: List[dict] = []
         session_object: dict = {
@@ -108,26 +94,36 @@ class MajorityJudgmentVoteView(VoteViewSchema):
 
         # Single option vote consistency check
         check_consistency_session: CheckConsistencySession = CheckConsistencySession(request)
-        if  (not request.session.get(SESSION_CONSISTENCY_CHECK) and # Check used if user has already seen the consistency check
-            check_consistency_session.check_consistency(poll, ratings, SESSION_SINGLE_OPTION_VOTE_ID, SESSION_CONSISTENCY_CHECK)):
-            return HttpResponseRedirect(reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))    
+        if  (not request.session.get(SESSION_CONSISTENCY_CHECK) and 
+             # Check used if user has already seen the consistency check
+            check_consistency_session.check_consistency(
+                self.poll(), ratings, 
+                SESSION_SINGLE_OPTION_VOTE_ID, 
+                SESSION_CONSISTENCY_CHECK )):
+            
+            return HttpResponseRedirect(reverse(
+                'apps.votes_results:majority_judgment_vote', 
+                args=(self.poll().id,)))    
         
         try:
-            vote: MajorityVoteModel = MajorityJudjmentVoteService.perform_vote(ratings, poll_id=str(poll_id))
-
-            # invalidation of token if vote is successful
-            self.is_user_allowed_checker.mark_votemethod_as_used(self.get_votemethod())
-
-            # Clear session if the mj vote is performed
-            check_consistency_session.clear_session([SESSION_SINGLE_OPTION_VOTE_ID, SESSION_CONSISTENCY_CHECK])
-            
+            vote: MajorityVoteModel = MajorityJudjmentVoteService.perform_vote(
+                ratings, poll_id=str(self.poll().id))
         except PollOptionRatingUnvalidException:
         
             request.session[SESSION_MJ_VOTE_SUBMIT_ERROR] = session_object
-            return HttpResponseRedirect(reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))
+            return HttpResponseRedirect(reverse(
+                'apps.votes_results:majority_judgment_vote', 
+                args=(self.poll().id, )))
         except Exception as e:
             raise Http404
-
+        
+        
+        # Clear session if the mj vote is performed
+        check_consistency_session.clear_session([
+            SESSION_SINGLE_OPTION_VOTE_ID, 
+            SESSION_CONSISTENCY_CHECK
+            ])
+        
         # Clean session data for single option to majority control
         if request.session.get('os_to_mj') is not None:
             del request.session['os_to_mj']
@@ -139,7 +135,4 @@ class MajorityJudgmentVoteView(VoteViewSchema):
         # Save user vote in session
         request.session[SESSION_MJ_SUBMIT_ID] = vote.id
 
-        # Redirect to get request.
-        return HttpResponseRedirect(reverse('apps.votes_results:majority_judgment_recap', args=(poll_id, )))
-
-
+        return None

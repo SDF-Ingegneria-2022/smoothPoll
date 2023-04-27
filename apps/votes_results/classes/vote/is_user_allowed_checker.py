@@ -3,8 +3,8 @@ import abc
 from django.http import HttpRequest
 
 from apps.polls_management.models.poll_model import PollModel
-from apps.polls_management.models.poll_token import PollTokens
 from apps.votes_results.classes.vote.token_validator import TokenValidator
+from apps.polls_management.services.poll_token_service import PollTokenService
 
 
 class IsUserAllowedChecker(abc.ABC): 
@@ -100,6 +100,13 @@ class GoogleChecker(IsUserAllowedChecker):
         return self._checker.is_voted_so_but_not_mj()
     
     def mark_votemethod_as_used(self, votemethod: PollModel.PollType):
+        
+        # if token does not exist, I create it now 
+        if self._checker.token_validator.token == None:
+            token = PollTokenService.create_google_record(
+                self._checker.user, self._checker.poll)
+            self._checker.token_validator.token = token
+
         self._checker.mark_votemethod_as_used(votemethod)
     
 
