@@ -33,7 +33,7 @@ class SingleOptionVoteView(VoteViewSchema):
     def render_vote_form(self, request: HttpRequest) -> HttpResponse:
 
         if self.poll().poll_type == PollModel.PollType.MAJORITY_JUDJMENT:
-            return HttpResponseRedirect(reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))
+            return HttpResponseRedirect(reverse('apps.votes_results:majority_judgment_vote', args=(self.poll().id,)))
 
         # Get eventual error message and clean it
         eventual_error = request.session.get(SESSION_SINGLE_OPTION_VOTE_SUBMIT_ERROR)
@@ -54,7 +54,7 @@ class SingleOptionVoteView(VoteViewSchema):
         if REQUEST_VOTE not in request.POST:
             request.session[SESSION_SINGLE_OPTION_VOTE_SUBMIT_ERROR] = "Errore! Per confermare la scelta " \
                 + "devi esprimere una preferenza."
-            return HttpResponseRedirect(reverse('apps.votes_results:single_option_vote', args=(poll_id,)))
+            return HttpResponseRedirect(reverse('apps.votes_results:single_option_vote', args=(self.poll().id,)))
 
         # Save vote preference in session
         request.session[SESSION_SINGLE_OPTION_VOTE_ID] = request.POST[REQUEST_VOTE]
