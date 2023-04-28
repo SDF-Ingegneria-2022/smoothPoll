@@ -60,7 +60,8 @@ class MajorityJudgmentVoteView(VoteViewSchema):
             self.poll().is_votable_w_so_and_mj() and \
             request.session.get(SESSION_SINGLE_OPTION_VOTE_ID) is not None:
 
-            vote_single_option: PollOptionModel = PollOptionModel.objects.get(id=request.session.get(SESSION_SINGLE_OPTION_VOTE_ID))
+            vote_single_option: PollOptionModel = PollOptionModel.objects.get(
+                id=request.session.get(SESSION_SINGLE_OPTION_VOTE_ID))
             request.session['os_to_mj'] = vote_single_option.value
 
         return render(request, 'votes_results/majority_judgment_vote.html', {

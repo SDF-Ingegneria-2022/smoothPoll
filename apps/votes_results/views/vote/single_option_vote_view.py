@@ -67,7 +67,10 @@ class SingleOptionVoteView(VoteViewSchema):
             request.session[SESSION_SINGLE_OPTION_VOTE_SUBMIT_ERROR] = "Errore! La scelte deve essere " \
                 + "espressa tramite l'apposito form. Se continui a vedere questo " \
                 + "messaggio contatta gli sviluppatori."
-            return HttpResponseRedirect(reverse('apps.votes_results:single_option_vote', args=(poll_id,)))
+            return HttpResponseRedirect(
+                reverse('apps.votes_results:single_option_vote', 
+                        args=(self.poll().id,)
+                ))
         except PollDoesNotExistException:
             raise Http404
 

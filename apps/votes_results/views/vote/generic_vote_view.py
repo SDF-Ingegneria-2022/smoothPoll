@@ -38,12 +38,12 @@ def generic_vote_view(request, poll_id: int):
     # redirect to majority judgment vote view or single option
     if poll.poll_type == PollModel.PollType.MAJORITY_JUDJMENT:
         return HttpResponseRedirect(
-            reverse('apps.votes_results:majority_judgment_vote', args=(poll_id,)))
+            reverse('apps.votes_results:majority_judgment_vote', 
+                    args=(poll_id,)))
 
     return HttpResponseRedirect(reverse(
         'apps.votes_results:single_option_vote', 
         args=(poll_id,)))
-
 
 
     # add control if poll is votable only with tokens
