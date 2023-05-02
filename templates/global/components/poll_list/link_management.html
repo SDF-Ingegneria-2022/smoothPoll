@@ -88,7 +88,7 @@
                 </div>
             {% endif %}
             
-            {% if not poll.is_closed %}
+            {% if poll.is_closable_now %}
                 <div class="col-auto d-md-block d-none">
                     <a  onclick="$(window).on('load', $('#polldelete-{{poll.id}}').modal('show'))"
                         role="button" 
@@ -187,7 +187,7 @@
                                 role="button">Vedi dettagli
                             </a>
                             
-                            {% if not poll.is_closed %}
+                            {% if poll.is_closable_now %}
                             <a onclick="$(window).on('load', $('#polldelete-{{poll.id}}').modal('show'))"
                                 class="dropdown-item"
                                 role="button">Chiudi la Scelta
