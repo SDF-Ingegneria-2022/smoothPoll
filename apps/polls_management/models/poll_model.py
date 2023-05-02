@@ -150,6 +150,15 @@ class PollModel(models.Model):
         """Check if this kind of poll is closable right now"""
         return self.is_open() and not self.is_vote_end() and \
             self.results_visibility != PollModel.PollResultsVisibility.HIDDEN_UNTIL_CLOSED_FOR_VOTERS
+    
+    def are_results_visible(self, user=None) -> bool:
+        """Check if results are visible right now"""
+        return self.is_vote_end() or \
+            self.results_visibility == PollModel.PollResultsVisibility.ALWAYS_VISIBLE or \
+            (
+                self.results_visibility == PollModel.PollResultsVisibility.HIDDEN_UNTIL_CLOSED_FOR_VOTERS and
+                user is not None and user.is_authenticated and self.author == user
+            )
 
     def is_votable_token(self) -> bool:
         """Check if Poll is votable with token
