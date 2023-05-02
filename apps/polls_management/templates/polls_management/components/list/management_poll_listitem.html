@@ -1,4 +1,5 @@
 {% extends 'polls_management/components/list/generic_listitem.html' %}
+{% load are_results_visible %}
 {% load static %}
 {% comment %}
 
@@ -66,7 +67,7 @@
         {% if poll.is_open and not poll.is_closed %}
             {% include "votes_results/components/vote_button.html" with poll=poll btn_classes="mt-2 w-100" %}
         {% endif %}
-        {% if poll.is_open %}
+        {% if poll|are_results_visible:request %}
             <a href="{% url 'apps.votes_results:results' poll_id=poll.id %}" 
                 class="btn btn-secondary mt-2 w-100" 
                 role="button">Vedi risultati</a>

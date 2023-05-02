@@ -1,5 +1,4 @@
-
-
+{% load are_results_visible %}
 <div class="card shadow mb-2 mt-1 bg-light" >
     <div class="card-body">
         
@@ -131,11 +130,13 @@
                                     {% endif %}
                                 </a>
                                 {% endif %}
-                                <a class="dropdown-item" href="{% url 'apps.votes_results:results' poll_id=poll.id %}">Vedi risultati</a>
-                                {% if poll.is_votable_w_so_and_mj %}
-                                <a class="dropdown-item" href="{% url 'apps.votes_results:majority_judgment_results' poll_id=poll.id %}">
-                                    Vedi risultati con Giudizio Maggioritario
-                                </a>
+                                {% if poll|are_results_visible:request %}
+                                    <a class="dropdown-item" href="{% url 'apps.votes_results:results' poll_id=poll.id %}">Vedi risultati</a>
+                                    {% if poll.is_votable_w_so_and_mj %}
+                                    <a class="dropdown-item" href="{% url 'apps.votes_results:majority_judgment_results' poll_id=poll.id %}">
+                                        Vedi risultati con Giudizio Maggioritario
+                                    </a>
+                                    {% endif %}
                                 {% endif %}
                                 {% if user == poll.author %}
                                     <a class="dropdown-item" href="{% url 'apps.polls_management:poll_details' poll_id=poll.id %}">

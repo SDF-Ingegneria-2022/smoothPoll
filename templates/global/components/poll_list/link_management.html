@@ -1,3 +1,4 @@
+{% load are_results_visible %}
 <!-- Main voter-side actions -->
 <div class="flex-grow-1"> 
      
@@ -54,7 +55,7 @@
             </a>
         </div>
 
-        {% if poll.is_open %}
+        {% if  poll|are_results_visible:request %}
             <div class="col-auto">
                 <a  href="{% url 'apps.votes_results:results' poll_id=poll.id %}" 
                     class="text-white text-decoration-none">
@@ -165,7 +166,7 @@
 
                             {% endif %}
 
-                            {% if poll.is_open %}
+                            {% if  poll|are_results_visible:request %}
                                 <a class="dropdown-item" 
                                     href="{% url 'apps.votes_results:results' poll_id=poll.id %}">
                                     Vedi risultati
