@@ -27,11 +27,7 @@ def create_single_option_polls(
         PollModel: Poll created.
     """
 
-    # Create or get user
-    if not django_user_model.objects.filter(username="user").exists():
-        user = django_user_model.objects.create_user(username="user", password="password")
-    else:
-        user = django_user_model.objects.get(username="user")
+    user = get_user(django_user_model)
 
     # Create polls
     polls_created: List[PollModel] = []
@@ -50,4 +46,19 @@ def create_single_option_polls(
         polls_created.append(PollCreateService.create_or_edit_poll(single_option_form, single_option_options,user=user))
         
     return polls_created
-    
+
+
+def get_user(django_user_model):
+    """Get user. If not exists, create it.
+
+    Args:
+        django_user_model (Any): Django user model.
+
+    Returns:
+        Any: User.
+    """
+    # Create or get user
+    if not django_user_model.objects.filter(username="user").exists():
+        return django_user_model.objects.create_user(username="user", password="password")
+   
+    return  django_user_model.objects.get(username="user")
