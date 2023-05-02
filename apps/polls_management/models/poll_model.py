@@ -142,6 +142,15 @@ class PollModel(models.Model):
         
         return timezone.now() > self.close_datetime
     
+    def is_vote_end(self) -> bool:
+        """Check if votation ended"""
+        return self.is_closed()
+    
+    def is_closable_now(self) -> bool:
+        """Check if this kind of poll is closable right now"""
+        return self.is_open() and not self.is_vote_end() and \
+            self.results_visibility != PollModel.PollResultsVisibility.HIDDEN_UNTIL_CLOSED_FOR_VOTERS
+
     def is_votable_token(self) -> bool:
         """Check if Poll is votable with token
 
