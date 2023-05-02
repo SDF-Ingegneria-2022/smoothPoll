@@ -36,6 +36,12 @@ class PollModel(models.Model):
         TOKEN = 'token', _('Giudicabile tramite Token')
         GOOGLE = 'google', _('Giudicabile tramite autenticazione Google')
 
+    class PollResultsVisibility(models.TextChoices):
+        """The possible policies for the visibility of the results of a poll"""
+        ALWAYS_VISIBLE = 'always_visible', _('Sempre visibili')
+        HIDDEN_UNTIL_CLOSED_FOR_ALL = 'hidden_until_closed_for_all', _('Nascosti fino alla chiusura per tutti')
+        HIDDEN_UNTIL_CLOSED_FOR_VOTERS = 'hidden_until_closed_for_voters', _('Nascosti fino alla chiusura ai votanti')
+
     name: CharField = models.CharField(
         max_length=200, verbose_name=_('Nome Scelta'))
 
@@ -88,6 +94,12 @@ class PollModel(models.Model):
         choices=PollVoteProtection.choices, 
         default=PollVoteProtection.UNPROTECTED
         )  
+    
+    results_visibility: models.CharField = models.CharField(
+        max_length=200,
+        choices=PollResultsVisibility.choices, 
+        default=PollResultsVisibility.ALWAYS_VISIBLE
+        )
 
     def __str__(self):
         return str({
