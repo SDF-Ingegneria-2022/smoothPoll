@@ -21,6 +21,8 @@ PRIVATE = 'private'
 SHORT_ID = 'short_id'
 RANDOMIZE_OPTIONS = 'randomize_options'
 PROTECTION = 'protection'
+RESULTS_VISIBILITY = 'results_visibility'
+
 class PollModel(models.Model): 
 
     class PollType(models.TextChoices):
@@ -39,8 +41,8 @@ class PollModel(models.Model):
     class PollResultsVisibility(models.TextChoices):
         """The possible policies for the visibility of the results of a poll"""
         ALWAYS_VISIBLE = 'always_visible', _('Sempre visibili')
-        HIDDEN_UNTIL_CLOSED_FOR_ALL = 'hidden_until_closed_for_all', _('Nascosti fino alla chiusura per tutti')
-        HIDDEN_UNTIL_CLOSED_FOR_VOTERS = 'hidden_until_closed_for_voters', _('Nascosti fino alla chiusura ai votanti')
+        HIDDEN_UNTIL_CLOSED_FOR_ALL = 'hidden_until_closed_for_all', _('Nascosti fino alla chiusura')
+        HIDDEN_UNTIL_CLOSED_FOR_VOTERS = 'hidden_until_closed_for_voters', _('Nascosti fino alla chiusura, ma visibili per te')
 
     name: CharField = models.CharField(
         max_length=200, verbose_name=_('Nome Scelta'))
