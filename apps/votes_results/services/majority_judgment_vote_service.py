@@ -4,6 +4,7 @@ from apps.votes_results.classes.majority_poll_result_data import MajorityPollRes
 from apps.votes_results.exceptions.majority_number_of_ratings_not_valid import MajorityNumberOfRatingsNotValid
 from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
 from apps.votes_results.exceptions.poll_option_rating_unvalid_exception import PollOptionRatingUnvalidException
+from apps.votes_results.exceptions.results_not_available_exception import ResultsNotAvailableException
 from apps.votes_results.exceptions.vote_does_not_exixt_exception import VoteDoesNotExistException
 from apps.polls_management.models.majority_judgment_model import MajorityJudgmentModel
 from apps.polls_management.models.majority_vote_model import MajorityVoteModel
@@ -68,7 +69,7 @@ class MajorityJudjmentVoteService:
         return vote
 
     @staticmethod
-    def calculate_result(poll_id: str) -> List[MajorityPollResultData]:
+    def calculate_result(poll_id: str, user = None) -> List[MajorityPollResultData]:
         """Calculate result of a majority poll.
         
         Args:
@@ -87,6 +88,10 @@ class MajorityJudjmentVoteService:
         except ObjectDoesNotExist:
             raise PollDoesNotExistException(f"Poll with id={poll_id} does not exist")
 
+        # check if the results can be viewed
+        if not poll.are_results_visible(user):
+            raise ResultsNotAvailableException(f"Results of poll with id={poll_id} are not available")
+        
         majority_vote_result_unsorted: List[MajorityPollResultData] = []
 
         all_options: PollOptionModel = PollOptionModel.objects.filter(poll_fk=poll)
@@ -99,7 +104,7 @@ class MajorityJudjmentVoteService:
 
         # sort result (descendant)
         majority_vote_result_unsorted.sort(reverse=True)
-
+        
         return majority_vote_result_unsorted
 
     @staticmethod
