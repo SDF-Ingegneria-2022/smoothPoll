@@ -178,9 +178,6 @@
                                     </a>
                                 {% endif %}
                             {% endif %}
-
-                            
-                    
                     
                             <a href="{% url 'apps.polls_management:poll_details' poll_id=poll.id %}" 
                                 class="dropdown-item"
@@ -188,10 +185,10 @@
                             </a>
                             
                             {% if poll.is_closable_now %}
-                            <a onclick="$(window).on('load', $('#polldelete-{{poll.id}}').modal('show'))"
-                                class="dropdown-item"
-                                role="button">Chiudi la Scelta
-                            </a>
+                                <a onclick="$(window).on('load', $('#polldelete-{{poll.id}}').modal('show'))"
+                                    class="dropdown-item"
+                                    role="button">Chiudi la Scelta
+                                </a>
                             {% endif %}
 
                             <a  class="dropdown-item" 
@@ -256,8 +253,8 @@
     </div>
 
 
-    <!-- Popup to confirm open of poll w id={{poll.id}} -->
-    <div    class="modal fade" 
+<!-- Popup to confirm close of poll w id={{poll.id}} -->
+<div    class="modal fade" 
     id="polldelete-{{poll.id}}" tabindex="-1" 
     aria-labelledby="openpollabel" aria-hidden="true">
     
