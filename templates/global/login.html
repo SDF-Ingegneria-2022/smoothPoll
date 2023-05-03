@@ -1,6 +1,7 @@
 {% extends 'global/skeleton.html' %}
 
 {% load socialaccount %}
+{% load are_results_visible %}
 
 {% block pagename %}Login richiesto{% endblock pagename %}
 
@@ -91,12 +92,7 @@
 
         {% if poll.is_votable_google %}
 
-            {% comment %} <div class="d-grid gap-2 d-md-flex justify-content-md-center">
-                <a href="{% url 'apps.votes_results:results' poll_id=poll.id %}" 
-                    class="btn btn-secondary mt-2" 
-                    role="button">Vedi risultati</a>
-            </div> {% endcomment %}
-
+            {% if poll|are_results_visible:request %}  
             <div class="row">
                 <div class="col-md-4"></div>
                 <div class="col-md-4">
@@ -109,26 +105,21 @@
                 <div class="col-md-4"></div>
             </div>
 
-            {% if poll.is_votable_w_so_and_mj %}
+                {% if poll.is_votable_w_so_and_mj %}
 
-            {% comment %} <div class="d-grid gap-2 d-md-flex justify-content-md-center">
-                <a href="{% url 'apps.votes_results:majority_judgment_results' poll_id=poll.id %}" 
-                    class="btn btn-secondary mt-2" 
-                    role="button">Vedi risultati Giudizio Maggioritario</a>
-            </div> {% endcomment %}
-
-            <div class="row">
-                <div class="col-md-4"></div>
-                <div class="col-md-4">
-                    <div class="d-grid gap-2 mt-2 w-100">
-                        <a href="{% url 'apps.votes_results:majority_judgment_results' poll_id=poll.id %}" 
-                            class="btn btn-secondary mt-2" 
-                            role="button">Vedi risultati Giudizio Maggioritario</a>
+                <div class="row">
+                    <div class="col-md-4"></div>
+                    <div class="col-md-4">
+                        <div class="d-grid gap-2 mt-2 w-100">
+                            <a href="{% url 'apps.votes_results:majority_judgment_results' poll_id=poll.id %}" 
+                                class="btn btn-secondary mt-2" 
+                                role="button">Vedi risultati Giudizio Maggioritario</a>
+                        </div>
                     </div>
+                    <div class="col-md-4"></div>
                 </div>
-                <div class="col-md-4"></div>
-            </div>
 
+                {% endif %}
             {% endif %}
             
         {% endif %}

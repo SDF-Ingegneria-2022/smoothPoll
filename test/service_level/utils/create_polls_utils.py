@@ -12,6 +12,7 @@ def create_single_option_polls(
                 name: str = "Form name", 
                 question: str = "Form question?",
                 votable_mj: bool = True,
+                results_visibility: str = PollModel.PollResultsVisibility.ALWAYS_VISIBLE, 
                 ) -> List[PollModel]:
     """Create single option polls. Due to the ownrship of the poll, the 'django_user_model' must be injected before.
 
@@ -25,17 +26,19 @@ def create_single_option_polls(
     Returns:
         PollModel: Poll created.
     """
-    # User creation
-    user = django_user_model.objects.create_user(username="user", password="password")
+
+    user = get_user(django_user_model)
+
+    # Create polls
     polls_created: List[PollModel] = []
-    
     for index in range(number_of_polls): 
         single_option_form: PollForm = PollForm({
                                                 "name": name + f" {str(index)}", 
                                                 "question": question + f" {str(index)}", 
                                                 "poll_type": "single_option", 
                                                 "votable_mj": votable_mj, 
-                                                "short_id": ''.join(random.choice(string.ascii_lowercase) for i in range(6))
+                                                "short_id": ''.join(random.choice(string.ascii_lowercase) for i in range(6)), 
+                                                "results_visibility": results_visibility, 
                                                 })
         
         single_option_options: List[str] = ["Option 1", "Option 2", "Option 3"]
@@ -43,4 +46,19 @@ def create_single_option_polls(
         polls_created.append(PollCreateService.create_or_edit_poll(single_option_form, single_option_options,user=user))
         
     return polls_created
-    
+
+
+def get_user(django_user_model):
+    """Get user. If not exists, create it.
+
+    Args:
+        django_user_model (Any): Django user model.
+
+    Returns:
+        Any: User.
+    """
+    # Create or get user
+    if not django_user_model.objects.filter(username="user").exists():
+        return django_user_model.objects.create_user(username="user", password="password")
+   
+    return  django_user_model.objects.get(username="user")

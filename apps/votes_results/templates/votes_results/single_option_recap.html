@@ -1,5 +1,5 @@
 {% extends 'global/skeleton.html' %}
-
+{% load are_results_visible %}
 {% block pagename %}Conferma Opzione Singola{% endblock pagename %}
 
 {% block content %}
@@ -55,7 +55,7 @@
         <div class="fw-bold fs-4">{{mj_vote_counter.count_majority_judgment_votes}}</div>
         <a href="{% url 'apps.votes_results:majority_judgment_vote' poll_id=vote.poll.id %}" 
         class="btn btn-primary mt-2">Esprimi un giudizio</a>
-        {% if mj_vote_counter.count_majority_judgment_votes > 0 %} 
+        {% if mj_vote_counter.count_majority_judgment_votes > 0 and vote.poll|are_results_visible:request %} 
             <a href="{% url 'apps.votes_results:majority_judgment_results' poll_id=vote.poll.id %}" class="btn btn-secondary mt-2">Vedi risultati</a>
         {% endif %}
     </div>
@@ -74,9 +74,11 @@
             href="{% url 'home' %}" >
             Torna alla home
         </a>
+        {% if vote.poll|are_results_visible:request %} 
         <a class="btn btn-primary mt-2" 
             href="{% url 'apps.votes_results:single_option_results' poll_id=vote.poll.id %}" 
             role="button">Vedi risultati</a>
+        {% endif %}
         <button type="button" class="btn btn-info mt-2" 
             data-bs-toggle="modal" data-bs-target="#shareModal-{{vote.poll.id}}">
             Condividi 

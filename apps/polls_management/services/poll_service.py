@@ -190,7 +190,7 @@ class PollService:
         if poll.is_closed():
             raise PollIsCloseException(f"Poll with id={id} is already close.")
 
-        if poll.is_open():
+        if poll.is_closable_now():
             poll.close_datetime = timezone.now()
             poll.save()
             return poll

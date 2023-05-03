@@ -2,6 +2,7 @@ from apps.votes_results.classes.vote_builder import VoteBuilder
 from apps.polls_management.models.poll_model import PollModel
 from apps.polls_management.models.vote_model import VoteModel
 from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
+from apps.votes_results.exceptions.results_not_available_exception import ResultsNotAvailableException
 from apps.votes_results.exceptions.vote_does_not_exixt_exception import VoteDoesNotExistException
 from django.core.exceptions import ObjectDoesNotExist
 from apps.votes_results.classes.poll_result import PollResult
@@ -54,7 +55,7 @@ class SingleOptionVoteService:
             raise VoteDoesNotExistException()
 
     @staticmethod
-    def calculate_result(poll_id: str) -> PollResult:
+    def calculate_result(poll_id: str, user = None) -> PollResult:
         """
         Calculate result of a poll.
         Args:
@@ -67,6 +68,12 @@ class SingleOptionVoteService:
             poll: PollModel = PollModel.objects.get(id=poll_id)
         except ObjectDoesNotExist:
             raise PollDoesNotExistException(f"Poll with id={poll_id} does not exist")
+        
+        # check if the results can be viewed
+        if not poll.are_results_visible(user):
+            raise ResultsNotAvailableException(f"Results of poll with id={poll_id} are not available")
+        
+        
 
         return PollResult(poll)
 

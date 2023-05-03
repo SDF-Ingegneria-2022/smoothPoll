@@ -6,8 +6,9 @@ from apps.polls_management.services.poll_service import PollService
 from apps.polls_management.models.poll_model import RANDOMIZE_OPTIONS, PollModel, NAME, \
                                                     QUESTION, POLL_TYPE, \
                                                     OPEN_DATETIME, CLOSE_DATETIME,\
-                                                    PREDEFINITED, VOTABLE_MJ, AUTHOR,\
-                                                    PRIVATE, SHORT_ID, PROTECTION
+                                                    VOTABLE_MJ, AUTHOR,\
+                                                    PRIVATE, SHORT_ID, PROTECTION, \
+                                                    RESULTS_VISIBILITY
 
 # Session keys used to store form data 
 # (or create/edit process data)
@@ -106,7 +107,8 @@ def init_session_for_edit(request: HttpRequest, poll: PollModel,
         PRIVATE: override_data.get(PRIVATE, poll.private), 
         SHORT_ID: override_data.get(SHORT_ID, poll.short_id), 
         RANDOMIZE_OPTIONS: override_data.get(RANDOMIZE_OPTIONS, poll.randomize_options),
-        PROTECTION: override_data.get(PROTECTION, poll.protection)
+        PROTECTION: override_data.get(PROTECTION, poll.protection), 
+        RESULTS_VISIBILITY: override_data.get(RESULTS_VISIBILITY, poll.results_visibility), 
     }, instance=poll)
 
     # init poll options with current ones

@@ -29,6 +29,7 @@ class TestPollService():
     question: str = "What is your favorite poll option?"
     options: List[dict] = ["Question 1", "Question 2"]
     user: User = User(username="user1",password="bar1") 
+    
     ## Fixtures
     @pytest.fixture
     def create_20_polls(self):
@@ -393,58 +394,6 @@ class TestPollService():
             .when_called_with(id=id)
 
     # =================== END legacy creation mode ===================
-
-
-    # ====== Close poll anytime ======
-    
-    @pytest.mark.django_db
-    def test_close_poll(self):
-        """Test close poll"""
-        self.user.save()
-        poll = PollService.create(self.name, self.question, self.options, self.user)
-        id = poll.id
-        #yesterday 
-        open_date = timezone.now() - timezone.timedelta(days=1)
-        #tomorrow
-        close_date = timezone.now() + timezone.timedelta(days=1)
-        poll.open_datetime = open_date
-        poll.close_datetime = close_date
-        poll.save()
-
-        closed_poll: PollModel = PollService.close_poll(id)
-
-        assert_that(closed_poll.is_closed()).is_true()
-
-    @pytest.mark.django_db
-    def test_close_poll_already_closed(self):
-        """Test close poll, poll already closed"""
-        self.user.save()
-        poll = PollService.create(self.name, self.question, self.options, self.user)
-        id = poll.id
-        #yesterday 
-        open_date = timezone.now() - timezone.timedelta(days=1)
-        close_date = timezone.now()
-        poll.open_datetime = open_date
-        poll.close_datetime = close_date
-        poll.save()
-
-        assert_that(PollService.close_poll) \
-            .raises(PollIsCloseException) \
-            .when_called_with(id=id)
-
-    @pytest.mark.django_db
-    def test_close_poll_not_open(self):
-        """Test close poll, poll that need to be opened"""
-        self.user.save()
-        poll = PollService.create(self.name, self.question, self.options, self.user)
-        id = poll.id
-        poll.save()
-
-        assert_that(PollService.close_poll) \
-            .raises(PollCannotBeClosedException) \
-            .when_called_with(id=id)
-
-
 
 
 

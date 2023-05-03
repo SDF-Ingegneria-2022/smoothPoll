@@ -132,16 +132,18 @@ class TestRenderVoteGeneric(TestWithClient, abc.ABC):
 
         # call short id passing token as param
         response = client.get(test_config["short_id_url"]  + token.get_token_query_string())
-
-        # expect redirect to vote view 
-        # TODO: solve incoerence w vote without token!
         assert_that(response.status_code).is_equal_to(302)
-        assert_that(response.url).is_equal_to(test_config["vote_page_url"])
+        assert_that(response.url).is_equal_to(test_config["generic_vote_url"])
+
+        # expect redirect to generic vote view
+        response2 = client.get(response.url)
+        assert_that(response2.status_code).is_equal_to(302)
+        assert_that(response2.url).is_equal_to(test_config["vote_page_url"])
 
         # call redirect url and expect I can vote
-        response2 = client.get(response.url)
-        assert_that(response2.status_code).is_equal_to(200)
-        assert_that(response2.templates[0].name).is_equal_to(test_config["vote_page_template"])
+        response3 = client.get(response2.url)
+        assert_that(response3.status_code).is_equal_to(200)
+        assert_that(response3.templates[0].name).is_equal_to(test_config["vote_page_template"])
 
     def _test_missing_token(self, client, create_poll, test_config):
         """Test to ensure that a token protected choice cannot be accessed without a token"""
@@ -198,7 +200,7 @@ class TestRenderVoteGeneric(TestWithClient, abc.ABC):
         token = self._make_poll_token_votable(create_poll)
 
         self._vote_with_token(create_poll, token)
-
+    
         # call short id passing used token as param
         # (expect not the vote page)
         response = client.get(test_config["short_id_url"] + token.get_token_query_string())
@@ -226,14 +228,18 @@ class TestRenderVoteGeneric(TestWithClient, abc.ABC):
         # call short id passing used token as param
         # (expect not the vote page)
         response = auth_client.get(test_config["short_id_url"])
-
         assert_that(response.status_code).is_equal_to(302)
-        assert_that(response.url).is_equal_to(test_config["vote_page_url"])
+        assert_that(response.url).is_equal_to(test_config["generic_vote_url"])
 
-        # check that vote page is working
+        # expect redirect to generic vote view
         response2 = auth_client.get(response.url)
-        assert_that(response2.status_code).is_equal_to(200)
-        assert_that(response2.templates[0].name).is_equal_to(test_config["vote_page_template"])
+        assert_that(response2.status_code).is_equal_to(302)
+        assert_that(response2.url).is_equal_to(test_config["vote_page_url"])
+
+        # call redirect url and expect I can vote
+        response3 = auth_client.get(response2.url)
+        assert_that(response3.status_code).is_equal_to(200)
+        assert_that(response3.templates[0].name).is_equal_to(test_config["vote_page_template"])
 
     def _test_vote_w_google_from_generic(self, auth_client, create_poll, test_config):
         """Ensure that a logged user can vote Auth protected polls (using generic link)"""
