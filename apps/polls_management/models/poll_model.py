@@ -21,6 +21,8 @@ PRIVATE = 'private'
 SHORT_ID = 'short_id'
 RANDOMIZE_OPTIONS = 'randomize_options'
 PROTECTION = 'protection'
+RESULTS_VISIBILITY = 'results_visibility'
+
 class PollModel(models.Model): 
 
     class PollType(models.TextChoices):
@@ -35,6 +37,12 @@ class PollModel(models.Model):
         UNPROTECTED = 'unprotected', _('Non protetto')
         TOKEN = 'token', _('Giudicabile tramite Token')
         GOOGLE = 'google', _('Giudicabile tramite autenticazione Google')
+
+    class PollResultsVisibility(models.TextChoices):
+        """The possible policies for the visibility of the results of a poll"""
+        ALWAYS_VISIBLE = 'always_visible', _('Sempre visibili')
+        HIDDEN_UNTIL_CLOSED_FOR_ALL = 'hidden_until_closed_for_all', _('Nascosti fino alla chiusura')
+        HIDDEN_UNTIL_CLOSED_FOR_VOTERS = 'hidden_until_closed_for_voters', _('Nascosti fino alla chiusura, ma visibili per te')
 
     name: CharField = models.CharField(
         max_length=200, verbose_name=_('Nome Scelta'))
@@ -88,6 +96,12 @@ class PollModel(models.Model):
         choices=PollVoteProtection.choices, 
         default=PollVoteProtection.UNPROTECTED
         )  
+    
+    results_visibility: models.CharField = models.CharField(
+        max_length=200,
+        choices=PollResultsVisibility.choices, 
+        default=PollResultsVisibility.ALWAYS_VISIBLE
+        )
 
     def __str__(self):
         return str({
@@ -128,6 +142,24 @@ class PollModel(models.Model):
         
         return timezone.now() > self.close_datetime
     
+    def is_vote_end(self) -> bool:
+        """Check if votation ended"""
+        return self.is_closed()
+    
+    def is_closable_now(self) -> bool:
+        """Check if this kind of poll is closable right now"""
+        return self.is_open() and not self.is_vote_end() and \
+            self.results_visibility != PollModel.PollResultsVisibility.HIDDEN_UNTIL_CLOSED_FOR_VOTERS
+    
+    def are_results_visible(self, user=None) -> bool:
+        """Check if results are visible right now"""
+        return self.is_vote_end() or \
+            self.results_visibility == PollModel.PollResultsVisibility.ALWAYS_VISIBLE or \
+            (
+                self.results_visibility == PollModel.PollResultsVisibility.HIDDEN_UNTIL_CLOSED_FOR_VOTERS and
+                user is not None and user.is_authenticated and self.author == user
+            )
+
     def is_votable_token(self) -> bool:
         """Check if Poll is votable with token
 

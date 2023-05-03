@@ -1,6 +1,7 @@
 {% extends 'global/skeleton.html' %}
 
 {% load static %}
+{% load are_results_visible %}
 
 {% block pagename %}Scelte sociali{% endblock pagename %}
 
@@ -38,7 +39,10 @@
                             <p  class="fw-light mb-1 ">Stato scelta: <b>Aperto</b></p>
                             <p  class="fw-light mb-1 ">Data chiusura: <b>{{poll.close_datetime}}</b></p>
                     {% include "votes_results/components/vote_button.html" with poll=poll btn_classes="mt-2" %}
-                    <a href="{% url 'apps.votes_results:majority_judgment_results' poll_id=poll.id %}" class="btn btn-secondary mt-2">Vai ai risultati</a>
+                    
+                    {% if poll|are_results_visible:request %}
+                        <a href="{% url 'apps.votes_results:majority_judgment_results' poll_id=poll.id %}" class="btn btn-secondary mt-2">Vai ai risultati</a>
+                    {% endif %}
                     </div>
                 </div>
                 </div>

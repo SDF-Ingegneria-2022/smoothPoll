@@ -5,6 +5,7 @@ from apps.polls_management.exceptions.poll_does_not_exist_exception import PollD
 from apps.polls_management.models.poll_model import PollModel
 from apps.polls_management.services.poll_service import PollService
 from apps.votes_results.classes.poll_result import PollResult
+from apps.votes_results.exceptions.results_not_available_exception import ResultsNotAvailableException
 from apps.votes_results.services.single_option_vote_service import SingleOptionVoteService
 
 
@@ -35,12 +36,11 @@ def single_option_results_view(request: HttpRequest, poll_id: int):
 
     # regular results page 
     try:
-        poll_results: PollResult = SingleOptionVoteService.calculate_result(poll_id)
+        poll_results: PollResult = SingleOptionVoteService.calculate_result(poll_id, user=request.user)
     except PollDoesNotExistException:
         raise Http404
-    except Exception:
-        # Internal error: you should inizialize DB first (error 500)
-        return HttpResponseServerError("Something got (slighly) terribly wrong. Please contact developers")
+    except ResultsNotAvailableException:
+        raise Http404
 
     return render(request, 'votes_results/single_option_results.html', 
         {'poll_results': poll_results,

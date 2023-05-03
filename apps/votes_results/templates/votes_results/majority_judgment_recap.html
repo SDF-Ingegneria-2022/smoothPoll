@@ -1,8 +1,11 @@
 {% extends 'global/skeleton.html' %}
+{% load are_results_visible %}
 
 {% block pagename %}Conferma Giudizio Maggioritario{% endblock pagename %}
 
 {% block content %}
+
+
 
 <div class="container ">
     {# Poll summary #}
@@ -85,11 +88,13 @@
                 href="{% url 'home' %}" >
                 Torna alla home
             </a>
+            {% if vote.poll|are_results_visible:request %}  
             <a 
                 class="btn btn-primary mt-2"
                 href="{% url 'apps.votes_results:majority_judgment_results' poll_id=vote.poll.id %}">
                 Vedi risultati
             </a>
+            {% endif %}
             <button type="button" class="btn btn-info mt-2" 
                 data-bs-toggle="modal" data-bs-target="#shareModal-{{vote.poll.id}}">
                 Condividi 
