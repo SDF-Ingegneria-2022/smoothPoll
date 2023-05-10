@@ -1,0 +1,32 @@
+<script>
+document.body.addEventListener('htmx:configRequest', (event) => {
+            event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
+        })
+</script>
+
+<div class="d-flex justify-content-between">
+
+    <section class="col-6">
+    
+        {% if poll.options %}
+        
+            {% csrf_token %}
+            <form class="sortable list-group" hx-trigger="end" hx-post="{% url 'apps.votes_results:sort' poll_id=poll.id %}" hx-target="#option-list">
+                <div class="htmx-indicator">Updating...</div>
+                {% for option in poll.options %}
+                <div>
+                    <input type="hidden" name="option_order" value="{{ option.id }}" />
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <!--option order will be the number on the list-->
+                        #{{option.order}} {{ option.value }}
+                    </li>
+                </div>
+            {% endfor %}
+            </form>
+        {% else %}
+            <p>You do not have any options in your list</p>
+        {% endif %}
+    
+    </section>
+    
+    

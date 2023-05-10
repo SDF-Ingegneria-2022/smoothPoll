@@ -1,8 +1,9 @@
 from typing import List
-from django.http import HttpRequest
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 from django.core.paginator import Paginator
 from apps.polls_management.models.poll_model import PollModel
+from apps.polls_management.models.poll_option_model import PollOptionModel
 from apps.polls_management.services.poll_service import PollService
 
 
@@ -55,3 +56,18 @@ def all_votable_polls(request: HttpRequest):
                     'cannot_edit': not_editable
                     }
                 )
+
+def schulze(request, poll_id):
+    poll = PollService.get_poll_by_id(poll_id)
+    return render(request, 
+                    'votes_results/schulze_method_vote.html', 
+                    { 
+                        'poll': poll
+                    })
+
+def sort(request, poll_id):
+    #print(request.POST)
+    poll = PollService.get_poll_by_id(poll_id)
+    option_pks_order = request.POST.getlist('option_order')
+    print(option_pks_order)
+    return render(request, 'votes_results/partials/option-list.html', {'poll': poll})
