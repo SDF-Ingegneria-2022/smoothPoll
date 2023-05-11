@@ -206,7 +206,7 @@ class MajorityPollResultData(object):
         if not isinstance(obj, MajorityPollResultData):
             return False
         
-        if i == self.option_votes.count():
+        if i == self.option_votes.count()-1:
             return self.option.value > obj.option.value
 
         # if median is greater --> x win
