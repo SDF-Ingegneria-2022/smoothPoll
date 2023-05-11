@@ -565,12 +565,12 @@ class TestMajorityVoteService:
         x: List[MajorityPollResultData] = MajorityJudjmentVoteService.calculate_result(poll_id=poll.id)
 
         # verify options order
-        # assert_that(x[0].option).is_equal_to(poll.options()[2])
-        # assert_that(x[1].option).is_equal_to(poll.options()[3])
-        # assert_that(x[2].option).is_equal_to(poll.options()[4])
-        # assert_that(x[3].option).is_equal_to(poll.options()[1])
-        # assert_that(x[4].option).is_equal_to(poll.options()[0])
-        # assert_that(x[5].option).is_equal_to(poll.options()[5])
+        assert_that(x[0].option).is_equal_to(poll.options()[2])
+        assert_that(x[1].option).is_equal_to(poll.options()[3])
+        assert_that(x[2].option).is_equal_to(poll.options()[4])
+        assert_that(x[3].option).is_equal_to(poll.options()[1])
+        assert_that(x[4].option).is_equal_to(poll.options()[0])
+        assert_that(x[5].option).is_equal_to(poll.options()[5])
 
         # verify option values
         # for option in x:
