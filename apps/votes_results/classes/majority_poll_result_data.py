@@ -2,6 +2,8 @@ from apps.polls_management.models.majority_judgment_model import MajorityJudgmen
 from apps.polls_management.models.poll_option_model import PollOptionModel
 from apps.votes_results.exceptions.poll_not_yet_voted_exception import PollNotYetVodedException
 
+from django.db.models.query import QuerySet
+
 from dataclasses import dataclass
 import math
 
@@ -28,24 +30,27 @@ class MajorityPollResultData(object):
     """The majority grade sign is '+' if good votes are more than
     bad votes"""
 
+    option_votes: QuerySet
+    """All the votes for this option"""
+
     def __init__(self, option: PollOptionModel):
 
         self.option = option
 
         # retrieve votes (ordered by rating)
-        option_votes = MajorityJudgmentModel.objects \
+        self.option_votes = MajorityJudgmentModel.objects \
             .filter(poll_option=option.id) \
             .order_by('rating')
 
-        if option_votes.count() < 1:
+        if self.option_votes.count() < 1:
             raise PollNotYetVodedException()
 
         # calculate median (or worse of two)
-        self.median = option_votes[math.floor((option_votes.count()-1)/2)].rating
+        self.median = self.option_votes[math.floor((self.option_votes.count()-1)/2)].rating
 
         # retrieve number of (strictly) greater and smaller votes
-        self.good_votes: int = option_votes.filter(rating__gt=self.median).count()
-        self.bad_votes: int = option_votes.filter(rating__lt=self.median).count()
+        self.good_votes: int = self.option_votes.filter(rating__gt=self.median).count()
+        self.bad_votes: int = self.option_votes.filter(rating__lt=self.median).count()
 
         # set sign: 
         # if good > bad         --> +
@@ -102,29 +107,128 @@ class MajorityPollResultData(object):
         (so if I am semantically ">" than the other one)
         """
 
-        if not isinstance(other, MajorityPollResultData):
+        return self.sorting(other, i=0)
+
+        # if not isinstance(other, MajorityPollResultData):
+        #     return False
+        
+        # # if median is greater --> x win
+        # if self.median > other.median:
+        #     return True
+        # elif self.median < other.median:
+        #     return False
+
+        # # positive grade should win against  
+        # # negative grade
+        # if self.positive_grade and not other.positive_grade:
+        #     return True
+        # elif not self.positive_grade and other.positive_grade:
+        #     return False 
+        
+        # # if both are positive, it wins who has greater number of 
+        # # strictly better votes
+        # if self.positive_grade and other.positive_grade:
+        #     return self.good_votes > other.good_votes
+        # elif (not self.positive_grade) and (not other.positive_grade):
+        #     return self.bad_votes < other.bad_votes
+
+        # # if both have exactly same votes, I make win 
+        # # the one with "value" that came before
+        # return self.option.value > other.option.value
+    
+    def majority_values_median(self, values: QuerySet):
+        """Returns new median from list of majority values"""
+
+        old_median = values[math.floor((values.count()-1)/2)].rating
+        # here we exclude the single value of the median
+        values.exclude(rating=old_median)
+        new_median = values[math.floor((values.count()-1)/2)].rating
+        
+        return new_median
+
+    def median_value(self, iteration=0):
+        """Calculates the median of the current majority values iteration"""
+
+        majority_values: QuerySet = self.option_votes
+
+        if iteration > 0:
+            while(iteration > 0):
+                new_median = self.majority_values_median(majority_values)
+                iteration -= 1
+            return new_median
+        else:
+            return self.median
+        
+    def good_votes_value(self, it_g=0):
+        """Calculates the number of good votes for the current majority value iteration"""
+
+        majority_values: QuerySet = self.option_votes
+
+        if it_g > 0:
+            while(it_g > 0):
+                new_median = self.majority_values_median(majority_values)
+                it_g -= 1
+            new_good_votes: int = majority_values.filter(rating__gt=new_median).count()
+            return new_good_votes
+        else:
+            return self.good_votes
+        
+    def bad_votes_value(self, it_b=0):
+        """Calculates the number of bad votes for the current majority value iteration"""
+
+        majority_values: QuerySet = self.option_votes
+
+        if it_b > 0:
+            while(it_b > 0):
+                new_median = self.majority_values_median(majority_values)
+                it_b -= 1
+            new_bad_votes: int = majority_values.filter(rating__lt=new_median).count()
+            return new_bad_votes
+        else:
+            return self.bad_votes
+        
+    def positive_grade_value(self, iteration=0):
+        """Calculates the positive grade for the current majority value iteration"""
+
+        if iteration > 0:
+            new_positive_grade = (self.good_votes_value(it_g=iteration) > self.bad_votes_value(it_b=iteration))
+            return new_positive_grade
+        else:
+            return self.positive_grade
+
+    def sorting(self, obj, i):
+        """Function that gives sorting rules for Majority Data Objects"""
+
+        if not isinstance(obj, MajorityPollResultData):
             return False
         
         # if median is greater --> x win
-        if self.median > other.median:
+        if self.median_value(iteration=i) > obj.median_value(iteration=i):
             return True
-        elif self.median < other.median:
+        elif self.median_value(iteration=i) < obj.median_value(iteration=i):
             return False
 
         # positive grade should win against  
         # negative grade
-        if self.positive_grade and not other.positive_grade:
+        if self.positive_grade_value(iteration=i) and not obj.positive_grade_value(iteration=i):
             return True
-        elif not self.positive_grade and other.positive_grade:
+        elif not self.positive_grade_value(iteration=i) and obj.positive_grade_value(iteration=i):
             return False 
         
         # if both are positive, it wins who has greater number of 
         # strictly better votes
-        if self.positive_grade and other.positive_grade:
-            return self.good_votes > other.good_votes
-        elif (not self.positive_grade) and (not other.positive_grade):
-            return self.bad_votes < other.bad_votes
+        if self.positive_grade_value(iteration=i) and obj.positive_grade_value(iteration=i):
+            return self.good_votes_value(it_g=i) > obj.good_votes_value(it_g=i)
+        elif (not self.positive_grade_value(iteration=i)) and (not obj.positive_grade_value(iteration=i)):
+            return self.bad_votes_value(it_b=i) < obj.bad_votes_value(it_b=i)
+
+        # special case where (p, grade, q) => grade1==grade2 and p1==p2 or q1==q2
+        # here we use the iterations to get the majority values
+        if (self.median_value(iteration=i) == obj.median_value(iteration=i)) and \
+            ((self.good_votes_value(it_g=i) == obj.good_votes_value(it_g=i)) or \
+            (self.bad_votes_value(it_b=i) == obj.bad_votes_value(it_b=i))):
+            return self.sorting(obj, i+1)
 
         # if both have exactly same votes, I make win 
         # the one with "value" that came before
-        return self.option.value > other.option.value
+        return self.option.value > obj.option.value
