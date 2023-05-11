@@ -1,187 +1,19 @@
-from typing import List
+from ast import List
 import pytest
 from assertpy import assert_that
-from apps.votes_results.classes.majority_poll_result_data import MajorityPollResultData
-from apps.votes_results.exceptions.majority_number_of_ratings_not_valid import MajorityNumberOfRatingsNotValid
-from apps.votes_results.exceptions.poll_option_rating_unvalid_exception import PollOptionRatingUnvalidException
-from apps.polls_management.models.majority_judgment_model import MajorityJudgmentModel
-from apps.polls_management.models.majority_vote_model import MajorityVoteModel
-from apps.polls_management.models.poll_model import PollModel
-from apps.polls_management.models.poll_option_model import PollOptionModel
 from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
+
+from apps.polls_management.models.majority_vote_model import MajorityVoteModel
+
+from apps.polls_management.models.poll_model import PollModel
+from apps.votes_results.classes.majority_poll_result_data import MajorityPollResultData
 from apps.votes_results.services.majority_judgment_vote_service import MajorityJudjmentVoteService
+from test.service_level.utils.has_test_polls import HasTestPolls
 
-@pytest.fixture()
-def test_polls(request,django_user_model):
 
-    username = "user1"
-    password = "bar"
-    user = django_user_model.objects.create_user(username=username, password=password) 
+class TestMajorityResults(HasTestPolls):
 
-    dummy_poll = PollModel(name="Dummy", question="Dummy question?", author=user)
-    dummy_poll.save()
-
-    option1 = PollOptionModel(value="Valore 1", poll_fk=dummy_poll)
-    option1.save()
-
-    option2 = PollOptionModel(value="Valore 2", poll_fk=dummy_poll)
-    option2.save()
-
-    option3 = PollOptionModel(value="Valore 3", poll_fk=dummy_poll)
-    option3.save()
-    
-    username2 = "user2"
-    password2 = "bar"
-    user2 = django_user_model.objects.create_user(username=username2, password=password2) 
-    
-    control_poll = PollModel(name="Dummy2", question="Dummy question2?", author=user2)
-    control_poll.save()
-
-    option4 = PollOptionModel(value="Valore 1", poll_fk=control_poll)
-    option4.save()
-
-    option5 = PollOptionModel(value="Valore 2", poll_fk=control_poll)
-    option5.save()
-
-    option6 = PollOptionModel(value="Valore 3", poll_fk=control_poll)
-    option6.save()
-
-    option7 = PollOptionModel(value="Valore 4", poll_fk=control_poll)
-    option7.save()
-
-    username3 = "user3"
-    password3 = "bar"
-    user3 = django_user_model.objects.create_user(username=username3, password=password3) 
-
-    control_poll2 = PollModel(name="Dummy3", question="Dummy question3?", author=user3)
-    control_poll2.save()
-
-    option8 = PollOptionModel(value="A", poll_fk=control_poll2)
-    option8.save()
-
-    option9 = PollOptionModel(value="B", poll_fk=control_poll2)
-    option9.save()
-
-    option10 = PollOptionModel(value="C", poll_fk=control_poll2)
-    option10.save()
-
-    option11 = PollOptionModel(value="D", poll_fk=control_poll2)
-    option11.save()
-
-    option12 = PollOptionModel(value="E", poll_fk=control_poll2)
-    option12.save()
-
-    option13 = PollOptionModel(value="F", poll_fk=control_poll2)
-    option13.save()
-
-    username4 = "user4"
-    password4 = "bar"
-    user4 = django_user_model.objects.create_user(username=username4, password=password4) 
-
-    control_poll3 = PollModel(name="Dummy4", question="Dummy question4?", author=user4)
-    control_poll3.save()
-
-    option14 = PollOptionModel(value="A", poll_fk=control_poll3)
-    option14.save()
-
-    option15 = PollOptionModel(value="B", poll_fk=control_poll3)
-    option15.save()
-
-    option16 = PollOptionModel(value="C", poll_fk=control_poll3)
-    option16.save()
-
-    return {'voted_poll': dummy_poll, 'control_poll': control_poll, 'control_poll2': control_poll2, 'control_poll3': control_poll3 }
-
-class TestMajorityVoteService:
-
-    @pytest.mark.django_db
-    def test_majority_vote_perform_works(self,test_polls):
-        """
-        Test majority vote perform procedure works
-        """
-
-        poll: PollModel = test_polls['voted_poll']
-
-        votes: List[dict] = [{'poll_choice_id': poll.options()[0].id, 'rating': 2 },
-                            {'poll_choice_id': poll.options()[1].id, 'rating': 2 },
-                            {'poll_choice_id': poll.options()[2].id, 'rating': 3 }]
-
-        MajorityJudjmentVoteService.perform_vote(votes, poll_id=poll.id)
-
-    @pytest.mark.django_db
-    def test_majority_vote_perform_works_correctly(self, test_polls):
-        """Various test to assert that the majority vote creates the vote correctly"""
-
-        poll: PollModel = test_polls['voted_poll']
-        
-        votes: List[dict] = [{'poll_choice_id': poll.options()[0].id, 'rating': 2 },
-                            {'poll_choice_id': poll.options()[1].id, 'rating': 2 },
-                            {'poll_choice_id': poll.options()[2].id, 'rating': 3 }]
-
-        performed_vote: MajorityVoteModel = MajorityJudjmentVoteService.perform_vote(votes, poll_id=poll.id)
-
-        assert_that(performed_vote).is_instance_of(MajorityVoteModel)
-
-        majority_judgement = MajorityJudgmentModel.objects.filter(majority_poll_vote=performed_vote.id)
-
-        # check if we have added three votes
-        assert_that(majority_judgement.count()).is_equal_to(3)
-
-        # check if the rating are assigned to the correct options
-        assert_that(majority_judgement.get(poll_option=poll.options()[0].id).rating).is_equal_to(2)
-        assert_that(majority_judgement.get(poll_option=poll.options()[1].id).rating).is_equal_to(2)
-        assert_that(majority_judgement.get(poll_option=poll.options()[2].id).rating).is_equal_to(3)
-
-    @pytest.mark.django_db
-    def test_majority_vote_notexist_poll(self, test_polls):
-        """
-        Test that you cannot vote a majority pool which doesn't exist
-        """
-
-        votes: List[dict] = []
-
-        voted_poll: PollModel = test_polls['voted_poll']
-        id = voted_poll.id
-        voted_poll.delete()
-
-        assert_that(MajorityJudjmentVoteService.perform_vote) \
-            .raises(PollDoesNotExistException) \
-            .when_called_with(votes, poll_id=id)
-
-    @pytest.mark.django_db
-    def test_majority_vote_option_not_all_voted(self, test_polls):
-        """
-        Test that you cannot vote a majority poll when you have not selected
-        a preference for every option
-        """
-
-        poll: PollModel = test_polls['voted_poll']
-
-        votes: List[dict] = [{'poll_choice_id': poll.options()[0].id, 'rating': 2 },
-                            {'poll_choice_id': poll.options()[1].id, 'rating': 2 }]
-
-        assert_that(MajorityJudjmentVoteService.perform_vote) \
-            .raises(PollOptionRatingUnvalidException) \
-            .when_called_with(votes, poll_id=poll.id)
-
-    @pytest.mark.django_db
-    def test_majority_vote_option_rating_number_wrong(self, test_polls):
-        """
-        Test that you cannot give a preference not expected by the majority poll
-        (es.: 7 when the max number/value is 5)
-        """
-
-        poll: PollModel = test_polls['voted_poll']
-
-        votes: List[dict] = [{'poll_choice_id': poll.options()[0].id, 'rating': 2 },
-                            {'poll_choice_id': poll.options()[1].id, 'rating': 7 },
-                            {'poll_choice_id': poll.options()[2].id, 'rating': 3 }]
-
-        assert_that(MajorityJudjmentVoteService.perform_vote) \
-            .raises(MajorityNumberOfRatingsNotValid) \
-            .when_called_with(votes, poll_id=poll.id)
-
-# Section related to tests of method calculate_result
+    # Section related to tests of method calculate_result
 
     @pytest.mark.django_db
     def test_majority_vote_calculate_result_call(self, test_polls):
@@ -488,7 +320,7 @@ class TestMajorityVoteService:
                 assert_that(option.positive_grade).is_true()
 
 
-# -------------------- tests for majority revision algorithm --------------------
+    # -------------------- tests for majority revision algorithm --------------------
 
 
     @pytest.mark.django_db
