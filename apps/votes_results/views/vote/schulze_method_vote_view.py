@@ -1,5 +1,6 @@
 from apps.polls_management.classes.poll_token_validation.token_validation import TokenValidation
 from apps.polls_management.models.poll_token import PollTokens
+from apps.polls_management.services.poll_service import PollService
 from apps.polls_management.services.poll_token_service import PollTokenService
 from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
 from apps.polls_management.models.poll_model import PollModel
@@ -21,13 +22,20 @@ SESSION_SINGLE_OPTION_VOTE_SUBMIT_ERROR = 'vote-submit-error'
 SESSION_SINGLE_OPTION_VOTE_ID = 'single-option-vote-id'
 SESSION_TOKEN_USED = 'token_used'
 
-def schulze(self,request:HttpRequest)-> HttpResponse:
+
+def schulze(request, poll_id):
+    poll = PollService.get_poll_by_id(poll_id)
     return render(request, 
                     'votes_results/schulze_method_vote.html', 
                     { 
-                        'poll': self.poll(), 
+                        'poll': poll
                     })
 
+def sort(request, poll_id):
+    poll = PollService.get_poll_by_id(poll_id)
+    option_pks_order = request.POST.getlist('option_order')
+    print(option_pks_order)
+    return render(request, 'votes_results/partials/option-list.html', {'poll': poll})
 
 """
 class SchulzeMethodVoteView(VoteViewSchema):
