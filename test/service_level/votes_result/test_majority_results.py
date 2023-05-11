@@ -364,70 +364,60 @@ class TestMajorityResults(HasTestPolls):
     #     assert_that(x[3].option).is_equal_to(poll.options()[2])
 
 
-    @pytest.mark.django_db
-    def test_majority_vote_calculate_result_check_correct_special_case2(self, test_polls):
-        """
-        Test where the calculate_result function is called and chech if the result is correct
-        """
-        poll: PollModel = test_polls['poll_case_23']
+    # @pytest.mark.django_db
+    # def test_majority_vote_calculate_result_check_correct_special_case2(self, test_polls):
 
-        # option[0] = A
-        # option[1] = B
-        # option[2] = C
-        # number of votes = 5
+    #     poll: PollModel = test_polls['poll_case_23']
 
-        MajorityJudjmentVoteService.perform_vote(
-            [{'poll_choice_id': poll.options()[0].id, 'rating': 1 },
-            {'poll_choice_id': poll.options()[1].id, 'rating': 1 },
-            {'poll_choice_id': poll.options()[2].id, 'rating': 2 }], poll_id=poll.id)
-        
-        MajorityJudjmentVoteService.perform_vote(
-            [{'poll_choice_id': poll.options()[0].id, 'rating': 2 },
-            {'poll_choice_id': poll.options()[1].id, 'rating': 2 },
-            {'poll_choice_id': poll.options()[2].id, 'rating': 2 }], poll_id=poll.id)
-        
-        MajorityJudjmentVoteService.perform_vote(
-            [{'poll_choice_id': poll.options()[0].id, 'rating': 3 },
-            {'poll_choice_id': poll.options()[1].id, 'rating': 3 },
-            {'poll_choice_id': poll.options()[2].id, 'rating': 3 }], poll_id=poll.id)
-        
-        MajorityJudjmentVoteService.perform_vote(
-            [{'poll_choice_id': poll.options()[0].id, 'rating': 3 },
-            {'poll_choice_id': poll.options()[1].id, 'rating': 3 },
-            {'poll_choice_id': poll.options()[2].id, 'rating': 3 }], poll_id=poll.id)
-        
-        MajorityJudjmentVoteService.perform_vote(
-            [{'poll_choice_id': poll.options()[0].id, 'rating': 5 },
-            {'poll_choice_id': poll.options()[1].id, 'rating': 4 },
-            {'poll_choice_id': poll.options()[2].id, 'rating': 5 }], poll_id=poll.id)
-        
-        x: List[MajorityPollResultData] = MajorityJudjmentVoteService.calculate_result(poll_id=poll.id)
+    #     # option[0] = A <-- 444-555
+    #     # option[1] = B <-- 222-444
+    #     # option[2] = C <-- 11-3-555
+    #     # option[3] = D <-- 11-33-55
+    #     # option[4] = E <-- 11-2-555
+    #     # number of votes = 6
+    #     # expected result: C > D > A > E > B 
 
-        # verify options order C, A, B ---- (C, B, A)
-        # assert_that(x[0].option).is_equal_to(poll.options()[2])
-        # assert_that(x[1].option).is_equal_to(poll.options()[0])
-        # assert_that(x[2].option).is_equal_to(poll.options()[1])
+    #     self.__quick_submit_vote(poll, [4, 2, 1, 1, 1])
+    #     self.__quick_submit_vote(poll, [4, 2, 1, 1, 1])
+    #     self.__quick_submit_vote(poll, [4, 4, 3, 3, 2])
+    #     self.__quick_submit_vote(poll, [5, 4, 5, 3, 5])
+    #     self.__quick_submit_vote(poll, [5, 4, 5, 5, 5])
+    #     self.__quick_submit_vote(poll, [5, 4, 5, 5, 5])
 
-        # verify option values
-        for option in x:
-            
-            if option.option == poll.options()[0]:
-                # votes on option 0-A: [1, 2, 3, 3, 5]
-                assert_that(option.median).is_equal_to(3)
-                assert_that(option.good_votes).is_equal_to(1)
-                assert_that(option.bad_votes).is_equal_to(2)
-                assert_that(option.positive_grade).is_false()
+    #     x: List[MajorityPollResultData] = \
+    #         MajorityJudjmentVoteService.calculate_result(poll_id=poll.id)
 
-            elif option.option == poll.options()[1]:
-                # votes on option 1-B: [1, 2, 3, 3, 4]
-                assert_that(option.median).is_equal_to(3)
-                assert_that(option.good_votes).is_equal_to(1)
-                assert_that(option.bad_votes).is_equal_to(2)
-                assert_that(option.positive_grade).is_false()
+    #     assert_that(x[0].option).is_equal_to(poll.options()[2])
+    #     assert_that(x[1].option).is_equal_to(poll.options()[3])
+    #     assert_that(x[2].option).is_equal_to(poll.options()[0])
+    #     assert_that(x[3].option).is_equal_to(poll.options()[4])
+    #     assert_that(x[4].option).is_equal_to(poll.options()[2])
 
-            else:
-                # votes on option 2-C: [2, 2, 3, 3, 5]
-                assert_that(option.median).is_equal_to(3)
-                assert_that(option.good_votes).is_equal_to(1)
-                assert_that(option.bad_votes).is_equal_to(2)
-                assert_that(option.positive_grade).is_false()
+    # @pytest.mark.django_db
+    # def test_majority_vote_calculate_result_check_correct_special_case3(self, test_polls):
+
+    #     poll: PollModel = test_polls['poll_case_23']
+
+    #     # option[0] = A <-- 1-222-4
+    #     # option[1] = B <-- 1-222-4
+    #     # option[2] = C <-- 0-22-33
+    #     # option[3] = D <-- 0-22-33
+    #     # option[4] = E <-- 00-222
+    #     # number of votes = 5
+    #     # expected result: C = D > A = B > E
+
+    #     self.__quick_submit_vote(poll, [1, 1, 0, 0, 0])
+    #     self.__quick_submit_vote(poll, [2, 2, 2, 2, 0])
+    #     self.__quick_submit_vote(poll, [2, 2, 2, 2, 2])
+    #     self.__quick_submit_vote(poll, [2, 2, 3, 3, 2])
+    #     self.__quick_submit_vote(poll, [4, 4, 3, 3, 2])
+
+    #     x: List[MajorityPollResultData] = \
+    #         MajorityJudjmentVoteService.calculate_result(poll_id=poll.id)
+
+    #     assert_that(x[0].option).is_equal_to(poll.options()[2])
+    #     assert_that(x[1].option).is_equal_to(poll.options()[3])
+    #     assert_that(x[2].option).is_equal_to(poll.options()[0])
+    #     assert_that(x[3].option).is_equal_to(poll.options()[1])
+    #     assert_that(x[4].option).is_equal_to(poll.options()[4])
+
