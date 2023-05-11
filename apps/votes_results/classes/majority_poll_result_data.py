@@ -139,11 +139,11 @@ class MajorityPollResultData(object):
     def majority_values_median(self, values: QuerySet):
         """Returns new median from list of majority values"""
 
-        old_median = values[math.floor((values.count()-1)/2)].rating
+        old_median = values[math.floor((values.count()-1)/2)]
 
         if values.count() > 1:
             # here we exclude the single value of the median
-            values.exclude(rating=old_median)
+            values.exclude(id=old_median.id)
             new_median = values[math.floor((values.count()-1)/2)].rating
         
             return new_median
