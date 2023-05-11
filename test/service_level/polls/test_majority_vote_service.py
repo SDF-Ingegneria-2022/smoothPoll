@@ -13,10 +13,12 @@ from apps.votes_results.services.majority_judgment_vote_service import MajorityJ
 
 @pytest.fixture()
 def test_polls(request,django_user_model):
+
     username = "user1"
     password = "bar"
     user = django_user_model.objects.create_user(username=username, password=password) 
-    dummy_poll = PollModel(name="Dummy", question="Dummy question?",author=user)
+
+    dummy_poll = PollModel(name="Dummy", question="Dummy question?", author=user)
     dummy_poll.save()
 
     option1 = PollOptionModel(value="Valore 1", poll_fk=dummy_poll)
@@ -32,7 +34,7 @@ def test_polls(request,django_user_model):
     password2 = "bar"
     user2 = django_user_model.objects.create_user(username=username2, password=password2) 
     
-    control_poll = PollModel(name="Dummy2", question="Dummy question2?",author=user2)
+    control_poll = PollModel(name="Dummy2", question="Dummy question2?", author=user2)
     control_poll.save()
 
     option4 = PollOptionModel(value="Valore 1", poll_fk=control_poll)
@@ -47,7 +49,32 @@ def test_polls(request,django_user_model):
     option7 = PollOptionModel(value="Valore 4", poll_fk=control_poll)
     option7.save()
 
-    return {'voted_poll': dummy_poll, 'control_poll': control_poll}
+    username3 = "user3"
+    password3 = "bar"
+    user3 = django_user_model.objects.create_user(username=username3, password=password3) 
+
+    control_poll2 = PollModel(name="Dummy3", question="Dummy question3?", author=user3)
+    control_poll2.save()
+
+    option8 = PollOptionModel(value="A", poll_fk=control_poll2)
+    option8.save()
+
+    option9 = PollOptionModel(value="B", poll_fk=control_poll2)
+    option9.save()
+
+    option10 = PollOptionModel(value="C", poll_fk=control_poll2)
+    option10.save()
+
+    option11 = PollOptionModel(value="D", poll_fk=control_poll2)
+    option11.save()
+
+    option12 = PollOptionModel(value="E", poll_fk=control_poll2)
+    option12.save()
+
+    option13 = PollOptionModel(value="F", poll_fk=control_poll2)
+    option13.save()
+
+    return {'voted_poll': dummy_poll, 'control_poll': control_poll, 'control_poll2': control_poll2 }
 
 class TestMajorityVoteService:
 
@@ -443,3 +470,135 @@ class TestMajorityVoteService:
                 assert_that(option.good_votes).is_equal_to(1)
                 assert_that(option.bad_votes).is_equal_to(0)
                 assert_that(option.positive_grade).is_true()
+
+
+# -------------------- tests for majority revision algorithm --------------------
+
+
+    @pytest.mark.django_db
+    def test_majority_vote_calculate_result_check_correct_special_case1(self, test_polls):
+        """
+        Test where the calculate_result function is called and chech if the result is correct
+        """
+        poll: PollModel = test_polls['control_poll2']
+
+        # option[0] = A
+        # option[1] = B
+        # option[2] = C
+        # option[3] = D
+        # option[4] = E
+        # option[5] = F
+        # number of votes = 9
+
+        MajorityJudjmentVoteService.perform_vote(
+            [{'poll_choice_id': poll.options()[0].id, 'rating': 1 },
+            {'poll_choice_id': poll.options()[1].id, 'rating': 1 },
+            {'poll_choice_id': poll.options()[2].id, 'rating': 1 },
+            {'poll_choice_id': poll.options()[3].id, 'rating': 1 },
+            {'poll_choice_id': poll.options()[4].id, 'rating': 1 },
+            {'poll_choice_id': poll.options()[5].id, 'rating': 1 }], poll_id=poll.id)
+
+        MajorityJudjmentVoteService.perform_vote(
+            [{'poll_choice_id': poll.options()[0].id, 'rating': 1 },
+            {'poll_choice_id': poll.options()[1].id, 'rating': 2 },
+            {'poll_choice_id': poll.options()[2].id, 'rating': 1 },
+            {'poll_choice_id': poll.options()[3].id, 'rating': 1 },
+            {'poll_choice_id': poll.options()[4].id, 'rating': 1 },
+            {'poll_choice_id': poll.options()[5].id, 'rating': 1 }], poll_id=poll.id)
+
+        MajorityJudjmentVoteService.perform_vote(
+            [{'poll_choice_id': poll.options()[0].id, 'rating': 2 },
+            {'poll_choice_id': poll.options()[1].id, 'rating': 2 },
+            {'poll_choice_id': poll.options()[2].id, 'rating': 1 },
+            {'poll_choice_id': poll.options()[3].id, 'rating': 1 },
+            {'poll_choice_id': poll.options()[4].id, 'rating': 1 },
+            {'poll_choice_id': poll.options()[5].id, 'rating': 2 }], poll_id=poll.id)
+
+        MajorityJudjmentVoteService.perform_vote(
+            [{'poll_choice_id': poll.options()[0].id, 'rating': 2 },
+            {'poll_choice_id': poll.options()[1].id, 'rating': 2 },
+            {'poll_choice_id': poll.options()[2].id, 'rating': 1 },
+            {'poll_choice_id': poll.options()[3].id, 'rating': 3 },
+            {'poll_choice_id': poll.options()[4].id, 'rating': 3 },
+            {'poll_choice_id': poll.options()[5].id, 'rating': 2 }], poll_id=poll.id)
+
+        MajorityJudjmentVoteService.perform_vote(
+            [{'poll_choice_id': poll.options()[0].id, 'rating': 3 },
+            {'poll_choice_id': poll.options()[1].id, 'rating': 3 },
+            {'poll_choice_id': poll.options()[2].id, 'rating': 4 },
+            {'poll_choice_id': poll.options()[3].id, 'rating': 3 },
+            {'poll_choice_id': poll.options()[4].id, 'rating': 3 },
+            {'poll_choice_id': poll.options()[5].id, 'rating': 2 }], poll_id=poll.id)
+
+        MajorityJudjmentVoteService.perform_vote(
+            [{'poll_choice_id': poll.options()[0].id, 'rating': 3 },
+            {'poll_choice_id': poll.options()[1].id, 'rating': 3 },
+            {'poll_choice_id': poll.options()[2].id, 'rating': 4 },
+            {'poll_choice_id': poll.options()[3].id, 'rating': 4 },
+            {'poll_choice_id': poll.options()[4].id, 'rating': 3 },
+            {'poll_choice_id': poll.options()[5].id, 'rating': 5 }], poll_id=poll.id)
+
+        MajorityJudjmentVoteService.perform_vote(
+            [{'poll_choice_id': poll.options()[0].id, 'rating': 3 },
+            {'poll_choice_id': poll.options()[1].id, 'rating': 3 },
+            {'poll_choice_id': poll.options()[2].id, 'rating': 4 },
+            {'poll_choice_id': poll.options()[3].id, 'rating': 4 },
+            {'poll_choice_id': poll.options()[4].id, 'rating': 3 },
+            {'poll_choice_id': poll.options()[5].id, 'rating': 5 }], poll_id=poll.id)
+
+        MajorityJudjmentVoteService.perform_vote(
+            [{'poll_choice_id': poll.options()[0].id, 'rating': 4 },
+            {'poll_choice_id': poll.options()[1].id, 'rating': 3 },
+            {'poll_choice_id': poll.options()[2].id, 'rating': 4 },
+            {'poll_choice_id': poll.options()[3].id, 'rating': 5 },
+            {'poll_choice_id': poll.options()[4].id, 'rating': 3 },
+            {'poll_choice_id': poll.options()[5].id, 'rating': 5 }], poll_id=poll.id)
+
+        MajorityJudjmentVoteService.perform_vote(
+            [{'poll_choice_id': poll.options()[0].id, 'rating': 4 },
+            {'poll_choice_id': poll.options()[1].id, 'rating': 4 },
+            {'poll_choice_id': poll.options()[2].id, 'rating': 4 },
+            {'poll_choice_id': poll.options()[3].id, 'rating': 5 },
+            {'poll_choice_id': poll.options()[4].id, 'rating': 3 },
+            {'poll_choice_id': poll.options()[5].id, 'rating': 5 }], poll_id=poll.id)
+
+        x: List[MajorityPollResultData] = MajorityJudjmentVoteService.calculate_result(poll_id=poll.id)
+
+        # verify options order
+        # assert_that(x[0].option).is_equal_to(poll.options()[2])
+        # assert_that(x[1].option).is_equal_to(poll.options()[3])
+        # assert_that(x[2].option).is_equal_to(poll.options()[4])
+        # assert_that(x[3].option).is_equal_to(poll.options()[1])
+        # assert_that(x[4].option).is_equal_to(poll.options()[0])
+        # assert_that(x[5].option).is_equal_to(poll.options()[5])
+
+        # verify option values
+        # for option in x:
+            
+        #     if option.option == poll.options()[0]:
+        #         # votes on option 0: [1, 1, 2, 3]
+        #         assert_that(option.median).is_equal_to(1)
+        #         assert_that(option.good_votes).is_equal_to(2)
+        #         assert_that(option.bad_votes).is_equal_to(0)
+        #         assert_that(option.positive_grade).is_true()
+
+        #     elif option.option == poll.options()[1]:
+        #         # votes on option 1:  [1, 2, 2, 2]
+        #         assert_that(option.median).is_equal_to(2)
+        #         assert_that(option.good_votes).is_equal_to(0)
+        #         assert_that(option.bad_votes).is_equal_to(1)
+        #         assert_that(option.positive_grade).is_false()
+
+        #     elif option.option == poll.options()[2]:
+        #         # votes on option 1:  [1, 2, 4, 5]
+        #         assert_that(option.median).is_equal_to(2)
+        #         assert_that(option.good_votes).is_equal_to(2)
+        #         assert_that(option.bad_votes).is_equal_to(1)
+        #         assert_that(option.positive_grade).is_true()
+
+        #     else:
+        #         # votes on option 2: [2, 2, 2, 4]
+        #         assert_that(option.median).is_equal_to(2)
+        #         assert_that(option.good_votes).is_equal_to(1)
+        #         assert_that(option.bad_votes).is_equal_to(0)
+        #         assert_that(option.positive_grade).is_true()
