@@ -74,7 +74,23 @@ def test_polls(request,django_user_model):
     option13 = PollOptionModel(value="F", poll_fk=control_poll2)
     option13.save()
 
-    return {'voted_poll': dummy_poll, 'control_poll': control_poll, 'control_poll2': control_poll2 }
+    username4 = "user4"
+    password4 = "bar"
+    user4 = django_user_model.objects.create_user(username=username4, password=password4) 
+
+    control_poll3 = PollModel(name="Dummy4", question="Dummy question4?", author=user4)
+    control_poll3.save()
+
+    option14 = PollOptionModel(value="A", poll_fk=control_poll3)
+    option14.save()
+
+    option15 = PollOptionModel(value="B", poll_fk=control_poll3)
+    option15.save()
+
+    option16 = PollOptionModel(value="C", poll_fk=control_poll3)
+    option16.save()
+
+    return {'voted_poll': dummy_poll, 'control_poll': control_poll, 'control_poll2': control_poll2, 'control_poll3': control_poll3 }
 
 class TestMajorityVoteService:
 
@@ -564,7 +580,7 @@ class TestMajorityVoteService:
 
         x: List[MajorityPollResultData] = MajorityJudjmentVoteService.calculate_result(poll_id=poll.id)
 
-        # verify options order
+        # verify options order C, D, E, B, A, F
         assert_that(x[0].option).is_equal_to(poll.options()[2])
         assert_that(x[1].option).is_equal_to(poll.options()[3])
         assert_that(x[2].option).is_equal_to(poll.options()[4])
@@ -616,3 +632,71 @@ class TestMajorityVoteService:
                 assert_that(option.good_votes).is_equal_to(4)
                 assert_that(option.bad_votes).is_equal_to(2)
                 assert_that(option.positive_grade).is_true()
+
+    @pytest.mark.django_db
+    def test_majority_vote_calculate_result_check_correct_special_case2(self, test_polls):
+        """
+        Test where the calculate_result function is called and chech if the result is correct
+        """
+        poll: PollModel = test_polls['control_poll3']
+
+        # option[0] = A
+        # option[1] = B
+        # option[2] = C
+        # number of votes = 5
+
+        MajorityJudjmentVoteService.perform_vote(
+            [{'poll_choice_id': poll.options()[0].id, 'rating': 1 },
+            {'poll_choice_id': poll.options()[1].id, 'rating': 1 },
+            {'poll_choice_id': poll.options()[2].id, 'rating': 2 }], poll_id=poll.id)
+        
+        MajorityJudjmentVoteService.perform_vote(
+            [{'poll_choice_id': poll.options()[0].id, 'rating': 2 },
+            {'poll_choice_id': poll.options()[1].id, 'rating': 2 },
+            {'poll_choice_id': poll.options()[2].id, 'rating': 2 }], poll_id=poll.id)
+        
+        MajorityJudjmentVoteService.perform_vote(
+            [{'poll_choice_id': poll.options()[0].id, 'rating': 3 },
+            {'poll_choice_id': poll.options()[1].id, 'rating': 3 },
+            {'poll_choice_id': poll.options()[2].id, 'rating': 3 }], poll_id=poll.id)
+        
+        MajorityJudjmentVoteService.perform_vote(
+            [{'poll_choice_id': poll.options()[0].id, 'rating': 3 },
+            {'poll_choice_id': poll.options()[1].id, 'rating': 3 },
+            {'poll_choice_id': poll.options()[2].id, 'rating': 3 }], poll_id=poll.id)
+        
+        MajorityJudjmentVoteService.perform_vote(
+            [{'poll_choice_id': poll.options()[0].id, 'rating': 5 },
+            {'poll_choice_id': poll.options()[1].id, 'rating': 4 },
+            {'poll_choice_id': poll.options()[2].id, 'rating': 5 }], poll_id=poll.id)
+        
+        x: List[MajorityPollResultData] = MajorityJudjmentVoteService.calculate_result(poll_id=poll.id)
+
+        # verify options order C, A, B
+        # assert_that(x[0].option).is_equal_to(poll.options()[2])
+        # assert_that(x[1].option).is_equal_to(poll.options()[0])
+        # assert_that(x[2].option).is_equal_to(poll.options()[1])
+
+        # verify option values
+        for option in x:
+            
+            if option.option == poll.options()[0]:
+                # votes on option 0-A: [1, 2, 3, 3, 5]
+                assert_that(option.median).is_equal_to(3)
+                assert_that(option.good_votes).is_equal_to(1)
+                assert_that(option.bad_votes).is_equal_to(2)
+                assert_that(option.positive_grade).is_false()
+
+            elif option.option == poll.options()[1]:
+                # votes on option 1-B: [1, 2, 3, 3, 4]
+                assert_that(option.median).is_equal_to(3)
+                assert_that(option.good_votes).is_equal_to(1)
+                assert_that(option.bad_votes).is_equal_to(2)
+                assert_that(option.positive_grade).is_false()
+
+            else:
+                # votes on option 2-C: [2, 2, 3, 3, 5]
+                assert_that(option.median).is_equal_to(3)
+                assert_that(option.good_votes).is_equal_to(1)
+                assert_that(option.bad_votes).is_equal_to(2)
+                assert_that(option.positive_grade).is_false()

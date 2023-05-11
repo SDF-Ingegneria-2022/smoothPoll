@@ -225,7 +225,7 @@ class MajorityPollResultData(object):
         # if both are positive, it wins who has greater number of 
         # strictly better votes
         if self.positive_grade_value(iteration=i) and obj.positive_grade_value(iteration=i):
-            # special case where (p, grade, q) => grade1==grade2 (with same sign) and p1==p2 or q1==q2
+            # special case where (p, grade, q) => grade1==grade2 (with same sign) and p1==p2
             # here we use the iterations to get the majority values
             if self.good_votes_value(it_g=i) == obj.good_votes_value(it_g=i) and \
                 not (self.bad_votes_value(it_b=i) == obj.bad_votes_value(it_b=i)):
@@ -234,7 +234,7 @@ class MajorityPollResultData(object):
             else:
                 return self.good_votes_value(it_g=i) > obj.good_votes_value(it_g=i)
         elif (not self.positive_grade_value(iteration=i)) and (not obj.positive_grade_value(iteration=i)):
-            # special case where (p, grade, q) => grade1==grade2 (with same sign) and p1==p2 or q1==q2
+            # special case where (p, grade, q) => grade1==grade2 (with same sign) and q1==q2
             # here we use the iterations to get the majority values
             if self.bad_votes_value(it_b=i) == obj.bad_votes_value(it_b=i) and \
                 not (self.good_votes_value(it_g=i) == obj.good_votes_value(it_g=i)):
@@ -242,12 +242,6 @@ class MajorityPollResultData(object):
                 return self.sorting(obj, i+1)
             else:
                 return self.bad_votes_value(it_b=i) < obj.bad_votes_value(it_b=i)
-
-        # special case where (p, grade, q) => grade1==grade2 (with same sign) and p1==p2 or q1==q2
-        # here we use the iterations to get the majority values
-        # if ((self.good_votes_value(it_g=i) == obj.good_votes_value(it_g=i)) or \
-        #     (self.bad_votes_value(it_b=i) == obj.bad_votes_value(it_b=i))):
-        #     return self.sorting(obj, i+1)
 
         # if both have exactly same votes, I make win 
         # the one with "value" that came before
