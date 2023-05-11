@@ -51,13 +51,13 @@ class HasTestPolls(abc.ABC):
                 options=["Valore 1", "Valore 2", "Valore 3", "Valore 4"],
                 author=user2, ), 
 
-            'control_poll2': self.generate_poll(
+            'poll_case_1': self.generate_poll(
                 name="Dummy3", question="Dummy question3?",
-                options=["A", "B", "C", "D", "E", "F"],
+                options=["A", "B", "C", "D", ],
                 author=user3, ), 
 
-            'control_poll3': self.generate_poll(
+            'poll_case_23': self.generate_poll(
                 name="Dummy4", question="Dummy question4?",
-                options=["A", "B", "C"],
+                options=["A", "B", "C", "D", "E"],
                 author=user4, ),  
             }
