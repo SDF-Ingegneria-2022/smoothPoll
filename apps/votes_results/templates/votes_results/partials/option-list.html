@@ -14,7 +14,7 @@ document.body.addEventListener('htmx:configRequest', (event) => {
             <form class="sortable list-group" hx-trigger="end" hx-post="{% url 'apps.votes_results:sort' poll_id=poll.id %}" hx-target="#option-list">
                 <div class="htmx-indicator">Updating...</div>
                 {% for option in poll.options %}
-                <div>
+                <div style="cursor: grab;">
                     <input type="hidden" name="option_order" value="{{ option.id }}" />
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <!--option order will be the number on the list-->
@@ -22,6 +22,10 @@ document.body.addEventListener('htmx:configRequest', (event) => {
                     </li>
                 </div>
             {% endfor %}
+                {# Confirm button #}
+                <div class="container mt-5 mb-3">
+                    <button type="submit" class="btn btn-primary">Conferma</button>
+                </div>
             </form>
         {% else %}
             <p>You do not have any options in your list</p>
