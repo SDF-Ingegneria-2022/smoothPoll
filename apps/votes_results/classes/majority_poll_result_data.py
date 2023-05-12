@@ -107,7 +107,10 @@ class MajorityPollResultData(object):
         (so if I am semantically ">" than the other one)
         """
 
-        return self.sorting(other, i=0)
+        if not isinstance(other, MajorityPollResultData):
+            return False
+
+        return self.sorting(other, 0)
 
         # if not isinstance(other, MajorityPollResultData):
         #     return False
@@ -136,24 +139,24 @@ class MajorityPollResultData(object):
         # # the one with "value" that came before
         # return self.option.value > other.option.value
     
-    def majority_values_median(self, values: QuerySet):
+    def majority_values_median(self, values: list[MajorityJudgmentModel]) -> int:
         """Returns new median from list of majority values"""
 
-        old_median = values[math.floor((values.count()-1)/2)]
+        old_median = values[math.floor(len(values)/2)]
 
-        if values.count() > 1:
+        if len(values) > 1:
             # here we exclude the single value of the median
-            values.exclude(id=old_median.id)
-            new_median = values[math.floor((values.count()-1)/2)].rating
+            values.remove(old_median)
+            new_median = values[math.floor(len(values)/2)].rating
         
             return new_median
         else:
             return old_median
 
-    def median_value(self, iteration=0):
+    def median_value(self, iteration=0) -> int:
         """Calculates the median of the current majority values iteration"""
 
-        majority_values: QuerySet = self.option_votes
+        majority_values: list[MajorityJudgmentModel] = list(self.option_votes)
 
         if iteration > 0:
             while(iteration > 0):
@@ -200,14 +203,11 @@ class MajorityPollResultData(object):
     #     else:
     #         return self.positive_grade
 
-    def sorting(self, obj, i):
-        """Function that gives sorting rules for Majority Data Objects"""
-
-        if not isinstance(obj, MajorityPollResultData):
-            return False
+    def sorting(self, obj, i) -> bool:
+        """Function that gives sorting rules for Majority Poll Result Data Objects"""
         
         if i == self.option_votes.count()-1:
-            return self.option.value > obj.option.value
+            return self.option.value < obj.option.value
 
         # if median is greater --> x win
         if self.median_value(iteration=i) > obj.median_value(iteration=i):
@@ -247,4 +247,4 @@ class MajorityPollResultData(object):
 
         # if both have exactly same votes, I make win 
         # the one with "value" that came before
-        return self.option.value > obj.option.value
+        # return self.option.value > obj.option.value
