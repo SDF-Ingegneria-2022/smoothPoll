@@ -142,7 +142,7 @@ class MajorityPollResultData(object):
     def sorting(self, obj, i) -> bool:
         """Function that gives sorting rules for Majority Poll Result Data Objects"""
         
-        if i == self.option_votes.count()-1:
+        if i == self.option_votes.count():
             return self.option.value < obj.option.value
 
         # if median is greater --> x win
