@@ -111,33 +111,6 @@ class MajorityPollResultData(object):
             return False
 
         return self.sorting(other, 0)
-
-        # if not isinstance(other, MajorityPollResultData):
-        #     return False
-        
-        # # if median is greater --> x win
-        # if self.median > other.median:
-        #     return True
-        # elif self.median < other.median:
-        #     return False
-
-        # # positive grade should win against  
-        # # negative grade
-        # if self.positive_grade and not other.positive_grade:
-        #     return True
-        # elif not self.positive_grade and other.positive_grade:
-        #     return False 
-        
-        # # if both are positive, it wins who has greater number of 
-        # # strictly better votes
-        # if self.positive_grade and other.positive_grade:
-        #     return self.good_votes > other.good_votes
-        # elif (not self.positive_grade) and (not other.positive_grade):
-        #     return self.bad_votes < other.bad_votes
-
-        # # if both have exactly same votes, I make win 
-        # # the one with "value" that came before
-        # return self.option.value > other.option.value
     
     def majority_values_median(self, values: list[MajorityJudgmentModel]) -> int:
         """Returns new median from list of majority values"""
@@ -166,43 +139,6 @@ class MajorityPollResultData(object):
         else:
             return self.median
         
-    # def good_votes_value(self, it_g=0):
-    #     """Calculates the number of good votes for the current majority value iteration"""
-
-    #     majority_values: QuerySet = self.option_votes
-
-    #     if it_g > 0:
-    #         while(it_g > 0):
-    #             new_median = self.majority_values_median(majority_values)
-    #             it_g -= 1
-    #         new_good_votes: int = majority_values.filter(rating__gt=new_median).count()
-    #         return new_good_votes
-    #     else:
-    #         return self.good_votes
-        
-    # def bad_votes_value(self, it_b=0):
-    #     """Calculates the number of bad votes for the current majority value iteration"""
-
-    #     majority_values: QuerySet = self.option_votes
-
-    #     if it_b > 0:
-    #         while(it_b > 0):
-    #             new_median = self.majority_values_median(majority_values)
-    #             it_b -= 1
-    #         new_bad_votes: int = majority_values.filter(rating__lt=new_median).count()
-    #         return new_bad_votes
-    #     else:
-    #         return self.bad_votes
-        
-    # def positive_grade_value(self, iteration=0):
-    #     """Calculates the positive grade for the current majority value iteration"""
-
-    #     if iteration > 0:
-    #         new_positive_grade = (self.good_votes_value(it_g=iteration) > self.bad_votes_value(it_b=iteration))
-    #         return new_positive_grade
-    #     else:
-    #         return self.positive_grade
-
     def sorting(self, obj, i) -> bool:
         """Function that gives sorting rules for Majority Poll Result Data Objects"""
         
@@ -216,35 +152,3 @@ class MajorityPollResultData(object):
             return False
         else:
             return self.sorting(obj, i+1)
-
-        # # positive grade should win against  
-        # # negative grade
-        # if self.positive_grade_value(iteration=i) and not obj.positive_grade_value(iteration=i):
-        #     return True
-        # elif not self.positive_grade_value(iteration=i) and obj.positive_grade_value(iteration=i):
-        #     return False 
-        
-        # # if both are positive, it wins who has greater number of 
-        # # strictly better votes
-        # if self.positive_grade_value(iteration=i) and obj.positive_grade_value(iteration=i):
-        #     # special case where (p, grade, q) => grade1==grade2 (with same sign) and p1==p2
-        #     # here we use the iterations to get the majority values
-        #     if self.good_votes_value(it_g=i) == obj.good_votes_value(it_g=i) and \
-        #         not (self.bad_votes_value(it_b=i) == obj.bad_votes_value(it_b=i)):
-
-        #         return self.sorting(obj, i+1)
-        #     else:
-        #         return self.good_votes_value(it_g=i) > obj.good_votes_value(it_g=i)
-        # elif (not self.positive_grade_value(iteration=i)) and (not obj.positive_grade_value(iteration=i)):
-        #     # special case where (p, grade, q) => grade1==grade2 (with same sign) and q1==q2
-        #     # here we use the iterations to get the majority values
-        #     if self.bad_votes_value(it_b=i) == obj.bad_votes_value(it_b=i) and \
-        #         not (self.good_votes_value(it_g=i) == obj.good_votes_value(it_g=i)):
-
-        #         return self.sorting(obj, i+1)
-        #     else:
-        #         return self.bad_votes_value(it_b=i) < obj.bad_votes_value(it_b=i)
-
-        # if both have exactly same votes, I make win 
-        # the one with "value" that came before
-        # return self.option.value > obj.option.value
