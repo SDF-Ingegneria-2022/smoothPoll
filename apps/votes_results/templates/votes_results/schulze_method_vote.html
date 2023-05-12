@@ -23,19 +23,48 @@
   </symbol>
 </svg>
 
+<div class="container text-center">
+    <h1>{{ poll.name }}</h1>
+</div>
 
-<div class="align-center col-10 offset-1">
+<div class="container border">
+
+    {# Poll question #}
+    <div class="container mt-3">
+        <div class="row border-0 rounded bg-light">
+            <div class="col-md-auto pe-0">
+                <p class="mb-0 fs-3 ">Domanda:</p>
+            </div>
+            <div class="col">
+                <p class="mb-0 mt-1 fs-4 fw-light">{{ poll.question }}</p>
+            </div>
+        </div>
+        <div class="row border-0 rounded bg-light mt-1">
+            <div class="col-md-auto pe-0">
+                <p class="mb-0 fs-3 ">Tipologia:</p>
+            </div>
+            <div class="col">
+                <p class="mb-0 mt-1 fs-4 fw-light">{{ poll.get_type_verbose_name }}</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container mt-3">
+      <div class="alert alert-primary d-flex align-items-center" role="alert">
+          <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Info:"><use xlink:href="#info-fill"/></svg>
+            <div>
+              Esprimi la tua preferenza usando il <strong>metodo di Schulze</strong>.
+              Ordina la lista posizionando in alto le opzioni che preferisci.
+            </div>
+      </div>
+    </div>
 
     {% csrf_token %}
-    <div class="d-flex justify-content-between align-items-center">
-        <p class="lead ml-0">Le scelte</p>
-    </div>
-    <hr/>
-    
-    <main class="d-flex">
+    <div class="container">
+        <p class="fs-3">Opzioni da valutare:</p>
         <section id="option-list" class="col-12">
             {% include 'votes_results/partials/option-list.html' with poll=poll %}
         </section>
-    </main>
+    </div>
 </div>
 {% endblock content %}
