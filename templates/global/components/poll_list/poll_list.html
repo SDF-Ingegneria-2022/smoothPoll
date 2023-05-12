@@ -15,10 +15,14 @@
                     <span class="badge rounded-pill fs-6 fw-light" style="background-color: {{poll.get_type_color}};"
                         data-bs-toggle="tooltip" data-bs-placement="top" 
                         data-bs-title="Giudizio Maggioritario">GM</span>
-                    {% else %}
+                    {% elif poll.get_type_verbose_name == 'Opzione Singola' %}
                     <span class="badge rounded-pill fs-6 fw-light" style="background-color: {{poll.get_type_color}};"
                         data-bs-toggle="tooltip" data-bs-placement="top" 
                         data-bs-title="Opzione singola">OS</span>
+                    {% elif poll.get_type_verbose_name == 'Metodo Schulze' %}
+                    <span class="badge rounded-pill fs-6 fw-light" style="background-color: {{poll.get_type_color}};"
+                        data-bs-toggle="tooltip" data-bs-placement="top" 
+                        data-bs-title="Metodo Schulze">SC</span>
                     {% endif %}
             </div>
             <!-- End Poll type indicator -->

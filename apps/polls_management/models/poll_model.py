@@ -31,6 +31,7 @@ class PollModel(models.Model):
         belongs to one PollType"""
         SINGLE_OPTION = 'single_option', _('Opzione Singola')
         MAJORITY_JUDJMENT = 'majority_judjment', _('Giudizio Maggioritario')
+        SCHULZE = 'schulze', _('Metodo Schulze')
         
     class PollVoteProtection(models.TextChoices):
         """Possible vote protection modes a poll can have"""
@@ -177,9 +178,10 @@ class PollModel(models.Model):
         return self.protection == PollModel.PollVoteProtection.GOOGLE
     
     def is_votable_w_so_and_mj(self) -> bool:
-        """Check if Poll is votable both with single option and majority judgment"""
+        """Check if Poll is votable both with single option (or schulze) and majority judgment"""
         
-        return self.votable_mj and self.poll_type == PollModel.PollType.SINGLE_OPTION
+        return self.votable_mj and (self.poll_type == PollModel.PollType.SINGLE_OPTION or \
+                                    self.poll_type == PollModel.PollType.SCHULZE)
     
     def get_state_label(self) -> str: 
         """Get a label rappresentative of the state"""
@@ -206,6 +208,8 @@ class PollModel(models.Model):
             return "Giudizio Maggioritario"
         elif self.poll_type == PollModel.PollType.SINGLE_OPTION:
             return "Opzione Singola"
+        elif self.poll_type == PollModel.PollType.SCHULZE:
+            return "Metodo Schulze"
 
         return "Nessun Tipo"
 
@@ -215,5 +219,7 @@ class PollModel(models.Model):
             return "#253495"
         elif self.poll_type == PollModel.PollType.SINGLE_OPTION:
             return "#F6AA1C"
+        elif self.poll_type == PollModel.PollType.SCHULZE:
+            return "#961af4"
 
         return "#363732"
