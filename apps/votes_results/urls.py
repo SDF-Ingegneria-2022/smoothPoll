@@ -28,6 +28,12 @@ urlpatterns = [
     # dummy majority judjment poll
     path('prova-giudizio-maggioritario/', views.MajorityJudgmentVoteView.as_view(), name='dummy_majority'),
 
+    # vote process for schulze method
+    path('<int:poll_id>/metodo-schulze/', views.schulze, name='schulze'),
+
+    # expose endpoint to sort option after a post request
+    path('<int:poll_id>/metodo-schulze/sort/', views.sort, name='sort'),
+
     # old urls (kept w redirect for retro-compatibility)
     # path('<int:poll_id>/vota/', views.redirect_to_vote, name='vote_redirect_legacy'), 
     # path('<int:poll_id>/vota/scelta-singola/', views.SingleOptionVoteView.as_view(), name='single_option_vote'),
