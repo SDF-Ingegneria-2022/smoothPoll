@@ -32,8 +32,6 @@ urlpatterns = [
     path('<int:poll_id>/metodo-schulze/', views.SchulzeMethodVoteView.as_view(), name='schulze_method_vote'),
     path('<int:poll_id>/riepilogo-metodo-schulze/', views.schulze_method_recap_view, name='schulze_method_recap'),
 
-    # expose endpoint to sort option after a post request
-    path('<int:poll_id>/metodo-schulze/sort/', views.sort, name='sort'),
 
     # old urls (kept w redirect for retro-compatibility)
     # path('<int:poll_id>/vota/', views.redirect_to_vote, name='vote_redirect_legacy'), 

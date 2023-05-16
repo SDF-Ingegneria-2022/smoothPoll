@@ -23,13 +23,6 @@ SESSION_SINGLE_OPTION_VOTE_ID = 'single-option-vote-id'
 SESSION_TOKEN_USED = 'token_used'
 
 
-def sort(request, poll_id):
-    poll = PollService.get_poll_by_id(poll_id)
-    option_pks_order = request.POST.getlist('option_order')
-    print(option_pks_order)
-    return render(request, 'votes_results/partials/option-list.html', {'poll': poll})
-
-
 class SchulzeMethodVoteView(VoteViewSchema):
     """View to handle Single Option vote operation. """
 
