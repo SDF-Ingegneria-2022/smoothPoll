@@ -18,7 +18,7 @@
         </div>
     </div>
  
-
+    <!-- SO results -->
     {%for position in poll_results.get_sorted_options.positions %}
         <div class="row m-3 ms-0 me-0">
             <div class="col-1 fs-5 d-flex align-items-center justify-content-center {%if position.0 == 1%}bg-success {%else%}bg-primary {%endif%}text-center text-white">
@@ -31,7 +31,6 @@
                             <div class="col-sm-5 fs-5 fw-light ms-1 my-1 bg-light text-start ">
                                 {{voted_option.option.value}}
                             </div>
-                        </br>
                             <div class="col-sm fs-5 fw-light ms-1 my-1 bg-light ">
                                 {{voted_option.n_votes}} {%if voted_option.n_votes == 1%}preferenza{%else%}preferenze{%endif%}
                             </div>
@@ -43,9 +42,8 @@
         </div>
     {% endfor %}
     
-    
-        
     <!-- SO results -->
+    {% comment %}TODO: check if this code is sreally used {% endcomment %}
     {%for voted_option in poll_results.get_sorted_options.results %}
         <div class="row m-3">
             <div class="col-1 fs-4 pt-1 {%if voted_option.position == 1%}bg-success {%else%}bg-primary {%endif%}text-center text-white ">
