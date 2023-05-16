@@ -5,14 +5,12 @@ Sortable.create(list, {
 });
 </script>
 
-{{poll}}
  <div class="d-flex ">
     <section class="col-lg-10 col-12">
         {% if poll.options %}
             {% csrf_token %}
             <form class="sortable list-group" action="{% url 'apps.votes_results:schulze_method_vote' poll_id=poll.id %}" method="POST">
                 {% csrf_token %}
-                <div class="htmx-indicator">Updating...</div>
                 {% for option in poll.options %}
                 <div style="cursor: grab;">
                     <input type="hidden" name="option_order" value="{{ option.id }}" />
