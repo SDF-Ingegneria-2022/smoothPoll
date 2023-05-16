@@ -11,7 +11,9 @@ document.body.addEventListener('htmx:configRequest', (event) => {
         {% if poll.options %}
         
             {% csrf_token %}
-            <form class="sortable list-group" hx-trigger="end" hx-post="{% url 'apps.votes_results:sort' poll_id=poll.id %}" hx-target="#option-list">
+            <form class="sortable list-group" action="{% url 'apps.votes_results:schulze_method_vote' poll_id=poll.id %}" method="POST"
+            hx-trigger="end" hx-post="{% url 'apps.votes_results:sort' poll_id=poll.id %}" hx-target="#option-list">
+                {% csrf_token %}
                 <div class="htmx-indicator">Updating...</div>
                 {% for option in poll.options %}
                 <div style="cursor: grab;">

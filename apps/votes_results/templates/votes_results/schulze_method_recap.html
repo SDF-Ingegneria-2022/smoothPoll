@@ -1,0 +1,50 @@
+{% extends 'global/skeleton.html' %}
+{% block pagename %}Conferma Metodo Schulze{% endblock pagename %}
+
+{% block content %}
+
+<!-- Choice recap -->
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h2 class="fs-2 text-success">Grazie di aver espresso la tua scelta!</h2>
+        </div>
+    </div>
+    <hr>
+    <div class="row border-0 rounded bg-light">
+        <div class="col-md-auto pe-0">
+                <div class="fs-4 pt-1">Nome scelta:</div>    
+        </div>
+        
+        <div class="col">
+            <div class="mt-1 fw-light fs-4">{{vote.poll.name}}</div>
+        </div>
+    </div>
+    
+    <div class="row mt-1 border-0 rounded bg-light">
+        <div class="col-md-auto pe-0">
+            <div class="fs-4 pt-1">Quesito:</div>
+        </div>
+        <div class="col">
+            <div class="mt-1 fs-4 fw-light">{{vote.poll.question}}</div>
+        </div>
+    </div>
+        
+    <div class="row mt-1 border-0 rounded bg-light">
+        <div class="col-md-auto pe-0">
+            <div class="fs-4 pt-1">Scelta effettuata: </div>
+        </div>
+        <div class="col">
+                <div class="mt-1 fs-4 text-success">{{ vote }}</div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}
+
+{% block customjs %}
+
+{% include 'polls_management/components/copy_link/copy_link_script.html' with poll=poll %}
+
+{% endblock customjs %}

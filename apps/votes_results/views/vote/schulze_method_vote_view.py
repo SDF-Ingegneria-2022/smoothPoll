@@ -15,21 +15,13 @@ from django.urls import reverse
 
 from apps.votes_results.views.vote.vote_view_schema import VoteViewSchema
 
-
-REQUEST_VOTE = 'vote'
+#da modificare con 'vote'
+REQUEST_VOTE = 'option_order'
 
 SESSION_SINGLE_OPTION_VOTE_SUBMIT_ERROR = 'vote-submit-error'
 SESSION_SINGLE_OPTION_VOTE_ID = 'single-option-vote-id'
 SESSION_TOKEN_USED = 'token_used'
 
-
-def schulze(request, poll_id):
-    poll = PollService.get_poll_by_id(poll_id)
-    return render(request, 
-                    'votes_results/schulze_method_vote.html', 
-                    { 
-                        'poll': poll
-                    })
 
 def sort(request, poll_id):
     poll = PollService.get_poll_by_id(poll_id)
@@ -37,50 +29,24 @@ def sort(request, poll_id):
     print(option_pks_order)
     return render(request, 'votes_results/partials/option-list.html', {'poll': poll})
 
-"""
+
 class SchulzeMethodVoteView(VoteViewSchema):
-    View to handle Single Option vote operation. 
+    """View to handle Single Option vote operation. """
+
     def get_votemethod(self) -> PollModel.PollType:
-        return PollModel.PollType.SINGLE_OPTION
+        return PollModel.PollType.SCHULZE
     
     def get_recap_page_url_name(self) -> str:
-        return 'apps.votes_results:single_option_recap'
+        return 'apps.votes_results:schulze_method_recap'
     
     def render_vote_form(self, request: HttpRequest) -> HttpResponse:
-
-        if self.poll().poll_type == PollModel.PollType.MAJORITY_JUDJMENT:
-            return HttpResponseRedirect(reverse('apps.votes_results:majority_judgment_vote', args=(self.poll().id,)))
-
-        # Get eventual error message and clean it
-        eventual_error = request.session.get(SESSION_SINGLE_OPTION_VOTE_SUBMIT_ERROR)
-        if eventual_error is not None:
-            del request.session[SESSION_SINGLE_OPTION_VOTE_SUBMIT_ERROR]
-        
-        # Render vote form (with eventual error message)
         return render(request, 
                     'votes_results/schulze_method_vote.html', 
                     { 
-                        'poll': self.poll(), 
-                        'error': eventual_error 
+                        'poll': self.poll()
                     })
-
-
-
-class SingleOptionVoteView(VoteViewSchema):
-    View to handle Single Option vote operation. 
-
-    def get_votemethod(self) -> PollModel.PollType:
-        return PollModel.PollType.SINGLE_OPTION
-    
-    def get_recap_page_url_name(self) -> str:
-        return 'apps.votes_results:single_option_recap'
-    
-    def render_vote_form(self, request: HttpRequest) -> HttpResponse:
-
-        if self.poll().poll_type == PollModel.PollType.MAJORITY_JUDJMENT:
-            return HttpResponseRedirect(reverse('apps.votes_results:majority_judgment_vote', args=(self.poll().id,)))
-
         # Get eventual error message and clean it
+        """
         eventual_error = request.session.get(SESSION_SINGLE_OPTION_VOTE_SUBMIT_ERROR)
         if eventual_error is not None:
             del request.session[SESSION_SINGLE_OPTION_VOTE_SUBMIT_ERROR]
@@ -92,14 +58,17 @@ class SingleOptionVoteView(VoteViewSchema):
                         'poll': self.poll(), 
                         'error': eventual_error 
                     })
+        """
 
     def perform_vote_or_redirect_to_form(self, request: HttpRequest) -> HttpResponse:
+        print(request.POST)
         
         # Check is passed any data.
+        """
         if REQUEST_VOTE not in request.POST:
             request.session[SESSION_SINGLE_OPTION_VOTE_SUBMIT_ERROR] = "Errore! Per confermare la scelta " \
                 + "devi esprimere una preferenza."
-            return HttpResponseRedirect(reverse('apps.votes_results:single_option_vote', args=(self.poll().id,)))
+            return HttpResponseRedirect(reverse('apps.votes_results:schulze_method_vote', args=(self.poll().id,)))
 
         # Save vote preference in session
         request.session[SESSION_SINGLE_OPTION_VOTE_ID] = request.POST[REQUEST_VOTE]
@@ -122,10 +91,9 @@ class SingleOptionVoteView(VoteViewSchema):
         # Clean eventual error session.
         if request.session.get(SESSION_SINGLE_OPTION_VOTE_SUBMIT_ERROR) is not None:
             del request.session[SESSION_SINGLE_OPTION_VOTE_SUBMIT_ERROR]
-
+            """
+        print(request.POST.getlist('option_order'))
         # Save user vote in session (so when I re-render with GET I have the vote).
-        request.session['vote-submit-id'] = vote.id
+        request.session['vote-submit-id'] = request.POST.getlist('option_order')
 
         return None
-
-"""

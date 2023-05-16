@@ -50,6 +50,7 @@ class SingleOptionVoteView(VoteViewSchema):
 
     def perform_vote_or_redirect_to_form(self, request: HttpRequest) -> HttpResponse:
         
+        print(request.POST)
         # Check is passed any data.
         if REQUEST_VOTE not in request.POST:
             request.session[SESSION_SINGLE_OPTION_VOTE_SUBMIT_ERROR] = "Errore! Per confermare la scelta " \
