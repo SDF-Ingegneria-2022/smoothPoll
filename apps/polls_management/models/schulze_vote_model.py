@@ -19,6 +19,7 @@ class SchulzeVoteModel(models.Model):
     """Reference to poll"""
 
     order: CharField = models.CharField(max_length=200)
+    """String representation of order for poll options classification"""
 
     def __str__(self):
         return str({
@@ -36,7 +37,7 @@ class SchulzeVoteModel(models.Model):
     def get_order(self) -> List[str]:
         """Method used to get list of user ordered poll options as strings of their ids"""
 
-        # order is a string like this "1,2,3", so we get the order as a list of ids like this [1,2,3]
+        # order is a string like this "1,2,3" so we get the order as a list of string ids like this ["1","2","3"]
         order_ids = self.order.split(',')
 
         return order_ids
@@ -66,17 +67,17 @@ class SchulzeVoteModel(models.Model):
             if input_order.count() != all_options.count():
                 raise PollOptionNumberMismatch(f"Error: the number of poll options and input ids do not match.")
             if repeated_options:
-                raise PollOptionsRepeated(f"Error: the number of poll options are repeated.")
+                raise PollOptionsRepeated(f"Error: the ids of certain poll options are repeated.")
 
         order_str: str = ""
 
-        # set order from the input, for example [1, 2, 3] to "1,2,3" except last element
+        # set order from the input, for example [1, 2, 3] to "1,2," except last element
         for id in input_order[:-1]:
-            order_str += id
+            order_str += str(id)
             order_str += ","
 
         # set last element of input_order to the string (to not get a string like this "1,2,3,")
-        order_str += input_order[-1]
+        order_str += str(input_order[-1])
 
         self.order = order_str
 
