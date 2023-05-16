@@ -1,8 +1,7 @@
 from typing import List
-from collections import Counter
 from apps.polls_management.exceptions.poll_option_model_does_not_exist_exception import PollOptionDoesNotExist
 from apps.polls_management.exceptions.poll_option_number_mismatch_exception import PollOptionNumberMismatch
-from apps.polls_management.exceptions.poll_options_repeated_exception import PollOptionsRepeated
+from apps.polls_management.exceptions.wrong_poll_options_exception import WrongPollOptions
 from apps.polls_management.models.poll_option_model import PollOptionModel
 from apps.polls_management.constants.models_constants import POLL_MODEL_NAME
 from django.db.models import CharField
@@ -54,20 +53,23 @@ class SchulzeVoteModel(models.Model):
         """Method used to set the order of the poll options from the input"""
 
         # first some checks to make sure input_order is legit (option exists, is related to poll, all options and not repated)
-        for option_id in input_order:
-            try:
-                option = PollOptionModel.objects.get(id=option_id)
-            except ObjectDoesNotExist:
-                raise PollOptionDoesNotExist(f"Error: poll option with id={option_id} does not exit.")  
-            
         try:
-            all_options: list[PollOptionModel] = PollOptionModel.objects.filter(poll_fk=self.poll)
-            repeated_options: list[PollOptionModel] = [k for k, v in Counter(all_options).items() if v>1]
-        except Exception:
-            if input_order.count() != all_options.count():
-                raise PollOptionNumberMismatch(f"Error: the number of poll options and input ids do not match.")
-            if repeated_options:
-                raise PollOptionsRepeated(f"Error: the ids of certain poll options are repeated.")
+            for option_id in input_order:
+                option = PollOptionModel.objects.get(id=option_id)
+        except ObjectDoesNotExist:
+            raise PollOptionDoesNotExist(f"Error: poll option with id={option_id} does not exit.")
+        
+        all_options = PollOptionModel.objects.filter(poll_fk=self.poll)
+        all_options_ids = list(all_options.values_list('id', flat=True))
+        all_options_ids.sort()
+        sorted_input: List[int] = input_order
+        sorted_input.sort()
+
+        if len(input_order) != all_options.count():
+            raise PollOptionNumberMismatch(f"Error: the number of poll options and input ids do not match.")
+
+        if all_options_ids != sorted_input:
+            raise WrongPollOptions(f"Error: the poll options given as input don't belong to the poll={self.poll.id}")
 
         order_str: str = ""
 

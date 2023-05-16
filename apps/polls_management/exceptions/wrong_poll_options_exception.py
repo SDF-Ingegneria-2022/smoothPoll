@@ -1,6 +1,6 @@
-class PollOptionsRepeated(Exception):
+class WrongPollOptions(Exception):
     """
-    Poll options and input number are mismatched
+    Poll options don't belong to the same poll
     """
 
     def __init__(self, *args: object) -> None:
