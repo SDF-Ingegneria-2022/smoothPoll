@@ -133,9 +133,9 @@
 
 
         {% if poll.is_votable_w_so_and_mj %}
-            <a href="{% url 'apps.votes_results:single_option_results' poll_id=poll.id %}" 
+            <a href="{% url 'apps.votes_results:majority_judgment_results' poll_id=poll.id %}" 
                 class="btn btn-primary" 
-                role="button">Vedi risultati per Opzione Singola</a>
+                role="button">Vedi risultati per Giudizio Maggioritario</a>
         {% endif %}
 
         <a
