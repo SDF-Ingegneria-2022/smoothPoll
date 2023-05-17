@@ -33,3 +33,26 @@ class ISchulzeResults(abc.ABC):
         to the worse. We use a list of list because there could be equal 
         scores."""
         pass
+
+    def get_preference_matrix_row(self, a: PollOptionModel) -> List[int]:
+        """Return the number of times a is prefered to b."""
+
+        options = []
+        for position in self.get_sorted_options():
+            for option in position:
+                options.append(option)
+
+        row = []
+        for b in options:
+            if a == b:
+                row.append("/")
+                continue
+
+            count = 0
+            for vote in self.get_votes():
+                order = vote.get_order_as_ids()
+                if order.index(str(a.id)) < order.index(str(b.id)):
+                    count += 1
+            row.append(count)
+
+        return row

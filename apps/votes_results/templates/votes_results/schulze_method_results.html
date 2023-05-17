@@ -1,4 +1,5 @@
 {% extends 'global/skeleton.html' %}
+{% load get_schulze_matrix_row %}
 
 {% block pagename %}Risultati Metodo di Schulze{% endblock pagename %}
 
@@ -19,23 +20,83 @@
 
 {% if poll_results %}
 
-    <!-- SO results (Ranked list )-->
-    {%for position in poll_results.get_sorted_options %}
-        <div class="row m-3 ms-0 me-0">
-            <div class="col-1 fs-5 d-flex align-items-center justify-content-center 
-                {%if forloop.counter == 1%}bg-success {%else%}bg-primary {%endif%}
-                text-center text-white">
-                {{ forloop.counter }}
-            </div>
-            <div class="col">
-                {%for option in position %}
-                    <div class="fs-5 fw-light ms-1 my-1 bg-light text-start">
-                        {{option.value}}
-                    </div>
-                {% endfor %}
+    <!-- Number of votes -->
+    <div class="row mt-2 ms-1 me-1 border-0 rounded bg-light">
+        <div class="col-md-auto pe-0">
+            <div class="fs-4">Numero voti ricevuti:</div>
+        </div>
+        <div class="col ">
+            <div class="fs-5 fw-light mt-1">
+                {{poll_results.get_votes|length}}
             </div>
         </div>
-    {% endfor %}
+    </div>
+
+    <!-- SO results (Ranked list )-->
+    <div class="mt-5">
+        <h4>Opzioni ordinate</h4>
+        {%for position in poll_results.get_sorted_options %}
+            <div class="row m-3 ms-0 me-0">
+                <div class="col-1 fs-5 d-flex align-items-center justify-content-center 
+                    {%if forloop.counter == 1%}bg-success {%else%}bg-primary {%endif%}
+                    text-center text-white">
+                    {{ forloop.counter }}
+                </div>
+                <div class="col">
+                    {%for option in position %}
+                        <div class="fs-5 fw-light ms-1 my-1 bg-light text-start">
+                            {{option.value}}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Preferencies matrix -->
+    <div class="mt-5">
+        <h4>Matrice delle preferenze</h4>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    {%for position in poll_results.get_sorted_options %}
+                    {%for option in position %}
+                        <th scope="col">
+                            <div class="rotate-sm-l-90">
+                                {{option.value|truncatechars:25}}
+                            </div>
+                        </th>
+                    {% endfor %}
+                    {% endfor %}
+                </tr>
+            </thead>
+
+            <tbody>
+            {%for position in poll_results.get_sorted_options %}
+            {%for option in position %}
+                <tr>
+                    <th scope="row">
+                        <div>
+                            {{option.value|truncatechars:25}}
+                        </div>
+                    </th>
+
+                    {% for preferences_count in poll_results|get_schulze_matrix_row:option %}
+                        <td>
+                            {{preferences_count}}
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+            {% endfor %}
+            </tbody>
+
+        </table>
+    </div>
+
+    
     
 {% else %}
     <!-- Error message: no votes received -->
@@ -52,7 +113,7 @@
 
 
 <!-- Poll data -->
-<div class="container border pb-1">
+<div class="container border pb-1 mt-5">
     <div class="row mt-0 text-start bg-primary ">
         <p class="mb-0 fs-4 text-white fw-light ">
             Dettagli
