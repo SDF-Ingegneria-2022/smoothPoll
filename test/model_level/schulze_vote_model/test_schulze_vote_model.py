@@ -10,7 +10,7 @@ from test.service_level.utils.has_test_polls import HasTestPolls
 from assertpy import assert_that
 
 class TestSchulzeVoteModel(HasTestPolls):
-    pass
+
     # check methods of schulze vote model ----------------------------------------------
 
     @pytest.mark.django_db
@@ -20,8 +20,6 @@ class TestSchulzeVoteModel(HasTestPolls):
         poll_test: PollModel = test_polls['poll_case_23']
         
         schulze: SchulzeVoteModel = SchulzeVoteModel(poll=poll_test)
-
-        # poll options ids for poll_test are 12,13,14,15,16
 
         # first test input ********************************
 
@@ -92,8 +90,6 @@ class TestSchulzeVoteModel(HasTestPolls):
         op2 = poll_test.options()[2].id
         op1 = poll_test.options()[1].id
         op0 = poll_test.options()[0].id
-
-        # poll options ids for poll_test are now 17,18,19,20,21
 
         input_mismatch: List[int] = [op0, op1, op2]
 
