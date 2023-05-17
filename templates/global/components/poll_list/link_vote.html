@@ -18,9 +18,12 @@
                     </svg>
                             {% if poll.poll_type == "majority_judjment" %}
                               Giudica
+                            {% elif poll.poll_type == "schulze"%}
+                            Classifica
                             {% else %}
                               Scegli
                             {% endif %}
+
                 </a>
             </div>
         {% endif %}

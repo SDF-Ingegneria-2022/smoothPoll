@@ -40,6 +40,11 @@ def generic_vote_view(request, poll_id: int):
         return HttpResponseRedirect(
             reverse('apps.votes_results:majority_judgment_vote', 
                     args=(poll_id,)))
+    elif poll.poll_type == PollModel.PollType.SCHULZE:
+        return HttpResponseRedirect(reverse(
+            'apps.votes_results:schulze_method_vote', 
+            args=(poll_id,)))
+
 
     return HttpResponseRedirect(reverse(
         'apps.votes_results:single_option_vote', 
