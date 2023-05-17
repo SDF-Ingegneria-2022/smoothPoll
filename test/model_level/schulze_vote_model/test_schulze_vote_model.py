@@ -13,89 +13,111 @@ class TestSchulzeVoteModel(HasTestPolls):
     pass
     # check methods of schulze vote model ----------------------------------------------
 
-    # @pytest.mark.django_db
-    # def test_schulze_vote_creation(self, test_polls):
-    #     """Check if schulze vote model is created"""
+    @pytest.mark.django_db
+    def test_schulze_vote_creation(self, test_polls):
+        """Check if schulze vote model is created"""
 
-    #     poll_test: PollModel = test_polls['poll_case_23']
+        poll_test: PollModel = test_polls['poll_case_23']
         
-    #     schulze: SchulzeVoteModel = SchulzeVoteModel(poll=poll_test)
+        schulze: SchulzeVoteModel = SchulzeVoteModel(poll=poll_test)
 
-    #     # poll options ids for poll_test are 12,13,14,15,16
+        # poll options ids for poll_test are 12,13,14,15,16
 
-    #     # first test input ********************************
+        # first test input ********************************
 
-    #     input1: List[int] = [14, 13, 12, 15, 16]
+        op4 = poll_test.options()[4].id
+        op3 = poll_test.options()[3].id
+        op2 = poll_test.options()[2].id
+        op1 = poll_test.options()[1].id
+        op0 = poll_test.options()[0].id
 
-    #     schulze.set_order(input1)
-    #     schulze.save()
-    #     assert_that(schulze.order).is_equal_to("14,13,12,15,16")
+        input1: List[int] = [op4, op3, op2, op1, op0]
 
-    #     test_order = schulze.get_order()
-    #     assert_that(test_order).is_equal_to(["14", "13", "12", "15", "16"])
+        schulze.set_order(input1)
+        schulze.save()
+        assert_that(schulze.order).is_equal_to(f"{op4},{op3},{op2},{op1},{op0}")
 
-    #     list_options = schulze.get_order_as_ids()
-    #     assert_that(list_options).is_equal_to(["12", "13", "14", "15", "16"])
+        test_order = schulze.get_order()
+        assert_that(test_order).is_equal_to([str(op4), str(op3), str(op2), str(op1), str(op0)])
 
-    #     # second test input ********************************
+        list_options = schulze.get_order_as_ids()
+        assert_that(list_options).is_equal_to([str(op0), str(op1), str(op2), str(op3), str(op4)])
 
-    #     input2: List[int] = [12, 13, 14, 15, 16]
+        # second test input ********************************
 
-    #     schulze.set_order(input2)
-    #     schulze.save()
-    #     assert_that(schulze.order).is_equal_to("12,13,14,15,16")
+        input2: List[int] = [op2, op3, op1, op4, op0]
 
-    #     test_order = schulze.get_order()
-    #     assert_that(test_order).is_equal_to(["12", "13", "14", "15", "16"])
+        schulze.set_order(input2)
+        schulze.save()
+        assert_that(schulze.order).is_equal_to(f"{op2},{op3},{op1},{op4},{op0}")
 
-    #     list_options = schulze.get_order_as_ids()
-    #     assert_that(list_options).is_equal_to(["12", "13", "14", "15", "16"])
+        test_order = schulze.get_order()
+        assert_that(test_order).is_equal_to([str(op2), str(op3), str(op1), str(op4), str(op0)])
 
-    #     # third test input ********************************
+        list_options = schulze.get_order_as_ids()
+        assert_that(list_options).is_equal_to([str(op0), str(op1), str(op2), str(op3), str(op4)])
 
-    #     input3: List[int] = [16, 13, 15, 14, 12]
+        # # third test input ********************************
 
-    #     schulze.set_order(input3)
-    #     schulze.save()
-    #     assert_that(schulze.order).is_equal_to("16,13,15,14,12")
+        input3: List[int] = [op0, op1, op2, op3, op4]
 
-    #     test_order = schulze.get_order()
-    #     assert_that(test_order).is_equal_to(["16", "13", "15", "14", "12"])
+        schulze.set_order(input3)
+        schulze.save()
+        assert_that(schulze.order).is_equal_to(f"{op0},{op1},{op2},{op3},{op4}")
 
-    #     list_options = schulze.get_order_as_ids()
-    #     assert_that(list_options).is_equal_to(["12", "13", "14", "15", "16"])
+        test_order = schulze.get_order()
+        assert_that(test_order).is_equal_to([str(op0), str(op1), str(op2), str(op3), str(op4)])
+
+        list_options = schulze.get_order_as_ids()
+        assert_that(list_options).is_equal_to([str(op0), str(op1), str(op2), str(op3), str(op4)])
 
 
-    #     test_options_as_obj: List[PollOptionModel] = list(PollOptionModel.objects.filter(poll_fk=poll_test).order_by('id'))
-    #     list_options_as_obj: List[PollOptionModel] = schulze.get_order_as_obj()
-    #     assert_that(list_options_as_obj).is_equal_to(test_options_as_obj)
+        test_options_as_obj: List[PollOptionModel] = list(PollOptionModel.objects.filter(poll_fk=poll_test).order_by('id'))
+        list_options_as_obj: List[PollOptionModel] = schulze.get_order_as_obj()
+        assert_that(list_options_as_obj).is_equal_to(test_options_as_obj)
 
-    # # check exceptions -----------------------------------------------------------------
+    # check exceptions -----------------------------------------------------------------
 
-    # @pytest.mark.django_db
-    # def test_schulze_vote_exceptions(self, test_polls):
-    #     """Check raised exceptions for schulze vote model"""
+    @pytest.mark.django_db
+    def test_schulze_vote_exceptions(self, test_polls):
+        """Check raised exceptions for schulze vote model"""
 
-    #     poll_test: PollModel = test_polls['poll_case_23']
+        poll_test: PollModel = test_polls['poll_case_23']
+        wrong_poll: PollModel = test_polls['poll_case_1']
         
-    #     schulze: SchulzeVoteModel = SchulzeVoteModel(poll=poll_test)
+        schulze: SchulzeVoteModel = SchulzeVoteModel(poll=poll_test)
 
-    #     # poll options ids for poll_test are now 17,18,19,20,21
+        op4 = poll_test.options()[4].id
+        op3 = poll_test.options()[3].id
+        op2 = poll_test.options()[2].id
+        op1 = poll_test.options()[1].id
+        op0 = poll_test.options()[0].id
 
-    #     input_mismatch: List[int] = [17, 18, 19]
+        # poll options ids for poll_test are now 17,18,19,20,21
 
-    #     assert_that(schulze.set_order) \
-    #         .raises(PollOptionNumberMismatch) \
-    #         .when_called_with(input_mismatch)
+        input_mismatch: List[int] = [op0, op1, op2]
+
+        assert_that(schulze.set_order) \
+            .raises(PollOptionNumberMismatch) \
+            .when_called_with(input_mismatch)
         
-    #     input_not_exist: List[int] = [1, 17, 18, 19, 20]
+        deleted_poll_option: PollOptionModel = PollOptionModel(value="Opzione cancellata", poll_fk=wrong_poll)
+        deleted_poll_option.save()
+        deleted_id: int = deleted_poll_option.id
+        deleted_poll_option.delete()
 
-    #     assert_that(schulze.set_order) \
-    #         .raises(PollOptionDoesNotExist) \
-    #         .when_called_with(input_not_exist)
+        input_not_exist: List[int] = [deleted_id, op0, op1, op2, op3]
+
+        assert_that(schulze.set_order) \
+            .raises(PollOptionDoesNotExist) \
+            .when_called_with(input_not_exist)
         
-    #     wrong_input: List[int] = [17, 18, 19, 20, 22]
+        wrong_poll_option: PollOptionModel = PollOptionModel(value="Opzione sbagliata", poll_fk=wrong_poll)
+        wrong_poll_option.save()
+        wpo_id: int = wrong_poll_option.id
 
-    #     assert_that(schulze.set_order) \
-    #         .raises(WrongPollOptions) \
-    #         .when_called_with(wrong_input)
+        wrong_input: List[int] = [op0, op1, op2, op3, wpo_id]
+
+        assert_that(schulze.set_order) \
+            .raises(WrongPollOptions) \
+            .when_called_with(wrong_input)
