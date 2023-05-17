@@ -72,8 +72,7 @@ class SchulzeMethodVoteView(VoteViewSchema):
 
         if request.session.get(SESSION_SCHULZE_METHOD_VOTE_SUBMIT_ERROR) is not None:
             del request.session[SESSION_SCHULZE_METHOD_VOTE_SUBMIT_ERROR]
-        print(request.POST.getlist('option_order'))
         # Save user vote in session (so when I re-render with GET I have the vote).
-        request.session['vote-submit-id'] = request.POST.getlist('option_order')
+        request.session['vote-submit-id'] = vote.id
 
         return None
