@@ -1,0 +1,83 @@
+{% extends 'global/skeleton.html' %}
+
+{% block pagename %}Risultati Metodo di Schulze{% endblock pagename %}
+
+{% block content %}
+
+<div class="container text-center mt-3">
+    <h1 class="fw-normal">Risultati della scelta: {{ poll.name }}</h1>
+</div>
+<div class="row text-start text-white bg-secondary">
+    <div class="col-auto pe-0">
+        <p class="fw-light  fs-4 mb-0 pt-1 pb-1 ">Domanda:</p>
+    </div>
+    <div class="col ps-2">
+        <p class=" fw-light fs-4 mb-0 pt-1 pb-1 ">{{ poll.question }} </p>
+    </div>
+</div>
+
+
+{% if poll_results %}
+    
+{% else %}
+    <!-- Error message: no votes received -->
+    <div class="container text-center mt-5 mb-5">
+        <p class="fw-bold text-danger">
+            Per questa scelta purtroppo non è stata fornita ancora ancora classifica, 
+            quindi non è possibile calcolare i risultati.
+        </p>
+        <a class="btn btn-primary mt-2" 
+            href="{% url 'apps.votes_results:schulze_method_vote' poll_id=poll.id  %}" 
+            role="button">Classifica</a>
+    </div>
+{% endif %}
+
+
+<!-- Poll data -->
+<div class="container border pb-1">
+    <div class="row mt-0 text-start bg-primary ">
+        <p class="mb-0 fs-4 text-white fw-light ">
+            Dettagli
+        </p>
+    </div>
+    {% include 'polls_management/components/poll_info.html' with poll=poll poll_info_to_view=poll_info_to_view%}
+</div>
+
+<!-- Actions -->
+<div class="container mt-3">
+    <div class="d-grid gap-2 d-md-block text-center mt-5">
+        <button type="button" class="btn btn-info" 
+            data-bs-toggle="modal" data-bs-target="#shareModal-{{poll.id}}">
+            Condividi 
+        </button>
+        {% include "polls_management/components/share_social/share_social_modal.html" with poll=poll %}
+
+
+        {% if poll.is_votable_w_so_and_mj %}
+            <a href="{% url 'apps.votes_results:single_option_results' poll_id=poll.id %}" 
+                class="btn btn-primary" 
+                role="button">Vedi risultati per Opzione Singola</a>
+        {% endif %}
+
+        <a
+            class="btn btn-secondary" 
+            href="{% url 'apps.votes_results:votable_polls' %}?page=1&per_page=10" >
+            Ritorna alla lista di tutte le scelte
+        </a>
+        <a name="" id="" role="button"
+            class="btn btn-secondary" 
+            href="https://github.com/SDF-Ingegneria-2022/smoothPoll/issues" 
+            target="_blank">
+            Lasciaci un Feedback
+        </a> 
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block customjs %}
+
+{% include 'polls_management/components/copy_link/copy_link_script.html' with poll=poll %}
+
+{% endblock customjs %}
+
