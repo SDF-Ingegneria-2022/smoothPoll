@@ -18,6 +18,24 @@
 
 
 {% if poll_results %}
+
+    <!-- SO results (Ranked list )-->
+    {%for position in poll_results.get_sorted_options %}
+        <div class="row m-3 ms-0 me-0">
+            <div class="col-1 fs-5 d-flex align-items-center justify-content-center 
+                {%if forloop.counter == 1%}bg-success {%else%}bg-primary {%endif%}
+                text-center text-white">
+                {{ forloop.counter }}
+            </div>
+            <div class="col">
+                {%for option in position %}
+                    <div class="fs-5 fw-light ms-1 my-1 bg-light text-start">
+                        {{option.value}}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endfor %}
     
 {% else %}
     <!-- Error message: no votes received -->

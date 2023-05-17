@@ -30,7 +30,7 @@ class ShulzeResultsStub(ISchulzeResults):
         
 
     def get_sorted_options(self) -> List[List[PollOptionModel]]:
-        return [[o] for o in self.__options]
+        return self.__options
 
 
 def schulze_method_results_view(request: HttpRequest, poll_id: int):
