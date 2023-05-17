@@ -1,15 +1,10 @@
-
 from typing import List
 from django.core.exceptions import ObjectDoesNotExist
 from apps.polls_management.models.schulze_vote_model import SchulzeVoteModel
 from apps.votes_results.classes.majority_poll_result_data import MajorityPollResultData
-from apps.votes_results.exceptions.majority_number_of_ratings_not_valid import MajorityNumberOfRatingsNotValid
 from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
-from apps.votes_results.exceptions.poll_option_rating_unvalid_exception import PollOptionRatingUnvalidException
 from apps.votes_results.exceptions.results_not_available_exception import ResultsNotAvailableException
 from apps.votes_results.exceptions.vote_does_not_exixt_exception import VoteDoesNotExistException
-from apps.polls_management.models.majority_judgment_model import MajorityJudgmentModel
-from apps.polls_management.models.majority_vote_model import MajorityVoteModel
 from apps.polls_management.models.poll_model import PollModel
 from apps.polls_management.models.poll_option_model import PollOptionModel
 
@@ -18,7 +13,7 @@ class SchulzeMethodVoteService:
     """Class that handles vote procedures for the majority vote case"""
 
     @staticmethod
-    def perform_vote(options_rated: List[str], poll_id: str) -> MajorityVoteModel:
+    def perform_vote(options_rated: List[str], poll_id: str) -> SchulzeVoteModel:
         """
         Perform a vote on a majority vote poll
         Args:
@@ -86,7 +81,7 @@ class SchulzeMethodVoteService:
         return majority_vote_result_unsorted
 
     @staticmethod
-    def get_vote_by_id(vote_id: str) -> MajorityVoteModel:
+    def get_vote_by_id(vote_id: str) -> SchulzeVoteModel:
         """
         Retrieve a vote by its ID 
         (temporary method! In future we will wanna use <poll_id, user_id>)
@@ -97,6 +92,6 @@ class SchulzeMethodVoteService:
         """
 
         try:
-            return MajorityVoteModel.objects.get(id=vote_id)
+            return SchulzeVoteModel.objects.get(id=vote_id)
         except ObjectDoesNotExist:
             raise VoteDoesNotExistException()
