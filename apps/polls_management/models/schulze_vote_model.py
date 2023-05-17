@@ -36,10 +36,14 @@ class SchulzeVoteModel(models.Model):
     def get_order(self) -> List[str]:
         """Method used to get list of user ordered poll options as strings of their ids"""
 
-        # order is a string like this "1,2,3" so we get the order as a list of string ids like this ["1","2","3"]
+        # order is a string like this "1,2,3" so we get the order as a list of string ids like this [["1"],["2"],["3"]]
         order_ids = self.order.split(',')
+        order_list_ids = []
 
-        return order_ids
+        for id in order_ids:
+            order_list_ids.append([id])
+
+        return order_list_ids
     
     def get_order_as_ids(self) -> List[str]:
         """Method used to get list of all poll options as strings of their ids"""
