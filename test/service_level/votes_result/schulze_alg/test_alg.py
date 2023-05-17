@@ -20,7 +20,7 @@ class TestAlg():
 
     def _assert_row(self, matrix, name, expected_values):
         other_names = (other_name for other_name in 'abcde' if other_name != name)
-        for other_name, expected_value in zip(other_names, expected_values, strict=True):
+        for other_name, expected_value in zip(other_names, expected_values):
             actual_value = matrix.get((name, other_name), 0)
             # self.assertEqual(
             #     expected_value,
@@ -60,36 +60,36 @@ class TestAlg():
 
         return d
 
-    # @pytest.mark.django_db
-    # def test_compute_d_wikipedia(self):
-    #     """Tests computing the d array found at http://en.wikipedia.org/wiki/Schulze_method."""
-    #     d = self._compute_d_wikipedia()
+    @pytest.mark.django_db
+    def test_compute_d_wikipedia(self):
+        """Tests computing the d array found at http://en.wikipedia.org/wiki/Schulze_method."""
+        d = self._compute_d_wikipedia()
 
-    #     for name in 'abcde':
-    #         # self.assertNotIn((name, name), d)
-    #         assert_that((name, name)).is_not_in(d)
-    #     self._assert_row(d, 'a', (20, 26, 30, 22))
-    #     self._assert_row(d, 'b', (25, 16, 33, 18))
-    #     self._assert_row(d, 'c', (19, 29, 17, 24))
-    #     self._assert_row(d, 'd', (15, 12, 28, 14))
-    #     self._assert_row(d, 'e', (23, 27, 21, 31))
+        for name in 'abcde':
+            # self.assertNotIn((name, name), d)
+            assert_that((name, name)).is_not_in(d)
+        self._assert_row(d, 'a', (20, 26, 30, 22))
+        self._assert_row(d, 'b', (25, 16, 33, 18))
+        self._assert_row(d, 'c', (19, 29, 17, 24))
+        self._assert_row(d, 'd', (15, 12, 28, 14))
+        self._assert_row(d, 'e', (23, 27, 21, 31))
 
-    # @pytest.mark.django_db
-    # def test_compute_p_wikipedia(self):
-    #     """Tests computing the p array found at http://en.wikipedia.org/wiki/Schulze_method."""
-    #     d = self._compute_d_wikipedia()
+    @pytest.mark.django_db
+    def test_compute_p_wikipedia(self):
+        """Tests computing the p array found at http://en.wikipedia.org/wiki/Schulze_method."""
+        d = self._compute_d_wikipedia()
 
-    #     candidate_names = 'abcde'
-    #     p = schulze._compute_p(d, candidate_names)
+        candidate_names = 'abcde'
+        p = schulze._compute_p(d, candidate_names)
 
-    #     for name in 'abcde':
-    #         # self.assertNotIn((name, name), p)
-    #         assert_that((name, name)).is_not_in(p)
-    #     self._assert_row(p, 'a', (28, 28, 30, 24))
-    #     self._assert_row(p, 'b', (25, 28, 33, 24))
-    #     self._assert_row(p, 'c', (25, 29, 29, 24))
-    #     self._assert_row(p, 'd', (25, 28, 28, 24))
-    #     self._assert_row(p, 'e', (25, 28, 28, 31))
+        for name in 'abcde':
+            # self.assertNotIn((name, name), p)
+            assert_that((name, name)).is_not_in(p)
+        self._assert_row(p, 'a', (28, 28, 30, 24))
+        self._assert_row(p, 'b', (25, 28, 33, 24))
+        self._assert_row(p, 'c', (25, 29, 29, 24))
+        self._assert_row(p, 'd', (25, 28, 28, 24))
+        self._assert_row(p, 'e', (25, 28, 28, 31))
 
     @pytest.mark.django_db
     def test_rank_p_wikipedia(self):
