@@ -145,3 +145,38 @@ class TestAlg():
         expected_best = schulze._rank_p(candidate_names, p)
         # self.assertSequenceEqual(expected_best, best)
         assert_that(best).is_equal_to(expected_best)
+
+# custom tests ---------------------------------------------------------------------
+
+    @pytest.mark.django_db
+    def test_1_with_tie(self):
+        d = defaultdict(int)
+
+        candidate_names = 'abc'
+
+        # A > B > C (3 votes)
+        ranks = self._make_ranks('abc')
+        schulze._add_ranks_to_d(d, ranks, 3)
+        # C > B > A (3 votes)
+        ranks = self._make_ranks('cba')
+        schulze._add_ranks_to_d(d, ranks, 3)
+        # B > C > A (3 votes)
+        ranks = self._make_ranks('bca')
+        schulze._add_ranks_to_d(d, ranks, 3)
+        # B > A > C (3 votes)
+        ranks = self._make_ranks('bac')
+        schulze._add_ranks_to_d(d, ranks, 3)
+
+        p = schulze._compute_p(d, candidate_names)
+
+        ballots = []
+        for ballot, weight in p.items():
+            new_ballots = [ballot for _ in range(weight)]
+            ballots.extend(new_ballots)
+
+        best = schulze.compute_schulze_ranking(candidate_names, ballots)
+
+        # Excpected result: B > A = C
+        expected_best = [['b'], ['a','c']]
+        # self.assertSequenceEqual(expected_best, best)
+        assert_that(best).is_equal_to(expected_best)
