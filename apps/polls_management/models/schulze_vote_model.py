@@ -31,7 +31,7 @@ class SchulzeVoteModel(models.Model):
     def get_order_as_obj(self) -> List[PollOptionModel]:
         """method to retrieve all Schulze poll related options as objects"""
 
-        return list(PollOptionModel.objects.filter(poll_fk=self.poll))
+        return list(PollOptionModel.objects.filter(poll_fk=self.poll).order_by('id'))
 
     def get_order(self) -> List[str]:
         """Method used to get list of user ordered poll options as strings of their ids"""
@@ -62,14 +62,14 @@ class SchulzeVoteModel(models.Model):
         all_options = PollOptionModel.objects.filter(poll_fk=self.poll)
         all_options_ids = list(all_options.values_list('id', flat=True))
         all_options_ids.sort()
-        sorted_input: List[int] = input_order
+        sorted_input: List[int] = input_order.copy()
         sorted_input.sort()
 
         if len(input_order) != all_options.count():
             raise PollOptionNumberMismatch(f"Error: the number of poll options and input ids do not match.")
 
         if all_options_ids != sorted_input:
-            raise WrongPollOptions(f"Error: the poll options given as input don't belong to the poll={self.poll.id}")
+            raise WrongPollOptions(f"Error: the poll options given as input don't belong to the poll of id={self.poll.id}")
 
         order_str: str = ""
 
