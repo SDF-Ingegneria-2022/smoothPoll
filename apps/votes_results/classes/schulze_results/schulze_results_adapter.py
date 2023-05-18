@@ -54,7 +54,7 @@ class SchulzeResultsAdapter(ISchulzeResults):
 
         # from the schulze algorithm, we need to "candidate names" and "ballots"
         # respectively 'schulze_str_options' and 'all_schulze_rankings'
-        result: List[str] = schulze.compute_schulze_ranking(self.schulze_str_options, self.all_schulze_rankings)
+        result: List[List[str]] = schulze.compute_schulze_ranking(self.schulze_str_options, self.all_schulze_rankings)
 
         rankings: List[List[PollOptionModel]] = []
         for id in result:
