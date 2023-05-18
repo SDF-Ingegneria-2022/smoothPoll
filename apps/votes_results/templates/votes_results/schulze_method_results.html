@@ -1,5 +1,5 @@
 {% extends 'global/skeleton.html' %}
-{% load get_schulze_matrix_row %}
+{% load get_schulze_matrix_cell %}
 
 {% block pagename %}Risultati Metodo di Schulze{% endblock pagename %}
 
@@ -75,18 +75,20 @@
 
             <tbody>
             {%for position in poll_results.get_sorted_options %}
-            {%for option in position %}
+            {%for a in position %}
                 <tr>
                     <th scope="row">
                         <div>
-                            {{option.value|truncatechars:25}}
+                            {{a.value|truncatechars:25}}
                         </div>
                     </th>
 
-                    {% for preferences_count in poll_results|get_schulze_matrix_row:option %}
+                    {%for position in poll_results.get_sorted_options %}
+                    {%for b in position %}
                         <td>
-                            {{preferences_count}}
+                            {% get_schulze_matrix_cell poll_results a b %}
                         </td>
+                    {% endfor %}
                     {% endfor %}
                 </tr>
             {% endfor %}

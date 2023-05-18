@@ -43,7 +43,6 @@ class SchulzeVoteModel(models.Model):
 
         # order is a string like this "1,2,3" so we get the order as a list of string ids like this ["1","2","3"]
         order_ids = self.order.split(',')
-
         return order_ids
     
     def get_order_as_ids(self) -> List[str]:

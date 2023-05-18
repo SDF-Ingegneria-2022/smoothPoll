@@ -24,6 +24,13 @@ class ShulzeResultsStub(ISchulzeResults):
         self.__options = [[o] for o in options]
 
         self.__votes = []
+        for i in range(0, 100):
+            random.Random(i).shuffle(options)
+            vote = SchulzeVoteModel(
+                poll=self.poll, 
+                order=','.join([str(o.id) for o in options])
+                )
+            self.__votes.append(vote)
 
     def get_votes(self) -> List[SchulzeVoteModel]:
         return self.__votes
