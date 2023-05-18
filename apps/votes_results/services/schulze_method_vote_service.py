@@ -36,7 +36,10 @@ class SchulzeMethodVoteService:
         # create schulze vote object
         vote: SchulzeVoteModel = SchulzeVoteModel()
         vote.poll = poll
-        vote.order=options_rated
+        user_order :List = []
+        for opt in options_rated:
+            user_order.append(int(opt))
+        vote.set_order(user_order)
         vote.save()
         
         return vote
