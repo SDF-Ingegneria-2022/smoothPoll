@@ -21,7 +21,6 @@ class SchulzeMethodVoteService:
             options_rated: List of string of option id [12,14,13,15] 
         Raises:
             PollDoesNotExistException: execption raised when the poll selected is not present in the database
-            PollOptionRatingUnvalidException: exception raised when there are no rating choices in the options (None)
         Returns:
             SchulzeVoteModel: the schulze vote model created.
         """
