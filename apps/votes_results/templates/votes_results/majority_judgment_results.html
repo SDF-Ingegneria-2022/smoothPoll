@@ -172,9 +172,15 @@
 
 
         {% if poll.is_votable_w_so_and_mj %}
-            <a href="{% url 'apps.votes_results:single_option_results' poll_id=poll.id %}" 
-                class="btn btn-primary" 
-                role="button">Vedi risultati per Opzione Singola</a>
+            {% if poll.poll_type == "schulze" %}
+                <a href="{% url 'apps.votes_results:schulze_method_results' poll_id=poll.id %}" 
+                    class="btn btn-primary" role="button">
+                    Vedi risultati per Metodo Schulze</a>
+            {% else %}
+                <a href="{% url 'apps.votes_results:single_option_results' poll_id=poll.id %}" 
+                    class="btn btn-primary" role="button">
+                    Vedi risultati per Opzione Singola</a>
+            {% endif %}
         {% endif %}
 
         <a
