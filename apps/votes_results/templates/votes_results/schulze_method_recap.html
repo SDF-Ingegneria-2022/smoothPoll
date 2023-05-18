@@ -30,12 +30,25 @@
         </div>
     </div>
         
-    <div class="row mt-1 border-0 rounded bg-light">
-        <div class="col-md-auto pe-0">
-            <div class="fs-4 pt-1">Scelta effettuata: </div>
-        </div>
-        <div class="col">
-                <div class="mt-1 fs-4 text-success">{{ vote }}</div>
+    <div class="row mt-1 ">
+        <div class="col-md-5">
+            <table class="table table-secondary shadow p-3 mb-5 bg-body rounded">
+                <thead>
+                    <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Opzione</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for option in vote.get_order_as_obj%}
+                        <tr>
+                            <th scope="row">  {{ forloop.counter }}</th>
+                            <td>
+                            {{option.value}}</td>
+                        </tr>  
+                    {%endfor%}
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
