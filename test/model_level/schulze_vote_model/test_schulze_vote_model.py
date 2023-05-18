@@ -41,6 +41,15 @@ class TestSchulzeVoteModel(HasTestPolls):
         list_options = schulze.get_order_as_ids()
         assert_that(list_options).is_equal_to([str(op0), str(op1), str(op2), str(op3), str(op4)])
 
+        test_options_as_obj: List[PollOptionModel] = [poll_test.options()[4], \
+                                                    poll_test.options()[3], \
+                                                    poll_test.options()[2], \
+                                                    poll_test.options()[1], \
+                                                    poll_test.options()[0]]
+        
+        list_options_as_obj: List[PollOptionModel] = schulze.get_order_as_obj()
+        assert_that(list_options_as_obj).is_equal_to(test_options_as_obj)
+
         # second test input ********************************
 
         input2: List[int] = [op2, op3, op1, op4, op0]
@@ -54,6 +63,15 @@ class TestSchulzeVoteModel(HasTestPolls):
 
         list_options = schulze.get_order_as_ids()
         assert_that(list_options).is_equal_to([str(op0), str(op1), str(op2), str(op3), str(op4)])
+
+        test_options_as_obj: List[PollOptionModel] = [poll_test.options()[2], \
+                                                    poll_test.options()[3], \
+                                                    poll_test.options()[1], \
+                                                    poll_test.options()[4], \
+                                                    poll_test.options()[0]]
+        
+        list_options_as_obj: List[PollOptionModel] = schulze.get_order_as_obj()
+        assert_that(list_options_as_obj).is_equal_to(test_options_as_obj)
 
         # # third test input ********************************
 
@@ -69,11 +87,15 @@ class TestSchulzeVoteModel(HasTestPolls):
         list_options = schulze.get_order_as_ids()
         assert_that(list_options).is_equal_to([str(op0), str(op1), str(op2), str(op3), str(op4)])
 
-        # TODO: adjust this... I expect options to be ordered by user preference
+
+        test_options_as_obj: List[PollOptionModel] = [poll_test.options()[0], \
+                                                    poll_test.options()[1], \
+                                                    poll_test.options()[2], \
+                                                    poll_test.options()[3], \
+                                                    poll_test.options()[4]]
         
-        # test_options_as_obj: List[PollOptionModel] = list(PollOptionModel.objects.filter(poll_fk=poll_test).order_by('id'))
-        # list_options_as_obj: List[PollOptionModel] = schulze.get_order_as_obj()
-        # assert_that(list_options_as_obj).is_equal_to(test_options_as_obj)
+        list_options_as_obj: List[PollOptionModel] = schulze.get_order_as_obj()
+        assert_that(list_options_as_obj).is_equal_to(test_options_as_obj)
 
     # check exceptions -----------------------------------------------------------------
 
