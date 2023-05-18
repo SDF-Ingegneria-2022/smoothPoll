@@ -13,10 +13,25 @@ class TestSchulzeResultsAdapter(HasTestPolls):
     # check schulze results adapter class ----------------------------------------------
 
     @pytest.mark.django_db
-    def test_schulze_results_adapter_creation(self, test_votes1):
+    def test_schulze_results_adapter_creation1(self, test_votes1):
         """Check if schulze results adapter is created."""
 
         poll_test: PollModel = test_votes1['case1']
+
+        schulze_res: SchulzeResultsAdapter = SchulzeResultsAdapter(poll_test)
+        schulze_res.calculate()
+        
+        assert_that(schulze_res.poll).is_equal_to(poll_test)
+        assert_that(schulze_res.schulze_votes).is_not_none()
+        assert_that(schulze_res.schulze_results).is_not_none()
+        assert_that(schulze_res.schulze_str_options).is_not_none()
+        assert_that(schulze_res.all_schulze_rankings).is_not_none()
+
+    @pytest.mark.django_db
+    def test_schulze_results_adapter_creation2(self, test_votes2):
+        """Check if schulze results adapter is created."""
+
+        poll_test: PollModel = test_votes2['case1']
 
         schulze_res: SchulzeResultsAdapter = SchulzeResultsAdapter(poll_test)
         schulze_res.calculate()

@@ -122,6 +122,38 @@ class HasTestPolls(abc.ABC):
         self.generate_votes_in_bulk(poll_test, input_user7, votes7)
         self.generate_votes_in_bulk(poll_test, input_user8, votes8)
 
-        # Expected results:  E > A > C > B > D
+        # Expected results:  E > A > C > B > D.
+
+        return {'case1': poll_test}
+    
+    @pytest.fixture()
+    def test_votes2(self, test_polls):
+
+        poll_test: PollModel = test_polls['voted_poll']
+
+        op2 = poll_test.options()[2].id #C
+        op1 = poll_test.options()[1].id #B
+        op0 = poll_test.options()[0].id #A
+
+        # 3 people think A > B > C.
+        input_user1: List[int] = [op0, op1, op2]
+        # 3 people think C > B > A.
+        input_user2: List[int] = [op2, op1, op0]
+        # 3 people think B > C > A.
+        input_user3: List[int] = [op1, op2, op0]
+        # 3 people think B > A > C.
+        input_user4: List[int] = [op1, op0, op2]
+
+        votes1: int = 3
+        votes2: int = 3
+        votes3: int = 3
+        votes4: int = 3
+
+        self.generate_votes_in_bulk(poll_test, input_user1, votes1)
+        self.generate_votes_in_bulk(poll_test, input_user2, votes2)
+        self.generate_votes_in_bulk(poll_test, input_user3, votes3)
+        self.generate_votes_in_bulk(poll_test, input_user4, votes4)
+
+        # Expected results:  B > A = C.
 
         return {'case1': poll_test}
