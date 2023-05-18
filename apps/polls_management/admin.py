@@ -1,4 +1,5 @@
 from apps.polls_management.models.poll_token import PollTokens
+from apps.polls_management.models.schulze_vote_model import SchulzeVoteModel
 from .models.poll_model import PollModel
 from .models.poll_option_model import PollOptionModel
 from .models.vote_model import VoteModel
@@ -37,9 +38,13 @@ class MajorityJudgmentVoteAdmin(admin.ModelAdmin):
 class MajorityJudgmentJudgmentAdmin(admin.ModelAdmin):
     pass
 
+class SchulzeJudgmentVoteAdmin(admin.ModelAdmin):
+    pass
+
 admin.site.register(VoteModel, SingleOptionVoteAdmin)
 admin.site.register(MajorityVoteModel, MajorityJudgmentVoteAdmin)
 admin.site.register(MajorityJudgmentModel, MajorityJudgmentJudgmentAdmin)
+admin.site.register(SchulzeVoteModel, SchulzeJudgmentVoteAdmin)
 
 # TODO: give models more significative "__str__()" method 
 # (so admin panel is more readable)
