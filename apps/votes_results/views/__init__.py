@@ -14,4 +14,5 @@ from .vote_recap.schulze_method_recap_view import *
 # results views
 from .results.single_option_results_view import *
 from .results.majority_judgment_results_view import *
+from .results.schulze_method_results_view import *
 from .results.generic_results_view import *

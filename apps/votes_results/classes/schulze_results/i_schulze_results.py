@@ -13,7 +13,7 @@ class ISchulzeResults(abc.ABC):
     It is the type expected by the Schulze results service."""
 
     def __init__(self, poll: PollModel) -> None:
-        self.poll = poll
+        self.poll = poll        
 
     @abc.abstractmethod
     def calculate(self) -> None:
@@ -33,3 +33,16 @@ class ISchulzeResults(abc.ABC):
         to the worse. We use a list of list because there could be equal 
         scores."""
         pass
+
+    def get_preference_matrix_cell(self, a: PollOptionModel, b: PollOptionModel) -> List[int]:
+        """Return the number of times a is prefered to b."""
+
+        if a == b:
+            return "/"
+
+        count = 0
+        for vote in self.get_votes():
+            order = vote.get_order()
+            if order.index(str(a.id)) < order.index(str(b.id)):
+                count += 1
+        return count

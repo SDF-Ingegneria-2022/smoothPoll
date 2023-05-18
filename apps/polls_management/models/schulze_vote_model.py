@@ -30,23 +30,20 @@ class SchulzeVoteModel(models.Model):
 
     def get_order_as_obj(self) -> List[PollOptionModel]:
         """method to retrieve all Schulze poll related options as objects"""
+        
+        options = self.poll.options()
+        order = self.get_order()
 
-        id_list: List[int] = list(map(int, self.get_order()))
+        options.sort(key=lambda x: order.index(str(x.id)))
+        
+        return options
 
-        options_not_sorted = PollOptionModel.objects.filter(id__in=id_list)
-        options_not_sorted = dict([(option.id, option) for option in options_not_sorted])
-        sorted_options = [options_not_sorted[id] for id in id_list]
-
-        return sorted_options
-
-        # return list(PollOptionModel.objects.filter(poll_fk=self.poll).order_by('id'))
 
     def get_order(self) -> List[str]:
         """Method used to get list of user ordered poll options as strings of their ids"""
 
         # order is a string like this "1,2,3" so we get the order as a list of string ids like this ["1","2","3"]
         order_ids = self.order.split(',')
-
         return order_ids
     
     def get_order_as_ids(self) -> List[str]:
