@@ -46,16 +46,20 @@ class SchulzeResultsAdapter(ISchulzeResults):
         self.schulze_str_options = self.schulze_votes[0].get_order_as_ids()
 
     def set_all_rankings(self) -> None:
+
+        all_rankings: List[List[List[str]]] = []
         for vote in self.schulze_votes:
             vote_list: List[List[str]] = vote.get_order()
-            self.all_schulze_rankings.append(vote_list)
+            all_rankings.append(vote_list)
+
+        self.all_schulze_rankings = all_rankings
 
     def set_schulze_results(self) -> None:
 
         # from the schulze algorithm, we need to "candidate names" and "ballots"
         # respectively 'schulze_str_options' and 'all_schulze_rankings'
         result: List[List[str]] = schulze.compute_schulze_ranking(self.schulze_str_options, self.all_schulze_rankings)
-
+        
         rankings: List[List[PollOptionModel]] = []
         for id in result:
             same_rank_list: List[PollOptionModel] = []

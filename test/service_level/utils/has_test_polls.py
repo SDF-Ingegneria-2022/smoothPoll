@@ -4,6 +4,8 @@ import pytest
 
 from apps.polls_management.models.poll_model import PollModel
 from apps.polls_management.models.poll_option_model import PollOptionModel
+from apps.polls_management.models.schulze_vote_model import SchulzeVoteModel
+from apps.votes_results.classes.schulze_results.schulze_results_adapter import SchulzeResultsAdapter
 
 
 class HasTestPolls(abc.ABC):
@@ -61,3 +63,43 @@ class HasTestPolls(abc.ABC):
                 options=["A", "B", "C", "D", "E"],
                 author=user4, ),  
             }
+
+    def generate_votes(self, schulze_poll, user_inputs: List[int]):
+
+        schulze: SchulzeVoteModel = SchulzeVoteModel(poll=schulze_poll)
+        schulze.set_order(user_inputs)
+        schulze.save()
+
+    def generate_votes_in_bulk(self, schulze_poll, input: List[int], num_votes: int):
+
+        while num_votes>0:
+            self.generate_votes(schulze_poll, input)
+            num_votes -= 1
+
+    @pytest.fixture()
+    def test_votes1(self, test_polls):
+
+        poll_test: PollModel = test_polls['poll_case_23']
+
+        op4 = poll_test.options()[4].id
+        op3 = poll_test.options()[3].id
+        op2 = poll_test.options()[2].id
+        op1 = poll_test.options()[1].id
+        op0 = poll_test.options()[0].id
+
+        input_user1: List[int] = [op4, op3, op2, op1, op0]
+        input_user2: List[int] = [op3, op2, op1, op0, op4]
+        input_user3: List[int] = [op2, op4, op3, op0, op1]
+        input_user4: List[int] = [op0, op1, op2, op3, op4]
+
+        votes1: int = 5
+        votes2: int = 4
+        votes3: int = 2
+        votes4: int = 7
+
+        self.generate_votes_in_bulk(poll_test, input_user1, votes1)
+        self.generate_votes_in_bulk(poll_test, input_user2, votes2)
+        self.generate_votes_in_bulk(poll_test, input_user3, votes3)
+        self.generate_votes_in_bulk(poll_test, input_user4, votes4)
+
+        return {'case1': poll_test}
