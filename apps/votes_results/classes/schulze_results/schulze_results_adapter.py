@@ -47,7 +47,7 @@ class SchulzeResultsAdapter(ISchulzeResults):
 
     def set_all_rankings(self) -> None:
         for vote in self.schulze_votes:
-            vote_list: List[str] = vote.get_order()
+            vote_list: List[List[str]] = vote.get_order()
             self.all_schulze_rankings.append(vote_list)
 
     def set_schulze_results(self) -> None:
