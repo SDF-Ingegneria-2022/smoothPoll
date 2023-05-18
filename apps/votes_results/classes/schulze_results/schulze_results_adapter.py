@@ -1,9 +1,10 @@
 from typing import List
 from apps.polls_management.classes.schulze_algorithm import schulze
-from apps.polls_management.models.poll_model import PollModel
 from apps.polls_management.models.poll_option_model import PollOptionModel
 from apps.polls_management.models.schulze_vote_model import SchulzeVoteModel
 from apps.votes_results.classes.schulze_results.i_schulze_results import ISchulzeResults
+from django.core.exceptions import ObjectDoesNotExist
+from apps.votes_results.exceptions.vote_does_not_exixt_exception import VoteDoesNotExistException
 
 class SchulzeResultsAdapter(ISchulzeResults):
     """Class used to manage data for a Schulze poll results"""
@@ -28,17 +29,18 @@ class SchulzeResultsAdapter(ISchulzeResults):
     
     def calculate(self) -> None:
 
-        #TODO: add controls for querysets in the database
         self.set_votes()
         self.set_options()
-
-        # now we have all the elements to calcluate the results with the algorithm
         self.set_all_rankings()
-
+        # now we have all the elements to calcluate the results with the algorithm
         self.set_schulze_results()
 
     def set_votes(self) -> None:
-        self.schulze_votes = list(SchulzeVoteModel.objects.filter(poll=self.poll))
+        
+        try:
+            self.schulze_votes = list(SchulzeVoteModel.objects.filter(poll=self.poll))
+        except ObjectDoesNotExist:
+            raise VoteDoesNotExistException(f"The vote model does not exist.")
 
     def set_options(self) -> None:
         self.schulze_str_options = self.schulze_votes[0].get_order_as_ids()
@@ -50,6 +52,8 @@ class SchulzeResultsAdapter(ISchulzeResults):
 
     def set_schulze_results(self) -> None:
 
+        # from the schulze algorithm, we need to "candidate names" and "ballots"
+        # respectively 'schulze_str_options' and 'all_schulze_rankings'
         result: List[str] = schulze.compute_schulze_ranking(self.schulze_str_options, self.all_schulze_rankings)
 
         rankings: List[List[PollOptionModel]] = []
