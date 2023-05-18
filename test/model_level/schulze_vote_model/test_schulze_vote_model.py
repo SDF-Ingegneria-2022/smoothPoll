@@ -36,7 +36,7 @@ class TestSchulzeVoteModel(HasTestPolls):
         assert_that(schulze.order).is_equal_to(f"{op4},{op3},{op2},{op1},{op0}")
 
         test_order = schulze.get_order()
-        assert_that(test_order).is_equal_to([[str(op4)], [str(op3)], [str(op2)], [str(op1)], [str(op0)]])
+        assert_that(test_order).is_equal_to([str(op4), str(op3), str(op2), str(op1), str(op0)])
 
         list_options = schulze.get_order_as_ids()
         assert_that(list_options).is_equal_to([str(op0), str(op1), str(op2), str(op3), str(op4)])
@@ -59,7 +59,7 @@ class TestSchulzeVoteModel(HasTestPolls):
         assert_that(schulze.order).is_equal_to(f"{op2},{op3},{op1},{op4},{op0}")
 
         test_order = schulze.get_order()
-        assert_that(test_order).is_equal_to([[str(op2)], [str(op3)], [str(op1)], [str(op4)], [str(op0)]])
+        assert_that(test_order).is_equal_to([str(op2), str(op3), str(op1), str(op4), str(op0)])
 
         list_options = schulze.get_order_as_ids()
         assert_that(list_options).is_equal_to([str(op0), str(op1), str(op2), str(op3), str(op4)])
@@ -82,7 +82,7 @@ class TestSchulzeVoteModel(HasTestPolls):
         assert_that(schulze.order).is_equal_to(f"{op0},{op1},{op2},{op3},{op4}")
 
         test_order = schulze.get_order()
-        assert_that(test_order).is_equal_to([[str(op0)], [str(op1)], [str(op2)], [str(op3)], [str(op4)]])
+        assert_that(test_order).is_equal_to([str(op0), str(op1), str(op2), str(op3), str(op4)])
 
         list_options = schulze.get_order_as_ids()
         assert_that(list_options).is_equal_to([str(op0), str(op1), str(op2), str(op3), str(op4)])

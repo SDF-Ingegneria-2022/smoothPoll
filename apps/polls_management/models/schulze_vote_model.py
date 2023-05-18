@@ -47,7 +47,7 @@ class SchulzeVoteModel(models.Model):
         order_list_ids = []
 
         for id in order_ids:
-            order_list_ids.append([id])
+            order_list_ids.append(id)
 
         return order_list_ids
     

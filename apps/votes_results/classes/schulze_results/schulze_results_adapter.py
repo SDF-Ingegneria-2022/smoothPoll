@@ -49,7 +49,7 @@ class SchulzeResultsAdapter(ISchulzeResults):
 
         all_rankings: List[List[List[str]]] = []
         for vote in self.schulze_votes:
-            vote_list: List[List[str]] = vote.get_order()
+            vote_list: List[List[str]] = [[i] for i in vote.get_order()]
             all_rankings.append(vote_list)
 
         self.all_schulze_rankings = all_rankings
