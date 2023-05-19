@@ -96,7 +96,7 @@ class MajorityJudjmentVoteService:
             raise ResultsNotAvailableException(f"Results of poll with id={poll_id} are not available")
         
         # results = NoParityMJResults(poll)
-        results = NoParityMJResults(poll)
+        results = ParityMJResults(poll)
         results.calculate()
 
         return results

@@ -6,6 +6,7 @@ from apps.polls_management.exceptions.poll_does_not_exist_exception import PollD
 from apps.polls_management.models.majority_vote_model import MajorityVoteModel
 
 from apps.polls_management.models.poll_model import PollModel
+from apps.polls_management.models.poll_option_model import PollOptionModel
 from apps.votes_results.classes.majority_poll_result_data import MajorityPollResultData
 from apps.votes_results.services.majority_judgment_vote_service import MajorityJudjmentVoteService
 from test.service_level.utils.has_test_polls import HasTestPolls
@@ -303,32 +304,41 @@ class TestMajorityResults(HasTestPolls):
         assert_that(x[3][0].option).is_equal_to(poll.options()[4])
         assert_that(x[4][0].option).is_equal_to(poll.options()[1])
 
-    # @pytest.mark.django_db
-    # def test_majority_vote_calculate_result_check_correct_special_case3(self, test_polls):
+    @pytest.mark.django_db
+    def test_majority_vote_calculate_result_check_correct_special_case3(self, test_polls):
 
-    #     poll: PollModel = test_polls['poll_case_23']
+        poll: PollModel = test_polls['poll_case_23']
 
-    #     # option[0] = A <-- 2-333-5
-    #     # option[1] = B <-- 2-333-5
-    #     # option[2] = C <-- 1-33-44
-    #     # option[3] = D <-- 1-33-44
-    #     # option[4] = E <-- 11-333
-    #     # number of votes = 5
-    #     # expected result: C = D > A = B > E
+        # option[0] = A <-- 2-333-5
+        # option[1] = B <-- 2-333-5
+        # option[2] = C <-- 1-33-44
+        # option[3] = D <-- 1-33-44
+        # option[4] = E <-- 11-333
+        # number of votes = 5
+        # expected result: C = D > A = B > E
 
-    #     self.__quick_submit_vote(poll, [2, 2, 1, 1, 1])
-    #     self.__quick_submit_vote(poll, [3, 3, 3, 3, 1])
-    #     self.__quick_submit_vote(poll, [3, 3, 3, 3, 3])
-    #     self.__quick_submit_vote(poll, [3, 3, 4, 4, 3])
-    #     self.__quick_submit_vote(poll, [5, 5, 4, 4, 3])
+        self.__quick_submit_vote(poll, [2, 2, 1, 1, 1])
+        self.__quick_submit_vote(poll, [3, 3, 3, 3, 1])
+        self.__quick_submit_vote(poll, [3, 3, 3, 3, 3])
+        self.__quick_submit_vote(poll, [3, 3, 4, 4, 3])
+        self.__quick_submit_vote(poll, [5, 5, 4, 4, 3])
 
-    #     x: List[List[MajorityPollResultData]] = MajorityJudjmentVoteService.calculate_result(
-    #         poll_id=poll.id).get_sorted_options()
+        x: List[List[MajorityPollResultData]] = MajorityJudjmentVoteService.calculate_result(
+            poll_id=poll.id).get_sorted_options()
         
-    
-    #     assert_that(x[0].option).is_equal_to(poll.options()[2])
-    #     assert_that(x[1].option).is_equal_to(poll.options()[3])
-    #     assert_that(x[2].option).is_equal_to(poll.options()[0])
-    #     assert_that(x[3].option).is_equal_to(poll.options()[1])
-    #     assert_that(x[4].option).is_equal_to(poll.options()[4])
+        def check_presence_in_position(
+                position: List[MajorityPollResultData], 
+                option: PollOptionModel ):
+            
+            for x in position:
+                if x.option == option:
+                    return True
+            return False
+        
+        assert_that(check_presence_in_position(x[0], poll.options()[2])).is_true()
+        assert_that(check_presence_in_position(x[0], poll.options()[3])).is_true()
+        assert_that(check_presence_in_position(x[1], poll.options()[0])).is_true()
+        assert_that(check_presence_in_position(x[1], poll.options()[1])).is_true()
+        assert_that(check_presence_in_position(x[2], poll.options()[4])).is_true()
+
 
