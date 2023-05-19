@@ -30,7 +30,7 @@
         </div>
     </div>
         
-    <div class="row mt-1 ">
+    <div class="row mt-3 ">
         <div class="col-md-5">
             <table class="table table-secondary shadow p-3 mb-5 bg-body rounded">
                 <thead>
@@ -53,6 +53,52 @@
     </div>
 </div>
 
+
+{% if vote.poll.is_votable_w_so_and_mj %}
+<!-- Banner to ask user to vote also with MJ -->
+<div class="card mt-3 shadow bg-body rounded">
+    <div class="card-body">
+        <h5 class="card-title">Perchè non provi anche il metodo del giudizio maggioritario?</h5>
+        <p class="card-text">Il giudizio maggioritario è stato 
+        introdotto nel 2007 da <b>Michel Balinski e Rida Laraki</b>. 
+        Il suo principio si basa sulla <b>regola della mediana
+        più alta</b>. Provalo pure tu! </p>
+        <hr>
+        <div class="fw-lighter fs-5">Giudizi espressi con il metodo maggioritario per questa scelta</div>
+        <div class="fw-bold fs-4">{{mj_vote_counter.count_majority_judgment_votes}}</div>
+        <a href="{% url 'apps.votes_results:majority_judgment_vote' poll_id=vote.poll.id %}" 
+        class="btn btn-primary mt-2">Esprimi un giudizio</a>
+        {% if mj_vote_counter.count_majority_judgment_votes > 0 and vote.poll|are_results_visible:request %} 
+            <a href="{% url 'apps.votes_results:majority_judgment_results' poll_id=vote.poll.id %}" class="btn btn-secondary mt-2">Vedi risultati</a>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+
+<!-- Actions after vote -->
+<div class="container mt-5" >
+    <div class="d-grid gap-2 d-md-block">
+        <a 
+            class="btn btn-primary mt-2" 
+            href="{% url 'apps.votes_results:votable_polls' %}?page=1&per_page=10" >
+            Ritorna alla lista di tutte le scelte</a>
+        <a 
+            class="btn btn-primary mt-2" 
+            href="{% url 'home' %}" >
+            Torna alla home
+        </a>
+        {% if vote.poll|are_results_visible:request %} 
+        <a class="btn btn-primary mt-2" 
+            href="{% url 'apps.votes_results:schulze_method_results' poll_id=vote.poll.id %}" 
+            role="button">Vedi risultati</a>
+        {% endif %}
+        <button type="button" class="btn btn-info mt-2" 
+            data-bs-toggle="modal" data-bs-target="#shareModal-{{vote.poll.id}}">
+            Condividi 
+        </button>
+        {% include "polls_management/components/share_social/share_social_modal.html" with poll=vote.poll %}
+    </div>
+</div>
 
 {% endblock content %}
 

@@ -12,6 +12,7 @@ from apps.votes_results.classes.schulze_results.i_schulze_results import ISchulz
 from apps.votes_results.classes.schulze_results.schulze_results_adapter import SchulzeResultsAdapter
 from apps.votes_results.exceptions.poll_not_yet_voted_exception import PollNotYetVodedException
 from apps.votes_results.exceptions.results_not_available_exception import ResultsNotAvailableException
+from apps.votes_results.services.schulze_method_vote_service import SchulzeMethodVoteService
 
 class ShulzeResultsStub(ISchulzeResults):
 
@@ -58,10 +59,10 @@ def schulze_method_results_view(request: HttpRequest, poll_id: int):
         raise Http404()
     
     try:
-        # todo: replace with real call to service
-        poll_results: SchulzeResultsAdapter = SchulzeResultsAdapter(poll)
-        poll_results.calculate()
-        # poll_results: SchulzeResultsAdapter = SchulzeVoteService.calculate_results(poll, user=request.user)
+        # # todo: replace with real call to service
+        # poll_results: SchulzeResultsAdapter = SchulzeResultsAdapter(poll)
+        # poll_results.calculate()
+        poll_results: SchulzeResultsAdapter = SchulzeMethodVoteService.calculate_result(poll, user=request.user)
     except PollDoesNotExistException:
         raise Http404()
     except ResultsNotAvailableException:
@@ -81,30 +82,3 @@ def schulze_method_results_view(request: HttpRequest, poll_id: int):
             'type': True,
         }
         })
-
-# --------------------- Schulze Vote Service --------------------
-
-    # @staticmethod
-    # def calculate_result(poll: PollModel, user = None) -> SchulzeResultsAdapter:
-    #     """
-    #     Calculate result of a poll.
-    #     Args:
-    #         poll: the poll you want to calculate results
-    #     Raises:
-    #         PollDoesNotExistException: you tried to calculate results on a non-existent poll
-    #         ResultsNotAvailableException: raised if you try to check results not visible
-    #     """
-
-    #     try:
-    #         poll: PollModel = PollModel.objects.get(id=poll.id)
-    #     except ObjectDoesNotExist:
-    #         raise PollDoesNotExistException(f"Poll with id={poll.id} does not exist")
-        
-    #     # check if the results can be viewed
-    #     if not poll.are_results_visible(user):
-    #         raise ResultsNotAvailableException(f"Results of poll with id={poll.id} are not available")
-        
-    #     result: SchulzeResultsAdapter = SchulzeResultsAdapter(poll)
-    #     result.calculate()
-
-    #     return result
