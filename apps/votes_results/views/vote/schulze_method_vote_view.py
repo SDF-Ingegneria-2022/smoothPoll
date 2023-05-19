@@ -53,12 +53,13 @@ class SchulzeMethodVoteView(VoteViewSchema):
             return HttpResponseRedirect(reverse('apps.votes_results:schulze_method_vote', args=(self.poll().id,)))
 
         # Save vote preference in session
-        request.session[SESSION_SCHULZE_METHOD_VOTE_ID] = request.POST[REQUEST_VOTE]
+        #request.session[SESSION_SCHULZE_METHOD_VOTE_ID] = request.POST[REQUEST_VOTE]
         
         # Perform vote and handle missing vote or poll exception.
         try:
             vote = SchulzeMethodVoteService.perform_vote(
                 request.POST.getlist('option_order'),self.poll().id, )
+            request.session[SESSION_SCHULZE_METHOD_VOTE_ID] = vote.id
         except PollOptionUnvalidException:
             request.session[SESSION_SCHULZE_METHOD_VOTE_SUBMIT_ERROR] = "Errore! La scelte deve essere " \
                 + "espressa tramite l'apposito form. Se continui a vedere questo " \
