@@ -3,6 +3,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from apps.polls_management.models.schulze_vote_model import SchulzeVoteModel
 from apps.votes_results.classes.majority_poll_result_data import MajorityPollResultData
 from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
+from apps.votes_results.classes.schulze_results.schulze_results_adapter import SchulzeResultsAdapter
 from apps.votes_results.exceptions.results_not_available_exception import ResultsNotAvailableException
 from apps.votes_results.exceptions.vote_does_not_exixt_exception import VoteDoesNotExistException
 from apps.polls_management.models.poll_model import PollModel
@@ -44,43 +45,29 @@ class SchulzeMethodVoteService:
         return vote
 
     @staticmethod
-    def calculate_result(poll_id: str, user = None) -> List[MajorityPollResultData]:
-        """Calculate result of a majority poll.
-        
+    def calculate_result(poll: PollModel, user = None) -> SchulzeResultsAdapter:
+        """
+        Calculate result of a poll.
         Args:
-            poll_id: The id of the poll.
-        
+            poll: the poll you want to calculate results
         Raises:
-            PollDoesNotExistException: If the poll does not exist.
-            PollNotYetVodedException: If the poll didn't received votes.
-        
-        Returns: 
-            List[MajorityPollResultData]: List of calculated result for each option.
+            PollDoesNotExistException: you tried to calculate results on a non-existent poll
+            ResultsNotAvailableException: raised if you try to check results not visible
         """
 
         try:
-            poll: PollModel = PollModel.objects.get(id=poll_id)
+            poll: PollModel = PollModel.objects.get(id=poll.id)
         except ObjectDoesNotExist:
-            raise PollDoesNotExistException(f"Poll with id={poll_id} does not exist")
-
+            raise PollDoesNotExistException(f"Poll with id={poll.id} does not exist")
+        
         # check if the results can be viewed
         if not poll.are_results_visible(user):
-            raise ResultsNotAvailableException(f"Results of poll with id={poll_id} are not available")
+            raise ResultsNotAvailableException(f"Results of poll with id={poll.id} are not available")
         
-        majority_vote_result_unsorted: List[MajorityPollResultData] = []
+        result: SchulzeResultsAdapter = SchulzeResultsAdapter(poll)
+        result.calculate()
 
-        all_options: PollOptionModel = PollOptionModel.objects.filter(poll_fk=poll)
-        
-        # calculate triplet <#worst votes, median(sign), #best votes> foreach option
-        for option in all_options:
-
-            option_result = MajorityPollResultData(option)
-            majority_vote_result_unsorted.append(option_result)
-
-        # sort result (descendant)
-        majority_vote_result_unsorted.sort(reverse=True)
-        
-        return majority_vote_result_unsorted
+        return result
 
     @staticmethod
     def get_vote_by_id(vote_id: str) -> SchulzeVoteModel:

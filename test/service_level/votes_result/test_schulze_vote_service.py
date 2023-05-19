@@ -91,8 +91,8 @@ class TestSchulzeVoteService():
         poll: PollModel = create_schulze_poll
         schulze_options:  List[PollOptionModel] = poll.options()
         votes: List[int] = [option.id for option in schulze_options]
-        #append another vote 
-        votes.append(1)
+        #remove one vote
+        votes.pop(0)
         id = poll.id
 
         assert_that(SchulzeMethodVoteService.perform_vote) \
