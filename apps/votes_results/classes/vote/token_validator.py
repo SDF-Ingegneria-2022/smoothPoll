@@ -33,7 +33,8 @@ class TokenValidator:
         
     def is_token_available_for_votemethod(self, votemethod: PollModel.PollType) -> bool:
         
-        if votemethod == PollModel.PollType.SINGLE_OPTION:
+        if (votemethod == PollModel.PollType.SINGLE_OPTION) or \
+            (votemethod == PollModel.PollType.SCHULZE):
             return not self.token.single_option_use
         
         if votemethod == PollModel.PollType.MAJORITY_JUDJMENT:
@@ -53,7 +54,8 @@ class TokenValidator:
         if not self.is_token_load():
             raise Exception("Cannot mark a token as used if it's not load")
         
-        if votemethod == PollModel.PollType.SINGLE_OPTION:
+        if (votemethod == PollModel.PollType.SINGLE_OPTION) or \
+            (votemethod == PollModel.PollType.SCHULZE):
             if self.token.single_option_use:
                 raise Exception("Cannot vote two times with same method (single option)")
             
