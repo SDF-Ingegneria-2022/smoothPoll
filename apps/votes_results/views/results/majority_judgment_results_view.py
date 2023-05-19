@@ -29,12 +29,7 @@ def majority_judgment_results_view(request: HttpRequest, poll_id: int):
     if poll.poll_type == PollModel.PollType.SINGLE_OPTION and not poll.is_votable_w_so_and_mj():
         raise Http404()
     
-    try:
-        
-        # poll_results: List[MajorityPollResultData] = MajorityJudjmentVoteService.calculate_result(
-        #     poll_id=str(poll_id), user=request.user)\
-        #     .get_sorted_options_no_parity()
-        
+    try:    
         poll_results: IMajorityJudgmentResults = \
             MajorityJudjmentVoteService.calculate_result(
             poll_id=str(poll_id), user=request.user)

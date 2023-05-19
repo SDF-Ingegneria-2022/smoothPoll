@@ -2,6 +2,7 @@ from typing import List
 from django.core.exceptions import ObjectDoesNotExist
 from apps.votes_results.classes.majority_judgment_results.i_majority_judment_results import IMajorityJudgmentResults
 from apps.votes_results.classes.majority_judgment_results.no_parity_mj_results import NoParityMJResults
+from apps.votes_results.classes.majority_judgment_results.parity_mj_results import ParityMJResults
 from apps.votes_results.classes.majority_poll_result_data import MajorityPollResultData
 from apps.votes_results.exceptions.majority_number_of_ratings_not_valid import MajorityNumberOfRatingsNotValid
 from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
@@ -94,6 +95,7 @@ class MajorityJudjmentVoteService:
         if not poll.are_results_visible(user):
             raise ResultsNotAvailableException(f"Results of poll with id={poll_id} are not available")
         
+        # results = NoParityMJResults(poll)
         results = NoParityMJResults(poll)
         results.calculate()
 
