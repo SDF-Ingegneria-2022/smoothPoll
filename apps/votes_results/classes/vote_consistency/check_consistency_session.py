@@ -62,7 +62,7 @@ class CheckConsistencySession:
     
     
     def _checks_for_single_option(self, poll, vote_id, session_consistency_check, mj_ratings) -> bool:
-        return  poll.poll_type == PollModel.PollType.SCHULZE and \
+        return  poll.poll_type == PollModel.PollType.SINGLE_OPTION and \
                 self._request.session.get(vote_id) and \
                 self._request.session.get(session_consistency_check) is None and \
                 not CheckConsistencyMjVote.check(self._request.session.get(vote_id), mj_ratings)

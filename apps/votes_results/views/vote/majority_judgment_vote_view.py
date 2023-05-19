@@ -99,7 +99,9 @@ class MajorityJudgmentVoteView(VoteViewSchema):
              # Check used if user has already seen the consistency check
             check_consistency_session.check_consistency(
                 self.poll(), ratings, 
-                SESSION_SINGLE_OPTION_VOTE_ID, 
+                SESSION_SINGLE_OPTION_VOTE_ID,  # Session key for single option vote and shuzle method 
+                                                # Note: SESSION_SINGLE_OPTION_VOTE_ID is used also for shulze method
+                                                # TODO: change name of SESSION_SINGLE_OPTION_VOTE_ID SESSION_OPTION_VOTE_ID
                 SESSION_CONSISTENCY_CHECK )):
             
             return HttpResponseRedirect(reverse(
