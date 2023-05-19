@@ -4,6 +4,7 @@ from apps.polls_management.models.poll_option_model import PollOptionModel
 from apps.polls_management.models.schulze_vote_model import SchulzeVoteModel
 from apps.votes_results.classes.schulze_results.i_schulze_results import ISchulzeResults
 from django.core.exceptions import ObjectDoesNotExist
+from apps.votes_results.exceptions.poll_not_yet_voted_exception import PollNotYetVodedException
 from apps.votes_results.exceptions.vote_does_not_exixt_exception import VoteDoesNotExistException
 
 class SchulzeResultsAdapter(ISchulzeResults):
@@ -41,6 +42,9 @@ class SchulzeResultsAdapter(ISchulzeResults):
             self.schulze_votes = list(SchulzeVoteModel.objects.filter(poll=self.poll))
         except ObjectDoesNotExist:
             raise VoteDoesNotExistException(f"The vote model does not exist.")
+        
+        if len(self.schulze_votes) < 1:
+            raise PollNotYetVodedException()
 
     def set_options(self) -> None:
         self.schulze_str_options = self.schulze_votes[0].get_order_as_ids()
