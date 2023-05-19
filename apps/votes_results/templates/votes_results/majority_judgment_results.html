@@ -67,7 +67,7 @@
             </div>
 
             <!-- Sorted options -->
-            {%for voted_option in poll_results %}
+            {%for voted_option in poll_results.get_sorted_options_no_parity %}
                 <div class="row">
                     <div class="col-md-4 col-12">
                         <p class="text-secondary">{{forloop.counter}}.
