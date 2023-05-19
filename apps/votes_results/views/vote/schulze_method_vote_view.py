@@ -59,6 +59,7 @@ class SchulzeMethodVoteView(VoteViewSchema):
         try:
             vote = SchulzeMethodVoteService.perform_vote(
                 request.POST.getlist('option_order'),self.poll().id, )
+            print("VOTE: ", request.POST.getlist('option_order'))
         except PollOptionUnvalidException:
             request.session[SESSION_SCHULZE_METHOD_VOTE_SUBMIT_ERROR] = "Errore! La scelte deve essere " \
                 + "espressa tramite l'apposito form. Se continui a vedere questo " \
