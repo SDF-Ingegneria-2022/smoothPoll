@@ -19,7 +19,7 @@
     <h1>{{ poll.name }}</h1>
 </div>
 
-{% if poll.is_votable_w_so_and_mj %}
+{% if poll.is_votable_w_so_and_mj and poll.poll_type == "single_option" %}
 
 <div class="modal mt-5" id="voteconsistencyerror" tabindex="-1">
     <div class="modal-dialog">
@@ -38,6 +38,26 @@
       </div>
     </div>
   </div>
+
+{% elif poll.is_votable_w_so_and_mj and poll.poll_type == "schulze" %}
+
+  <div class="modal mt-5" id="voteconsistencyerror" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header  bg-warning">
+            <h5 class="modal-title">Attenzione!</h5>
+          </div>
+          <div class="modal-body">
+            <p class="fw-light">Abbiamo riscontrato un'incongruenza tra la classifica nel metodo Schulze e il giudizio con il metodo del Giudizio Maggioritario.</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="confirm-submit">Voglio procedere lo stesso!</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cambio le scelte</button>
+  
+          </div>
+        </div>
+      </div>
+    </div>
 
 {% endif %}
 
