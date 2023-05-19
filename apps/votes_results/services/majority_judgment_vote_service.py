@@ -1,5 +1,7 @@
 from typing import List
 from django.core.exceptions import ObjectDoesNotExist
+from apps.votes_results.classes.majority_judgment_results.i_majority_judment_results import IMajorityJudgmentResults
+from apps.votes_results.classes.majority_judgment_results.no_parity_mj_results import NoParityMJResults
 from apps.votes_results.classes.majority_poll_result_data import MajorityPollResultData
 from apps.votes_results.exceptions.majority_number_of_ratings_not_valid import MajorityNumberOfRatingsNotValid
 from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
@@ -69,7 +71,7 @@ class MajorityJudjmentVoteService:
         return vote
 
     @staticmethod
-    def calculate_result(poll_id: str, user = None) -> List[MajorityPollResultData]:
+    def calculate_result(poll_id: str, user = None) -> IMajorityJudgmentResults:
         """Calculate result of a majority poll.
         
         Args:
@@ -92,20 +94,10 @@ class MajorityJudjmentVoteService:
         if not poll.are_results_visible(user):
             raise ResultsNotAvailableException(f"Results of poll with id={poll_id} are not available")
         
-        majority_vote_result_unsorted: List[MajorityPollResultData] = []
+        results = NoParityMJResults(poll)
+        results.calculate()
 
-        all_options: PollOptionModel = PollOptionModel.objects.filter(poll_fk=poll)
-        
-        # calculate triplet <#worst votes, median(sign), #best votes> foreach option
-        for option in all_options:
-
-            option_result = MajorityPollResultData(option)
-            majority_vote_result_unsorted.append(option_result)
-
-        # sort result (descendant)
-        majority_vote_result_unsorted.sort(reverse=True)
-        
-        return majority_vote_result_unsorted
+        return results
 
     @staticmethod
     def get_vote_by_id(vote_id: str) -> MajorityVoteModel:

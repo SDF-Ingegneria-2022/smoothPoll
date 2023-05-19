@@ -30,8 +30,10 @@ def majority_judgment_results_view(request: HttpRequest, poll_id: int):
     
     try:
         
-        poll_results: List[MajorityPollResultData] = \
-            MajorityJudjmentVoteService.calculate_result(poll_id=str(poll_id), user=request.user)
+        poll_results: List[MajorityPollResultData] = MajorityJudjmentVoteService.calculate_result(
+            poll_id=str(poll_id), user=request.user)\
+            .get_sorted_options_no_parity()
+    
     except PollDoesNotExistException:
         raise Http404()
     except ResultsNotAvailableException:

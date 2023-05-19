@@ -66,7 +66,8 @@ class TestMajorityResults(HasTestPolls):
             {'poll_choice_id': poll.options()[1].id, 'rating': 2 },
             {'poll_choice_id': poll.options()[2].id, 'rating': 2 }], poll_id=poll.id)
 
-        x: List[MajorityPollResultData] = MajorityJudjmentVoteService.calculate_result(poll_id=poll.id)
+        x: List[MajorityPollResultData] = MajorityJudjmentVoteService.calculate_result(
+            poll_id=poll.id).get_sorted_options_no_parity()
         
         # verify options order
         assert_that(x[0].option).is_equal_to(poll.options()[0])
@@ -123,8 +124,9 @@ class TestMajorityResults(HasTestPolls):
              {'poll_choice_id': poll.options()[1].id, 'rating': 4 },
              {'poll_choice_id': poll.options()[2].id, 'rating': 5 }], poll_id=poll.id)
 
-        x: List[MajorityPollResultData] = MajorityJudjmentVoteService.calculate_result(poll_id=poll.id)
-
+        x: List[MajorityPollResultData] = MajorityJudjmentVoteService.calculate_result(
+            poll_id=poll.id).get_sorted_options_no_parity()
+        
         # verify options order
         assert_that(x[0].option).is_equal_to(poll.options()[2])
         assert_that(x[1].option).is_equal_to(poll.options()[1])
@@ -184,7 +186,8 @@ class TestMajorityResults(HasTestPolls):
             {'poll_choice_id': poll.options()[2].id, 'rating': 2 },
             {'poll_choice_id': poll.options()[3].id, 'rating': 2 }], poll_id=poll.id)
 
-        x: List[MajorityPollResultData] = MajorityJudjmentVoteService.calculate_result(poll_id=poll.id)
+        x: List[MajorityPollResultData] = MajorityJudjmentVoteService.calculate_result(
+            poll_id=poll.id).get_sorted_options_no_parity()
 
         # verify options order 2, 3, 1, 0
         assert_that(x[0].option).is_equal_to(poll.options()[2])
@@ -259,8 +262,9 @@ class TestMajorityResults(HasTestPolls):
         self.__quick_submit_vote(poll, [5, 4, 5, 5])
         self.__quick_submit_vote(poll, [5, 5, 5, 5])
        
-
-        x: List[MajorityPollResultData] = MajorityJudjmentVoteService.calculate_result(poll_id=poll.id)
+        x: List[MajorityPollResultData] = MajorityJudjmentVoteService.calculate_result(
+            poll_id=poll.id).get_sorted_options_no_parity()
+        
 
         assert_that(x[0].option).is_equal_to(poll.options()[1])
         assert_that(x[1].option).is_equal_to(poll.options()[3])
@@ -288,8 +292,9 @@ class TestMajorityResults(HasTestPolls):
         self.__quick_submit_vote(poll, [5, 4, 5, 5, 5])
         self.__quick_submit_vote(poll, [5, 4, 5, 5, 5])
 
-        x: List[MajorityPollResultData] = \
-            MajorityJudjmentVoteService.calculate_result(poll_id=poll.id)
+        x: List[MajorityPollResultData] = MajorityJudjmentVoteService.calculate_result(
+            poll_id=poll.id).get_sorted_options_no_parity()
+        
 
         assert_that(x[0].option).is_equal_to(poll.options()[0])
         assert_that(x[1].option).is_equal_to(poll.options()[2])
@@ -316,8 +321,9 @@ class TestMajorityResults(HasTestPolls):
         self.__quick_submit_vote(poll, [3, 3, 4, 4, 3])
         self.__quick_submit_vote(poll, [5, 5, 4, 4, 3])
 
-        x: List[MajorityPollResultData] = \
-            MajorityJudjmentVoteService.calculate_result(poll_id=poll.id)
+        x: List[MajorityPollResultData] = MajorityJudjmentVoteService.calculate_result(
+            poll_id=poll.id).get_sorted_options_no_parity()
+        
 
         assert_that(x[0].option).is_equal_to(poll.options()[2])
         assert_that(x[1].option).is_equal_to(poll.options()[3])
