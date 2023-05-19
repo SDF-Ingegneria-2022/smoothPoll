@@ -6,6 +6,7 @@ from apps.polls_management.exceptions.poll_does_not_exist_exception import PollD
 
 from apps.polls_management.models.poll_model import PollModel
 from apps.polls_management.services.poll_service import PollService
+from apps.votes_results.classes.majority_judgment_results.i_majority_judment_results import IMajorityJudgmentResults
 from apps.votes_results.classes.majority_poll_result_data import MajorityPollResultData
 from apps.votes_results.exceptions.poll_not_yet_voted_exception import PollNotYetVodedException
 from apps.votes_results.exceptions.results_not_available_exception import ResultsNotAvailableException
@@ -28,10 +29,11 @@ def majority_judgment_results_view(request: HttpRequest, poll_id: int):
     if poll.poll_type == PollModel.PollType.SINGLE_OPTION and not poll.is_votable_w_so_and_mj():
         raise Http404()
     
-    try:
-        
-        poll_results: List[MajorityPollResultData] = \
-            MajorityJudjmentVoteService.calculate_result(poll_id=str(poll_id), user=request.user)
+    try:    
+        poll_results: IMajorityJudgmentResults = \
+            MajorityJudjmentVoteService.calculate_result(
+            poll_id=str(poll_id), user=request.user)
+    
     except PollDoesNotExistException:
         raise Http404()
     except ResultsNotAvailableException:

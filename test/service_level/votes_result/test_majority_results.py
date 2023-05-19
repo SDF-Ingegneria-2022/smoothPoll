@@ -6,6 +6,7 @@ from apps.polls_management.exceptions.poll_does_not_exist_exception import PollD
 from apps.polls_management.models.majority_vote_model import MajorityVoteModel
 
 from apps.polls_management.models.poll_model import PollModel
+from apps.polls_management.models.poll_option_model import PollOptionModel
 from apps.votes_results.classes.majority_poll_result_data import MajorityPollResultData
 from apps.votes_results.services.majority_judgment_vote_service import MajorityJudjmentVoteService
 from test.service_level.utils.has_test_polls import HasTestPolls
@@ -66,7 +67,8 @@ class TestMajorityResults(HasTestPolls):
             {'poll_choice_id': poll.options()[1].id, 'rating': 2 },
             {'poll_choice_id': poll.options()[2].id, 'rating': 2 }], poll_id=poll.id)
 
-        x: List[MajorityPollResultData] = MajorityJudjmentVoteService.calculate_result(poll_id=poll.id)
+        x: List[MajorityPollResultData] = MajorityJudjmentVoteService.calculate_result(
+            poll_id=poll.id).get_sorted_options_no_parity()
         
         # verify options order
         assert_that(x[0].option).is_equal_to(poll.options()[0])
@@ -123,8 +125,9 @@ class TestMajorityResults(HasTestPolls):
              {'poll_choice_id': poll.options()[1].id, 'rating': 4 },
              {'poll_choice_id': poll.options()[2].id, 'rating': 5 }], poll_id=poll.id)
 
-        x: List[MajorityPollResultData] = MajorityJudjmentVoteService.calculate_result(poll_id=poll.id)
-
+        x: List[MajorityPollResultData] = MajorityJudjmentVoteService.calculate_result(
+            poll_id=poll.id).get_sorted_options_no_parity()
+        
         # verify options order
         assert_that(x[0].option).is_equal_to(poll.options()[2])
         assert_that(x[1].option).is_equal_to(poll.options()[1])
@@ -184,7 +187,8 @@ class TestMajorityResults(HasTestPolls):
             {'poll_choice_id': poll.options()[2].id, 'rating': 2 },
             {'poll_choice_id': poll.options()[3].id, 'rating': 2 }], poll_id=poll.id)
 
-        x: List[MajorityPollResultData] = MajorityJudjmentVoteService.calculate_result(poll_id=poll.id)
+        x: List[MajorityPollResultData] = MajorityJudjmentVoteService.calculate_result(
+            poll_id=poll.id).get_sorted_options_no_parity()
 
         # verify options order 2, 3, 1, 0
         assert_that(x[0].option).is_equal_to(poll.options()[2])
@@ -259,13 +263,15 @@ class TestMajorityResults(HasTestPolls):
         self.__quick_submit_vote(poll, [5, 4, 5, 5])
         self.__quick_submit_vote(poll, [5, 5, 5, 5])
        
+        x: List[List[MajorityPollResultData]] = \
+            MajorityJudjmentVoteService.calculate_result(
+            poll_id=poll.id).get_sorted_options()
+        
 
-        x: List[MajorityPollResultData] = MajorityJudjmentVoteService.calculate_result(poll_id=poll.id)
-
-        assert_that(x[0].option).is_equal_to(poll.options()[1])
-        assert_that(x[1].option).is_equal_to(poll.options()[3])
-        assert_that(x[2].option).is_equal_to(poll.options()[0])
-        assert_that(x[3].option).is_equal_to(poll.options()[2])
+        assert_that(x[0][0].option).is_equal_to(poll.options()[1])
+        assert_that(x[1][0].option).is_equal_to(poll.options()[3])
+        assert_that(x[2][0].option).is_equal_to(poll.options()[0])
+        assert_that(x[3][0].option).is_equal_to(poll.options()[2])
 
 
     @pytest.mark.django_db
@@ -288,14 +294,15 @@ class TestMajorityResults(HasTestPolls):
         self.__quick_submit_vote(poll, [5, 4, 5, 5, 5])
         self.__quick_submit_vote(poll, [5, 4, 5, 5, 5])
 
-        x: List[MajorityPollResultData] = \
-            MajorityJudjmentVoteService.calculate_result(poll_id=poll.id)
-
-        assert_that(x[0].option).is_equal_to(poll.options()[0])
-        assert_that(x[1].option).is_equal_to(poll.options()[2])
-        assert_that(x[2].option).is_equal_to(poll.options()[3])
-        assert_that(x[3].option).is_equal_to(poll.options()[4])
-        assert_that(x[4].option).is_equal_to(poll.options()[1])
+        x: List[List[MajorityPollResultData]] = \
+            MajorityJudjmentVoteService.calculate_result(
+            poll_id=poll.id).get_sorted_options()
+        
+        assert_that(x[0][0].option).is_equal_to(poll.options()[0])
+        assert_that(x[1][0].option).is_equal_to(poll.options()[2])
+        assert_that(x[2][0].option).is_equal_to(poll.options()[3])
+        assert_that(x[3][0].option).is_equal_to(poll.options()[4])
+        assert_that(x[4][0].option).is_equal_to(poll.options()[1])
 
     @pytest.mark.django_db
     def test_majority_vote_calculate_result_check_correct_special_case3(self, test_polls):
@@ -316,12 +323,22 @@ class TestMajorityResults(HasTestPolls):
         self.__quick_submit_vote(poll, [3, 3, 4, 4, 3])
         self.__quick_submit_vote(poll, [5, 5, 4, 4, 3])
 
-        x: List[MajorityPollResultData] = \
-            MajorityJudjmentVoteService.calculate_result(poll_id=poll.id)
+        x: List[List[MajorityPollResultData]] = MajorityJudjmentVoteService.calculate_result(
+            poll_id=poll.id).get_sorted_options()
+        
+        def check_presence_in_position(
+                position: List[MajorityPollResultData], 
+                option: PollOptionModel ):
+            
+            for x in position:
+                if x.option == option:
+                    return True
+            return False
+        
+        assert_that(check_presence_in_position(x[0], poll.options()[2])).is_true()
+        assert_that(check_presence_in_position(x[0], poll.options()[3])).is_true()
+        assert_that(check_presence_in_position(x[1], poll.options()[0])).is_true()
+        assert_that(check_presence_in_position(x[1], poll.options()[1])).is_true()
+        assert_that(check_presence_in_position(x[2], poll.options()[4])).is_true()
 
-        assert_that(x[0].option).is_equal_to(poll.options()[2])
-        assert_that(x[1].option).is_equal_to(poll.options()[3])
-        assert_that(x[2].option).is_equal_to(poll.options()[0])
-        assert_that(x[3].option).is_equal_to(poll.options()[1])
-        assert_that(x[4].option).is_equal_to(poll.options()[4])
 
