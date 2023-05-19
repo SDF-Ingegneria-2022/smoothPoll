@@ -77,7 +77,7 @@ class PollForm(ModelForm):
                         OPEN_DATETIME: _("La data dalla quale sarà possibile esprimere la scelta"), 
                         CLOSE_DATETIME: _("La data dalla quale non sarà più possibile esprimere la scelta"), 
                         AUTHOR: _("Il nome dell'autore che ha creato la scelta"),
-                        VOTABLE_MJ: _("(abilita questa opzione se vuoi che una scelta a Opzione Singola sia giudicabile anche con il Giudizio Maggioritario)"),
+                        VOTABLE_MJ: _("(abilita questa opzione se vuoi che una scelta sia giudicabile anche con il Giudizio Maggioritario)"),
                         PRIVATE: _("(se abiliti questa opzione la scelta non sarà visibile nella sezione con tutte le scelte)"),
                         SHORT_ID: _("Codice identificativo univoco per il link"), 
                         PROTECTION: _("Come evitare che la scelta venga effetuata più volte dallo stesso utente"), 
