@@ -16,5 +16,8 @@ def generic_results_view(request, poll_id: int):
     # redirect to proper vote method's results
     if poll.poll_type == PollModel.PollType.MAJORITY_JUDJMENT:
         return HttpResponseRedirect(reverse('apps.votes_results:majority_judgment_results', args=(poll_id,)))
-    else:
-        return HttpResponseRedirect(reverse('apps.votes_results:single_option_results', args=(poll_id,)))
+    
+    if poll.poll_type == PollModel.PollType.SCHULZE:
+        return HttpResponseRedirect(reverse('apps.votes_results:schulze_method_results', args=(poll_id,)))
+    
+    return HttpResponseRedirect(reverse('apps.votes_results:single_option_results', args=(poll_id,)))

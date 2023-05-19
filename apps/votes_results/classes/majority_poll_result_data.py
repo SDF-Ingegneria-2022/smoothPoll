@@ -7,7 +7,6 @@ from django.db.models.query import QuerySet
 from dataclasses import dataclass
 import math
 
-
 @dataclass
 class MajorityPollResultData(object):
     """Small class used to store the data related to
@@ -97,9 +96,9 @@ class MajorityPollResultData(object):
     def __eq__(self, other): 
 
         if not isinstance(other, MajorityPollResultData):
-            return False
+            raise Exception("Cannot compare MajorityPollResultData with other type")
 
-        return self == other
+        return self.compare(other) == 0
     
     def __gt__(self, other):
         """
@@ -108,9 +107,10 @@ class MajorityPollResultData(object):
         """
 
         if not isinstance(other, MajorityPollResultData):
-            return False
+            raise Exception("Cannot compare MajorityPollResultData with other type")
 
-        return self.sorting(other, 0)
+        cmp = self.compare(other)
+        return cmp > 0 if cmp != 0 else self.option.value > other.option.value
     
     def majority_values_median(self, values: list[MajorityJudgmentModel]) -> int:
         """Returns new median from list of majority values"""
@@ -129,15 +129,19 @@ class MajorityPollResultData(object):
     def median_value(self, iteration=0) -> int:
         """Calculates the median of the current majority values iteration"""
 
-        majority_values: list[MajorityJudgmentModel] = list(self.option_votes)
+        majority_values = list(self.option_votes)
+        majority_values.sort(key=lambda x: x.rating)
 
-        if iteration > 0:
-            while(iteration > 0):
-                new_median = self.majority_values_median(majority_values)
-                iteration -= 1
-            return new_median
-        else:
-            return self.median
+        median_idx = math.floor((len(majority_values)-1)/2)
+        median = majority_values[median_idx].rating
+
+        while iteration > 0:
+            del majority_values[median_idx]
+            iteration -= 1 
+            median_idx = math.floor((len(majority_values)-1)/2)
+            median = majority_values[median_idx].rating
+        
+        return median
         
     def sorting(self, obj, i) -> bool:
         """Function that gives sorting rules for Majority Poll Result Data Objects"""
@@ -152,3 +156,21 @@ class MajorityPollResultData(object):
             return False
         else:
             return self.sorting(obj, i+1)
+        
+    def compare(self, obj, i=0):
+        """returns 1 if self > obj, -1 if self < obj, 0 if self == obj"""
+
+        if i == self.option_votes.count():
+            return 0
+
+        # if median is greater --> x win
+        self_median = self.median_value(iteration=i)
+        obj_median = obj.median_value(iteration=i)
+
+        if self_median > obj_median:
+            return +1
+        elif self_median < obj_median:
+            return -1
+        else:
+            return self.compare(obj, i+1)
+
