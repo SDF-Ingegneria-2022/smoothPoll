@@ -5,7 +5,7 @@ from apps.polls_management.services.poll_token_service import PollTokenService
 from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
 from apps.polls_management.models.poll_model import PollModel
 from apps.votes_results.exceptions.poll_option_unvalid_exception import PollOptionUnvalidException
-from apps.votes_results.classes.single_option_vote_counter import SingleOptionVoteCounter
+from apps.votes_results.classes.mj_vote_counter import MjVoteCounter
 from apps.votes_results.services.schulze_method_vote_service import SchulzeMethodVoteService
 from apps.votes_results.services.single_option_vote_service import SingleOptionVoteService
 
@@ -53,12 +53,13 @@ class SchulzeMethodVoteView(VoteViewSchema):
             return HttpResponseRedirect(reverse('apps.votes_results:schulze_method_vote', args=(self.poll().id,)))
 
         # Save vote preference in session
-        request.session[SESSION_SCHULZE_METHOD_VOTE_ID] = request.POST[REQUEST_VOTE]
+        #request.session[SESSION_SCHULZE_METHOD_VOTE_ID] = request.POST[REQUEST_VOTE]
         
         # Perform vote and handle missing vote or poll exception.
         try:
             vote = SchulzeMethodVoteService.perform_vote(
                 request.POST.getlist('option_order'),self.poll().id, )
+            request.session[SESSION_SCHULZE_METHOD_VOTE_ID] = vote.id
         except PollOptionUnvalidException:
             request.session[SESSION_SCHULZE_METHOD_VOTE_SUBMIT_ERROR] = "Errore! La scelte deve essere " \
                 + "espressa tramite l'apposito form. Se continui a vedere questo " \

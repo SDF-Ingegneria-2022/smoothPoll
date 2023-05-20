@@ -19,7 +19,7 @@
     <h1>{{ poll.name }}</h1>
 </div>
 
-{% if poll.is_votable_w_so_and_mj %}
+{% if poll.is_votable_w_so_and_mj and poll.poll_type == "single_option" %}
 
 <div class="modal mt-5" id="voteconsistencyerror" tabindex="-1">
     <div class="modal-dialog">
@@ -38,6 +38,28 @@
       </div>
     </div>
   </div>
+
+{% elif poll.is_votable_w_so_and_mj and poll.poll_type == "schulze" %}
+
+  <div class="modal mt-5" id="voteconsistencyerror" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header  bg-warning">
+            <h5 class="modal-title">Attenzione!</h5>
+          </div>
+          <div class="modal-body">
+            <p class="fw-light">Abbiamo notato che hai dato un giudizio basso ad <b>almeno</b> un'opzione che prima hai classificato in una posizione alta.</p>
+            <p class="fw-light">Sei sicuro della tua scelta?</p>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="confirm-submit">Si,voglio procedere</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Voglio cambiare la mia scelta</button>
+  
+          </div>
+        </div>
+      </div>
+    </div>
 
 {% endif %}
 
