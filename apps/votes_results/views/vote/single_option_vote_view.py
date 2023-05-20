@@ -4,7 +4,7 @@ from apps.polls_management.services.poll_token_service import PollTokenService
 from apps.polls_management.exceptions.poll_does_not_exist_exception import PollDoesNotExistException
 from apps.polls_management.models.poll_model import PollModel
 from apps.votes_results.exceptions.poll_option_unvalid_exception import PollOptionUnvalidException
-from apps.votes_results.classes.single_option_vote_counter import SingleOptionVoteCounter
+from apps.votes_results.classes.mj_vote_counter import MjVoteCounter
 from apps.votes_results.services.single_option_vote_service import SingleOptionVoteService
 
 from django.http import Http404, HttpResponse  

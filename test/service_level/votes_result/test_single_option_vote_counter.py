@@ -5,7 +5,7 @@ from apps.polls_management.classes.poll_form_utils.poll_form import PollForm
 from apps.polls_management.models.poll_option_model import PollOptionModel
 from apps.polls_management.services.poll_create_service import PollCreateService
 from apps.polls_management.models.poll_model import PollModel
-from apps.votes_results.classes.single_option_vote_counter import SingleOptionVoteCounter
+from apps.votes_results.classes.mj_vote_counter import MjVoteCounter
 from apps.votes_results.services.majority_judgment_vote_service import MajorityJudjmentVoteService
 
 
@@ -42,7 +42,7 @@ class TestSingleOptionVoteCounter:
     def test_count_with_twenty_vote(self, create_votes_for_single_option_poll):
         """Test count with 20 votes."""
         poll: PollModel = create_votes_for_single_option_poll
-        counter: SingleOptionVoteCounter = SingleOptionVoteCounter(poll)
+        counter: MjVoteCounter = MjVoteCounter(poll)
         
         assert_that(counter.count_majority_judgment_votes()).is_equal_to(20)
         
@@ -50,7 +50,7 @@ class TestSingleOptionVoteCounter:
     def test_count_with_no_vote(self, create_mj_poll):
         """Test count with no vote."""
         poll: PollModel = create_mj_poll
-        counter: SingleOptionVoteCounter = SingleOptionVoteCounter(poll)
+        counter: MjVoteCounter = MjVoteCounter(poll)
         
         assert_that(counter.count_majority_judgment_votes()).is_equal_to(0)
         
