@@ -4,7 +4,7 @@ from django.urls import reverse
 
 from apps.polls_management.models.poll_model import PollModel
 from apps.polls_management.services.poll_service import PollService
-from apps.votes_results.classes.single_option_vote_counter import SingleOptionVoteCounter
+from apps.votes_results.classes.mj_vote_counter import MjVoteCounter
 from apps.votes_results.exceptions.vote_does_not_exixt_exception import VoteDoesNotExistException
 from apps.votes_results.services.single_option_vote_service import SingleOptionVoteService
 from apps.votes_results.views.vote.single_option_vote_view import SESSION_SINGLE_OPTION_VOTE_SUBMIT_ERROR
@@ -49,10 +49,10 @@ def single_option_recap_view(request: HttpRequest, poll_id: int):
         return HttpResponseRedirect(reverse('apps.votes_results:single_option_vote', args=(poll_id,)))
     
     # show confirm page
-    mj_vote_counter: SingleOptionVoteCounter = None
+    mj_vote_counter: MjVoteCounter = None
     
     if poll.is_votable_w_so_and_mj():
-        mj_vote_counter: SingleOptionVoteCounter = SingleOptionVoteCounter(poll)
+        mj_vote_counter: MjVoteCounter = MjVoteCounter(poll)
 
     # Clean session data for token validation if poll is not also votable with majority
     # if not poll.is_votable_w_so_and_mj():

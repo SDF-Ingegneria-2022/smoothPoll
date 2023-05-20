@@ -24,7 +24,7 @@ class CheckConsistencyShulze:
                     previous_rating: list= list(filter(lambda x: x['poll_choice_id'] == int(shulze_options[shulze_options_index]), mj_votes ))[0]['rating']
                     next_rating: list = list(filter(lambda x: x['poll_choice_id'] == int(shulze_options[shulze_options_index + 1]), mj_votes ))[0]['rating']
                     
-                    if previous_rating <= next_rating:
+                    if previous_rating < next_rating:
                         return False
             except Exception as e:
                 # If the poll is not found, the vote is not consistent
