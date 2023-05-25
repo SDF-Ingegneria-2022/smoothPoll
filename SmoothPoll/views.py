@@ -21,6 +21,18 @@ def home(request):
     return render(request, "global/home.html",
                   {"predefined_polls": predefined_polls, })
 
+def single_option_info(request):
+    """Info page for single option poll type"""
+    return render(request, "global/info/single_option_info.html")
+
+def majority_judgment_info(request):
+    """Info page for majority judgment poll type"""
+    return render(request, "global/info/majority_judgment_info.html")
+
+def schulze_method_info(request):
+    """Info page for schulze method poll type"""
+    return render(request, "global/info/schulze_method_info.html")
+
 def attributions(request):
     """Attributions for Creative Common material"""
     return render(request, "global/attributions.html")

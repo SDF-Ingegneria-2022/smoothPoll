@@ -26,6 +26,11 @@ urlpatterns = [
     path('<str:poll_short_id>', views.poll_details_page, name="poll_details_page"),
     # attributions for creative commons licence
     path('attribuzioni-creative-commons/', views.attributions, name="attributions"),
+
+    # info pages
+    path('info/opzione-singola', views.single_option_info, name="single_option_info"),
+    path('info/giudizio-maggioritario', views.majority_judgment_info, name="majority_judgment_info"),
+    path('info/metodo-schulze', views.schulze_method_info, name="schulze_method_info"),
     
     # area to manage your polls (open, close, CRUD operations)
     path('gestione-scelte/', include('apps.polls_management.urls'), name="polls_management"),
