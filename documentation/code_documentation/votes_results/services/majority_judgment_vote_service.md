@@ -2,4 +2,4 @@
 
 Majority Judgment services related to vote.
 
-::: apps.votes_results.services.majority_judgement_vote_service
+::: apps.votes_results.services.majority_judgment_vote_service
