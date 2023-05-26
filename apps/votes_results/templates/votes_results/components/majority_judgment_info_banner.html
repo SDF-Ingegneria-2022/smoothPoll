@@ -1,9 +1,9 @@
 {% load static %}
 
-<div class="container position-fixed bottom-0 end-0 mb-3" >
+{% comment %} <div class="container ps-5 position-fixed bottom-0 end-0 mb-3" > {% endcomment %}
    {% if guide_already_viwed %}
     <!-- Button trigger modal -->
-    <div class="row justify-content-end me-3">
+    <div class="row justify-content-end me-3 position-fixed bottom-0 end-0 mb-3">
       <div class="col-3 col-md-2 float-end">
         <button type="button" class="btn btn-info shadow p-3 mb-4 ps-4 pe-4 text-white fw-bold" data-bs-toggle="modal" data-bs-target="#guidaModal">
           Guida
@@ -11,7 +11,7 @@
       </div>
     </div>
     {% else %}
-    <div class="row justify-content-end">
+    <div class="row justify-content-end position-fixed bottom-0 end-0 mb-3">
         <div class="col-lg-8 col-xl-8 col-xxl-8" id="info">
             <div class="shadow-lg bg-body rounded">
                 <div class="card ">
@@ -39,7 +39,7 @@
         </div>
     </div>
     {% endif %}
-</div>
+{% comment %} </div> {% endcomment %}
 
     
 <script type="text/javascript">
