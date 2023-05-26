@@ -1,4 +1,4 @@
-# Single option vote counter
+# Majority Judgment vote counter
 
 Vote counter for mj votes votes
 
