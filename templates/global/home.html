@@ -13,8 +13,11 @@
 {% include "global/home_components/page_header.html" %}
 
 <!-- MJ polls slider -->
-<div class="container mt-5 mb-5">
-    <h2>Scelte a Giudizio Maggioritario</h2>
+<div class="container mt-5 mb-5" id="giudizio-maggioritario">
+    <h2>Metodo Giudizio Maggioritario</h2>
+    <h4 class="fw-light">
+        Prova il metodo del Giudizio Maggioritario su queste scelte
+    </h4>
     {% include "global/home_components/slider.html" with polls=majority_judgment_polls request=request id="mj-carousel" %}
 </div>
 
@@ -24,8 +27,8 @@
         <div class="row justify-content-center align-items-center g-2">
             <div class="col-12 col-md-6  text-center">
                 <h3 class="fw-light text-light mb-4">
-                    A volte, un'opionione è più complicata di 
-                    una scelta a preferenza singola.
+                    A volte, una scelta è più complicata di 
+                    una preferenza singola.
                 </h3>
             </div>
             <div class="col-12 col-md-6">
@@ -37,7 +40,9 @@
                         permette di dare un giudizio a tutte le opzioni. L'algoritmo poi 
                         aggrega le preferenze di tutti e calcola i risultati migliori. 
                     </p>
-                    <strong class="text-dark">Provalo ora!</strong>
+                    <a href="#giudizio-maggioritario" class="btn btn-link text-dark">
+                        <strong>Provalo ora!</strong>
+                    </a>
                     </div>
                 </div>
             </div>
