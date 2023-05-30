@@ -17,9 +17,14 @@
 }
 
 .carousel-slider-card {
-    min-width: 330px;
+    min-width: 300px;
     height: 280px;
     margin-right: 10px;
+}
+
+.carousel-slider:hover .carousel-slider-button {
+    opacity: 1;
+    visibility: visible;
 }
 
 .carousel-slider-button {
@@ -31,6 +36,9 @@
     align-items: center;
     justify-content: space-around;
     cursor: pointer;
+
+    opacity: 0;
+    visibility: hidden;
 }
 
 .carousel-slider-right-arrow {
@@ -38,6 +46,14 @@
     transform: translateX(20%);
     transition: all 500ms;
 }
+
+@media screen and (max-width: 768px) {
+    .carousel-slider-right-arrow {
+        opacity: 1;
+        visibility: visible;
+    }
+}
+
 .carousel-slider-left-arrow {
     left: 0;
     transform: translateX(-20%);
