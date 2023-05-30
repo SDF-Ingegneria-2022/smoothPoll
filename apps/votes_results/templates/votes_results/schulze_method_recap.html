@@ -78,15 +78,6 @@
 <!-- Actions after vote -->
 <div class="container mt-5" >
     <div class="d-grid gap-2 d-md-block">
-        <a 
-            class="btn btn-primary mt-2" 
-            href="{% url 'apps.votes_results:votable_polls' %}?page=1&per_page=10" >
-            Ritorna alla lista di tutte le scelte</a>
-        <a 
-            class="btn btn-primary mt-2" 
-            href="{% url 'home' %}" >
-            Torna alla home
-        </a>
         {% if vote.poll|are_results_visible:request %} 
         <a class="btn btn-primary mt-2" 
             href="{% url 'apps.votes_results:schulze_method_results' poll_id=vote.poll.id %}" 
@@ -96,6 +87,15 @@
             data-bs-toggle="modal" data-bs-target="#shareModal-{{vote.poll.id}}">
             Condividi 
         </button>
+        <a 
+            class="btn btn-primary mt-2" 
+            href="{% url 'apps.votes_results:votable_polls' %}?page=1&per_page=10" >
+            Ritorna alla lista di tutte le scelte</a>
+        <a 
+            class="btn btn-primary mt-2" 
+            href="{% url 'home' %}" >
+            Torna alla home
+        </a>
         {% include "polls_management/components/share_social/share_social_modal.html" with poll=vote.poll %}
     </div>
 </div>
