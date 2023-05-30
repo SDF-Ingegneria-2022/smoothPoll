@@ -26,7 +26,7 @@ class PollCreateService:
             TooManyOptionsExcetion: you put in too many options for this type of poll.
                 
         Returns:
-            The initialized and saved PollModel object
+            poll: the initialized and saved PollModel object
         """
         # validate form
         if not poll_form.is_valid():

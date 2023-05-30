@@ -23,12 +23,15 @@ class SchulzeResultsAdapter(ISchulzeResults):
     """List containing all the order rankings of the poll as list of string ids."""
 
     def get_votes(self) -> List[SchulzeVoteModel]:
+        """Returns all the schulze votes of the poll as list"""
         return self.schulze_votes
     
     def get_sorted_options(self) -> List[List[PollOptionModel]]:
+        """Returns the schulze poll results as list of List of PollOptionModel (in case of parity)"""
         return self.schulze_results
     
     def calculate(self) -> None:
+        """Populates the class variables from the poll"""
 
         self.set_votes()
         self.set_options()
@@ -37,6 +40,7 @@ class SchulzeResultsAdapter(ISchulzeResults):
         self.set_schulze_results()
 
     def set_votes(self) -> None:
+        """Populates the votes list"""
         
         try:
             self.schulze_votes = list(SchulzeVoteModel.objects.filter(poll=self.poll))
@@ -47,9 +51,11 @@ class SchulzeResultsAdapter(ISchulzeResults):
             raise PollNotYetVodedException()
 
     def set_options(self) -> None:
+        """Populates options list as string of ids"""
         self.schulze_str_options = self.schulze_votes[0].get_order_as_ids()
 
     def set_all_rankings(self) -> None:
+        """Populates the list of all ranks"""
 
         all_rankings: List[List[List[str]]] = []
         for vote in self.schulze_votes:
@@ -59,6 +65,7 @@ class SchulzeResultsAdapter(ISchulzeResults):
         self.all_schulze_rankings = all_rankings
 
     def set_schulze_results(self) -> None:
+        """Calculates all the results"""
 
         # from the schulze algorithm, we need to "candidate names" and "ballots"
         # respectively 'schulze_str_options' and 'all_schulze_rankings'

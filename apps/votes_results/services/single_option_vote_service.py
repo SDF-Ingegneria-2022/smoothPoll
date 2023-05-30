@@ -26,6 +26,8 @@ class SingleOptionVoteService:
             PollDoesNotExistException: you tried to vote a not existent poll
             PollOptionUnvalidException: you tried to vote an unvalid option 
                 (id doesn't exists or it doesn't belong to this poll)
+        Returns:
+            vote: the vote model of the result
         """
 
         vote_builder = VoteBuilder()
@@ -47,6 +49,8 @@ class SingleOptionVoteService:
             vote_id: id of the vote object you want to retrieve
         Raises:
             VoteDoesNotExistException: if vote does not exists
+        Returns:
+            VoteModel: the vote object by the specified id
         """
 
         try:
@@ -62,6 +66,9 @@ class SingleOptionVoteService:
             poll_id: id of poll you want to calculate results
         Raises:
             PollDoesNotExistException: you tried to calculate results on a non-existent poll
+            ResultsNotAvailableException: you tried to access results on a poll that are not available
+        Returns:
+            PollResult: results of the poll specified by id
         """
 
         try:
