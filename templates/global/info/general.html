@@ -1,0 +1,38 @@
+{% extends 'global/skeleton.html' %}
+
+{% load static %}
+
+{% block pagename %}Informazioni sui metodi di scelta{% endblock pagename %}
+
+{% block content %}
+
+<div class="container text-center">
+    <h2>Quali tipi di scelte ci sono in questo sito?</h2>
+</div>
+
+<div class="container text-center">
+    <div class="d-grid gap-2 d-md-block justify-content-middle">
+        <a 
+            class="btn btn-primary mt-2" 
+            href="{% url 'home' %}" >
+            Torna alla home
+        </a>
+        <a 
+            class="btn btn-primary mt-2" 
+            href="{% url 'single_option_info' %}" >
+            Informazioni su Opzione Singola
+        </a>
+        <a 
+            class="btn btn-primary mt-2" 
+            href="{% url 'majority_judgment_info' %}" >
+            Informazioni su Giudizio Maggioritario
+        </a>
+        <a 
+            class="btn btn-primary mt-2" 
+            href="{% url 'schulze_method_info' %}" >
+            Informazioni su Metodo Schulze
+        </a>
+    </div>
+</div>
+
+{% endblock content %}

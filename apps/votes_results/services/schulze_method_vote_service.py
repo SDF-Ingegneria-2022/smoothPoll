@@ -23,7 +23,7 @@ class SchulzeMethodVoteService:
         Raises:
             PollDoesNotExistException: execption raised when the poll selected is not present in the database
         Returns:
-            SchulzeVoteModel: the schulze vote model created.
+            vote: the schulze vote model created.
         """
 
         # check if poll exists
@@ -53,6 +53,8 @@ class SchulzeMethodVoteService:
         Raises:
             PollDoesNotExistException: you tried to calculate results on a non-existent poll
             ResultsNotAvailableException: raised if you try to check results not visible
+        Returns:
+            result: list of PollOptions sorted by ranking number as Schulze algorithm results
         """
 
         try:
@@ -78,6 +80,8 @@ class SchulzeMethodVoteService:
             vote_id: id of the vote object you want to retrieve
         Raises:
             VoteDoesNotExistException: if vote does not exists
+        Returns:
+            SchulzeVoteModel: schulze vote by the specified id
         """
 
         try:

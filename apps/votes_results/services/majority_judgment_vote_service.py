@@ -30,7 +30,7 @@ class MajorityJudjmentVoteService:
             PollOptionRatingUnvalidException: exception raised when there are no rating choices in the options (None)
             MajorityNumberOfRatingsNotValid: exception raised when the rating number is not between 1 and 5
         Returns:
-            MajorityVoteModel: the majority vote model created.
+            vote: the majority vote model created.
         """
 
         # check if poll exists
@@ -80,8 +80,7 @@ class MajorityJudjmentVoteService:
         
         Raises:
             PollDoesNotExistException: If the poll does not exist.
-            PollNotYetVodedException: If the poll didn't received votes.
-        
+            ResultsNotAvailableException: you tried to access results on a poll that are not available        
         Returns: 
             List[MajorityPollResultData]: List of calculated result for each option.
         """
@@ -110,6 +109,8 @@ class MajorityJudjmentVoteService:
             vote_id: id of the vote object you want to retrieve
         Raises:
             VoteDoesNotExistException: if vote does not exists
+        Returns:
+            MajorityVoteModel: the majority vote model with the specified id
         """
 
         try:

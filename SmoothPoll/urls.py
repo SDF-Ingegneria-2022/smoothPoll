@@ -28,6 +28,7 @@ urlpatterns = [
     path('attribuzioni-creative-commons/', views.attributions, name="attributions"),
 
     # info pages
+    path('info/', views.general_info, name="general_info"),
     path('info/opzione-singola', views.single_option_info, name="single_option_info"),
     path('info/giudizio-maggioritario', views.majority_judgment_info, name="majority_judgment_info"),
     path('info/metodo-schulze', views.schulze_method_info, name="schulze_method_info"),

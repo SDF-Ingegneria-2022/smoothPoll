@@ -136,14 +136,7 @@ class PollForm(ModelForm):
             ).get_type_verbose_name()
 
     def clean(self):
-
-        # TEMP disable Schulze method (not yet implemented)
-        """
-        if self.cleaned_data.get(POLL_TYPE, None) == PollModel.PollType.SCHULZE:
-            self._errors[POLL_TYPE] = self.error_class(
-                ['Il metodo Schulze purtroppo non è ancora stato implementato, scegli un altro metodo.']
-                )
-                """
+        """Checks for errors related to date setting in the form"""
 
         # checks on open and close datetime
         open_datetime = self.cleaned_data.get(OPEN_DATETIME, None)
