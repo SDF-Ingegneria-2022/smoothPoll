@@ -21,6 +21,10 @@ def home(request):
     return render(request, "global/home.html",
                   {"predefined_polls": predefined_polls, })
 
+def general_info(request):
+    """General information page about poll methods"""
+    return render(request, "global/info/general.html")
+
 def single_option_info(request):
     """Info page for single option poll type"""
     return render(request, "global/info/single_option_info.html")
