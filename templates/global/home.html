@@ -10,45 +10,76 @@
 
 {% include "global/home_components/page_header.html" %}
 
-<div class="row">
-    <div class="col-12 mt-5 text-center">
-        <p class=" fs-3 fw-light">
-            Prova il <b>Metodo del Giudizio Maggioritario</b>
-        </p>
-    </div>
+<!-- MJ polls slider -->
+<div class="container mt-5 mb-5">
+    <h2>Scelte a Giudizio Maggioritario</h2>
+    {% include "global/home_components/slider.html" with polls=majority_judgment_polls request=request id="mj-carousel" %}
 </div>
 
-{% include "global/home_components/slider.html" with polls=predefined_polls request=request %}
-
-<br>
-
-<div class="row mt-2 justify-content-md-center  justify-content-center">
-    <div class="col-xs-12 col-sm-12 col-md-8 text-center fs-5 fw-lighter">
-        <p>
-            Il nostro obiettivo è fornire uno strumento efficace per 
-            <strong>creare ed esprimere scelte sociali</strong>, 
-            anche attraverso metodologie di scelta avanzate, come
-            il <strong>Giudizio Maggioritario</strong>.
-        </p>
-    </div>
-</div>
-
-<div class="row mt-2 justify-content-md-center">
-    <div class="col-md-6">
-        <div class="d-grid gap-2 d-md-block text-center">
-            <a name="" id="" role="button"
-                class="btn  btn-outline-primary mt-2 me-2" 
-                href="{% url 'apps.votes_results:votable_polls' %}?page=1&per_page=10" >
-                Vai alle scelte
-            </a>
-            <a name="" id="" role="button"
-                class="btn btn-outline-secondary mt-2 me-2" 
-                href="https://github.com/SDF-Ingegneria-2022/smoothPoll/issues" 
-                target="_blank">
-                Lasciaci un Feedback
-            </a> 
+<!-- MJ exmplaination -->
+<div class="mb-5 pt-5 pb-5 bg-dark">
+    <div class="container">
+        <div class="row justify-content-center align-items-center g-2">
+            <div class="col-12 col-md-6  text-center">
+                <h3 class="fw-light text-light mb-4">
+                    A volte, un'opionione è più complicata di 
+                    una scelta a preferenza singola.
+                </h3>
+            </div>
+            <div class="col-12 col-md-6">
+                <div class="card ms-md-5 me-md-5">
+                    <div class="card-body bg-light">
+                    {% comment %} <h3 class="card-title">Title</h3> {% endcomment %}
+                    <p class="card-text text-secondary">
+                        Il <strong class="text-dark">metodo del Giudizio Maggioritario</strong> 
+                        permette di dare un giudizio a tutte le opzioni. L'algoritmo poi 
+                        aggrega le preferenze di tutti e calcola i risultati migliori. 
+                    </p>
+                    <strong class="text-dark">Provalo ora!</strong>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+
+<!-- Other vote types sliders -->
+<div class="container pt-5 pb-5">    
+    <h2>Altri metodi di scelta</h2>
+    <div class="mt-5">
+        <h3 class="fw-light">Scelte con il metodo di Schultze</h3>
+        {% include "global/home_components/slider.html" with polls=schulze_method_polls request=request id="schulze-carousel" %}
+    </div>
+
+    <div class="mt-5">
+        <h3 class="fw-light">Scelte ad opzione singola</h3>
+        {% include "global/home_components/slider.html" with polls=single_option_polls request=request id="so-carousel" %}
+    </div>
+</div>
+
+
+<div class="container pt-5 pb-5">
+    <div class="row mt-2 justify-content-md-center">
+        <div class="col-md-6">
+            <div class="d-grid gap-2 d-md-block text-center">
+                <a name="" id="" role="button"
+                    class="btn  btn-outline-primary mt-2 me-2" 
+                    href="{% url 'apps.votes_results:votable_polls' %}?page=1&per_page=10" >
+                    Vai alle scelte
+                </a>
+                <a name="" id="" role="button"
+                    class="btn btn-outline-secondary mt-2 me-2" 
+                    href="https://github.com/SDF-Ingegneria-2022/smoothPoll/issues" 
+                    target="_blank">
+                    Lasciaci un Feedback
+                </a> 
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 {% endblock container %}
 

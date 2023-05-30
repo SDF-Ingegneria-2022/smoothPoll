@@ -15,12 +15,33 @@ def home(request):
     App home page
     """
     predefined_polls = PollService.votable_or_closed_polls()
-    
+
+    # categorize polls by type 
+    single_option_polls = [
+        poll for poll in predefined_polls 
+        if poll.poll_type == PollModel.PollType.SINGLE_OPTION
+    ]
+
+    majority_judgment_polls = [
+        poll for poll in predefined_polls
+        if poll.poll_type == PollModel.PollType.MAJORITY_JUDJMENT
+    ]
+
+    schulze_method_polls = [
+        poll for poll in predefined_polls
+        if poll.poll_type == PollModel.PollType.SCHULZE
+    ]
+
+    # consistency check session cleaning (?)
+
     check_consistency_session: CheckConsistencySession = CheckConsistencySession(request)
     check_consistency_session.clear_session([SESSION_SINGLE_OPTION_VOTE_ID, SESSION_CONSISTENCY_CHECK])
 
-    return render(request, "global/home.html",
-                  {"predefined_polls": predefined_polls, })
+    return render(request, "global/home.html", {
+        "single_option_polls": single_option_polls, 
+        "majority_judgment_polls": majority_judgment_polls,
+        "schulze_method_polls": schulze_method_polls
+        })
 
 def general_info(request):
     """General information page about poll methods"""
