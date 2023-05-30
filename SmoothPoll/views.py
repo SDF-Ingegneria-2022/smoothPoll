@@ -1,6 +1,7 @@
 from django.http import Http404
 from django.shortcuts import render
 from apps.polls_management.models.poll_model import PollModel
+from apps.polls_management.services.poll_service import PollService
 
 from apps.polls_management.views.poll_short_id_view import PollShortIdView
 from apps.votes_results.classes.vote_consistency.check_consistency_session import CheckConsistencySession
@@ -13,7 +14,7 @@ def home(request):
     """
     App home page
     """
-    predefined_polls = PollModel.objects.filter(predefined=True)
+    predefined_polls = PollService.votable_or_closed_polls()
     
     check_consistency_session: CheckConsistencySession = CheckConsistencySession(request)
     check_consistency_session.clear_session([SESSION_SINGLE_OPTION_VOTE_ID, SESSION_CONSISTENCY_CHECK])

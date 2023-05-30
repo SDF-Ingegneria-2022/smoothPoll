@@ -1,0 +1,35 @@
+{% load are_results_visible %}
+
+<div class="row">
+    <div id="carouselExampleDark" class="carousel carousel-dark slide " data-bs-ride="carousel"> 
+        <div class="carousel-inner shadow-lg bg-body rounded">
+            {% for poll in polls %}
+                <div class="carousel-item {% if  forloop.counter == 1 %} active {% endif %}" data-bs-interval="10000">
+                <div class="card w-100 border-0 pt-3 pb-3">
+                    <div class="card-body text-center">
+                        <h3 class="card-title">{{poll.name}}</h3>
+                        <h4 class="card-subtitle mb-2 text-muted">{{poll.question}}</h4>
+                        <p  class="fw-light mb-1 ">Stato scelta: <b>Aperto</b></p>
+                        <p  class="fw-light mb-1 ">Data chiusura: <b>{{poll.close_datetime}}</b></p>
+                    
+                        {% include "votes_results/components/vote_button.html" with poll=poll btn_classes="mt-2" %}
+                
+                        {% if poll|are_results_visible:request %}
+                            <a href="{% url 'apps.votes_results:results' poll_id=poll.id %}" class="btn btn-secondary mt-2">Vai ai risultati</a>
+                        {% endif %}
+                    </div>
+                </div>
+                </div>
+            {% endfor %}
+            
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+</div>
