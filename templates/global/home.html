@@ -2,10 +2,13 @@
 
 {% block pagename %}Scelte sociali{% endblock pagename %}
 
-{% block content %}
+{% comment %}
+    NOTE: home page overrides container and not content, 
+    so we can use full page width
+{% endcomment %}
+{% block container %}
 
-
-{% include "global/home_components/header.html" %}
+{% include "global/home_components/page_header.html" %}
 
 <div class="row">
     <div class="col-12 mt-5 text-center">
@@ -47,5 +50,5 @@
         </div>
     </div>
 </div>
-{% endblock content %}
+{% endblock container %}
 
