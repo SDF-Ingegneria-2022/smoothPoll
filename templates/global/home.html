@@ -1,5 +1,7 @@
 {% extends 'global/skeleton.html' %}
 
+{% load static %}
+
 {% block pagename %}Scelte sociali{% endblock pagename %}
 
 {% comment %}
@@ -79,7 +81,15 @@
     </div>
 </div>
 
-
-
 {% endblock container %}
+
+{% block pagestyle %}
+<link rel="stylesheet" href="{% static 'css/home-carousel.css' %}" />
+{% endblock pagestyle %}
+
+{% block customjs %}
+<script src="{% static 'js/home-carousel.js' %}"></script>
+{% endblock customjs %} 
+
+
 

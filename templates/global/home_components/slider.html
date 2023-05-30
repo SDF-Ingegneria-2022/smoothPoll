@@ -1,5 +1,5 @@
 {% load are_results_visible %}
-
+{% comment %} 
 <div class="row">
     <div id="{{id}}" class="carousel carousel-dark slide " data-bs-ride="carousel"> 
         <div class="carousel-inner shadow-lg bg-body rounded">
@@ -31,5 +31,104 @@
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Next</span>
         </button>
+    </div>
+</div> {% endcomment %}
+
+
+<div class="carousel-slider-container">
+    <div class="carousel-slider d-flex flex-row flex-nowrap" id="{{id}}">
+        <div class="card carousel-slider-card">
+            <div class="card-body">
+                <h4 class="card-title">Title</h4>
+                <p class="card-text">Text</p>
+            </div>
+        </div>
+
+        <div class="card carousel-slider-card">
+            <div class="card-body">
+                <h4 class="card-title">Title</h4>
+                <p class="card-text">Text</p>
+            </div>
+        </div>
+
+        <div class="card carousel-slider-card">
+            <div class="card-body">
+                <h4 class="card-title">Title</h4>
+                <p class="card-text">Text</p>
+            </div>
+        </div>
+
+        <div class="card carousel-slider-card">
+            <div class="card-body">
+                <h4 class="card-title">Title</h4>
+                <p class="card-text">Text</p>
+            </div>
+        </div>
+
+        <div class="card carousel-slider-card">
+            <div class="card-body">
+                <h4 class="card-title">Title</h4>
+                <p class="card-text">Text</p>
+            </div>
+        </div>
+
+        <div class="card carousel-slider-card">
+            <div class="card-body">
+                <h4 class="card-title">Title</h4>
+                <p class="card-text">Text</p>
+            </div>
+        </div>
+
+        <div class="card carousel-slider-card">
+            <div class="card-body">
+                <h4 class="card-title">Title</h4>
+                <p class="card-text">Text</p>
+            </div>
+        </div>
+
+        <div class="card carousel-slider-card">
+            <div class="card-body">
+                <h4 class="card-title">Title</h4>
+                <p class="card-text">Text</p>
+            </div>
+        </div>
+
+        <div class="card carousel-slider-card">
+            <div class="card-body">
+                <h4 class="card-title">Title</h4>
+                <p class="card-text">Text</p>
+            </div>
+        </div>
+
+        <div class="card carousel-slider-card">
+            <div class="card-body">
+                <h4 class="card-title">Title</h4>
+                <p class="card-text">Text</p>
+            </div>
+        </div>
+
+        <div class="card carousel-slider-card">
+            <div class="card-body">
+                <h4 class="card-title">Title</h4>
+                <p class="card-text">Text</p>
+            </div>
+        </div>
+
+        <div class="card carousel-slider-card">
+            <div class="card-body">
+                <h4 class="card-title">Title</h4>
+                <p class="card-text">Text</p>
+            </div>
+        </div>
+
+        <div class="carousel-slider-button carousel-slider-left-arrow"
+            onclick="scrollL('{{id}}')">
+            <i class="arrow left"></i>
+        </div>
+        <div class="carousel-slider-button carousel-slider-right-arrow"
+            onclick="scrollR('{{id}}')">
+            <i class="arrow right"></i>
+        </div>
+
     </div>
 </div>
