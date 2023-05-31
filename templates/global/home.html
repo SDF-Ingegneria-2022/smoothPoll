@@ -94,14 +94,20 @@
             
             <div class="mt-4">
                 {% if user.is_authenticated %}
-                    <a class="btn btn-success m-1" 
-                        href="{% url 'apps.polls_management:poll_create' %}" >
-                        Crea scelta
-                    </a>
-                    <a class="btn btn-secondary m-1" 
-                        href="{% url 'apps.polls_management:all_user_polls' %}" >
-                        Gestisci le tue scelte
-                    </a>
+                <div class="row">
+                    <div class="col-8 col-lg-3 mb-2">
+                        <a class="btn btn-success m-1 w-100 h-100 " 
+                            href="{% url 'apps.polls_management:poll_create' %}" >
+                            Crea scelta
+                        </a>
+                    </div>
+                    <div class="col-8 col-lg-3 mb-2">
+                        <a class="btn btn-secondary m-1 w-100 h-100" 
+                            href="{% url 'apps.polls_management:all_user_polls' %}" >
+                            Gestisci le tue scelte
+                        </a>
+                    </div>
+                </div>
                 {% else %}
                     <p>Registrati o fai login e inizia a creare scelte.</p>
 
