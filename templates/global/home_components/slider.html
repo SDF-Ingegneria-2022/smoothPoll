@@ -33,7 +33,7 @@
                             {% endif %}
                             
                             {% if poll|are_results_visible:request %}
-                                <a href="{% url 'apps.votes_results:results' poll_id=poll.id %}" class="btn btn-secondary ms-1 me-1">Vedi risultati</a>
+                                <a href="{% url 'apps.votes_results:results' poll_id=poll.id %}" class="btn btn-secondary  w-100 h-100 ms-1 me-1">Vedi risultati</a>
                             {% endif %}
                         </div>
                     </div>
