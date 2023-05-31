@@ -1,42 +1,44 @@
 <footer>
-    
-    <!-- App name + quick links -->
-    <div class="bg-secondary text-light"> 
-        <div class="container p-3 text-center">
-            <p class="m-0">
-                Scegli Meglio @ {% now "Y" %} - Progetto didattico di Ing. del Software <br />
-                Università degli Studi di Udine, A.A. 2022/23 
+    <div class="bg-dark text-light pt-4 pb-4">
+        <div class="container">
+            <div class="row justify-content-center  g-2">
+                <!-- App name + quick links -->
+                <div class="col-12 col-md-6">
+                    <h4>Chi siamo: </h4>
+                    <p>
+                        Scegli Meglio@{% now "Y" %} - Progetto didattico di Ingegneria del Software <br/>
+                        Università degli Studi di Udine, A.A. 2022/23 
+                    </p>
+                    <p>Versione applicazione: <span class="badge bg-secondary">v{{APP_VERSION}}</span></p>
+                </div>
+                <div class="col-12 col-md-6">
+                    <h4>Link vari</h4>
 
-                <!-- Iubenda Privacy Policy -->
-                {% include "global/components/iubenda_privacy_link.html" %}
-            </p>
-
-            <p >
-            </p>
+                    <ul>
+                        <li>
+                            <!-- Iubenda Privacy Policy -->
+                            {% include "global/components/iubenda_privacy_link.html" %}
+                        </li>
+                        <li>
+                            Repository progetto: 
+                            <a target="_blank" title="Github Repository SmoothPoll"
+                                href="https://github.com/SDF-Ingegneria-2022/smoothPoll" >
+                                https://github.com/SDF-Ingegneria-2022/smoothPoll</a> 
+                        </li>
+                        <li>
+                            <a href="{% url 'attributions' %}">
+                                Attribuzioni contenuti Creative Commons
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://github.com/SDF-Ingegneria-2022/smoothPoll/issues" 
+                                target="_blank">
+                                Lasciaci un Feedback
+                            </a> 
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
-
-    <!-- Repo + project version -->
-    <div class="bg-dark text-light">
-        <div class="container p-2 text-center">
-            <p class="m-0">
-                Repository progetto: 
-                <a target="_blank" title="Github Repository SmoothPoll"
-                    href="https://github.com/SDF-Ingegneria-2022/smoothPoll" >
-                    https://github.com/SDF-Ingegneria-2022/smoothPoll</a> 
-                <span class="badge bg-secondary">v{{APP_VERSION}}</span>
-            </p>
-            <p class="m-0">
-                Altri link: 
-                    <a href="{% url 'attributions' %}">
-                        Attribuzioni contenuti Creative Commons
-                    </a>, 
-                    <a href="https://github.com/SDF-Ingegneria-2022/smoothPoll/issues" 
-                        target="_blank">
-                        Lasciaci un Feedback
-                    </a> 
-            </p>
-        </div>
-    </div>
-
 </footer>
