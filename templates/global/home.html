@@ -41,8 +41,8 @@
                         permette di dare un giudizio a tutte le opzioni. L'algoritmo poi 
                         aggrega le preferenze di tutti e calcola i risultati migliori. 
                     </p>
-                    <a href="#giudizio-maggioritario" class="btn btn-link text-dark">
-                        <strong>Provalo ora!</strong>
+                    <a href="#giudizio-maggioritario" class="btn btn-primary">
+                        Provalo ora!
                     </a>
                     </div>
                 </div>
@@ -53,15 +53,15 @@
 
 
 <!-- Other vote types sliders -->
-<div class="container pt-5 pb-5">    
-    <h2>Altri metodi di scelta</h2>
-    <div class="mt-5">
-        <h3 class="fw-light">Scelte con il metodo di Schultze</h3>
+<div class="container pt-3 pb-3">    
+    <h3 class="fw-light">Altri metodi di scelta</h3>
+    <div class="mt-3">
+        <h2 class="">Metodo di Schultze</h2>
         {% include "global/home_components/slider.html" with polls=schulze_method_polls request=request id="schulze-carousel" %}
     </div>
 
     <div class="mt-5">
-        <h3 class="fw-light">Scelte ad opzione singola</h3>
+        <h2 class="">Opzione singola</h2>
         {% include "global/home_components/slider.html" with polls=single_option_polls request=request id="so-carousel" %}
     </div>
 </div>
