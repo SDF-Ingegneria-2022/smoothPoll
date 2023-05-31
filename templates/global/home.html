@@ -1,6 +1,7 @@
 {% extends 'global/skeleton.html' %}
 
 {% load static %}
+{% load socialaccount %}
 
 {% block pagename %}Scelte sociali{% endblock pagename %}
 
@@ -65,22 +66,38 @@
     </div>
 </div>
 
+<!-- Create an account and start creating your own polls -->
 
-<div class="container pt-5 pb-5">
-    <div class="row mt-2 justify-content-md-center">
-        <div class="col-md-6">
-            <div class="d-grid gap-2 d-md-block text-center">
-                <a name="" id="" role="button"
-                    class="btn  btn-outline-primary mt-2 me-2" 
-                    href="{% url 'apps.votes_results:votable_polls' %}?page=1&per_page=10" >
-                    Vai alle scelte
-                </a>
-                <a name="" id="" role="button"
-                    class="btn btn-outline-secondary mt-2 me-2" 
-                    href="https://github.com/SDF-Ingegneria-2022/smoothPoll/issues" 
-                    target="_blank">
-                    Lasciaci un Feedback
-                </a> 
+<div class="cut-edge-banner-background mt-5">
+    <div class="cut-edge-banner pt-4 pb-4 pt-md-5 pb-md-5">
+        <div class="container">
+            
+            <div style="max-width: 75%">
+                <h2>Crea anche tu scelte sociali!</h2>
+                <h6>Crea, gestisci e condividi le tue scelte.</h6>
+            </div>
+            
+            <div class="mt-4">
+                {% if user.is_authenticated %}
+                    <a class="btn btn-success m-1" 
+                        href="{% url 'apps.polls_management:poll_create' %}" >
+                        Crea scelta
+                    </a>
+                    <a class="btn btn-secondary m-1" 
+                        href="{% url 'apps.polls_management:all_user_polls' %}" >
+                        Gestisci le tue scelte
+                    </a>
+                {% else %}
+                    <p>Registrati o fai login e inizia a creare scelte.</p>
+
+                    <!-- Google login button -->
+                    <form action="{% provider_login_url 'google' %}?next={% url 'apps.polls_management:all_user_polls' %}" method="POST">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-light border border-dark">
+                            <img width="20px" style="margin-bottom:3px; margin-right:5px" alt="Google sign-in" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png" />
+                            Login con Google</button>
+                    </form>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -90,6 +107,18 @@
 
 {% block pagestyle %}
 <link rel="stylesheet" href="{% static 'css/home-carousel.css' %}" />
+<style>
+    .cut-edge-banner-background {
+        background-color: #0D6EFD;
+    }
+
+    .cut-edge-banner {
+        background-color: #14255f;
+        -webkit-clip-path: polygon(0 0, 75% 0, 90% 100%, 0 100%);
+        clip-path: polygon(0 0, 75% 0, 90% 100%, 0 100%);
+        color: #fff;
+    }
+</style>
 {% endblock pagestyle %}
 
 {% block customjs %}
