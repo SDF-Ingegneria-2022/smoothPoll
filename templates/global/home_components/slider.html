@@ -6,8 +6,8 @@
         {% for poll in polls %}
             <div class="card carousel-slider-card">
                 <div class="card-body">
-                    <h6 class="card-title">{{poll.name}}</h6>
-                    <p class="card-subtitle mb-2 text-muted">{{poll.question}}</p>
+                    <h6 class="card-title">{{poll.name|truncatechars:60}}</h6>
+                    <p class="card-subtitle mb-2 text-muted">{{poll.question|truncatechars:60}}</p>
                     
 
                     <div class="position-absolute bottom-0 start-0 end-0 p-2 ps-3 pe-3">
