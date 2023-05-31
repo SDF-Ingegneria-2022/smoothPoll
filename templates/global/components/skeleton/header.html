@@ -1,16 +1,19 @@
 {% load static %}
 {% load socialaccount %}
 
-<header class="p-1 p-md-2 mb-0 border-bottom bg-primary">
+<header class="p-1 p-md-2 mb-0" style="background: #004AAD">
     <div class="container-fluid">
         <div class="d-flex flex-wrap align-items-center justify-content-start flex-row-reverse flex-md-row">
             
             <!-- Hamburger button to toggle sidebar -->            
             <span class="">
                 <a class="sidebar-toggler" role="button" href="" >
-                    <img src="{% static 'icon/menu.png' %}" 
+                    {% comment %} <img src="{% static 'icon/menu.png' %}" 
                         alt="Apri menù laterale" width="50" 
-                        class="bi me-2" role="img" />
+                        class="bi me-2" role="img" /> {% endcomment %}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="#FAB005" class="bi bi-list" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
+                    </svg>
                 </a>
             </span>
             
