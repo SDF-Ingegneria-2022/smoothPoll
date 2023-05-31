@@ -76,33 +76,41 @@
     </div>
     
     {# Buttons #}
-    <div class="container mt-1 ps-0" >
+    <div class="container text-center mt-2 mb-5" >
         <div class="row">
-
-        <div class="d-grid gap-2 d-md-block">
+            
             {% if vote.poll|are_results_visible:request %}  
+            <div class="col-12 col-lg-3 mb-2">
             <a 
-                class="btn btn-primary mt-2"
+                class="btn btn-primary w-100 h-100"
                 href="{% url 'apps.votes_results:majority_judgment_results' poll_id=vote.poll.id %}">
                 Vedi risultati
             </a>
+            </div>
             {% endif %}
-            <button type="button" class="btn btn-info mt-2" 
-                data-bs-toggle="modal" data-bs-target="#shareModal-{{vote.poll.id}}">
-                Condividi 
-            </button>
-            <a
-                class="btn btn-primary mt-2" 
-                href="{% url 'apps.votes_results:votable_polls' %}?page=1&per_page=10" >
-                Ritorna alla lista di tutte le scelte
-            </a>
-            <a name="" id="" role="button"
-                class="btn btn-primary mt-2" 
-                href="{% url 'home' %}" >
-                Torna alla home
-            </a>
-        {% include "polls_management/components/share_social/share_social_modal.html" with poll=vote.poll %}
-        </div>
+            <div class="col-12 col-lg-3 mb-2">
+                <button type="button" class="btn btn-info w-100 h-100" 
+                    data-bs-toggle="modal" data-bs-target="#shareModal-{{vote.poll.id}}">
+                    Condividi 
+                </button>
+            </div>
+
+            <div class="col-12 col-lg-3 mb-2">
+                <a
+                    class="btn btn-primary w-100 h-100" 
+                    href="{% url 'apps.votes_results:votable_polls' %}?page=1&per_page=10" >
+                    Ritorna alla lista di tutte le scelte
+                </a>
+            </div>
+
+            <div class="col-12 col-lg-3 mb-2">
+                <a name="" id="" role="button"
+                    class="btn btn-primary w-100 h-100" 
+                    href="{% url 'home' %}" >
+                    Torna alla home
+                </a>
+            </div>
+            {% include "polls_management/components/share_social/share_social_modal.html" with poll=vote.poll %}
         </div>
     </div>
 
