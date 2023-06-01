@@ -16,35 +16,33 @@
         <h5>
             Modalità di scelta
         </h5>
-        <div class="col-md-4">
+        <div class="col-md-6">
             <img src="{% static 'info_pages/OS/OS_vote_blank.JPG' %}" class="img-fluid shadow p-3 mb-5 bg-body rounded" 
             alt="Scelta non ancora effettuata">
         </div>
-        <div class="col-md-4">
+        <div class="col-md-6">
             <img src="{% static 'info_pages/OS/OS_vote.JPG' %}" class="img-fluid shadow p-3 mb-5 bg-body rounded" 
             alt="Scelta effettuata">
         </div>
-        <div class="col-md-4">
-            <p>
-                Come si può facilmente intuire dal nome, nel metodo ad opzione singola basta selezionare l'opzione desiderata
-                per rispondere alla domanda. Naturalmente solo un'opzione può essere scelta.
-            </p>
-        </div>
+    </div>
+    <div class="row align-items-center">
+        <p>
+            Come si può facilmente intuire dal nome, nel metodo ad opzione singola basta selezionare l'opzione desiderata
+            per rispondere alla domanda. Naturalmente solo un'opzione può essere scelta.
+        </p>
     </div>
     <div class="row align-items-center">
         <h5>
             Calcolo dei risultati
         </h5>
-        <div class="col-md-6">
             <img src="{% static 'info_pages/OS/OS_results.JPG' %}" class="img-fluid shadow p-3 mb-5 bg-body rounded" 
             alt="Risultati scelta">
-        </div>
-        <div class="col-md-6">
-            <p>
-                Il calcolo dei risultati per il metodo dell'opzione singola è molto semplice: per ogni opzione si contano il numero
-                di scelte che ha ricevuto e vince l'opzione che ne ha ottenute di più.
-            </p>
-        </div>
+    </div>
+    <div class="row align-items-center">
+        <p>
+            Il calcolo dei risultati per il metodo dell'opzione singola è molto semplice: per ogni opzione si contano il numero
+            di scelte che ha ricevuto e vince l'opzione che ne ha ottenute di più.
+        </p>
     </div>
 
     <h5>
@@ -52,7 +50,7 @@
     </h5>
     <p>
         Lo sapevi che per certe scelte è possibile anche provare il metodo del giudizio maggioritario? Clicca 
-        <a href="https://it.wikipedia.org/wiki/Sistema_maggioritario" target="_blank" rel="noopener"
+        <a href="{% url 'majority_judgment_info' %}" target="_blank" rel="noopener"
         class="text-decoration-none">qui</a> per saperne di più su questa tipologia di scelta molto interessante.
     </p>
 </div>
