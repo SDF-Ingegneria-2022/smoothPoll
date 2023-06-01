@@ -7,32 +7,49 @@
 {% block content %}
 
 <div class="container text-center">
-    <h2>Quali tipi di scelte ci sono in questo sito?</h2>
+    <h2>In questo sito potrai provare tre differenti metodi di scelta:</h2>
 </div>
 
+<br>
+
 <div class="container text-center">
+    <div class="d-grid gap-2 d-md-block mt-2 justify-content-middle">
+        <a 
+            class="btn btn-primary btn-lg mt-2 border-0" 
+            href="{% url 'single_option_info' %}"
+            style="background-color: #F6AA1C">
+            Opzione Singola
+        </a>
+    </div>
+    <div class="d-grid gap-2 d-md-block mt-2 justify-content-middle">
+        <a 
+            class="btn btn-primary btn-lg mt-2 border-0" 
+            href="{% url 'majority_judgment_info' %}"
+            style="background-color: #253495">
+            Giudizio Maggioritario
+        </a>
+    </div>
+    <div class="d-grid gap-2 d-md-block mt-2 justify-content-middle">
+        <a 
+            class="btn btn-primary btn-lg mt-2 border-0" 
+            href="{% url 'schulze_method_info' %}"
+            style="background-color: #961af4">
+            Metodo Schulze
+        </a>
+    </div>
+</div>
+
+<div class="container text-center mt-5">
     <div class="d-grid gap-2 d-md-block justify-content-middle">
         <a 
             class="btn btn-primary mt-2" 
             href="{% url 'home' %}" >
             Torna alla home
         </a>
-        <a 
-            class="btn btn-primary mt-2" 
-            href="{% url 'single_option_info' %}" >
-            Informazioni su Opzione Singola
-        </a>
-        <a 
-            class="btn btn-primary mt-2" 
-            href="{% url 'majority_judgment_info' %}" >
-            Informazioni su Giudizio Maggioritario
-        </a>
-        <a 
-            class="btn btn-primary mt-2" 
-            href="{% url 'schulze_method_info' %}" >
-            Informazioni su Metodo Schulze
-        </a>
     </div>
 </div>
+
+<br>
+<br>
 
 {% endblock content %}
