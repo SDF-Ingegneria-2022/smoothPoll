@@ -13,30 +13,42 @@
 <br>
 
 <div class="container text-center">
-    <div class="d-grid gap-2 d-md-block mt-2 justify-content-middle">
-        <a 
-            class="btn btn-primary btn-lg mt-2 border-0" 
-            href="{% url 'single_option_info' %}"
-            style="background-color: #F6AA1C">
-            Opzione Singola
-        </a>
+
+    <div class="row md-auto justify-content-center">
+        <div class="card md-auto me-5 mt-3" style="width: 18rem;">
+            <img src="{% static 'info_pages/OS/OS_vote_blank.JPG' %}" class="card-img-top" alt="Opzione Singola">
+            <div class="card-body text-center">
+                <h5 class="card-title">Opzione Singola</h5>
+                <p class="card-text">Il metodo di scelta più conosciuto.</p>
+                <a href="{% url 'single_option_info' %}"
+                    style="background-color: #F6AA1C" 
+                    class="btn btn-primary btn-lg mt-2 border-0">Vai alle spiegazioni</a>
+            </div>
+        </div>
+
+        <div class="card md-auto me-5 mt-3" style="width: 18rem;">
+            <img src="{% static 'info_pages/MJ/MJ_vote_blank.JPG' %}" class="card-img-top" alt="Giudizio Maggioritario">
+            <div class="card-body text-center">
+                <h5 class="card-title">Giudizio Maggioritario</h5>
+                <p class="card-text">Un metodo di scelta che giudica le opzioni.</p>
+                <a href="{% url 'majority_judgment_info' %}"
+                    style="background-color: #253495" 
+                    class="btn btn-primary btn-lg mt-2 border-0">Vai alle spiegazioni</a>
+            </div>
+        </div>
+
+        <div class="card md-auto me-5 mt-3" style="width: 18rem;">
+            <img src="{% static 'info_pages/SC/SC_vote_blank.JPG' %}" class="card-img-top" alt="Metodo Schulze">
+            <div class="card-body text-center">
+                <h5 class="card-title">Metodo Schulze</h5>
+                <p class="card-text">Un metodo di scelta che classifica le opzioni.</p>
+                <a href="{% url 'schulze_method_info' %}"
+                    style="background-color: #961af4" 
+                    class="btn btn-primary btn-lg mt-2 border-0">Vai alle spiegazioni</a>
+            </div>
+        </div>
     </div>
-    <div class="d-grid gap-2 d-md-block mt-2 justify-content-middle">
-        <a 
-            class="btn btn-primary btn-lg mt-2 border-0" 
-            href="{% url 'majority_judgment_info' %}"
-            style="background-color: #253495">
-            Giudizio Maggioritario
-        </a>
-    </div>
-    <div class="d-grid gap-2 d-md-block mt-2 justify-content-middle">
-        <a 
-            class="btn btn-primary btn-lg mt-2 border-0" 
-            href="{% url 'schulze_method_info' %}"
-            style="background-color: #961af4">
-            Metodo Schulze
-        </a>
-    </div>
+    
 </div>
 
 <div class="container mt-5">
