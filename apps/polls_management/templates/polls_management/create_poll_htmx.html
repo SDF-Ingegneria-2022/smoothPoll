@@ -14,23 +14,16 @@
 {% endblock pagename %}
 
 {% block content %}
-<div class="container text-center mt-5">
-<h1>
+<div class="container text-center mt-5 mb-5">
+    <h1>
         {% if edit  %}
             Modifica scelta
         {% else %}
             Crea nuova scelta
         {% endif %}
     </h1>
-    <div class="alert alert-primary d-flex align-items-center" role="alert">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
-            <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
-          </svg> 
-          <svg class="bi flex-shrink-0 me-2" width="8" height="8" role="img" aria-label="Info:"><use xlink:href="#info-fill"/></svg>
-            Inserisci tutti i dati e premi "Salva"
-    </div>
+    <h2 class="text-info">Inserisci tutti i dati e premi "Salva"</h2>
 </div>
-<div class="container border">
 <div class="container mb-5"  hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' hx-ext="class-tools loading-states">
 
     <form action="{% url 'apps.polls_management:poll_form' %}" method="POST">
@@ -73,7 +66,6 @@
             <button type="submit" class="btn btn-success" data-loading-disable >Salva</button>
         </div>
     </form>
-</div>
 </div>
 
 {% endblock content %}
