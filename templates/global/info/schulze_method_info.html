@@ -8,6 +8,82 @@
 
 <div class="container text-center">
     <h2>Scelte con il metodo Schulze</h2>
+    <p>E' un metodo che consente all'utente di ordinare le opzioni in base alle preferenze.</p>
+</div>
+
+<div class="container">
+    <div class="row align-items-center">
+        <h5>
+            Modalità di scelta
+        </h5>
+        <div class="col-md-4">
+            <img src="{% static 'info_pages/SC/SC_vote_blank.JPG' %}" class="img-fluid shadow p-3 mb-5 bg-body rounded" 
+            alt="Scelta non ancora effettuata">
+        </div>
+        <div class="col-md-4">
+            <img src="{% static 'info_pages/SC/SC_vote.JPG' %}" class="img-fluid shadow p-3 mb-5 bg-body rounded" 
+            alt="Scelta effettuata">
+        </div>
+        <div class="col-md-4">
+            <p>
+                Per esprimere una preferenza con questo metodo si deve classificare, dall'alto verso il basso con importanza
+                decrescente, le opzioni fornite dal quesito.
+                Come già specificato, l'opzione che si trova più in alto sarà la prima per ordine di preferenza, quella successiva la
+                seconda e così via...
+            </p>
+        </div>
+    </div>
+    <div class="row align-items-center">
+        <h5>
+            Calcolo dei risultati
+        </h5>
+        <div class="col-md-4">
+            <img src="{% static 'info_pages/SC/SC_graph.JPG' %}" class="img-fluid shadow p-3 mb-5 bg-body rounded" 
+            alt="Rappresentazione di una classificazione">
+        </div>
+        <div class="col-md-4">
+            <img src="{% static 'info_pages/SC/SC_graph_2.JPG' %}" class="img-fluid shadow p-3 mb-5 bg-body rounded" 
+            alt="Rappresentazione di tutte le classificazioni effettuate">
+        </div>
+        <div class="col-md-4">
+            <p>
+                Per quanto concerne il calcolo dei risultati di questo particolare metodo di scelta, basti pensare a dei semplici
+                grafi ordinati: i nodi sono le opzioni e gli archi indicano l'ordine di preferenza, da crescente a decrescente.
+                L'ordine di preferenze scelto rappresenta pertanto un percorso di questo ipotetico grafo.
+                Ogni utente crea un grafo ordinato senza cicli.
+                Ogni percorso realizzato consente di determinare, per ogni arco, dei pesi numerici che aumentano all'aumentare
+                delle classifiche che prevedono il medesimo ordine di opzioni. 
+                Per verificare quale opzione abbia ottenuto più preferenze si confrontano tutti questi grafi. 
+                Per maggiori informazioni su questo specifico algoritmo clicca <a href="https://it.wikipedia.org/wiki/Metodo_Schulze" 
+                target="_blank" rel="noopener" class="text-decoration-none">qui</a>.
+            </p>
+        </div>
+    </div>
+    <div class="row align-items-center">
+        <div class="col-md-4">
+            <img src="{% static 'info_pages/SC/SC_results_1.JPG' %}" class="img-fluid shadow p-3 mb-5 bg-body rounded" 
+            alt="Risultati scelta">
+        </div>
+        <div class="col-md-4">
+            <img src="{% static 'info_pages/SC/SC_results_2.JPG' %}" class="img-fluid shadow p-3 mb-5 bg-body rounded" 
+            alt="Risultati scelta">
+        </div>
+        <div class="col-md-4">
+            <p>
+                La rappresentazione dei risultati è del tutto similare a quella del metodo a opzione singola, con l'aggiunta
+                di una matrice di preferenze che mostra il valore finale dei pesi degli archi per ogni coppia di opzioni.
+            </p>
+        </div>
+    </div>
+
+    <h5>
+        Ma c'è di più...
+    </h5>
+    <p>
+        Lo sapevi che per certe scelte è possibile anche provare il metodo del giudizio maggioritario? Clicca 
+        <a href="https://it.wikipedia.org/wiki/Sistema_maggioritario" target="_blank" rel="noopener"
+        class="text-decoration-none">qui</a> per saperne di più su questa tipologia di scelta molto interessante.
+    </p>
 </div>
 
 <div class="container text-center">
