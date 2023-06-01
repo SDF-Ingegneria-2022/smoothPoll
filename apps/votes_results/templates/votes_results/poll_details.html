@@ -22,27 +22,36 @@
 
 
     {% comment %} Vote and view results actions {% endcomment %}
-    {% if poll.is_open and not poll.is_closed %}
-        <div class="d-grid gap-2 d-md-flex justify-content-md-end m-2">
-            {% include "votes_results/components/vote_button.html" with poll=poll btn_classes="me-md-2 mt-2" %}
-        </div>
+    <div class="container mt-5">
+        <div class="row">
 
-        {% if poll.is_closable_now %}
+            {% if poll.is_open and not poll.is_closed %}
+            <div class="col-12 col-lg-4 mb-2">
+            {% include "votes_results/components/vote_button.html" with poll=poll btn_classes="me-md-2 mt-2" %}
+            </div>
+
+            {% if poll.is_closable_now %}
+            <div class="col-12 col-lg-4 mb-2">
             <!-- Close poll -->
             {% include 'polls_management/components/poll_close.html' with poll=poll %}
-        {% endif %}
+            </div>
+            {% endif %}
 
-    {% elif poll.is_closed %}
-        <div class="d-grid gap-2 d-md-flex justify-content-md-end m-2">
+            {% elif poll.is_closed %}
+            <div class="col-12 col-lg-4 mb-2">
             <a href="{% url 'apps.votes_results:single_option_results' poll_id=poll.id %}" 
-                class="btn btn-secondary me-md-2 mt-2"  
+                class="btn btn-secondary w-100 h-100"  
                 role="button">Vedi risultati</a>
+            </div>
+            {% endif %} 
         </div>
-    {% endif %} 
+        
+    </div>
 
-
+    <div class="container my-2">
     <!-- Performable actions on a poll -->
     {% include 'polls_management/components/poll_actions.html' with poll=poll %}
+    </div>
 
     <!-- Token management -->
     {% if poll.is_votable_token and not poll.is_closed and user.is_authenticated %}

@@ -80,8 +80,9 @@
             Quando poi è il momento di decidere il vincitore si valutano per ciascun candidato tutti i giudizi di tutti gli elettori e si estrae la mediana.
             La cosa più probabile è però che due o più candidati abbiano la stessa mediana. Bisogna quindi eseguire uno spareggio tra questi due candidati. Questo viene fatto nel seguente modo:
             supponiamo vi siano due candidati Andrea e Barbara che hanno entrambi ricevuto come mediana il giudizio Sufficiente. Per risolvere tra questi due candidati come primo passo si escludono 
-            tutti gli altri candidati che sono risultati con mediana inferiore. Quindi si levano uno dopo l’altro a due a due i giudizi in cui le persone hanno votato Buono per Barbara e per Antonio. 
-            Questo rende le mediane instabili. Pertanto una delle due a seguito dell’instabilità si muove in alto (quindi vince) o in basso (quindi perde).
+            i due giudizi mediani per i due candidati. Quindi si calcolano nuovamente i mediani: se la stessa situazione si ripresente si ripete il processo, fino a quando non si otterrà
+            una situazione di chiara distinzione tra le due mediane. Nell'estremo caso in cui si ottenga la stessa mediana con l'ultimo giudizio per entrambi, i due candidati verranno
+            ordinati in ordine alafabetico, in quanto possiedono lo stesso numero e lo stesso tipo di giudizi.
         </p>
         
         <img src="{% static 'banner-info-table-percent.png' %}" class="img-fluid shadow p-3 mb-5 bg-body rounded" alt="...">
@@ -92,7 +93,7 @@
             le persone all’interno della comunità comprendano 
             in maniera univoca il significato dei livelli e il loro ordine.
         </p>
-        <div>Fonte: <a href="https://copernicani.it/eleggere-il-candidato-migliore/" class="link-secondary">Copercani - eleggere il candidato migliore</a> </div>
+        <div>Maggiori informazioni: <a href="{% url 'majority_judgment_info' %}" target="_blank" rel="noopener" class="link-secondary">Giudizio Maggioritario</a> </div>
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>

@@ -8,19 +8,64 @@
 
 <div class="container text-center">
     <h2>Scelte con il metodo dell'Opzione Singola</h2>
+    <p>E' il metodo più comunemente utilizzato per esprimere una preferenza ad un quesito a scelta multipla.</p>
 </div>
 
-<div class="container text-center">
-    <div class="d-grid gap-2 d-md-block justify-content-middle">
-        <a 
-            class="btn btn-primary mt-2" 
-            href="{% url 'home' %}" >
-            Torna alla home
-        </a>
+<div class="container">
+    <div class="row align-items-center">
+        <h5>
+            Modalità di scelta
+        </h5>
+        <div class="col-md-6">
+            <img src="{% static 'info_pages/OS/OS_vote_blank.JPG' %}" class="img-fluid shadow p-3 mb-5 bg-body rounded" 
+            alt="Scelta non ancora effettuata">
+        </div>
+        <div class="col-md-6">
+            <img src="{% static 'info_pages/OS/OS_vote.JPG' %}" class="img-fluid shadow p-3 mb-5 bg-body rounded" 
+            alt="Scelta effettuata">
+        </div>
+    </div>
+    <div class="row align-items-center">
+        <p>
+            Come si può facilmente intuire dal nome, nel metodo ad opzione singola basta selezionare l'opzione desiderata
+            per rispondere alla domanda. Naturalmente solo un'opzione può essere scelta.
+        </p>
+    </div>
+    <div class="row align-items-center">
+        <h5>
+            Calcolo dei risultati
+        </h5>
+            <img src="{% static 'info_pages/OS/OS_results.JPG' %}" class="img-fluid shadow p-3 mb-5 bg-body rounded" 
+            alt="Risultati scelta">
+    </div>
+    <div class="row align-items-center">
+        <p>
+            Il calcolo dei risultati per il metodo dell'opzione singola è molto semplice: per ogni opzione si contano il numero
+            di scelte che ha ricevuto e vince l'opzione che ne ha ottenute di più.
+        </p>
+    </div>
+
+    <h5>
+        Ma c'è di più...
+    </h5>
+    <p>
+        Lo sapevi che per certe scelte è possibile anche provare il metodo del giudizio maggioritario? Clicca 
+        <a href="{% url 'majority_judgment_info' %}" target="_blank" rel="noopener"
+        class="text-decoration-none">qui</a> per saperne di più su questa tipologia di scelta molto interessante.
+    </p>
+</div>
+
+<div class="container">
+    <div class="d-grid gap-2 d-md-block justify-content-start">
         <a 
             class="btn btn-primary mt-2" 
             href="{% url 'general_info' %}" >
             Vai alle informazioni generali
+        </a>
+        <a 
+            class="btn btn-outline-secondary mt-2" 
+            href="{% url 'home' %}" >
+            Torna alla home
         </a>
     </div>
 </div>

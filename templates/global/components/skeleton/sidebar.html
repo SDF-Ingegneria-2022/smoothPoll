@@ -1,6 +1,6 @@
 {% load static %}
 
-<div class="p-2 h-100 d-flex align-items-end flex-column bg-light">
+<div class="p-2 h-100 d-flex align-items-end flex-column border">
     <!-- Site name + close icon -->
     <div class="w-100 d-flex justify-content-between ps-2">
         <span>
@@ -20,26 +20,26 @@
     </div>
 
     <!-- Nav Menu -->
-    <nav class="w-100 text-center pe-2">
-        <ul class="navbar-nav ps-1">
-            <li class="nav-item">
-                <a class="nav-link active" aria-current="page"
+    <nav class="w-100 text-center pe-2 ">
+        <ul class="navbar-nav ps-1 ">
+            <li class="nav-item border bg-light my-1">
+                <a class="nav-link active" style="color:#004AAD" aria-current="page"
                     href="{% url 'home' %}">Home</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" 
+            <li class="nav-item border bg-light my-1">
+                <a class="nav-link" style="color:#004AAD"
                 href="{% url 'apps.votes_results:votable_polls' %}">Scegli e vedi risultati</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" 
+            <li class="nav-item border bg-light my-1">
+                <a class="nav-link link-primary" style="color:#004AAD"
                 href="{% url 'apps.polls_management:all_user_polls' %}">Gestisci scelte</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" 
+            <li class="nav-item border bg-light my-1">
+                <a class="nav-link" style="color:#004AAD"
                 href="{% url 'apps.polls_management:poll_create' %}">Crea nuova scelta</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" 
+            <li class="nav-item border bg-light my-1">
+                <a class="nav-link" style="color:#004AAD"
                 href="{% url 'general_info' %}">Informazioni sui metodi di scelta</a>
             </li>
         </ul>
