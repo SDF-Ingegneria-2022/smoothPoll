@@ -14,7 +14,7 @@
 {% endblock pagename %}
 
 {% block content %}
-<div class="container text-center mt-5 mb-5">
+<div class="container text-center mt-3 bg-light ">
     <h1>
         {% if edit  %}
             Modifica scelta
@@ -22,9 +22,9 @@
             Crea nuova scelta
         {% endif %}
     </h1>
-    <h2 class="text-info">Inserisci tutti i dati e premi "Salva"</h2>
+    
 </div>
-<div class="container mb-5"  hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' hx-ext="class-tools loading-states">
+<div class="container mb-5 border p-3"  hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' hx-ext="class-tools loading-states">
 
     <form action="{% url 'apps.polls_management:poll_form' %}" method="POST">
 
