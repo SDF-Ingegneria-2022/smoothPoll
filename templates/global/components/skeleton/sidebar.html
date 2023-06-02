@@ -8,10 +8,10 @@
                 <span style="color:#004AAD">Scegli</span>
                 <span style="color:#EF921C">Meglio</span>
             </h2>
-            <p>Scelte sociali con il metodo del giudizio maggioritario</p>
+            <p class="fs-6 fw-light">Scelte sociali con il metodo del giudizio maggioritario</p>
         </span>
         <span>
-            <a class="d-flex align-items-center mb-2 mb-lg-0 sidebar-toggler"
+            <a class="d-flex align-items-center mt-1 mb-2 mb-lg-0 sidebar-toggler"
                 role="button" href="" >
                 <img src="{% static 'icon/close.png' %}" 
                     alt="Chiudi menù laterale" width="25" />
@@ -28,19 +28,21 @@
             </li>
             <li class="nav-item border bg-light my-1">
                 <a class="nav-link" style="color:#004AAD"
-                href="{% url 'apps.votes_results:votable_polls' %}">Scegli e vedi risultati</a>
+                href="{% url 'apps.votes_results:votable_polls' %}">Tutte le scelte</a>
             </li>
             <li class="nav-item border bg-light my-1">
                 <a class="nav-link link-primary" style="color:#004AAD"
-                href="{% url 'apps.polls_management:all_user_polls' %}">Gestisci scelte</a>
+                href="{% url 'apps.polls_management:all_user_polls' %}">Le tue scelte</a>
             </li>
+            
             <li class="nav-item border bg-light my-1">
                 <a class="nav-link" style="color:#004AAD"
-                href="{% url 'apps.polls_management:poll_create' %}">Crea nuova scelta</a>
+                href="{% url 'general_info' %}">Scopri di più sui metodi di scelta</a>
             </li>
-            <li class="nav-item border bg-light my-1">
-                <a class="nav-link" style="color:#004AAD"
-                href="{% url 'general_info' %}">Informazioni sui metodi di scelta</a>
+
+            <li class="nav-item border bg-success my-1 fw-bold">
+                <a class="nav-link" style="color:#FFFFFF"
+                href="{% url 'apps.polls_management:poll_create' %}">Crea scelta</a>
             </li>
         </ul>
     </nav>
