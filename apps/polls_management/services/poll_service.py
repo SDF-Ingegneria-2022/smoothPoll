@@ -27,7 +27,7 @@ class PollService:
         Raises:
             PollNotValidCreationException: Is raised when the poll is not valid. When the input params not meet the requirements.
         Returns:
-            PollModel: The created poll.
+            new_poll: The created poll.
         """
 
         if len(name)<1 or len(question)<1 or len(options)<1:
@@ -48,7 +48,9 @@ class PollService:
         Args:
             id: Id of the poll.
         Raises:
-            PollDoesNotExistException: raised when you retrieve a non-existent poll
+            PollDoesNotExistException: raised when you retrieve a non-existent poll.
+        Returns:
+            poll: poll object.
         """
 
         try:
@@ -68,7 +70,7 @@ class PollService:
         Raises:
             PaginatorPageSizeException: raised when the page size is not valid. When the page size is less than 1.
         Returns:
-            Paginator: A paginator object with the polls.
+            paginator: A paginator object with the polls.
         """
         if page_size < 1:
             raise PaginatorPageSizeException(f"Page size: {page_size} is not valid: It must be at least 1")
@@ -120,7 +122,7 @@ class PollService:
             PollCannotBeOpenedException: If the poll open and close time is not valid.
             
         Returns: 
-            PollModel: the opened poll.
+            poll: the opened poll.
         """
         try:
             poll: PollModel = PollModel.objects.get(id=id)
@@ -147,7 +149,7 @@ class PollService:
             user: the user who is the author of the polls.
         
         Returns: 
-            List: list of user polls.
+            user_poll_list: list of user polls.
         """
 
         # return a list of user polls ordered by the last poll created
@@ -159,7 +161,7 @@ class PollService:
         """Returns a list of votable or closed polls. The polls retuned are public by default.
         
         Returns: 
-            List: list of votable/closed polls.
+            List of votable/closed polls.
         """
 
         all_public_polls_list = PollModel.objects.filter(private=False)
@@ -180,7 +182,7 @@ class PollService:
             PollIsCloseException: If the poll is already close.
             
         Returns: 
-            PollModel: the closed poll.
+            poll: the closed poll.
         """
         try:
             poll: PollModel = PollModel.objects.get(id=id)

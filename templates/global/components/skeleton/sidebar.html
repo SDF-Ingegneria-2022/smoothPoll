@@ -1,17 +1,17 @@
 {% load static %}
 
-<div class="p-2 h-100 d-flex align-items-end flex-column bg-light">
+<div class="p-2 h-100 d-flex align-items-end flex-column border">
     <!-- Site name + close icon -->
     <div class="w-100 d-flex justify-content-between ps-2">
         <span>
             <h2 class="fs-3">
-                <span class="text-primary">Scegli </span>
+                <span style="color:#004AAD">Scegli</span>
                 <span style="color:#EF921C">Meglio</span>
             </h2>
-            <p>Scelte sociali con il metodo del giudizio maggioritario</p>
+            <p class="fs-6 fw-light">Scelte sociali con il metodo del giudizio maggioritario</p>
         </span>
         <span>
-            <a class="d-flex align-items-center mb-2 mb-lg-0 sidebar-toggler"
+            <a class="d-flex align-items-center mt-1 mb-2 mb-lg-0 sidebar-toggler"
                 role="button" href="" >
                 <img src="{% static 'icon/close.png' %}" 
                     alt="Chiudi menù laterale" width="25" />
@@ -20,23 +20,29 @@
     </div>
 
     <!-- Nav Menu -->
-    <nav class="w-100 text-center pe-2">
-        <ul class="navbar-nav ps-1">
-            <li class="nav-item">
-                <a class="nav-link active" aria-current="page"
+    <nav class="w-100 text-center pe-2 ">
+        <ul class="navbar-nav ps-1 ">
+            <li class="nav-item border bg-light my-1">
+                <a class="nav-link active" style="color:#004AAD" aria-current="page"
                     href="{% url 'home' %}">Home</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" 
-                href="{% url 'apps.votes_results:votable_polls' %}">Scegli e vedi risultati</a>
+            <li class="nav-item border bg-light my-1">
+                <a class="nav-link" style="color:#004AAD"
+                href="{% url 'apps.votes_results:votable_polls' %}">Tutte le scelte</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" 
-                href="{% url 'apps.polls_management:all_user_polls' %}">Gestisci scelte</a>
+            <li class="nav-item border bg-light my-1">
+                <a class="nav-link link-primary" style="color:#004AAD"
+                href="{% url 'apps.polls_management:all_user_polls' %}">Le tue scelte</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" 
-                href="{% url 'apps.polls_management:poll_create' %}">Crea nuova scelta</a>
+            
+            <li class="nav-item border bg-light my-1">
+                <a class="nav-link" style="color:#004AAD"
+                href="{% url 'general_info' %}">Scopri di più sui metodi di scelta</a>
+            </li>
+
+            <li class="nav-item border bg-success my-1 fw-bold">
+                <a class="nav-link" style="color:#FFFFFF"
+                href="{% url 'apps.polls_management:poll_create' %}">Crea scelta</a>
             </li>
         </ul>
     </nav>

@@ -1,0 +1,148 @@
+{% extends 'global/skeleton.html' %}
+
+{% load static %}
+
+{% block pagename %}Giudizio maggioritario: informazioni{% endblock pagename %}
+
+{% block content %}
+
+<div class="container text-center">
+    <h2 class="bg-light">Scelte con il metodo del Giudizio Maggioritario</h2>
+    
+</div>
+<p class="fs-5 mt-1">E' un metodo che consente all'utente di giudicare ogni opzione in base alla sua preferenza.</p>
+
+<div class="container">
+    <div class="row align-items-center">
+        <h5 class="fs-4">
+            Modalità di scelta
+        </h5>
+        <div class="col-md-6">
+            <img src="{% static 'info_pages/MJ/MJ_vote_blank.JPG' %}" class="img-fluid shadow p-3 mb-5 bg-body rounded" 
+            alt="Scelta non ancora effettuata">
+        </div>
+        <div class="col-md-6">
+            <img src="{% static 'info_pages/MJ/MJ_vote.JPG' %}" class="img-fluid shadow p-3 mb-5 bg-body rounded" 
+            alt="Scelta effettuata">
+        </div>
+    </div>
+    <div class="row align-items-center">
+        <p class="fs-5 mt-1">
+            In questo interessante metodo di scelta, si può esprimere un giudizio per ogni opzioni del quesito.
+            Il giudizio può essere uno tra i seguenti:
+            <ul class="ms-5 fs-5 ">
+                <li>Ottimo</li>
+                <li>Buono</li>
+                <li>Sufficiente</li>
+                <li>Insufficiente</li>
+                <li>Pessimo</li>
+            </ul>
+        </p>
+
+        <p  class="fs-5 mt-1">    
+            Fornire un aggettivo che possa quantificare il valore della opzione rende questo tipo di scelta molto
+            valido e superiore ad altri metodi di scelta.
+        </p>
+    </div>
+    <div class="row align-items-center">
+        <h5 class="fs-4">
+            Calcolo dei risultati
+        </h5>
+        <div class="col-md-6">
+            <img src="{% static 'info_pages/MJ/MJ_alg_1.JPG' %}" class="img-fluid shadow p-3 mb-5 bg-body rounded" 
+            alt="Esempio di calcolo dei risultati">
+        </div>
+        <div class="col-md-6">
+            <img src="{% static 'info_pages/MJ/MJ_alg_2.JPG' %}" class="img-fluid shadow p-3 mb-5 bg-body rounded" 
+            alt="Esempio di calcolo dei risultati">
+        </div>
+    </div>
+    <div class="row align-items-center">
+        <p class="fs-5 mt-1">
+            Per calcolare i risultati di questa tipologia di scelta si fa riferimento al giudizio mediano di tutti
+            i giudizi raccolti per ogni opzione.
+            Successivamente si determina quale opzione sia stata decretata migliore in base al suo giudizio mediano:
+            se è migliore allora la scelta si troverà in posizione superiore in classifica, mentre se è peggiore si
+            troverà in posizione inferiore.
+            Nel caso in cui due opzioni possiedono lo stesso giudizio mediano, si rimuove da entrambe
+            le opzioni quel particolare giudizio e vengono ricalcolati i due nuovi giudizi mediani, eseguendo
+            un altro confronto. Questo ciclo si ripete fin quando non si trova una chiara differenza tra le due.
+            Nel particolare caso, invece, in cui le due opzioni possiedono gli stessi mediani e gli stessi giudizi,
+            vengono posizionate in ordine alfabetico.
+        </p>
+    </div>
+    <div class="row align-items-center">
+        <div class="col-md-6">
+            <img src="{% static 'info_pages/MJ/MJ_results_alt.JPG' %}" class="img-fluid shadow p-3 mb-5 bg-body rounded" 
+            alt="Risultati scelta">
+        </div>
+        <div class="col-md-6">
+            <img src="{% static 'info_pages/MJ/MJ_results_alt_2.JPG' %}" class="img-fluid shadow p-3 mb-5 bg-body rounded" 
+            alt="Risultati scelta">
+        </div>
+    </div>
+    <div class="row align-items-center">
+        <img src="{% static 'info_pages/MJ/MJ_results_alt_3.JPG' %}" class="img-fluid shadow p-3 mb-5 bg-body rounded" 
+        alt="Risultati scelta">
+    </div>
+    <div class="row align-items-center">
+        <p class="fs-5 mt-1">
+            In figura possiamo vedere la rappresentazione dei risultati in due modalità: una più sintetica e una 
+            più estensiva e chiara all'utente.
+        </p>
+    </div>
+
+    <!--Alert-->
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+    </symbol>
+    <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+    </symbol>
+    <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+    </symbol>
+    </svg>
+    
+    <div class="alert alert-primary d-flex align-items-center" role="alert">
+        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Info:"><use xlink:href="#info-fill"/></svg>
+            <div>
+                <h3>Attenzione alla consistenza della scelta</h3>
+                Esistono scelte con altri tipi di metodo che possono essere <b>giudicate</b> anche con il <b>Metodo
+                del Giudizio Maggioritario</b>.
+                In questi casi entra in atto un sistema di verifica della consistenza delle scelte:
+                <ul class="ms-3">
+                    <li>Nel caso di scelta con metodo a 
+                        <a href="{% url 'single_option_info' %}" target="_blank" rel="noopener"
+                        class="text-decoration-none">Opzione Singola</a>, se è stato scelto <i>A</i> ed stato giudicato
+                       "Buono" con il Metodo del Giudizio Maggioritario e una opzione <i>B</i> con "Ottimo", si avrà un'incongruenza.</li>
+                    <li>Nel caso di scelta con il 
+                        <a href="{% url 'schulze_method_info' %}" target="_blank" rel="noopener"
+                        class="text-decoration-none">Metodo Schulze</a>, 
+                        se la classifica è <i>B</i> > <i>A</i>, 
+                        e si giudica <i>B</i> con "Buono" e <i>A</i> con "Ottimo" è presente
+                        un'incongruenza. Si noti anche che per le scelte con metodo di Schulze è possibile avere più di una
+                        incongruenza contemporaneamente rispetto al metodo ad Opzione Singola.</li>
+                </ul>
+            </div>
+    </div>
+    
+</div>
+
+<div class="container">
+    <div class="d-grid gap-2 d-md-block justify-content-start">
+        <a 
+            class="btn btn-primary mt-2" 
+            href="{% url 'general_info' %}" >
+            Vai alle informazioni generali
+        </a>
+        <a 
+            class="btn btn-secondary mt-2" 
+            href="{% url 'home' %}" >
+            Torna alla home
+        </a>
+    </div>
+</div>
+
+{% endblock content %}

@@ -17,7 +17,13 @@ class PollTokenService:
     @staticmethod
     def create_tokens(token_number: int, poll: PollModel) -> List[PollTokens]:
 
-        """Method used to create and store tokens in an object on database"""
+        """Create tokens for the poll and store them in the database.
+        Args:
+            token_number: number of tokens to create.
+            poll: poll to assign tokens created.
+        Returns:
+            tokens: list of tokens created.
+        """
 
         tokens: List[PollTokens] = []
 
@@ -48,6 +54,8 @@ class PollTokenService:
             user: user whom the token is assigned to.
         Raises:
             TokenDoesNotExistException: raised when you retrieve a non-existent token.
+        Returns:
+            poll_token: token associated with the user.
         """
 
         try:
@@ -63,6 +71,8 @@ class PollTokenService:
         """Check if a token is used for a single option poll.
         Args:
             token: token model with all necessary information.
+        Returns:
+            Bool indicating if token is used for a single option poll or not.
         """
 
         if token.single_option_use:
@@ -76,6 +86,8 @@ class PollTokenService:
         """Check if a token is used for a majority poll.
         Args:
             token: token model with all necessary information.
+        Returns:
+            Bool indicating if token is used for a majority judgment poll or not.
         """
 
         if token.majority_use:
@@ -111,6 +123,8 @@ class PollTokenService:
         """Return a list of available tokens.
         Args:
             poll: the poll the tokens belong to.
+        Returns:
+            List of available token links.
         """
 
         return PollTokens.objects.filter(
@@ -141,6 +155,8 @@ class PollTokenService:
         """Return a list of unavailable token links.
         Args:
             poll: the poll the tokens belong to.
+        Returns:
+            List of unavailable token links.
         """
 
         return PollTokens.objects.filter(Q(poll_fk=poll) & Q(Q(single_option_use=True) | Q(majority_use=True))).all()
@@ -152,6 +168,8 @@ class PollTokenService:
         Args:
             user: the user whose vote has to be recorded.
             poll: the poll the tokens belong to.
+        Returns:
+            google_vote: the token representing the user's vote with Google email.
         """
 
         google_vote: PollTokens = PollTokens(token_user=user, poll_fk=poll)
