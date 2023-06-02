@@ -49,7 +49,6 @@ def schulze_method_recap_view(request: HttpRequest, poll_id: int):
     # retrieve vote 
     try:
         vote = SchulzeMethodVoteService.get_vote_by_id(vote_id)
-        print(vote)
     except VoteDoesNotExistException:
         request.session[SESSION_SCHULZE_METHOD_VOTE_SUBMIT_ERROR] = "Errore! Non hai ancora espresso " \
             + "nessuna scelta. Usa questo form per esprimere la tua preferenza."
