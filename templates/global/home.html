@@ -63,10 +63,21 @@
         applicazione supporta anche il <b class="text-dark">Metodo di Schulze</b> 
         e le classiche <b class="text-dark">Scelte ad Opzione Singola</b>. 
     </p>
+    <div class="row row-cols-auto">
 
-    <a href="{% url 'majority_judgment_info' %}" class="text-dark">
-        Scopri di più sui metodi di scelta
-    </a>
+        <div class="col">
+            <a href="{% url 'apps.votes_results:votable_polls' %}" class="btn btn-primary">
+                Vai a tutte le scelte
+            </a>
+        </div>
+
+        <div class="col">
+            <a href="{% url 'general_info' %}" class="btn btn-link text-dark">
+                                    Scopri di più sui metodi di scelta
+            </a>
+        </div>
+
+    </div>
 
     <hr class="mt-3"> 
 
@@ -96,7 +107,7 @@
                 {% if user.is_authenticated %}
                 <div class="row">
                     <div class="col-8 col-lg-3">
-                        <a class="btn btn-success m-1 w-100 h-100 " 
+                        <a class="btn btn-success m-1 w-100 " 
                             href="{% url 'apps.polls_management:poll_create' %}" >
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
                                 <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
@@ -105,7 +116,7 @@
                         </a>
                     </div>
                     <div class="col-8 col-lg-3">
-                        <a class="btn btn-secondary m-1 w-100 h-100" 
+                        <a class="btn btn-secondary m-1 w-100" 
                             href="{% url 'apps.polls_management:all_user_polls' %}" >
                             Gestisci le tue scelte
                         </a>

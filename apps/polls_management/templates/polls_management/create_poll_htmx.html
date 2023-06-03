@@ -44,7 +44,9 @@
 
             {% bootstrap_form poll_form %}
         </div>
-
+        <div class="alert alert-secondary" role="alert">
+        Vuoi sapere come funzionano gli algoritmi di scelta? <a href="{% url 'general_info' %}" class="alert-link" target="_blank">Scopri di più!</a>
+        </div>
         <h5>Opzioni tra cui scegliere</h5>
 
         <div class="form-group mb-5">
@@ -61,6 +63,7 @@
         </div>
 
         {% csrf_token %}
+        
         <div class="d-grid gap-2 d-md-block">
             <a class="btn btn-warning" href="{% url 'apps.polls_management:poll_form_clean_go_back_home' %}" role="button">Annulla</a>
             <button type="submit" class="btn btn-success" data-loading-disable >Salva</button>
