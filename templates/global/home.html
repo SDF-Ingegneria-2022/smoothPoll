@@ -63,10 +63,21 @@
         applicazione supporta anche il <b class="text-dark">Metodo di Schulze</b> 
         e le classiche <b class="text-dark">Scelte ad Opzione Singola</b>. 
     </p>
+    <div class="row row-cols-auto">
 
-    <a href="{% url 'majority_judgment_info' %}" class="text-dark">
-        Scopri di più sui metodi di scelta
-    </a>
+        <div class="col">
+            <a href="{% url 'apps.votes_results:votable_polls' %}" class="btn btn-primary">
+                Vai a tutte le scelte
+            </a>
+        </div>
+
+        <div class="col">
+            <a href="{% url 'general_info' %}" class="btn btn-link text-dark">
+                                    Scopri di più sui metodi di scelta
+            </a>
+        </div>
+
+    </div>
 
     <hr class="mt-3"> 
 
