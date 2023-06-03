@@ -73,7 +73,7 @@ class PollForm(ModelForm):
         help_texts = {
                         NAME: _("Un nome sintetico che descrive la scelta"), 
                         QUESTION: _("Quesito che verrà posto a chi compie la scelta"), 
-                        POLL_TYPE: _("Il metodo che verrà usato per esprimere la scelta e calcolare i risultati"), 
+                        POLL_TYPE: _("Il metodo che verrà usato per esprimere la scelta e calcolare i risultati. <a href=\"/info/\"  target='_blank'>Scopri di più sui diversi metodi di scelta</a>."), 
                         OPEN_DATETIME: _("La data dalla quale sarà possibile esprimere la scelta"), 
                         CLOSE_DATETIME: _("La data dalla quale non sarà più possibile esprimere la scelta"), 
                         AUTHOR: _("Il nome dell'autore che ha creato la scelta"),
