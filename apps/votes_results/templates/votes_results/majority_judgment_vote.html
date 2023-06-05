@@ -136,10 +136,10 @@
                                     
                                         <div class="form-check form-check-inline d-grid mx-auto">
                                         {% with option_id=option.id value=error.options_selected value_from_consistency_check=consistency_check.options_selected%}
-                                            {% if option_id in  error.options_selected.id or option_id in consistency_check.options_selected.id and value|get_item:option_id == 1 or value_from_consistency_check|get_item:option_id == 1 %}
+                                            {% if value|get_item:option_id == 1 or value_from_consistency_check|get_item:option_id == 1 %}
                                                 <input type="radio" class="form-check-input btn-check btn-block " id="btn-check-2-outlined-{{option.id}}-a" checked autocomplete="off" name="{{option.id}}"  value="1">  
                                                 <label class="btn btn-outline-primary" for="btn-check-2-outlined-{{option.id}}-a">Pessimo</label><br>
-                                            {%else%}
+                                            {% else %}
                                                 <input type="radio" class="form-check-input btn-check btn-block" id="btn-check-2-outlined-{{option.id}}-a" autocomplete="off" name="{{option.id}}"  value="1">
                                                 <label class="btn btn-outline-primary w-100" for="btn-check-2-outlined-{{option.id}}-a">Pessimo</label><br>
                                             {% endif %}
@@ -151,10 +151,11 @@
                                 
                                     <div class="form-check form-check-inline d-grid mx-auto">
                                     {% with option_id=option.id value=error.options_selected value_from_consistency_check=consistency_check.options_selected%}
-                                        {% if option_id in  error.options_selected.id or option_id in consistency_check.options_selected.id and value|get_item:option_id == 2 or value_from_consistency_check|get_item:option_id == 2%}
+                                        {% if value|get_item:option_id == 2 or value_from_consistency_check|get_item:option_id == 2%}
                                             <input type="radio" class="form-check-input btn-check btn-block" id="btn-check-2-outlined-{{option.id}}-b" checked autocomplete="off" name="{{option.id}}"  value="2">  
                                             <label class="btn btn-outline-primary" for="btn-check-2-outlined-{{option.id}}-b">Insufficiente</label><br>
-                                        {%else%}
+                                        {% else %}
+                                            
                                             <input type="radio" class="form-check-input btn-check btn-block" id="btn-check-2-outlined-{{option.id}}-b" autocomplete="off" name="{{option.id}}"  value="2">
                                             <label class="btn btn-outline-primary" for="btn-check-2-outlined-{{option.id}}-b">Insufficiente</label><br>
                                         {% endif %}
@@ -165,10 +166,10 @@
                                 
                                     <div class="form-check form-check-inline d-grid mx-auto">
                                     {% with option_id=option.id value=error.options_selected value_from_consistency_check=consistency_check.options_selected%}
-                                        {% if option_id in  error.options_selected.id or option_id in consistency_check.options_selected.id and value|get_item:option_id == 3 or value_from_consistency_check|get_item:option_id == 3%}
+                                        {% if value|get_item:option_id == 3 or value_from_consistency_check|get_item:option_id == 3%}
                                             <input type="radio" class="form-check-input btn-check btn-block" id="btn-check-2-outlined-{{option.id}}-c" checked autocomplete="off" name="{{option.id}}"  value="3">  
                                             <label class="btn btn-outline-primary" for="btn-check-2-outlined-{{option.id}}-c">Sufficiente</label><br>
-                                        {%else%}
+                                        {% else %}
                                             <input type="radio" class="form-check-input btn-check btn-block" id="btn-check-2-outlined-{{option.id}}-c" autocomplete="off" name="{{option.id}}"  value="3">
                                             <label class="btn btn-outline-primary" for="btn-check-2-outlined-{{option.id}}-c">Sufficiente</label><br>
                                         {% endif %}
@@ -178,10 +179,10 @@
                                 
                                     <div class="form-check form-check-inline d-grid mx-auto">
                                     {% with option_id=option.id value=error.options_selected value_from_consistency_check=consistency_check.options_selected%}
-                                        {% if option_id in  error.options_selected.id or option_id in consistency_check.options_selected.id and value|get_item:option_id == 4 or value_from_consistency_check|get_item:option_id == 4 %}
+                                        {% if value|get_item:option_id == 4 or value_from_consistency_check|get_item:option_id == 4 %}
                                             <input type="radio" class="form-check-input btn-check btn-block" id="btn-check-2-outlined-{{option.id}}-d" checked autocomplete="off" name="{{option.id}}"  value="4">  
                                             <label class="btn btn-outline-primary" for="btn-check-2-outlined-{{option.id}}-d">Buono</label><br>
-                                        {%else%}
+                                        {% else %}
                                             <input type="radio" class="form-check-input btn-check btn-block" id="btn-check-2-outlined-{{option.id}}-d" autocomplete="off" name="{{option.id}}"  value="4">
                                             <label class="btn btn-outline-primary" for="btn-check-2-outlined-{{option.id}}-d">Buono</label><br>
                                         {% endif %}
@@ -191,10 +192,10 @@
                                 
                                     <div class="form-check form-check-inline d-grid mx-auto">
                                     {% with option_id=option.id value=error.options_selected value_from_consistency_check=consistency_check.options_selected%}
-                                        {% if option_id in  error.options_selected.id or option_id in consistency_check.options_selected.id and value|get_item:option_id == 5  or value_from_consistency_check|get_item:option_id == 5%}
+                                        {% if value|get_item:option_id == 5  or value_from_consistency_check|get_item:option_id == 5%}
                                             <input type="radio" class="form-check-input btn-check btn-block" id="btn-check-2-outlined-{{option.id}}-e" checked autocomplete="off" name="{{option.id}}"  value="5">  
                                             <label class="btn btn-outline-primary" for="btn-check-2-outlined-{{option.id}}-e">Ottimo</label><br>
-                                        {%else%}
+                                        {% else %}
                                             <input type="radio" class="form-check-input btn-check btn-block" id="btn-check-2-outlined-{{option.id}}-e" autocomplete="off" name="{{option.id}}"  value="5">
                                             <label class="btn btn-outline-primary" for="btn-check-2-outlined-{{option.id}}-e">Ottimo</label><br>
                                         {% endif %}
